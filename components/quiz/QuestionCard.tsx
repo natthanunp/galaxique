@@ -1,0 +1,112 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { ArrowRightIcon, ArrowLeftIcon } from "lucide-react";
+
+import type { Language, QuizQuestion } from "@/types/universe";
+
+interface QuestionCardProps {
+  question: QuizQuestion;
+  index: number;
+  total: number;
+  language: Language;
+  /** Index of the currently-selected option, or null if none selected yet. */
+  value: number | null;
+  onChange: (index: number) => void;
+  onBack: () => void;
+  onNext: () => void;
+  isLast: boolean;
+  /** Disable Next until an option is selected. */
+  canProceed: boolean;
+}
+
+/** A single question step with bilingual text, 4 multiple-choice options, and nav buttons. */
+export function QuestionCard({
+  question,
+  index,
+  total,
+  language,
+  value,
+  onChange,
+  onBack,
+  onNext,
+  isLast,
+  canProceed,
+}: QuestionCardProps) {
+  const text = language === "th" ? question.text_th : question.text_en;
+  const stepLabel = `${index + 1} / ${total}`;
+  const pct = ((index + 1) / total) * 100;
+
+  const nextLabel = isLast
+    ? language === "th"
+      ? "เผยจักรวาลของฉัน"
+      : "Reveal my universe"
+    : language === "th"
+      ? "ถัดไป"
+      : "Next";
+  const backLabel = language === "th" ? "กลับ" : "Back";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 60, rotateY: 12 }}
+      animate={{ opacity: 1, x: 0, rotateY: 0 }}
+      exit={{ opacity: 0, x: -60, rotateY: -12 }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      className="w-full"
+      style={{ perspective: 1000 }}
+    >
+      <Card className="mx-auto w-full max-w-2xl">
+        <CardContent className="flex flex-col gap-6 p-6 sm:p-8">
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              {stepLabel}
+            </span>
+            <Progress value={pct} className="max-w-40" />
+          </div>
+
+          <h2 className="text-balance text-xl font-semibold leading-snug sm:text-2xl">
+            {text}
+          </h2>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {question.options.map((option, i) => {
+              const optionText = language === "th" ? option.text_th : option.text_en;
+              const selected = value === i;
+              return (
+                <Button
+                  key={i}
+                  type="button"
+                  variant={selected ? "default" : "outline"}
+                  onClick={() => onChange(i)}
+                  className="h-auto min-h-14 w-full justify-start whitespace-normal text-left text-sm sm:text-base"
+                >
+                  {optionText}
+                </Button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center justify-between gap-3">
+            <Button
+              variant="ghost"
+              onClick={onBack}
+              disabled={index === 0}
+              className="gap-1"
+            >
+              <ArrowLeftIcon className="size-4" />
+              {backLabel}
+            </Button>
+            <Button onClick={onNext} disabled={!canProceed} className="gap-1">
+              {nextLabel}
+              <ArrowRightIcon className="size-4" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}

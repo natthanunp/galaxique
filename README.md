@@ -1,36 +1,164 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Galaxique — Your Unique Universe 🌌
 
-## Getting Started
+An AI-driven, space-themed personality visualizer. Answer a short bilingual
+(EN/TH) quiz, and the AI maps your inner vibe to a real-time 3D cosmic
+universe — a spiral galaxy, a black hole, a neutron star — paired with a
+matching Spotify song, a procedural creature companion, and a poetic
+reading. Export a 12-second MP4 of your spinning universe to share on
+Instagram Stories.
 
-First, run the development server:
+> _Made for the person who makes the night sky feel closer. She won't see
+> this, but the light is hers._
+
+## ✨ Features
+
+- **AI-generated quiz** — Uses model from OpenRouter writes a fresh set of short, conversational questions per session,
+  enforced via JSON-mode output.
+- **Personality → universe mapping** — the core of the app. Cozy / loving
+  vibes map to a warm spiral galaxy (optionally with a glowing heart at the
+  core); deep / intense vibes map to a black hole or neutron star; vast /
+  imaginative vibes map to a colorful multi-arm galaxy.
+- **LLM-generated creature companion** — the AI also picks a small procedural
+  creature (kind + accent + motion + name) that orbits the central cosmic
+  object. The creature is rendered procedurally from primitives, so any
+  (kind, accent, motion) tuple the model produces renders something cute and
+  animated. Wings flap, tails wag, bodies breathe.
+- **Animated 3D background** — a layered backdrop of distant and mid stars
+  (counter-rotating for parallax), plus drifting, breathing nebula clouds
+  tinted with the user's palette. No flat black void.
+- **Hybrid 3D rendering** (Three.js + React Three Fiber + Drei):
+  - The **spiral galaxy** uses a layered point cloud: a bright dense core
+    bulge, two clearly-readable spiral arms, and a soft outer halo — every
+    layer has a distinct color so the structure pops.
+  - **Cosmic objects** use custom GLSL shaders (swirling accretion disk for
+    the black hole, pulsing core + pulsar jets for the neutron star).
+  - The **central "soul" symbol** (a heart or a star) is rendered as a
+    procedural particle constellation with a custom glow shader.
+- **Spotify integration** — server-side Client Credentials flow resolves the
+  vibe-matched song and embeds the official player.
+- **Instagram Story export** — `canvas.captureStream()` → `MediaRecorder`
+  (webm) → `ffmpeg.wasm` transcode to MP4, all client-side. The ~31MB ffmpeg
+  core lazy-loads only on the first Share click.
+- **Bilingual EN/TH** with a language toggle; the LLM returns both languages.
+- **Framer Motion** floating transitions + Shadcn UI dark cosmic theme.
+
+## 🛠 Tech Stack
+
+| Layer     | Tech                                                                                 |
+| --------- | ------------------------------------------------------------------------------------ |
+| Framework | Next.js 16 (App Router), React 19, TypeScript                                        |
+| Styling   | Tailwind CSS v4, Shadcn UI (new-york), Framer Motion                                 |
+| 3D        | Three.js, @react-three/fiber, @react-three/drei                                      |
+| AI        | Groq (`llama-3.3-70b-versatile`, OpenAI-compatible) with Google Gemini as a fallback |
+| Music     | Spotify Web API (Client Credentials)                                                 |
+| Video     | `MediaRecorder` + `@ffmpeg/ffmpeg` + `@ffmpeg/util`                                  |
+| State     | Zustand (persisted)                                                                  |
+
+## 🚀 Getting Started
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Add your API keys
+
+Copy `.env.example` to `.env.local` and fill in:
+
+```bash
+cp .env.example .env.local
+```
+
+| Variable                | Where to get it                                                        |
+| ----------------------- | ---------------------------------------------------------------------- |
+| `OPENROUTER_API_KEY`    | [OpenRouter](https://openrouter.ai/keys)                               |
+| `SPOTIFY_CLIENT_ID`     | [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) |
+| `SPOTIFY_CLIENT_SECRET` | same dashboard (create an app)                                         |
+
+> All keys stay server-side in Next.js API routes — they are never exposed to
+> the browser bundle.
+
+### 3. Run the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000), pick a language, and begin.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧭 User Flow
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Landing** — choose EN/TH, click "Begin your journey".
+2. **Quiz** — answer a few short open-ended questions (Framer Motion transitions). One of them is always about your ideal soulmate.
+3. **AI processing** — the LLM analyzes your answers and returns a universe
+   reveal (vibe, cosmic object, central symbol, colors, rotation speed,
+   particle density, a Spotify query, and a 2-sentence reading).
+4. **Reveal** — your 3D universe renders in real time with the matching song
+   and poetic reading.
+5. **Share** — click "Share to Story" to record a 12s MP4 of your spinning
+   universe and download it for Instagram.
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/            # Next.js App Router pages + API routes
+  api/
+    generate-quiz/   # LLM call #1 (question generation)
+    analyze/         # LLM call #2 (personality → universe)
+    spotify/
+      token/         # Client Credentials token exchange
+      search/        # Track search → track_id
+components/     # UI components (Shadcn primitives + quiz + reveal + shared)
+three/          # All R3F/Three.js scene logic
+  constellations/    # Hand-authored Float32Array outlines (heart, star)
+  objects/           # Galaxy, BlackHole, NeutronStar, CentralSymbolObject
+  scene/             # UniverseScene, CosmicBackground, ParticleField
+  shaders/           # GLSL (glow particle)
+  materials/         # GlowPointMaterial
+  hooks/             # useUniverseConfig, useCanvasRecorder, useMp4Exporter
+lib/            # llm.ts (OpenRouter via @openrouter/sdk), spotify.ts, schemas.ts (Zod), utils.ts
+prompts/        # quizSystemPrompt.ts, revealSystemPrompt.ts
+config/         # quizConfig.ts (question count, theme, tone, model)
+types/          # universe.ts (shared types)
+store/          # quizStore.ts (Zustand, persisted)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔬 How the mapping works
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The personality → universe mapping is the heart of the app. The
+`prompts/revealSystemPrompt.ts` gives the LLM explicit rules:
 
-## Deploy on Vercel
+- **Cozy / warm / loving** → `galaxy` (a warm spiral) + `heart` (or `star`)
+  symbol, warm palette.
+- **Deep / quiet / intense** → `black_hole` (or `neutron_star`) + `star` (or
+  `none`) symbol, deep saturated palette.
+- **Focused / driven / carrying weight** → `neutron_star` + `star` (or
+  `heart`) symbol, electric / high-contrast palette.
+- **Vast / imaginative / dreamy** → `galaxy` + `star` (or `heart`) symbol,
+  iridescent palette.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Output is JSON-mode and re-validated with Zod (`lib/schemas.ts`) before
+reaching the 3D layer.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🎥 Video export notes
+
+- The R3F canvas uses `preserveDrawingBuffer: true` so `captureStream()` works.
+- `MediaRecorder` produces a webm, which `ffmpeg.wasm` transcodes to an
+  IG-friendly MP4 (`libx264`, `yuv420p`, `+faststart`).
+- The ffmpeg core (~31MB) is fetched from jsdelivr on first Share click and
+  reused after. Single-thread build is used to avoid COOP/COEP header setup.
+
+## ⚙️ Configuration
+
+Edit `config/quizConfig.ts` to change the question count (3–10), theme, tone,
+or LLM model (default `deepseek/deepseek-v4-flash` via OpenRouter). Override
+with the `OPENROUTER_MODEL` env var.
+
+## 📝 Notes
+
+- Without `OPENROUTER_API_KEY`, the quiz/analyze routes return 500.
+- Without Spotify credentials, the song card shows an error but the rest of the
+  reveal still works.
+- The constellation outlines are hand-authored for v1; they can be upgraded to
+  SVG-traced silhouettes later if denser shapes are desired.

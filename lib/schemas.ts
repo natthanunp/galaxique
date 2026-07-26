@@ -1,0 +1,107 @@
+import { z } from "zod";
+
+/** Zod schemas mirroring the Gemini JSON schemas, used to validate model output
+ *  at runtime (Gemini guarantees syntactic JSON, but values still need checking). */
+
+export const quizOptionSchema = z.object({
+  text_en: z.string().min(1),
+  text_th: z.string().min(1),
+});
+
+export const quizQuestionSchema = z.object({
+  id: z.number().int().min(1),
+  text_en: z.string().min(1),
+  text_th: z.string().min(1),
+  /** Exactly 4 bilingual multiple-choice answer options. */
+  options: z.array(quizOptionSchema).length(4),
+});
+
+export const quizPayloadSchema = z.object({
+  questions: z.array(quizQuestionSchema).min(1),
+});
+
+export const creatureSpecSchema = z.object({
+  kind: z.enum([
+    "fish",
+    "bird",
+    "fox",
+    "cat",
+    "dragon",
+    "jelly",
+    "spirit",
+  ]),
+  accent: z.enum([
+    "none",
+    "horns",
+    "ears",
+    "tail",
+    "fins",
+    "halo",
+    "wings",
+  ]),
+  motion: z.enum(["swim", "fly", "orbit", "bob"]),
+  name: z.string().min(1).max(20).optional(),
+});
+
+const galaxyVisualConfigSchema = z.object({
+  seed: z.number().int().min(0).max(2_147_483_647),
+  morphology: z.enum(["grand_design", "flocculent", "barred", "ringed"]),
+  arm_count: z.number().int().min(2).max(6),
+  arm_tightness: z.number().min(0.55).max(1.7),
+  bulge_strength: z.number().min(0.2).max(1),
+  disc_thickness: z.number().min(0.05).max(0.45),
+  dust_prominence: z.number().min(0).max(1),
+  stellar_temperature: z.enum(["warm", "balanced", "cool"]),
+});
+
+const blackHoleVisualConfigSchema = z.object({
+  seed: z.number().int().min(0).max(2_147_483_647),
+  disc_tilt: z.number().min(0.15).max(1.25),
+  accretion_activity: z.number().min(0.15).max(1),
+  lens_strength: z.number().min(0.2).max(1),
+  photon_ring_strength: z.number().min(0.2).max(1),
+});
+
+const neutronStarVisualConfigSchema = z.object({
+  seed: z.number().int().min(0).max(2_147_483_647),
+  pulse_intensity: z.number().min(0.2).max(1),
+  jet_length: z.number().min(0.4).max(2),
+  magnetic_tilt: z.number().min(0).max(1.2),
+});
+
+export const celestialVisualConfigSchema = z.discriminatedUnion("celestial_type", [
+  z.object({ celestial_type: z.literal("galaxy"), galaxy: galaxyVisualConfigSchema }),
+  z.object({ celestial_type: z.literal("black_hole"), black_hole: blackHoleVisualConfigSchema }),
+  z.object({ celestial_type: z.literal("neutron_star"), neutron_star: neutronStarVisualConfigSchema }),
+]);
+
+export const universeRevealSchema = z.object({
+  vibe: z.enum(["cute", "cozy", "mysterious", "intense", "whimsical"]),
+  celestial_type: z.enum([
+    "galaxy",
+    "black_hole",
+    "neutron_star",
+  ]),
+  central_symbol: z.enum([
+    "star",
+    "heart",
+    "none",
+  ]),
+  creature: creatureSpecSchema.optional(),
+  primary_color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/, "must be a #RRGGBB hex string"),
+  secondary_color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/, "must be a #RRGGBB hex string"),
+  rotation_speed: z.number().min(0.2).max(2),
+  particle_density: z.enum(["high", "medium", "low"]),
+  celestial_config: celestialVisualConfigSchema,
+  spotify_search_query: z.string().min(2),
+  personality_reading_en: z.string().min(1),
+  personality_reading_th: z.string().min(1),
+});
+
+export type QuizPayloadParsed = z.infer<typeof quizPayloadSchema>;
+export type UniverseRevealParsed = z.infer<typeof universeRevealSchema>;
+export type CreatureSpecParsed = z.infer<typeof creatureSpecSchema>;
