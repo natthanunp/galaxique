@@ -23,9 +23,15 @@ export const quizConfig = {
     process.env.OPENROUTER_MODEL || "deepseek/deepseek-v4-flash",
 } as const;
 
-/** The full pool of question angles. Exactly one slot per quiz is reserved
- *  for the soulmate angle (added separately, never sampled from this list).
- *  The remaining `questionCount - 1` slots are drawn from this pool.
+/** A pool of style-reference angles shown to the LLM as few-shot examples
+ *  when it generates quiz questions (see prompts/quizSystemPrompt.ts). The
+ *  model no longer picks from this list directly — it invents its own new
+ *  angle per question every call, using a random sample of these as a
+ *  grounding example of tone/depth, and the client's recently-seen angles as
+ *  a "don't repeat this" list. This removes the old variety ceiling (the
+ *  model can invent unlimited distinct angles instead of cycling a fixed
+ *  ~24-item pool), while these examples keep every invented angle anchored
+ *  to the same "reveal who someone durably is" spirit.
  *
  *  Phrasing matters: each entry is a concrete instruction the LLM must follow
  *  when writing the question — the inline examples anchor abstract topics so
@@ -33,9 +39,7 @@ export const quizConfig = {
  *  intentionally distinct so that two different rolls almost never produce
  *  overlapping questions.
  *
- *  Keep the list at ~20+ to give the sampler enough room to vary; with 5
- *  questions, 20+ angles means the same combination of 4 is unlikely to
- *  repeat even across many sessions. */
+ *  Keep the list at ~20+ so each call samples a fresh subset of examples. */
 export const QUESTION_ANGLES = [
   "How the user recharges or spends a slow, unscheduled day",
   "The first thing the user notices about someone new — MUST bake 2-3 concrete example anchors into the question wording (e.g. 'What's the first thing you notice about someone new — their energy, how they talk, or something else?')",

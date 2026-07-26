@@ -3,10 +3,7 @@ import { z } from "zod";
 
 import { callLlm } from "@/lib/llm";
 import { quizPayloadSchema } from "@/lib/schemas";
-import {
-  buildQuizSystemPrompt,
-  formatAnglesForPrompt,
-} from "@/prompts/quizSystemPrompt";
+import { buildQuizSystemPrompt } from "@/prompts/quizSystemPrompt";
 import { quizConfig, QUESTION_ANGLES } from "@/config/quizConfig";
 
 export const runtime = "nodejs";
@@ -25,8 +22,15 @@ const requestBodySchema = z.object({
   nonce: z.string().max(100).optional(),
 });
 
-/** Pick `count` distinct random angles from `pool`, preferring entries that
- * aren't in `avoid`.
+/** How many entries from the static QUESTION_ANGLES pool to show the LLM as
+ *  style/depth reference examples per call. The model invents its own real
+ *  angles — these are just grounding examples, not a fixed menu — so this
+ *  can be smaller than questionCount without capping variety. */
+const EXAMPLE_ANGLE_COUNT = 10;
+
+/** Pick `count` distinct random entries from `pool`, preferring entries that
+ * aren't in `avoid`. Used to sample a fresh set of style-reference angles
+ * each call so the few-shot examples themselves stay varied.
  *
  *  Fisher–Yates is fine here — `pool` is tiny (~24) and called once per
  *  request, so we don't need cryptographic randomness. */
@@ -58,23 +62,19 @@ export async function POST(request: Request) {
     const avoidAngles = parsed.success ? parsed.data.avoidAngles ?? [] : [];
     const nonce = parsed.success ? parsed.data.nonce : undefined;
 
-    // Sample every angle from the same broad pool. A relationship question
-    // can still appear naturally, but it must not dominate every result.
+    // Sample a fresh batch of style-reference angles from the static pool.
+    // These are only few-shot examples now — the model invents the actual
+    // angles it uses per call, so variety is no longer capped at the pool's
+    // size.
     const count = quizConfig.questionCount;
-    const pickedAngles = pickAngles(
+    const exampleAngles = pickAngles(
       QUESTION_ANGLES,
-      count,
+      EXAMPLE_ANGLE_COUNT,
       new Set(avoidAngles),
     );
 
-    const systemPrompt = buildQuizSystemPrompt(pickedAngles);
-    // The user prompt includes the chosen angles for transparency, and a
-    // nonce hint so the LLM knows this is a fresh roll (not a retry).
-    const userPrompt = [
-      `Generate the quiz now for nonce=${nonce ?? cryptoRandomNonce()}.`,
-      `The ${count} angles you must cover, in order, are:`,
-      formatAnglesForPrompt(pickedAngles),
-    ].join("\n");
+    const systemPrompt = buildQuizSystemPrompt(exampleAngles, avoidAngles);
+    const userPrompt = `Generate the quiz now for nonce=${nonce ?? cryptoRandomNonce()}. Invent ${count} distinct angles as instructed, then write the question for each.`;
 
     let validation: ReturnType<typeof quizPayloadSchema.safeParse> | null =
       null;
@@ -121,7 +121,17 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ ...validation.data, pickedAngles });
+    // The model invents its own angle per question (see quizSystemPrompt.ts);
+    // surface those as `pickedAngles` so the client can keep avoiding them on
+    // future calls, same contract as before. Strip the internal `angle` field
+    // from each question before returning — it's not part of the public
+    // question shape the client renders.
+    const pickedAngles = validation.data.questions.map((q) => q.angle);
+    const questions = validation.data.questions.map(
+      ({ angle: _angle, ...question }) => question,
+    );
+
+    return NextResponse.json({ questions, pickedAngles });
   } catch (err) {
     console.error("[generate-quiz]", err);
     const message = err instanceof Error ? err.message : "Unknown error";

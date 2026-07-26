@@ -24,7 +24,7 @@ const VIBE_TH: Record<string, string> = {
   whimsical: "เพ้อฝัน",
 };
 
-/** Displays the 2-sentence poetic reading with a gentle fade-in. */
+/** Displays the song-aware three-sentence poetic reading with a gentle fade-in. */
 export function PersonalityReading({
   reading,
   vibe,

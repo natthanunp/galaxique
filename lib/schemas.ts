@@ -10,6 +10,11 @@ export const quizOptionSchema = z.object({
 
 export const quizQuestionSchema = z.object({
   id: z.number().int().min(1),
+  /** The underlying facet-of-identity this question probes, invented by the
+   *  LLM itself (see prompts/quizSystemPrompt.ts). Used server-side to track
+   *  "seen" angles for future-call variety; stripped before the question is
+   *  sent to the client. */
+  angle: z.string().min(1),
   text_en: z.string().min(1),
   text_th: z.string().min(1),
   /** Exactly 4 bilingual multiple-choice answer options. */
@@ -18,6 +23,30 @@ export const quizQuestionSchema = z.object({
 
 export const quizPayloadSchema = z.object({
   questions: z.array(quizQuestionSchema).min(1),
+});
+
+/** Structured result from the dedicated playlist-matching LLM pass. Instead
+ *  of forcing a single deterministic pick, the model scores several
+ *  candidates it genuinely considered — the server then weight-randomly
+ *  samples among near-tied top scores (see pickWeightedCandidate() in
+ *  app/api/analyze/route.ts). This gives real variety across repeat/similar
+ *  quiz answers without ever excluding a track outright: a single standout
+ *  fit still always wins since nothing else lands within the tie margin. */
+export const songSelectionSchema = z.object({
+  answer_signals: z.array(z.string().min(1)).min(2).max(3),
+  candidates: z
+    .array(
+      z.object({
+        spotify_track_id: z.string().min(1),
+        /** 0-100 — how well this specific track fits the derived signals.
+         *  Scores must genuinely differentiate; don't hedge with several
+         *  near-identical high scores. */
+        fit_score: z.number().min(0).max(100),
+        match_summary: z.string().min(1),
+      }),
+    )
+    .min(1)
+    .max(6),
 });
 
 export const creatureSpecSchema = z.object({
@@ -104,5 +133,6 @@ export const universeRevealSchema = z.object({
 });
 
 export type QuizPayloadParsed = z.infer<typeof quizPayloadSchema>;
+export type SongSelectionParsed = z.infer<typeof songSelectionSchema>;
 export type UniverseRevealParsed = z.infer<typeof universeRevealSchema>;
 export type CreatureSpecParsed = z.infer<typeof creatureSpecSchema>;
