@@ -225,7 +225,11 @@ export default function RevealPage() {
               vibe={reveal.vibe}
               language={language}
             />
-            <SpotifyPlayer query={reveal.spotify_search_query} language={language} />
+            <SpotifyPlayer
+              query={reveal.spotify_search_query}
+              trackId={reveal.spotify_track_id}
+              language={language}
+            />
             <div className="flex flex-wrap items-center gap-3">
               <ShareButton
                 getCanvas={() => canvasRef.current}

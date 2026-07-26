@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { pickCreatureKindHint, pickSongFlavorHint } from "@/config/quizConfig";
 import { callLlm } from "@/lib/llm";
 import { universeRevealSchema } from "@/lib/schemas";
+import { getSpotifyPlaylistTracks, spotifyConfigured } from "@/lib/spotify";
 import { sendAnalyzeResultToTelegram } from "@/lib/telegram";
 import { buildRevealSystemPrompt } from "@/prompts/revealSystemPrompt";
 import type { Language, QuizAnswer } from "@/types/universe";
@@ -42,7 +43,20 @@ export async function POST(request: Request) {
   try {
     const songFlavorHint = pickSongFlavorHint();
     const creatureKindHint = pickCreatureKindHint();
-    const systemPrompt = buildRevealSystemPrompt(songFlavorHint, creatureKindHint);
+    let playlistTracks = [] as Awaited<ReturnType<typeof getSpotifyPlaylistTracks>>;
+    if (spotifyConfigured()) {
+      try {
+        playlistTracks = await getSpotifyPlaylistTracks();
+      } catch (err) {
+        // Keep the reveal working if the playlist is private or temporarily unavailable.
+        console.warn("[analyze] Spotify playlist unavailable; using search fallback", err);
+      }
+    }
+    const systemPrompt = buildRevealSystemPrompt(
+      songFlavorHint,
+      creatureKindHint,
+      playlistTracks,
+    );
 
     // Format the answers as a readable transcript for the model.
     const transcript = body.answers

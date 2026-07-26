@@ -97,6 +97,7 @@ export const universeRevealSchema = z.object({
   rotation_speed: z.number().min(0.2).max(2),
   particle_density: z.enum(["high", "medium", "low"]),
   celestial_config: celestialVisualConfigSchema,
+  spotify_track_id: z.string().min(1).nullable().optional(),
   spotify_search_query: z.string().min(2),
   personality_reading_en: z.string().min(1),
   personality_reading_th: z.string().min(1),

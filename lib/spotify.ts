@@ -1,4 +1,7 @@
-import type { SpotifyTrack } from "@/types/universe";
+import type {
+  SpotifyPlaylistCandidate,
+  SpotifyTrack,
+} from "@/types/universe";
 
 /**
  * Server-side Spotify helpers (Client Credentials flow).
@@ -14,6 +17,10 @@ import type { SpotifyTrack } from "@/types/universe";
 
 const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
 const SEARCH_ENDPOINT = "https://api.spotify.com/v1/search";
+const TRACKS_ENDPOINT = "https://api.spotify.com/v1/tracks";
+const PLAYLIST_ENDPOINT = "https://api.spotify.com/v1/playlists";
+const DEFAULT_PLAYLIST_ID = "1LGPBmHJCUZWlrxz17lWhP";
+const PLAYLIST_CACHE_TTL_MS = 5 * 60 * 1000;
 
 /** Fetch with up to 3 retries on transient network errors (ECONNRESET, etc.). */
 async function fetchWithRetry(
@@ -46,12 +53,22 @@ interface CachedToken {
 }
 
 let cachedToken: CachedToken | null = null;
+let cachedPlaylist: {
+  id: string;
+  tracks: SpotifyPlaylistCandidate[];
+  expiresAt: number;
+} | null = null;
 
 /** True when both Spotify env vars are present. */
 export function spotifyConfigured(): boolean {
   return Boolean(
     process.env.SPOTIFY_CLIENT_ID && process.env.SPOTIFY_CLIENT_SECRET,
   );
+}
+
+/** The playlist used for new reveal song selections. */
+export function getSpotifyPlaylistId(): string {
+  return process.env.SPOTIFY_PLAYLIST_ID?.trim() || DEFAULT_PLAYLIST_ID;
 }
 
 /** Obtain (or reuse) a Client Credentials access token. */
@@ -131,44 +148,117 @@ export async function searchTrack(query: string): Promise<SpotifyTrack | null> {
     .sort((a, b) => b.score - a.score || a.index - b.index)[0]?.item;
   if (!track) return null;
 
-  // Look up the 30s preview MP3. preview_url is sometimes null for newer
-  // tracks depending on the artist's distribution deal, so we tolerate that.
-  let preview_url: string | null = null;
-  try {
-    const detail = await fetchWithRetry(
-      `https://api.spotify.com/v1/tracks/${track.id}`,
-      {
+  return resolveTrack(track, token);
+}
+
+/** Resolve an exact Spotify track ID without searching the global catalog. */
+export async function getTrackById(trackId: string): Promise<SpotifyTrack | null> {
+  if (!/^[A-Za-z0-9]{22}$/.test(trackId)) return null;
+  const token = await getSpotifyToken();
+  const res = await fetchWithRetry(`${TRACKS_ENDPOINT}/${trackId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    const detail = await res.text();
+    throw new Error(`Spotify track lookup failed (${res.status}): ${detail}`);
+  }
+  return resolveTrack((await res.json()) as SpotifyApiTrack, token);
+}
+
+/** Load the configured public playlist and return only the fields the LLM needs. */
+export async function getSpotifyPlaylistTracks(
+  playlistId = getSpotifyPlaylistId(),
+): Promise<SpotifyPlaylistCandidate[]> {
+  const now = Date.now();
+  if (cachedPlaylist && cachedPlaylist.id === playlistId && cachedPlaylist.expiresAt > now) {
+    return cachedPlaylist.tracks;
+  }
+
+  const token = await getSpotifyToken();
+  const tracks: SpotifyPlaylistCandidate[] = [];
+  let offset = 0;
+  const limit = 50;
+
+  while (tracks.length < 200) {
+    const url = `${PLAYLIST_ENDPOINT}/${encodeURIComponent(playlistId)}/items?${new URLSearchParams({
+      limit: String(limit),
+      offset: String(offset),
+    })}`;
+    const res = await fetchWithRetry(url, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      const detail = await res.text();
+      throw new Error(`Spotify playlist request failed (${res.status}): ${detail}`);
+    }
+
+    const data = (await res.json()) as {
+      items?: { track?: SpotifyApiTrack | null }[];
+      next?: string | null;
+    };
+    const page = (data.items ?? [])
+      .map((item) => item.track)
+      .filter((track): track is SpotifyApiTrack => Boolean(track?.id && track.name));
+    tracks.push(
+      ...page.map((track) => ({
+        track_id: track.id,
+        name: track.name,
+        artist: track.artists.map((artist) => artist.name).join(", "),
+      })),
+    );
+
+    if (!data.next || page.length === 0) break;
+    offset += limit;
+  }
+
+  if (tracks.length === 0) {
+    throw new Error("The configured Spotify playlist has no readable tracks.");
+  }
+
+  cachedPlaylist = {
+    id: playlistId,
+    tracks,
+    expiresAt: now + PLAYLIST_CACHE_TTL_MS,
+  };
+  return tracks;
+}
+
+async function resolveTrack(
+  track: SpotifyApiTrack,
+  token: string,
+): Promise<SpotifyTrack> {
+  // Playlist items often include preview_url already, but a detail lookup
+  // keeps this reliable for both playlist and global-search results.
+  let preview_url = track.preview_url ?? null;
+  if (!preview_url) {
+    try {
+      const detail = await fetchWithRetry(`${TRACKS_ENDPOINT}/${track.id}`, {
         headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
-      },
-    );
-    if (detail.ok) {
-      const body = (await detail.json()) as { preview_url?: string | null };
-      preview_url = body.preview_url ?? null;
+      });
+      if (detail.ok) {
+        const body = (await detail.json()) as { preview_url?: string | null };
+        preview_url = body.preview_url ?? null;
+      }
+    } catch {
+      // Non-fatal — fall back to the iframe-only experience.
     }
-  } catch {
-    // Non-fatal — fall back to the iframe-only experience.
   }
 
   const artist = track.artists.map((a) => a.name).join(", ");
+  if (!preview_url) preview_url = await fetchItunesPreview(track.name, artist);
 
-  if (!preview_url) {
-    preview_url = await fetchItunesPreview(track.name, artist);
-  }
-
-  // Album images are ordered largest-first by Spotify; prefer the medium
-  // (~300px) size for a crisp-but-small thumbnail, falling back to whatever
-  // is available.
   const images = track.album?.images ?? [];
-  const album_art_url = images[1]?.url ?? images[0]?.url ?? null;
-
   return {
     track_id: track.id,
     name: track.name,
     artist,
     embed_url: `https://open.spotify.com/embed/track/${track.id}`,
     preview_url,
-    album_art_url,
+    album_art_url: images[1]?.url ?? images[0]?.url ?? null,
   };
 }
 
@@ -203,6 +293,7 @@ interface SpotifyApiTrack {
   name: string;
   artists: { name: string }[];
   album?: { images: { url: string; width: number; height: number }[] };
+  preview_url?: string | null;
   /** Spotify's 0-100 popularity score. Used as a minor tiebreaker so an
    *  obscure same-titled cover doesn't outrank the well-known original when
    *  text-match scores are close. */

@@ -34,8 +34,9 @@ Instagram Stories.
     the black hole, pulsing core + pulsar jets for the neutron star).
   - The **central "soul" symbol** (a heart or a star) is rendered as a
     procedural particle constellation with a custom glow shader.
-- **Spotify integration** — server-side Client Credentials flow resolves the
-  vibe-matched song and embeds the official player.
+- **Spotify integration** — server-side Client Credentials flow loads the
+  configured playlist, lets the LLM choose one track from that list, and embeds
+  the exact Spotify track. Older reveals still fall back to search.
 - **Instagram Story export** — `canvas.captureStream()` → `MediaRecorder`
   (webm) → `ffmpeg.wasm` transcode to MP4, all client-side. The ~31MB ffmpeg
   core lazy-loads only on the first Share click.
@@ -75,6 +76,7 @@ cp .env.example .env.local
 | `OPENROUTER_API_KEY`    | [OpenRouter](https://openrouter.ai/keys)                               |
 | `SPOTIFY_CLIENT_ID`     | [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) |
 | `SPOTIFY_CLIENT_SECRET` | same dashboard (create an app)                                         |
+| `SPOTIFY_PLAYLIST_ID`   | optional; defaults to the configured Galaxseea playlist                |
 
 > All keys stay server-side in Next.js API routes — they are never exposed to
 > the browser bundle.

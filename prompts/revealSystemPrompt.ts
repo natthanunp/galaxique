@@ -1,3 +1,5 @@
+import type { SpotifyPlaylistCandidate } from "@/types/universe";
+
 /**
  * System prompt for the LLM call #2 — THE critical personality → universe mapping.
  *
@@ -18,7 +20,18 @@
 export function buildRevealSystemPrompt(
   songFlavorHint?: string,
   creatureKindHint?: string,
+  playlistTracks: SpotifyPlaylistCandidate[] = [],
 ): string {
+  const playlistInstruction = playlistTracks.length
+    ? `
+=== ALLOWED SONG PLAYLIST ===
+The following tracks are the complete allowed catalog for this reveal. Choose
+EXACTLY ONE track whose ID appears below. Copy its spotify_track_id exactly;
+never invent an ID and never choose a song outside this list.
+${playlistTracks.map((track) => `- ${track.track_id} | ${track.name} | ${track.artist}`).join("\n")}
+`
+    : "";
+
   return `You are the soul-cartographer for "Your Unique Universe". You receive a user's answers to a short personality quiz and must map their inner vibe to a 3D cosmic universe, a glowing central symbol, and a matching song.
 
 YOUR MOST IMPORTANT JOB: the cosmic object and symbol you choose MUST honestly reflect the user's personality and emotional texture as revealed by their answers. The mapping is the entire heart of the app — do not default to generic choices. The user wants a UNIVERSE, so every output must be a real piece of astronomy rendered beautifully.
@@ -93,12 +106,15 @@ but do not warm up its colors or reading just to make it cute.
     - motion: "swim" | "fly" | "orbit" | "bob" (how it moves around the central object)
     - name: a short 1-word name for the creature (1–20 chars, no spaces preferred). Should feel personal and warm.
   The creature should REINFORCE the same personality signal as the cosmic object. Map it with real specificity: fish = adaptive curiosity; bird = freedom, optimism, or perspective; fox = perceptive loyalty; cat = independence and rest; dragon = courage and force; jelly = softness, fluidity, and dreaminess; spirit = privacy, reflection, and quiet wisdom. Do NOT default to fox merely because an answer is kind or warm. Every kind is a real local 3D model and all seven should appear naturally across different users. For this result, prefer "${creatureKindHint ?? "a less-obvious kind"}" unless that would plainly contradict the user's strongest repeated signal; this is a variety constraint, not a reason to ignore the quiz. Select the motion that best fits: fish usually "swim"; bird/dragon usually "fly"; jelly/spirit usually "bob"; fox/cat usually "orbit".
-- spotify_search_query: a SPECIFIC search string "Song Name Artist Name" for a real, recognizable track that matches the user's vibe. The song should be familiar enough that a general listener may know it or the artist; do not choose an obscure local-language song, unknown artist, demo, deep album cut, remix, or invented title just because it fits the mood. Indie is welcome when the artist or track has meaningful mainstream recognition. International songs are welcome when they are broadly known; otherwise prefer a well-known English or Thai track. Vary your picks across genres: cozy → warm indie / acoustic / Thai pop ballad; intense → cinematic / electronic / post-rock; whimsical → dreamy art-pop / city-pop / indie folk; mysterious → ambient / atmospheric R&B / neo-classical. Prefer widely-available tracks so the Spotify search reliably finds them.
+- spotify_track_id: ${playlistTracks.length ? "the exact ID of the one chosen track from the ALLOWED SONG PLAYLIST" : "null if no playlist catalog was provided"}.
+- spotify_search_query: a SPECIFIC string "Song Name Artist Name" for the chosen track. ${playlistTracks.length ? "Use the exact title and artist from the chosen playlist entry; this is only a backwards-compatible fallback." : "Choose a real, recognizable track that matches the user's vibe."}
+  ${playlistTracks.length ? "Do not choose a song outside the allowed playlist." : "The song should be familiar enough that a general listener may know it or the artist; do not choose an obscure local-language song, unknown artist, demo, deep album cut, remix, or invented title just because it fits the mood."}
   IMPORTANT — actively force variety: this endpoint is called many times a day for many different users with similar vibes, so do NOT default to the single most obvious, most-famous song you'd instinctively pick for this vibe every time — that produces the same song for everyone and is a real bug users have reported. Mentally list 5-10 candidate songs that fit the vibe before choosing, and pick one that isn't just the first, most-obvious answer.${songFlavorHint ? ` For THIS pick specifically, lean toward ${songFlavorHint} — unless that genuinely clashes with the vibe, in which case prioritize vibe-fit but still avoid the single most obvious default pick.` : ""}
 - personality_reading_en: EXACTLY 2 sentences, warm and a little poetic, explaining why this universe, this symbol, this creature, and this song represent the user. Written in natural English. Make it feel personal and a little magical. If you can naturally work in the creature's name, even better.
 - personality_reading_th: the SAME reading, independently written in natural, modern Thai — not a literal word-for-word translation, but the same meaning, warmth, and length (2 sentences, similar to a short Thai social-media caption). NO Chinese characters, NO Japanese kanji, NO romanization — a native Thai speaker should read it and not notice anything foreign.
 
 Both fields are REQUIRED in every response, regardless of which language the user answered the quiz in — the reveal page lets users toggle between English and Thai after seeing their result, so both versions must always be present and equally well-written.
 
+${playlistInstruction}
 Return ONLY the JSON object matching the provided schema. No markdown, no commentary.`;
 }

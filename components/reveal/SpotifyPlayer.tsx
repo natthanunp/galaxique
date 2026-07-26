@@ -8,8 +8,10 @@ import { cn } from "@/lib/utils";
 import type { Language } from "@/types/universe";
 
 interface SpotifyPlayerProps {
-  /** The vibe-matched "Song Name Artist Name" query from the Gemini reveal. */
+  /** Backwards-compatible search query from older reveals. */
   query: string;
+  /** Exact track selected from the configured playlist for new reveals. */
+  trackId?: string | null;
   language: Language;
   className?: string;
 }
@@ -27,7 +29,7 @@ interface Track {
  *  30s Spotify preview MP3 immediately through the shared, already-unlocked
  *  <audio> element (see BackgroundAudio). Falls back to a Spotify link if
  *  the preview is unavailable for that track. */
-export function SpotifyPlayer({ query, language, className }: SpotifyPlayerProps) {
+export function SpotifyPlayer({ query, trackId, language, className }: SpotifyPlayerProps) {
   const [track, setTrack] = useState<Track | null>(null);
   const [status, setStatus] = useState<"loading" | "ok" | "error">("loading");
   const [errorMsg, setErrorMsg] = useState<string>("");
@@ -43,7 +45,10 @@ export function SpotifyPlayer({ query, language, className }: SpotifyPlayerProps
     setSpotifyUrl(null);
     setStoreTrack(null);
 
-    fetch(`/api/spotify/search?q=${encodeURIComponent(query)}`)
+    const params = trackId
+      ? `id=${encodeURIComponent(trackId)}`
+      : `q=${encodeURIComponent(query)}`;
+    fetch(`/api/spotify/search?${params}`)
       .then(async (res) => {
         if (!res.ok) {
           const body = await res.json().catch(() => ({}));
@@ -78,7 +83,7 @@ export function SpotifyPlayer({ query, language, className }: SpotifyPlayerProps
       setSpotifyUrl(null);
       setStoreTrack(null);
     };
-  }, [query, setMediaMode, setSpotifyUrl, setStoreTrack]);
+  }, [query, trackId, setMediaMode, setSpotifyUrl, setStoreTrack]);
 
   return (
     <div

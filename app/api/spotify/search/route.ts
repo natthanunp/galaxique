@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
-import { searchTrack, spotifyConfigured } from "@/lib/spotify";
+import { getTrackById, searchTrack, spotifyConfigured } from "@/lib/spotify";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * GET /api/spotify/search?q=<query> — resolve a vibe-matched query to a track.
+ * GET /api/spotify/search?id=<trackId> or ?q=<query> — resolve a track.
  *
  * Returns { track_id, name, artist, embed_url } or 404 if nothing found.
  */
@@ -19,19 +19,20 @@ export async function GET(request: Request) {
   }
 
   const { searchParams } = new URL(request.url);
+  const trackId = searchParams.get("id")?.trim();
   const q = searchParams.get("q")?.trim();
-  if (!q) {
+  if (!trackId && !q) {
     return NextResponse.json(
-      { error: "Missing 'q' query parameter." },
+      { error: "Missing 'id' or 'q' query parameter." },
       { status: 400 },
     );
   }
 
   try {
-    const track = await searchTrack(q);
+    const track = trackId ? await getTrackById(trackId) : await searchTrack(q!);
     if (!track) {
       return NextResponse.json(
-        { error: "No track found for that query." },
+        { error: trackId ? "Spotify track not found." : "No track found for that query." },
         { status: 404 },
       );
     }
