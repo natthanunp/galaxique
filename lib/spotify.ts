@@ -16,11 +16,13 @@ import type {
  */
 
 const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
+const AUTHORIZE_ENDPOINT = "https://accounts.spotify.com/authorize";
 const SEARCH_ENDPOINT = "https://api.spotify.com/v1/search";
 const TRACKS_ENDPOINT = "https://api.spotify.com/v1/tracks";
 const PLAYLIST_ENDPOINT = "https://api.spotify.com/v1/playlists";
 const DEFAULT_PLAYLIST_ID = "1LGPBmHJCUZWlrxz17lWhP";
 const PLAYLIST_CACHE_TTL_MS = 5 * 60 * 1000;
+const PLAYLIST_SCOPES = ["playlist-read-private", "playlist-read-collaborative"];
 
 /** Fetch with up to 3 retries on transient network errors (ECONNRESET, etc.). */
 async function fetchWithRetry(
@@ -53,6 +55,7 @@ interface CachedToken {
 }
 
 let cachedToken: CachedToken | null = null;
+let cachedUserToken: CachedToken | null = null;
 let cachedPlaylist: {
   id: string;
   tracks: SpotifyPlaylistCandidate[];
@@ -66,9 +69,59 @@ export function spotifyConfigured(): boolean {
   );
 }
 
+/** True when the owner OAuth flow has been completed for playlist access. */
+export function spotifyOwnerAuthorizationConfigured(): boolean {
+  return Boolean(
+    spotifyConfigured() &&
+      process.env.SPOTIFY_REDIRECT_URI &&
+      process.env.SPOTIFY_REFRESH_TOKEN,
+  );
+}
+
 /** The playlist used for new reveal song selections. */
 export function getSpotifyPlaylistId(): string {
   return process.env.SPOTIFY_PLAYLIST_ID?.trim() || DEFAULT_PLAYLIST_ID;
+}
+
+/** Build Spotify's owner-authorization URL with a caller-generated CSRF state. */
+export function getSpotifyAuthorizationUrl(state: string): string {
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const redirectUri = process.env.SPOTIFY_REDIRECT_URI;
+  if (!clientId || !redirectUri) {
+    throw new Error(
+      "SPOTIFY_CLIENT_ID and SPOTIFY_REDIRECT_URI are required for owner authorization.",
+    );
+  }
+
+  return `${AUTHORIZE_ENDPOINT}?${new URLSearchParams({
+    client_id: clientId,
+    response_type: "code",
+    redirect_uri: redirectUri,
+    scope: PLAYLIST_SCOPES.join(" "),
+    state,
+  })}`;
+}
+
+/** Exchange a one-time Spotify authorization code for the owner's refresh token. */
+export async function exchangeSpotifyAuthorizationCode(code: string): Promise<string> {
+  const redirectUri = process.env.SPOTIFY_REDIRECT_URI;
+  if (!redirectUri) {
+    throw new Error("SPOTIFY_REDIRECT_URI is not configured.");
+  }
+
+  const token = await requestSpotifyToken(
+    new URLSearchParams({
+      grant_type: "authorization_code",
+      code,
+      redirect_uri: redirectUri,
+    }),
+  );
+  if (!token.refresh_token) {
+    throw new Error(
+      "Spotify did not return a refresh token. Remove this app from Spotify account access and authorize again.",
+    );
+  }
+  return token.refresh_token;
 }
 
 /** Obtain (or reuse) a Client Credentials access token. */
@@ -78,6 +131,49 @@ export async function getSpotifyToken(): Promise<string> {
     return cachedToken.value;
   }
 
+  const data = await requestSpotifyToken(
+    new URLSearchParams({ grant_type: "client_credentials" }),
+  );
+  cachedToken = {
+    value: data.access_token,
+    expiresAt: now + data.expires_in * 1000,
+  };
+  return cachedToken.value;
+}
+
+/** Obtain a short-lived access token for the playlist owner. */
+export async function getSpotifyUserToken(): Promise<string> {
+  const now = Date.now();
+  if (cachedUserToken && cachedUserToken.expiresAt - 30_000 > now) {
+    return cachedUserToken.value;
+  }
+
+  const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
+  if (!refreshToken) {
+    throw new Error(
+      "Spotify owner authorization is required. Open /api/spotify/authorize and set SPOTIFY_REFRESH_TOKEN from its callback response.",
+    );
+  }
+
+  const data = await requestSpotifyToken(
+    new URLSearchParams({ grant_type: "refresh_token", refresh_token: refreshToken }),
+  );
+  cachedUserToken = {
+    value: data.access_token,
+    expiresAt: now + data.expires_in * 1000,
+  };
+  return cachedUserToken.value;
+}
+
+interface SpotifyTokenResponse {
+  access_token: string;
+  expires_in: number;
+  refresh_token?: string;
+}
+
+async function requestSpotifyToken(
+  body: URLSearchParams,
+): Promise<SpotifyTokenResponse> {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
   if (!clientId || !clientSecret) {
@@ -91,24 +187,14 @@ export async function getSpotifyToken(): Promise<string> {
       Authorization: `Basic ${basic}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: new URLSearchParams({ grant_type: "client_credentials" }),
+    body,
     cache: "no-store",
   });
-
   if (!res.ok) {
     const detail = await res.text();
     throw new Error(`Spotify token request failed (${res.status}): ${detail}`);
   }
-
-  const data = (await res.json()) as {
-    access_token: string;
-    expires_in: number;
-  };
-  cachedToken = {
-    value: data.access_token,
-    expiresAt: now + data.expires_in * 1000,
-  };
-  return cachedToken.value;
+  return (await res.json()) as SpotifyTokenResponse;
 }
 
 /** Search Spotify for tracks matching the query; return the strongest title /
@@ -167,7 +253,7 @@ export async function getTrackById(trackId: string): Promise<SpotifyTrack | null
   return resolveTrack((await res.json()) as SpotifyApiTrack, token);
 }
 
-/** Load the configured public playlist and return only the fields the LLM needs. */
+/** Load the configured owner's playlist and return only the fields the LLM needs. */
 export async function getSpotifyPlaylistTracks(
   playlistId = getSpotifyPlaylistId(),
 ): Promise<SpotifyPlaylistCandidate[]> {
@@ -176,7 +262,7 @@ export async function getSpotifyPlaylistTracks(
     return cachedPlaylist.tracks;
   }
 
-  const token = await getSpotifyToken();
+  const token = await getSpotifyUserToken();
   const tracks: SpotifyPlaylistCandidate[] = [];
   let offset = 0;
   const limit = 50;
@@ -196,11 +282,16 @@ export async function getSpotifyPlaylistTracks(
     }
 
     const data = (await res.json()) as {
-      items?: { track?: SpotifyApiTrack | null }[];
+      items?: {
+        /** Current Spotify API response shape. */
+        item?: SpotifyApiTrack | null;
+        /** Legacy response shape retained for compatibility. */
+        track?: SpotifyApiTrack | null;
+      }[];
       next?: string | null;
     };
     const page = (data.items ?? [])
-      .map((item) => item.track)
+      .map((item) => item.item ?? item.track)
       .filter((track): track is SpotifyApiTrack => Boolean(track?.id && track.name));
     tracks.push(
       ...page.map((track) => ({

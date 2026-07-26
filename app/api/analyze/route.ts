@@ -48,8 +48,12 @@ export async function POST(request: Request) {
       try {
         playlistTracks = await getSpotifyPlaylistTracks();
       } catch (err) {
-        // Keep the reveal working if the playlist is private or temporarily unavailable.
-        console.warn("[analyze] Spotify playlist unavailable; using search fallback", err);
+        const message = err instanceof Error ? err.message : "Unknown error";
+        console.error("[analyze] Spotify playlist unavailable", err);
+        return NextResponse.json(
+          { error: "Could not load the configured Spotify playlist.", detail: message },
+          { status: 503 },
+        );
       }
     }
     const systemPrompt = buildRevealSystemPrompt(
@@ -92,7 +96,20 @@ export async function POST(request: Request) {
           nonce: `${requestNonce}:${attempt}`,
           purpose: "analyze",
         });
-        validation = universeRevealSchema.safeParse(parsed);
+        const parsedReveal = universeRevealSchema.safeParse(parsed);
+        validation = parsedReveal;
+        if (
+          parsedReveal.success &&
+          playlistTracks.length > 0 &&
+          !playlistTracks.some(
+            (track) => track.track_id === parsedReveal.data.spotify_track_id,
+          )
+        ) {
+          console.warn(
+            "[analyze] LLM did not select a valid configured-playlist track",
+          );
+          validation = null;
+        }
       } catch (err) {
         console.warn(`[analyze] LLM attempt ${attempt + 1} failed`, err);
       }

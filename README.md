@@ -76,12 +76,27 @@ cp .env.example .env.local
 | `OPENROUTER_API_KEY`    | [OpenRouter](https://openrouter.ai/keys)                               |
 | `SPOTIFY_CLIENT_ID`     | [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) |
 | `SPOTIFY_CLIENT_SECRET` | same dashboard (create an app)                                         |
+| `SPOTIFY_REDIRECT_URI`  | Spotify OAuth callback; local default is `http://127.0.0.1:3000/api/spotify/callback` |
+| `SPOTIFY_REFRESH_TOKEN` | generated once at `/api/spotify/authorize`; store it as a secret       |
 | `SPOTIFY_PLAYLIST_ID`   | optional; defaults to the configured Galaxseea playlist                |
 
 > All keys stay server-side in Next.js API routes — they are never exposed to
 > the browser bundle.
 
-### 3. Run the dev server
+### 3. Authorize your Spotify playlist
+
+Register `http://127.0.0.1:3000/api/spotify/callback` as a redirect URI in the
+Spotify Developer Dashboard, start the dev server, then open
+`http://127.0.0.1:3000/api/spotify/authorize`. Sign in as the playlist owner and
+approve access. The callback returns a one-time refresh token; add it as
+`SPOTIFY_REFRESH_TOKEN` in `.env.local` and restart the dev server.
+
+For Vercel, register the production callback URL, set `SPOTIFY_REDIRECT_URI` to
+that HTTPS URL, and add the same refresh token as an encrypted Production
+environment variable. The app uses this owner token to read the playlist before
+the LLM chooses a track.
+
+### 4. Run the dev server
 
 ```bash
 npm run dev
