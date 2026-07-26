@@ -97,6 +97,18 @@ export function CreatureModel({
     clone.traverse((node) => {
       if (!(node instanceof THREE.Mesh)) return;
 
+      // book_spirit.glb includes a separate, floating Glasses mesh. It reads
+      // as two detached circles above the companion in the reveal scene.
+      if (
+        spec.kind === "spirit" &&
+        [node.name, node.geometry.name].some((name) =>
+          name.toLowerCase().includes("glasses"),
+        )
+      ) {
+        node.visible = false;
+        return;
+      }
+
       const configureMaterial = (material: THREE.Material) => {
         const litMaterial = material.clone();
         if ("emissive" in litMaterial) {

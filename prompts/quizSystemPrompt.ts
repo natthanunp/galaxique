@@ -10,10 +10,6 @@ import { quizConfig } from "@/config/quizConfig";
  * from a small list, which historically caused the same few angles to repeat
  * across calls.
  *
- * One slot is reserved for a soulmate / love-themed question (a frequent
- * interest in personality apps). The remaining slots are the angles passed in
- * via `pickedAngles`, one per question.
- *
  * Interpolates {questionCount}, {theme}, {tone}, {angleList} from caller.
  * Output is also constrained by the responseFormat on the LLM call.
  */

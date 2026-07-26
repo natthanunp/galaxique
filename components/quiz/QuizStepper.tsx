@@ -26,12 +26,13 @@ export function QuizStepper() {
   const reset = useQuizStore((s) => s.reset);
 
   const [step, setStep] = useState(0);
-  // Selected MCQ option index for the current question (null = nothing
-  // picked yet). Reconstructed from the stored answer's canonical text_en
-  // when navigating back to a previously-answered question — see the sync
-  // effect below.
+  // Selected option index for the current question. Index 4 means the user's
+  // own answer in the card's Other field; null means nothing has been picked.
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [fetching, setFetching] = useState(true);
+  const [customAnswer, setCustomAnswer] = useState("");
+  const [fetching, setFetching] = useState(
+    () => questions.length === 0 || answers.length === 0,
+  );
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -94,11 +95,14 @@ export function QuizStepper() {
   useEffect(() => {
     if (didFetchRef.current) return;
     if (questions.length > 0 && answers.length > 0) {
-      setFetching(false);
       return;
     }
-    didFetchRef.current = true;
-    loadQuestions();
+    const requestId = window.setTimeout(() => {
+      if (didFetchRef.current) return;
+      didFetchRef.current = true;
+      void loadQuestions();
+    }, 0);
+    return () => window.clearTimeout(requestId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -107,32 +111,35 @@ export function QuizStepper() {
     void loadQuestions();
   }, [reset, loadQuestions]);
 
-  // Sync the selected option with the stored answer whenever the step
-  // changes — reverse-lookup by canonical text_en since the stored answer
-  // is language-independent but the displayed options are per-language.
-  useEffect(() => {
-    const question = questions[step];
-    const stored = answers.find((a) => a.questionId === question?.id);
-    if (!question || !stored) {
-      setSelectedIndex(null);
-      return;
-    }
-    const idx = question.options.findIndex((o) => o.text_en === stored.answer);
-    setSelectedIndex(idx >= 0 ? idx : null);
-  }, [step, answers, questions]);
-
   const total = questions.length;
   const currentQuestion = questions[step];
+  const storedAnswer = currentQuestion
+    ? answers.find((answer) => answer.questionId === currentQuestion.id)?.answer
+    : undefined;
+  const storedIndex = currentQuestion && storedAnswer
+    ? currentQuestion.options.findIndex((option) => option.text_en === storedAnswer)
+    : -1;
+  const effectiveSelectedIndex = selectedIndex ?? (
+    storedAnswer
+      ? storedIndex >= 0 ? storedIndex : currentQuestion?.options.length ?? null
+      : null
+  );
+  const effectiveCustomAnswer = selectedIndex === null && storedIndex === -1
+    ? storedAnswer ?? ""
+    : customAnswer;
 
   const handleNext = useCallback(() => {
-    if (!currentQuestion || selectedIndex === null) return;
+    if (!currentQuestion || effectiveSelectedIndex === null) return;
     const text = language === "th" ? currentQuestion.text_th : currentQuestion.text_en;
-    // Store the canonical English option text as the answer, regardless of
-    // display language, so it stays stable if the user toggles language.
-    const canonicalAnswer = currentQuestion.options[selectedIndex].text_en;
+    const canonicalAnswer = effectiveSelectedIndex === currentQuestion.options.length
+      ? effectiveCustomAnswer.trim()
+      : currentQuestion.options[effectiveSelectedIndex].text_en;
+    if (!canonicalAnswer) return;
     setAnswer(currentQuestion.id, text, canonicalAnswer);
 
     if (step < total - 1) {
+      setSelectedIndex(null);
+      setCustomAnswer("");
       setStep((s) => s + 1);
       return;
     }
@@ -175,7 +182,8 @@ export function QuizStepper() {
       });
   }, [
     currentQuestion,
-    selectedIndex,
+    effectiveSelectedIndex,
+    effectiveCustomAnswer,
     step,
     total,
     language,
@@ -191,10 +199,19 @@ export function QuizStepper() {
   ]);
 
   const handleBack = useCallback(() => {
-    if (step > 0) setStep((s) => s - 1);
+    if (step > 0) {
+      setSelectedIndex(null);
+      setCustomAnswer("");
+      setStep((s) => s - 1);
+    }
   }, [step]);
 
-  const canProceed = useMemo(() => selectedIndex !== null, [selectedIndex]);
+  const canProceed = useMemo(
+    () => effectiveSelectedIndex !== null && (
+      effectiveSelectedIndex !== currentQuestion?.options.length || effectiveCustomAnswer.trim().length > 0
+    ),
+    [effectiveSelectedIndex, currentQuestion, effectiveCustomAnswer],
+  );
 
   // --- States ---
 
@@ -263,8 +280,10 @@ export function QuizStepper() {
           index={step}
           total={total}
           language={language}
-          value={selectedIndex}
+          value={effectiveSelectedIndex}
           onChange={setSelectedIndex}
+          customAnswer={effectiveCustomAnswer}
+          onCustomAnswerChange={setCustomAnswer}
           onBack={handleBack}
           onNext={handleNext}
           isLast={step === total - 1}

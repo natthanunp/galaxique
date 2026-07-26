@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 
 import { NextResponse } from "next/server";
 
-import { pickSongFlavorHint } from "@/config/quizConfig";
+import { pickCreatureKindHint, pickSongFlavorHint } from "@/config/quizConfig";
 import { callLlm } from "@/lib/llm";
 import { universeRevealSchema } from "@/lib/schemas";
 import { sendAnalyzeResultToTelegram } from "@/lib/telegram";
@@ -41,7 +41,8 @@ export async function POST(request: Request) {
 
   try {
     const songFlavorHint = pickSongFlavorHint();
-    const systemPrompt = buildRevealSystemPrompt(songFlavorHint);
+    const creatureKindHint = pickCreatureKindHint();
+    const systemPrompt = buildRevealSystemPrompt(songFlavorHint, creatureKindHint);
 
     // Format the answers as a readable transcript for the model.
     const transcript = body.answers

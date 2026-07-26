@@ -78,11 +78,9 @@ export function RealisticGalaxy({
 }: RealisticGalaxyProps) {
   const tier = usePerfStore((state) => state.tier);
   const mobile = isMobileDevice();
-  const { camera, gl } = useThree();
-  const groupRef = useRef<THREE.Group>(null);
+  const { gl } = useThree();
   const discRef = useRef<THREE.Group>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const spinRef = useRef(0);
 
   const starCount = Math.max(
     900,
@@ -213,30 +211,14 @@ export function RealisticGalaxy({
   }, [config, gl, primaryColor, secondaryColor, starCount, tier]);
 
   useFrame((state, delta) => {
-    // The disc billboards to the camera every frame (copy, not compose), so
-    // its "rotation" has to be an in-plane spin applied AFTER that copy —
-    // rotating the outer group in world space instead would accumulate
-    // against the camera's own auto-orbit and tilt the disc edge-on over
-    // time, collapsing the spiral into a thin sliver.
-    //
-    // `lookAt()` (unlike a raw quaternion copy) accounts for the object's
-    // ANCESTORS' world rotation too — this component is rendered inside a
-    // drei <Float> wrapper in UniverseScene.tsx, which applies its own
-    // slow oscillating rotation to everything below it. A plain
-    // `quaternion.copy(camera.quaternion)` only billboards correctly when
-    // every ancestor has identity rotation, so Float's wobble was leaking
-    // into the disc's effective orientation — it looked "stuck" facing a
-    // fixed direction instead of tracking the camera while orbiting/zooming.
-    spinRef.current += delta * rotationSpeed * 0.1;
     if (discRef.current) {
-      discRef.current.lookAt(camera.position);
-      discRef.current.rotateZ(spinRef.current);
+      discRef.current.rotation.z += delta * rotationSpeed * 0.1;
     }
     if (materialRef.current) materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
   });
 
   return (
-    <group ref={groupRef}>
+    <group>
       <group ref={discRef}>
         <mesh material={discMaterial}>
           <circleGeometry args={[4.35, 64]} />

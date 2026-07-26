@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
 import { ArrowRightIcon, ArrowLeftIcon } from "lucide-react";
 
 import type { Language, QuizQuestion } from "@/types/universe";
@@ -17,6 +18,8 @@ interface QuestionCardProps {
   /** Index of the currently-selected option, or null if none selected yet. */
   value: number | null;
   onChange: (index: number) => void;
+  customAnswer: string;
+  onCustomAnswerChange: (answer: string) => void;
   onBack: () => void;
   onNext: () => void;
   isLast: boolean;
@@ -32,6 +35,8 @@ export function QuestionCard({
   language,
   value,
   onChange,
+  customAnswer,
+  onCustomAnswerChange,
   onBack,
   onNext,
   isLast,
@@ -49,6 +54,10 @@ export function QuestionCard({
       ? "ถัดไป"
       : "Next";
   const backLabel = language === "th" ? "กลับ" : "Back";
+  const otherLabel = language === "th" ? "อื่นๆ" : "Other";
+  const otherPlaceholder = language === "th"
+    ? "พิมพ์คำตอบของคุณ"
+    : "Write your own answer";
 
   return (
     <motion.div
@@ -88,6 +97,27 @@ export function QuestionCard({
                 </Button>
               );
             })}
+            <div className="sm:col-span-2">
+              <Button
+                type="button"
+                variant={value === question.options.length ? "default" : "outline"}
+                onClick={() => onChange(question.options.length)}
+                className="h-auto min-h-14 w-full justify-start"
+              >
+                {otherLabel}
+              </Button>
+              {value === question.options.length && (
+                <Textarea
+                  value={customAnswer}
+                  onChange={(event) => onCustomAnswerChange(event.target.value)}
+                  placeholder={otherPlaceholder}
+                  aria-label={otherLabel}
+                  maxLength={240}
+                  className="mt-3"
+                  autoFocus
+                />
+              )}
+            </div>
           </div>
 
           <div className="flex items-center justify-between gap-3">

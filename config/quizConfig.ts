@@ -12,7 +12,7 @@ export const quizConfig = {
   /** Thematic lens the questions are written through. */
   theme: "the cosmos, nature, and inner worlds",
   /** Emotional tone of the questions. */
-  tone: "dreamy, warm, slightly whimsical",
+  tone: "dreamy, honest, and varied",
   /** OpenRouter model id. deepseek/deepseek-v4-flash: ~$0.09/M input,
    *  $0.18/M output, ~0.7-1.1s P50 latency, and a very low structured-output
    *  error rate (~0.2-0.6% on its best provider routes) — cheaper than
@@ -63,14 +63,6 @@ export const QUESTION_ANGLES = [
   "How the user likes to be comforted when they're down — words, silence, presence, distraction, or something else",
 ] as const;
 
-/** The reserved soulmate/love-themed angle. Always appears exactly once per
- *  quiz, and is intentionally NOT in the main pool so it can't be sampled
- *  twice. Wording guidance keeps the question warm and respectful, not
- *  invasive — the goal is to surface how the user loves, not to interrogate
- *  their relationship status. */
-export const SOULMATE_ANGLE =
-  "The user's ideal soulmate or the kind of person they want to be with — what qualities, what presence, what feeling. Warm and respectful, not invasive. Keep it about what they'd love to feel beside someone, not about who they currently are or aren't with." as const;
-
 /** Song era/origin pools used to mechanically force variety in the
  *  `spotify_search_query` the reveal LLM picks (see prompts/revealSystemPrompt.ts).
  *  Without this, the model reliably gravitates toward the single most famous
@@ -98,6 +90,22 @@ export function pickSongFlavorHint(): string {
   const origin =
     SONG_ORIGIN_POOL[Math.floor(Math.random() * SONG_ORIGIN_POOL.length)];
   return `${era}, ${origin}`;
+}
+
+/** A soft per-result nudge that prevents companion selection from collapsing
+ * onto the same obvious model for every warm or gentle answer set. */
+const CREATURE_KIND_HINTS = [
+  "fish",
+  "bird",
+  "fox",
+  "cat",
+  "dragon",
+  "jelly",
+  "spirit",
+] as const;
+
+export function pickCreatureKindHint(): (typeof CREATURE_KIND_HINTS)[number] {
+  return CREATURE_KIND_HINTS[Math.floor(Math.random() * CREATURE_KIND_HINTS.length)];
 }
 
 export type QuizConfig = typeof quizConfig;

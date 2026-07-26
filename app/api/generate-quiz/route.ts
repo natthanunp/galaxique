@@ -7,7 +7,7 @@ import {
   buildQuizSystemPrompt,
   formatAnglesForPrompt,
 } from "@/prompts/quizSystemPrompt";
-import { quizConfig, QUESTION_ANGLES, SOULMATE_ANGLE } from "@/config/quizConfig";
+import { quizConfig, QUESTION_ANGLES } from "@/config/quizConfig";
 
 export const runtime = "nodejs";
 // Quiz generation is dynamic per call; don't cache at the framework level.
@@ -26,8 +26,7 @@ const requestBodySchema = z.object({
 });
 
 /** Pick `count` distinct random angles from `pool`, preferring entries that
- *  aren't in `avoid`. Soulmate is excluded from sampling and is appended
- *  separately by the caller.
+ * aren't in `avoid`.
  *
  *  Fisher–Yates is fine here — `pool` is tiny (~24) and called once per
  *  request, so we don't need cryptographic randomness. */
@@ -59,19 +58,13 @@ export async function POST(request: Request) {
     const avoidAngles = parsed.success ? parsed.data.avoidAngles ?? [] : [];
     const nonce = parsed.success ? parsed.data.nonce : undefined;
 
-    // Build the angle list: soulmate at a random slot, the rest sampled
-    // fresh from the wide pool, avoiding anything the client has already
-    // seen this session.
+    // Sample every angle from the same broad pool. A relationship question
+    // can still appear naturally, but it must not dominate every result.
     const count = quizConfig.questionCount;
-    const nonSoulmateCount = count - 1;
-    const sampled = pickAngles(
+    const pickedAngles = pickAngles(
       QUESTION_ANGLES,
-      nonSoulmateCount,
+      count,
       new Set(avoidAngles),
-    );
-    const soulmateSlot = Math.floor(Math.random() * count);
-    const pickedAngles: string[] = Array.from({ length: count }, (_, i) =>
-      i === soulmateSlot ? SOULMATE_ANGLE : sampled[i < soulmateSlot ? i : i - 1],
     );
 
     const systemPrompt = buildQuizSystemPrompt(pickedAngles);

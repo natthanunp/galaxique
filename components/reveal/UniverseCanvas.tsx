@@ -27,7 +27,8 @@ interface UniverseCanvasProps {
  * <PerformanceMonitor> measures live frame times and steps the shared
  * `usePerfStore` quality tier up/down, which in turn:
  *  - caps `dpr` further on top of the device-based `targetDpr()`
- *  - disables the lensing pass below the "high" tier, and bloom at "low"
+ *  - keeps black-hole lensing available from the first frame and disables
+ *    bloom at the "low" tier
  *  - scales particle/segment counts in CosmicBackground/ParticleField/Galaxy
  */
 export default function UniverseCanvas({
@@ -37,8 +38,11 @@ export default function UniverseCanvas({
   const tier = usePerfStore((s) => s.tier);
   const upgrade = usePerfStore((s) => s.upgrade);
   const downgrade = usePerfStore((s) => s.downgrade);
-  const { bloom, lensing } = tierEffectsEnabled(tier);
-  const showLensing = lensing && reveal.celestial_type === "black_hole";
+  const { bloom } = tierEffectsEnabled(tier);
+  // Lensing is the defining visual of a black-hole result. It is a single
+  // UV warp with no additional scene pass, so it should not wait for the
+  // adaptive monitor to promote a mobile viewport from medium to high.
+  const showLensing = reveal.celestial_type === "black_hole";
   const blackHoleConfig = reveal.celestial_config?.celestial_type === "black_hole"
     ? reveal.celestial_config.black_hole
     : undefined;
