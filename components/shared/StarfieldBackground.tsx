@@ -54,9 +54,32 @@ export function StarfieldBackground({ onCanvasReady }: StarfieldBackgroundProps 
     let mid: Star[] = [];
     let near: Star[] = [];
 
-    // A couple of soft nebula clouds.
-    type Cloud = { x: number; y: number; r: number; hue: string; speed: number; phase: number };
+    // Layered, uneven clouds give the nebula a more photographic structure.
+    type Cloud = {
+      x: number;
+      y: number;
+      r: number;
+      hue: string;
+      speed: number;
+      phase: number;
+      stretchX: number;
+      stretchY: number;
+    };
     let clouds: Cloud[] = [];
+
+    type Filament = {
+      startX: number;
+      startY: number;
+      controlX: number;
+      controlY: number;
+      endX: number;
+      endY: number;
+      width: number;
+      color: string;
+      speed: number;
+      phase: number;
+    };
+    let filaments: Filament[] = [];
 
     // Mouse-driven parallax offsets.
     const parallax = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -104,10 +127,18 @@ export function StarfieldBackground({ onCanvasReady }: StarfieldBackgroundProps 
       mid = buildStars(midCount, 0.6, 1.4, 0.35, 0.3, 0.5, 1.2, cool);
       near = buildStars(nearCount, 1.0, 2.2, 0.55, 0.3, 0.7, 1.6, warm);
 
+      const sceneSize = Math.max(width, height);
       clouds = [
-        { x: width * 0.2, y: height * 0.3, r: Math.max(width, height) * 0.5, hue: "rgba(140,120,255,0.18)", speed: 0.012, phase: 0 },
-        { x: width * 0.8, y: height * 0.7, r: Math.max(width, height) * 0.45, hue: "rgba(255,140,200,0.14)", speed: 0.015, phase: 1.2 },
-        { x: width * 0.5, y: height * 0.15, r: Math.max(width, height) * 0.35, hue: "rgba(120,200,255,0.10)", speed: 0.01, phase: 2.5 },
+        { x: width * 0.48, y: height * 0.36, r: sceneSize * 0.57, hue: "rgba(84, 152, 238, 0.32)", speed: 0.011, phase: 0.3, stretchX: 1.25, stretchY: 0.82 },
+        { x: width * 0.56, y: height * 0.52, r: sceneSize * 0.43, hue: "rgba(161, 208, 255, 0.27)", speed: 0.015, phase: 1.9, stretchX: 1.1, stretchY: 0.66 },
+        { x: width * 0.28, y: height * 0.62, r: sceneSize * 0.38, hue: "rgba(254, 119, 72, 0.22)", speed: 0.013, phase: 2.8, stretchX: 0.6, stretchY: 1.25 },
+        { x: width * 0.87, y: height * 0.29, r: sceneSize * 0.35, hue: "rgba(231, 81, 61, 0.19)", speed: 0.01, phase: 4.1, stretchX: 0.62, stretchY: 1.35 },
+        { x: width * 0.73, y: height * 0.74, r: sceneSize * 0.42, hue: "rgba(20, 44, 76, 0.5)", speed: 0.009, phase: 5.2, stretchX: 1.35, stretchY: 0.56 },
+      ];
+      filaments = [
+        { startX: -width * 0.08, startY: height * 0.82, controlX: width * 0.2, controlY: height * 0.38, endX: width * 0.55, endY: height * 0.7, width: sceneSize * 0.055, color: "rgba(255, 132, 83, 0.24)", speed: 0.018, phase: 0.2 },
+        { startX: width * 0.68, startY: -height * 0.04, controlX: width * 0.84, controlY: height * 0.42, endX: width * 1.04, endY: height * 0.72, width: sceneSize * 0.048, color: "rgba(255, 104, 71, 0.2)", speed: 0.014, phase: 1.6 },
+        { startX: width * 0.1, startY: height * 0.15, controlX: width * 0.34, controlY: height * 0.48, endX: width * 0.65, endY: height * 0.27, width: sceneSize * 0.034, color: "rgba(161, 214, 255, 0.16)", speed: 0.012, phase: 3.7 },
       ];
 
       cloudCanvas.width = canvas.width;
@@ -136,17 +167,44 @@ export function StarfieldBackground({ onCanvasReady }: StarfieldBackgroundProps 
       const driftY = Math.cos(t * 0.001 * c.speed * 0.7 + c.phase) * 12;
       const x = c.x + driftX;
       const y = c.y + driftY;
-      const g = context.createRadialGradient(x, y, 0, x, y, c.r);
+      context.save();
+      context.translate(x, y);
+      context.scale(c.stretchX, c.stretchY);
+      const g = context.createRadialGradient(0, 0, 0, 0, 0, c.r);
       g.addColorStop(0, c.hue);
-      g.addColorStop(0.6, c.hue.replace(/[\d.]+\)$/, "0.06)"));
+      g.addColorStop(0.48, c.hue.replace(/[\d.]+\)$/, "0.09)"));
+      g.addColorStop(0.74, c.hue.replace(/[\d.]+\)$/, "0.025)"));
       g.addColorStop(1, c.hue.replace(/[\d.]+\)$/, "0)"));
       context.fillStyle = g;
-      context.fillRect(0, 0, width, height);
+      context.fillRect(-c.r, -c.r, c.r * 2, c.r * 2);
+      context.restore();
+    };
+
+    const drawFilament = (context: CanvasRenderingContext2D, f: Filament, t: number) => {
+      const drift = Math.sin(t * 0.001 * f.speed + f.phase) * 14;
+      const gradient = context.createLinearGradient(f.startX, f.startY, f.endX, f.endY);
+      gradient.addColorStop(0, "rgba(255, 104, 71, 0)");
+      gradient.addColorStop(0.35, f.color);
+      gradient.addColorStop(0.7, f.color);
+      gradient.addColorStop(1, "rgba(255, 189, 126, 0)");
+
+      context.save();
+      context.globalCompositeOperation = "screen";
+      context.filter = `blur(${Math.max(8, f.width * 0.18)}px)`;
+      context.strokeStyle = gradient;
+      context.lineWidth = f.width;
+      context.lineCap = "round";
+      context.beginPath();
+      context.moveTo(f.startX, f.startY + drift);
+      context.quadraticCurveTo(f.controlX, f.controlY - drift, f.endX, f.endY + drift * 0.5);
+      context.stroke();
+      context.restore();
     };
 
     const renderClouds = (t: number) => {
       cloudCtx.clearRect(0, 0, width, height);
       for (const c of clouds) drawCloud(cloudCtx, c, t);
+      for (const f of filaments) drawFilament(cloudCtx, f, t);
       lastCloudRender = t;
     };
 
