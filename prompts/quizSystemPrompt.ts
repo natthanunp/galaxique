@@ -56,7 +56,7 @@ ${
 For each item:
 - Invent one concise angle (not a restatement of its question), written in English regardless of the quiz language (it's stripped before the client ever sees it).
 - Write one clear, concrete question, 8-14 words and never over 18; no metaphors, clichés, or double questions. ${languageInstruction}
-- Supply exactly 4 distinct, plausible answer options, each a concrete phrase under 8 words, short and punchy with no filler.
+- Supply exactly 4 distinct, plausible answer options, each a concrete phrase under 8 words, short and punchy with no filler. Every option must express a different choice; never repeat an option, even with changed punctuation or spacing.
 
 Tone: ${quizConfig.tone}
 Theme: ${quizConfig.theme}; use only as background flavor.
@@ -94,7 +94,7 @@ For each item:
 - Invent one concise angle (not a restatement of its question).
 - Write one clear, concrete English question, 8-14 words and never over 18; no metaphors, cliches, or double questions.
 - Supply a natural Thai translation in Thai script only: no English, pinyin, Chinese, or Japanese characters.
-- Supply exactly 4 distinct, plausible bilingual answer options. Each option is a concrete phrase under 8 English words.
+- Supply exactly 4 distinct, plausible bilingual answer options. Each option is a concrete phrase under 8 English words. Every option must express a different choice; never repeat an option in either language, even with changed punctuation or spacing.
 
 Tone: ${quizConfig.tone}
 Theme: ${quizConfig.theme}; use only as background flavor.

@@ -3,6 +3,28 @@ import { z } from "zod";
 /** Zod schemas mirroring the Gemini JSON schemas, used to validate model output
  *  at runtime (Gemini guarantees syntactic JSON, but values still need checking). */
 
+function hasDistinctOptionText(options: { text: string }[]): boolean {
+  const normalized = options.map((option) =>
+    option.text.normalize("NFC").trim().replace(/\s+/g, " ").toLocaleLowerCase(),
+  );
+  return new Set(normalized).size === normalized.length;
+}
+
+function hasDistinctLegacyOptionText(
+  options: { text_en: string; text_th: string }[],
+): boolean {
+  const normalizedEnglish = options.map((option) =>
+    option.text_en.normalize("NFC").trim().replace(/\s+/g, " ").toLocaleLowerCase(),
+  );
+  const normalizedThai = options.map((option) =>
+    option.text_th.normalize("NFC").trim().replace(/\s+/g, " "),
+  );
+  return (
+    new Set(normalizedEnglish).size === normalizedEnglish.length &&
+    new Set(normalizedThai).size === normalizedThai.length
+  );
+}
+
 export const quizOptionSchema = z.object({
   text: z.string().min(1),
 });
@@ -16,7 +38,10 @@ export const quizQuestionSchema = z.object({
   angle: z.string().min(1),
   text: z.string().min(1),
   /** Exactly 4 single-language multiple-choice answer options. */
-  options: z.array(quizOptionSchema).length(4),
+  options: z
+    .array(quizOptionSchema)
+    .length(4)
+    .refine(hasDistinctOptionText, "options must have distinct text"),
 });
 
 export const quizPayloadSchema = z.object({
@@ -36,7 +61,10 @@ const legacyQuizQuestionSchema = z.object({
   angle: z.string().min(1),
   text_en: z.string().min(1),
   text_th: z.string().min(1),
-  options: z.array(legacyQuizOptionSchema).length(4),
+  options: z
+    .array(legacyQuizOptionSchema)
+    .length(4)
+    .refine(hasDistinctLegacyOptionText, "options must have distinct text"),
 });
 
 export const legacyQuizPayloadSchema = z.object({
