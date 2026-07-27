@@ -235,7 +235,7 @@ export default function LandingPage() {
             <SparklesIcon className="size-4 text-accent" />
             {t.eyebrow}
             <span className="rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-accent">
-              Public Review 1
+              Public Beta 1
             </span>
           </div>
 
