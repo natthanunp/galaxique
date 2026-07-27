@@ -3,6 +3,7 @@ import type { Language, QuizAnswer } from "@/types/universe";
 /** Telegram's hard message-length cap. We split any single logical message
  *  that exceeds this so we never hit the API's `400 MESSAGE_TOO_LONG`. */
 const TELEGRAM_MESSAGE_LIMIT = 3900;
+const DEFAULT_TELEGRAM_REQUEST_TIMEOUT_MS = 15_000;
 
 interface AnalyzeNotification {
   answers: QuizAnswer[];
@@ -98,23 +99,44 @@ export async function sendSingleTelegramMessage(text: string): Promise<void> {
   const chatId = process.env.TELEGRAM_CHAT_ID;
   if (!botToken || !chatId) return;
 
-  for (const chunk of splitMessage(text)) {
-    const response = await fetch(
-      `https://api.telegram.org/bot${botToken}/sendMessage`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: chunk,
-          parse_mode: "HTML",
-        }),
-        signal: AbortSignal.timeout(5000),
-      },
-    );
+  const configuredTimeout = Number(process.env.TELEGRAM_REQUEST_TIMEOUT_MS);
+  const timeoutMs =
+    Number.isFinite(configuredTimeout) && configuredTimeout >= 1_000
+      ? configuredTimeout
+      : DEFAULT_TELEGRAM_REQUEST_TIMEOUT_MS;
+  const chunks = splitMessage(text);
+
+  for (const [index, chunk] of chunks.entries()) {
+    const startedAt = Date.now();
+    let response: Response;
+
+    try {
+      response = await fetch(
+        `https://api.telegram.org/bot${botToken}/sendMessage`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: chunk,
+            parse_mode: "HTML",
+          }),
+          signal: AbortSignal.timeout(timeoutMs),
+        },
+      );
+    } catch (error) {
+      const elapsedMs = Date.now() - startedAt;
+      const reason = error instanceof Error ? error.message : String(error);
+      throw new Error(
+        `Telegram request ${index + 1}/${chunks.length} failed after ${elapsedMs}ms: ${reason}`,
+        { cause: error },
+      );
+    }
 
     if (!response.ok) {
-      throw new Error(`Telegram API returned ${response.status}.`);
+      throw new Error(
+        `Telegram API returned ${response.status} for request ${index + 1}/${chunks.length} after ${Date.now() - startedAt}ms.`,
+      );
     }
   }
 }

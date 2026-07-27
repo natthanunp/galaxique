@@ -89,8 +89,10 @@ export default function UniverseCanvas({
 
       <EffectComposer enableNormalPass={false}>
         <Bloom intensity={0.32} luminanceThreshold={1.1} luminanceSmoothing={0.15} mipmapBlur />
-        {showLensing && (
+        {showLensing ? (
           <Lensing strength={blackHoleConfig?.lens_strength ?? 1} radius={0.42} />
+        ) : (
+          <></>
         )}
       </EffectComposer>
     </Canvas>
