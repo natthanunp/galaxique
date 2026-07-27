@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -394,6 +395,21 @@ export function ShareButton({
           </AnimatePresence>
 
           <div className="flex flex-wrap justify-end gap-2">
+            <DialogClose asChild>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  cancelledRef.current = true;
+                  recorder.cancel();
+                  overlay.stop();
+                  audioRef.current?.stop();
+                  audioRef.current = null;
+                  handleReset();
+                }}
+              >
+                {language === "th" ? "ปิด" : "Close"}
+              </Button>
+            </DialogClose>
             {phase === "idle" && (
               <>
                 <Button
