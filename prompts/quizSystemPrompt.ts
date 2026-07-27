@@ -38,8 +38,16 @@ export function buildQuizSystemPrompt(
   const languageName = language === "th" ? "Thai" : "English";
   const languageInstruction =
     language === "th"
-      ? "Write every question and option in natural, modern Thai script only: no English, pinyin, Chinese, or Japanese characters."
+      ? "Write every question and option directly in natural, modern conversational Thai: no English, pinyin, Chinese, or Japanese characters. Do not compose an English sentence and translate it word-for-word. Do a final native-speaker edit before output: use common Thai verbs and question forms, not English grammar in Thai words. Prefer \"ออกกำลังกาย\", not \"ทำการออกกำลังกาย\"; \"นั่งรับลมตอนเช้า\", not \"นั่งในอากาศสว่าง\"; \"มีความสุข\", not \"รู้สึกสุข\"; \"รู้สึกใกล้ชิด\", not \"รู้สึกสัมพันธ์\"; and \"ที่ไหน\", not \"ที่ใดที่หนึ่ง\". Avoid stiff bureaucratic wording, unnatural noun phrases, invented literary words, and repetitive translated templates such as \"วิธีที่คุณชอบมากที่สุดในการ...\"."
       : "Write every question and option in natural, concrete English.";
+  const questionLengthInstruction =
+    language === "th"
+      ? "Keep it concise and easy to understand at a glance; do not force Thai into an English word count."
+      : "Keep it 8-14 words and never over 18.";
+  const optionLengthInstruction =
+    language === "th"
+      ? "Each must be a short, natural Thai phrase that can stand alone."
+      : "Each must be a concrete phrase under 8 words, short and punchy with no filler.";
 
   return `Create a ${quizConfig.questionCount}-question personality quiz for "Your Unique Universe", written entirely in ${languageName}.
 
@@ -55,8 +63,9 @@ ${
 
 For each item:
 - Invent one concise angle (not a restatement of its question), written in English regardless of the quiz language (it's stripped before the client ever sees it).
-- Write one clear, concrete question, 8-14 words and never over 18; no metaphors, clichés, or double questions. ${languageInstruction}
-- Supply exactly 4 distinct, plausible answer options, each a concrete phrase under 8 words, short and punchy with no filler. Every option must express a different choice; never repeat an option, even with changed punctuation or spacing.
+- Write one clear, concrete question. ${questionLengthInstruction} No metaphors, clichés, or double questions. ${languageInstruction}
+- Supply exactly 4 distinct, plausible answer options. ${optionLengthInstruction} Every option must express a different choice; never repeat an option, even with changed punctuation or spacing.
+- Vary the question openings across the batch. Do not reuse one sentence template for several questions.
 
 Tone: ${quizConfig.tone}
 Theme: ${quizConfig.theme}; use only as background flavor.
@@ -93,8 +102,9 @@ ${
 For each item:
 - Invent one concise angle (not a restatement of its question).
 - Write one clear, concrete English question, 8-14 words and never over 18; no metaphors, cliches, or double questions.
-- Supply a natural Thai translation in Thai script only: no English, pinyin, Chinese, or Japanese characters.
-- Supply exactly 4 distinct, plausible bilingual answer options. Each option is a concrete phrase under 8 English words. Every option must express a different choice; never repeat an option in either language, even with changed punctuation or spacing.
+- Supply a natural Thai version written directly in conversational Thai, not a word-for-word English translation. Do a final native-speaker edit: write "ออกกำลังกาย", not "ทำการออกกำลังกาย"; "นั่งรับลมตอนเช้า", not "นั่งในอากาศสว่าง"; "มีความสุข", not "รู้สึกสุข"; and "รู้สึกใกล้ชิด", not "รู้สึกสัมพันธ์". Use Thai script only: no English, pinyin, Chinese, or Japanese characters.
+- Supply exactly 4 distinct, plausible bilingual answer options. Each English option is a concrete phrase under 8 words; write each Thai option as its own short, natural Thai phrase rather than a literal translation. Every option must express a different choice; never repeat an option in either language, even with changed punctuation or spacing.
+- Vary the question openings across the batch. Do not reuse one sentence template for several questions.
 
 Tone: ${quizConfig.tone}
 Theme: ${quizConfig.theme}; use only as background flavor.

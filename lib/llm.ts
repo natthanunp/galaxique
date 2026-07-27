@@ -29,6 +29,11 @@ export interface LlmCallOptions {
   systemPrompt: string;
   /** The user message (transcript of answers, or a generation trigger). */
   userPrompt: string;
+  /** Optional model override for a language- or task-specific route. */
+  model?: string;
+  /** Optional provider order for a model override. Provider slugs must use
+   *  the lowercase REST API form, e.g. "alibaba". */
+  providerOrder?: string[];
   /** Max output tokens. */
   maxTokens?: number;
   /** Temperature (0–2). Lower = more deterministic. */
@@ -123,7 +128,7 @@ export function callLlm(opts: LlmCallOptions): Promise<unknown> {
 async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
   const start = Date.now();
   const purpose = opts.purpose ?? "unknown";
-  const model = quizConfig.openrouterModel;
+  const model = opts.model ?? quizConfig.openrouterModel;
   // Provider routing can be tuned per environment. Throughput is the default
   // because a large, bilingual quiz needs sustained output speed; the quiz
   // route retries a timeout once with the alternate latency strategy.
@@ -170,7 +175,7 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
           // with OPENROUTER_REQUIRE_ZDR=true if data-retention compliance is
           // required (accept the throughput hit as a known tradeoff).
           provider: {
-            order: resolveProviderOrder(),
+            order: opts.providerOrder ?? resolveProviderOrder(),
             allowFallbacks: true,
             sort: providerSort as "latency" | "throughput",
             zdr: process.env.OPENROUTER_REQUIRE_ZDR === "true",

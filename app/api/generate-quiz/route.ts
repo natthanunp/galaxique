@@ -22,6 +22,14 @@ const LEGACY_QUESTION_COUNT = 5;
 const LETTER = /\p{L}/u;
 const LATIN_LETTER = /\p{Script=Latin}/u;
 const THAI_LETTER = /\p{Script=Thai}/u;
+const THAI_QUIZ_MODEL =
+  process.env.OPENROUTER_THAI_QUIZ_MODEL || "qwen/qwen3-30b-a3b";
+const THAI_QUIZ_PROVIDER_ORDER = (
+  process.env.OPENROUTER_THAI_QUIZ_PROVIDER_ORDER || "alibaba,deepinfra"
+)
+  .split(",")
+  .map((provider) => provider.trim().toLowerCase())
+  .filter(Boolean);
 
 type LegacyCompatibleQuestion = {
   id: number;
@@ -174,6 +182,8 @@ export async function POST(request: Request) {
     const fallbackProviderSort = preferredProviderSort === "throughput"
       ? "latency"
       : "throughput";
+    const needsThaiCopy = language === "th" || legacyClient;
+    const temperature = needsThaiCopy ? 0.7 : 0.9;
 
     let validation:
       | ReturnType<typeof quizPayloadSchema.safeParse>
@@ -187,7 +197,13 @@ export async function POST(request: Request) {
         parsedLlm = await callLlm({
           systemPrompt,
           userPrompt,
-          temperature: 0.9,
+          ...(needsThaiCopy
+            ? {
+                model: THAI_QUIZ_MODEL,
+                providerOrder: THAI_QUIZ_PROVIDER_ORDER,
+              }
+            : {}),
+          temperature,
           // v1 uses the original five bilingual questions; v2 keeps the
           // faster ten-question single-language format.
           maxTokens: legacyClient ? 2400 : 3200,
