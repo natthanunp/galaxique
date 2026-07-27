@@ -77,52 +77,61 @@ export function callLlm(opts: LlmCallOptions): Promise<unknown> {
 }
 
 async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
-  const result = await client.chat.send(
-    {
-      chatRequest: {
-        model: quizConfig.openrouterModel,
-        messages: [
-          { role: "system", content: opts.systemPrompt },
-          { role: "user", content: opts.userPrompt },
-        ],
-        responseFormat: { type: "json_object" },
-        temperature: opts.temperature ?? 0.9,
-        maxTokens: opts.maxTokens ?? 2048,
-        // Some models (e.g. deepseek/deepseek-v4-flash) default to an
-        // extended "thinking" mode that adds several seconds of billed
-        // reasoning tokens. This app only needs fast structured JSON, not
-        // deep reasoning, so disable it explicitly.
-        reasoning: { effort: "none" },
-        // `sort: "latency"` routes by each provider's historical p50 latency
-        // stat, which can go stale — in production this consistently routed
-        // us to a provider (CoreWeave) whose real-world latency for this
-        // model/token-budget was 20-55s, not the sub-6s its stat implied.
-        // `sort: "throughput"` routes by live tokens/sec instead and was
-        // consistently 6-9s for the same requests in direct testing, so it
-        // reflects current conditions rather than a possibly-outdated
-        // latency snapshot.
-        provider: { sort: "throughput" },
-      },
-    },
-    // Cap well below the UI's patience threshold, and also retry 429s (not
-    // just 5xx). Per-call `timeoutMs` lets large-output call sites (e.g.
-    // generate-quiz) opt into a longer budget instead of sharing one fixed
-    // value that's too tight for bigger payloads.
-    { timeoutMs: opts.timeoutMs ?? 20_000, retryCodes: ["429", "5XX"] },
-  );
-
-  if (!("choices" in result)) {
-    throw new Error("OpenRouter returned a streaming response unexpectedly.");
-  }
-  const content = result.choices[0]?.message?.content;
-  if (!content || typeof content !== "string") {
-    throw new Error("OpenRouter returned an empty response.");
-  }
+  const start = Date.now();
+  const purpose = opts.purpose ?? "unknown";
+  const model = quizConfig.openrouterModel;
+  // Provider routing can be tuned per environment. "throughput" was once
+  // fastest, but OpenRouter's provider mix changes; let operators override.
+  // Default to "latency" because real tests now show it is consistently
+  // faster for time-to-first-token (the user-visible delay).
+  const providerSort = process.env.OPENROUTER_PROVIDER_SORT || "latency";
+  const timeoutMs = opts.timeoutMs ?? 20_000;
   try {
-    return parseJsonContent(content);
-  } catch {
-    throw new Error(
-      `OpenRouter returned non-JSON output: ${content.slice(0, 200)}`,
+    const result = await client.chat.send(
+      {
+        chatRequest: {
+          model,
+          messages: [
+            { role: "system", content: opts.systemPrompt },
+            { role: "user", content: opts.userPrompt },
+          ],
+          responseFormat: { type: "json_object" },
+          temperature: opts.temperature ?? 0.9,
+          maxTokens: opts.maxTokens ?? 2048,
+          // Some models (e.g. deepseek/deepseek-v4-flash) default to an
+          // extended "thinking" mode that adds several seconds of billed
+          // reasoning tokens. This app only needs fast structured JSON, not
+          // deep reasoning, so disable it explicitly.
+          reasoning: { effort: "none" },
+          provider: { sort: providerSort as "latency" | "throughput" },
+        },
+      },
+      // Per-call `timeoutMs` lets large-output call sites (e.g.
+      // generate-quiz) opt into a longer budget instead of sharing one fixed
+      // value that's too tight for bigger payloads.
+      { timeoutMs, retryCodes: ["429", "5XX"] },
     );
+
+    if (!("choices" in result)) {
+      throw new Error("OpenRouter returned a streaming response unexpectedly.");
+    }
+    const content = result.choices[0]?.message?.content;
+    if (!content || typeof content !== "string") {
+      throw new Error("OpenRouter returned an empty response.");
+    }
+    console.log(`[llm] ${purpose} completed in ${Date.now() - start}ms`);
+    try {
+      return parseJsonContent(content);
+    } catch {
+      throw new Error(
+        `OpenRouter returned non-JSON output: ${content.slice(0, 200)}`,
+      );
+    }
+  } catch (err) {
+    console.error(
+      `[llm] ${purpose} failed after ${Date.now() - start}ms (timeout=${timeoutMs}ms, model=${model}, providerSort=${providerSort})`,
+      err,
+    );
+    throw err;
   }
 }

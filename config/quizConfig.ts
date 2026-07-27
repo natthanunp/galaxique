@@ -10,9 +10,9 @@ export const quizConfig = {
   /** Number of questions the LLM generates per quiz (5–10 recommended). */
   questionCount: 5,
   /** Thematic lens the questions are written through. */
-  theme: "the cosmos, nature, and inner worlds",
+  theme: "the cosmos, nature, connection, and inner worlds",
   /** Emotional tone of the questions. */
-  tone: "dreamy, honest, and varied",
+  tone: "warm, dreamy, honest, and varied — include light, playful, and connective angles alongside reflective ones",
   /** OpenRouter model id. deepseek/deepseek-v4-flash: ~$0.09/M input,
    *  $0.18/M output, ~0.7-1.1s P50 latency, and a very low structured-output
    *  error rate (~0.2-0.6% on its best provider routes) — cheaper than
@@ -41,30 +41,36 @@ export const quizConfig = {
  *
  *  Keep the list at ~20+ so each call samples a fresh subset of examples. */
 export const QUESTION_ANGLES = [
-  "How the user recharges or spends a slow, unscheduled day",
-  "The first thing the user notices about someone new — MUST bake 2-3 concrete example anchors into the question wording (e.g. 'What's the first thing you notice about someone new — their energy, how they talk, or something else?')",
-  "A small fear or quiet worry that visits the user sometimes",
-  "What 'home' or 'safety' feels like to the user — concrete, sensory (a sound, a smell, a room)",
+  // Warmth, play, connection, and outward energy
+  "Something that instantly lifts the user's mood — a tiny, specific moment of everyday joy",
+  "How the user likes to celebrate a small win or good day",
+  "A social setting where the user feels most alive — who is there, what is happening",
+  "What play or curiosity looks like for the user: a hobby, a question, or a little adventure",
+  "How the user shows love or care to people close to them — the small gestures, not the big declarations",
+  "A recent small kindness the user gave, received, or witnessed",
+  "What warmth feels like to the user — a sound, a room, a person, a ritual",
+  "The kind of conversation that makes the user feel most connected",
+  "How the user recharges when they need to feel like themselves again",
+  "A real or imagined place where the user feels free and open",
+  "What the user would spend a free afternoon doing if no one would ever judge them for it",
+  "A smell, taste, or texture that instantly takes them back to a good feeling",
+  "The kind of weather or time of day the user feels most hopeful in",
+  "How the user makes new people feel welcome or at ease",
+  "A song, album, or sound the user keeps returning to lately, and what it gives them",
+  // Reflection, depth, and inner life
   "A small daily ritual or habit the user loves and would miss if it disappeared",
   "What makes the user lose track of time — a craft, a sound, a person, a place",
   "How the user handles a tough day — what they reach for, who they call, what they do",
-  "Something that instantly lifts the user's mood — a tiny, specific moment",
   "A real or imagined place where the user feels most like themselves",
-  "How the user shows love or care to people close to them — the small gestures, not the big declarations",
   "What the user daydreams about during quiet moments",
   "A small thing the user feels quietly proud of — something others might not notice",
-  "A song, album, or sound the user keeps returning to lately, and what it gives them",
-  "What the user wishes more people understood about them",
   "A childhood memory or scene that still feels warm when the user thinks about it",
-  "The kind of weather or time of day the user feels most themselves in",
   "What the user does when they want to feel brave or courageous",
   "A stranger's kindness the user still remembers, however small",
-  "What the user would spend a free afternoon doing if no one would ever judge them for it",
-  "A smell, taste, or texture that instantly takes the user back to a feeling",
-  "The kind of conversation that makes the user feel most seen",
   "What the user is currently learning, curious about, or trying to figure out in life",
   "A piece of media (book, show, film, game) that changed how the user sees something",
   "How the user likes to be comforted when they're down — words, silence, presence, distraction, or something else",
+  "The first thing the user notices about someone new — MUST bake 2-3 concrete example anchors into the question wording (e.g. 'What's the first thing you notice about someone new — their energy, how they talk, or something else?')",
 ] as const;
 
 /** Song era/origin pools used to mechanically force variety in the

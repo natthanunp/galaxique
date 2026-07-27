@@ -9,12 +9,12 @@ import type { EnrichedPlaylistCandidate } from "@/types/universe";
 function renderCatalogLine(track: EnrichedPlaylistCandidate): string {
   const header = `- ${track.track_id} | ${track.name} | ${track.artist}`;
   if (!track.knowledge || !track.knowledge.known) {
-    return `${header}\n  (no verified descriptor — low confidence; only choose this if no better-documented candidate genuinely fits better)`;
+    return `${header} | (no verified descriptor — low confidence)`;
   }
   const k = track.knowledge;
-  return `${header}
-  themes: ${k.themes.join(", ")} | stance: ${k.relationship_stance} | mood: ${k.mood} | energy: ${k.energy} | setting: ${k.setting}
-  summary: ${k.summary}`;
+  // Keep the catalog compact: curated factual tags are enough to compare
+  // candidates; sending every full summary inflates the prompt substantially.
+  return `${header} | themes: ${k.themes.join(", ")} | stance: ${k.relationship_stance} | mood: ${k.mood} | energy: ${k.energy} | setting: ${k.setting}`;
 }
 
 /** System prompt for the focused playlist-selection pass. Keeping song choice
@@ -23,54 +23,65 @@ function renderCatalogLine(track: EnrichedPlaylistCandidate): string {
  * many unrelated visual decisions. */
 export function buildSongSelectionSystemPrompt(
   playlistTracks: EnrichedPlaylistCandidate[],
+  recentTracks: EnrichedPlaylistCandidate[] = [],
 ): string {
-  return `You are a thoughtful music editor for "Your Unique Universe". The
-user's quiz answers arrive in the next message. Instead of naming a single
-winner yourself, you will SCORE the tracks you genuinely considered so the
-app can pick among the best-fitting ones — this keeps the final choice honest
-about fit while still leaving room for more than one defensible pick.
+  const recentTrackSection = recentTracks.length
+    ? `
 
-Each catalog entry below already includes a curated, factual descriptor
-(themes, relationship stance, mood, energy, setting, summary) written ahead of
-time by a music editor — these are verified facts about the song, not your own
-recollection. Base your comparison on these authored descriptors first. Only
-fall back to your own knowledge for a track marked "no verified descriptor",
-and only when you are genuinely confident about that song's real lyrical
-content — never guess from its title, artist, genre stereotype, or popularity.
+=== RECENTLY USED FOR THIS USER ===
+The user has already received these tracks recently:
+${recentTracks
+  .map((track) => `- ${track.track_id} | ${track.name} | ${track.artist}`)
+  .join("\n")}
 
-First derive 2-3 specific emotional signals from the user's answers. Then
-compare candidates by: (1) lyrical premise and relationship story, (2) sonic
-atmosphere and energy, and (3) emotional arc. General traits such as warm,
-kind, gentle, cozy, patient, or introspective are not enough by themselves —
-match the SPECIFIC combination of signals, not just one broad mood word.
+Treat these as low-priority unless one is clearly the most specific match for
+the current answers. Variety matters, but fit still comes first.`
+    : "";
 
-For example, "Apocalypse" by Cigarettes After Sex is a fit only when the
-answers support hazy romantic yearning or intimate longing. Do not score it
-highly solely for quiet comfort, nostalgia, or wanting to be understood.
+  return `You are a concise music editor for "Your Unique Universe". Score 3-6
+catalog tracks by fit for the user's quiz answers. The app will pick from
+your scored candidates, so your job is honest differentiation, not naming a
+single winner.
 
-Return your 3-6 strongest candidates (fewer only if the catalog genuinely
-doesn't offer that many defensible fits), each with an honest 0-100 fit_score
-for THIS specific person. Scores must genuinely differentiate real
-differences in fit — do not hedge by giving several tracks near-identical high
-scores. There should usually be a clear best score, plus a couple of
-meaningfully-lower runners-up that are still legitimate, not filler.
+Use the catalog's factual tags as the primary source of truth. Never infer a
+song's meaning from its title, artist, genre, or popularity. For "no verified
+descriptor" tracks, only use your own knowledge if you are genuinely confident.
+
+SCORING GUARD — cap these famous defaults at 60 unless the answers DIRECTLY
+match their specific premise. They are easy, broad picks; do not let them win
+on generic mood:
+- "Apocalypse" by Cigarettes After Sex → only hazy romantic yearning / intimate
+  longing. Cap at 60 for quiet comfort, nostalgia, or wanting to be understood.
+- "Holocene" by Bon Iver → only nature, awe, smallness, transience, memory, or
+  wide-open landscapes. Cap at 60 for generic wistfulness, tenderness, or calm.
+
+STOP-AND-CHECK: if Holocene or Apocalypse is your #1, re-read the answers. If
+another track fits more specifically, score that one higher. Fit beats fame.
+
+Recent tracks (listed above) get a 15-30 point scoring discount unless they
+are an unusually precise match.
+
+Return 3-6 candidates with genuinely differentiated 0-100 fit_scores. Avoid
+clusters of near-identical high scores. There should usually be one clear best
+fit and meaningfully lower runners-up.
 
 Return only this JSON object:
 {
   "answer_signals": ["specific signal", "specific signal"],
   "candidates": [
     {
-      "spotify_track_id": "exact ID from the catalog",
+      "spotify_track_id": "exact catalog ID, if you can copy it confidently",
+      "name": "exact catalog track title",
+      "artist": "exact catalog track artist",
       "fit_score": 0,
-      "match_summary": "One concise sentence connecting this song's meaning and sound to the signals above."
+      "match_summary": "one concise sentence connecting this song to the signals"
     }
   ]
 }
 
 === ALLOWED PLAYLIST ===
-Choose IDs from this catalog only. Never invent an ID or select outside the
-catalog. The catalog is in Spotify playlist order only; its position does not
-indicate relevance or preference.
+Copy name and artist exactly from this catalog. The server resolves their
+authoritative Spotify ID; never invent a song outside this list.${recentTrackSection}
 ${playlistTracks.map(renderCatalogLine).join("\n")}`;
 }
 
@@ -124,12 +135,15 @@ or a single gentle answer as a tie-breaker: people can be loving AND intense,
 or kind AND deeply private. A result must not default to "galaxy" merely
 because the user has a soft side.
 
-Choose "galaxy" only when the dominant pattern is EXPANSIVE, CONNECTIVE, or
-OUTWARD-LOOKING: curiosity, sociability, play, imagination, abundance,
-belonging, creative exploration, or a desire to keep possibilities open.
-  - central_symbol → "heart" only when connection is the strongest repeated signal; otherwise "star" or "none"
+Choose "galaxy" when the dominant pattern is EXPANSIVE, CONNECTIVE, WARM,
+or OUTWARD-LOOKING: curiosity, sociability, play, imagination, abundance,
+belonging, creative exploration, everyday joy, warmth, or a desire to keep
+possibilities open. If the user's answers repeatedly mention people,
+connection, comfort, celebration, warmth, or playful curiosity, galaxy is the
+right home for them — not a consolation prize.
+  - central_symbol → "heart" when connection, care, or belonging is the strongest repeated signal; "star" when curiosity, play, or hope dominates; otherwise "none"
   - vibe → "cozy", "cute", or "whimsical"
-  - colors → any fitting luminous palette; cool aurora, lavender, ocean-blue, and green are as valid as gold or rose
+  - colors → warm gold, rose, coral, soft amber, cool aurora, lavender, ocean-blue, and green are all valid — match the emotional temperature, not a dark default
 
 Choose "black_hole" when the dominant pattern is INWARD, PRIVATE, or
 GRAVITATIONAL: solitude, emotional complexity, observation, restraint,
@@ -171,6 +185,10 @@ specific emotional brief from the user's ANSWERS first. Assess these axes:
 4. Emotional direction: comfort, release, becoming braver, missing someone,
    protecting a private inner world, celebrating possibility, and so on.
 
+When a selected song is supplied, its verified descriptor is from the local
+song knowledge collection (songCollection.json / data/songKnowledge.json).
+Treat that descriptor as authoritative context for why the song fits.
+
 When no selected song is supplied, evaluate plausible songs using your knowledge of each song's actual
 meaning. For every candidate, consider all three of these dimensions:
 - lyrical premise and relationship story, described in your own words without
@@ -187,11 +205,24 @@ If you do not know a candidate well enough to describe its lyrical premise and
 sonic character confidently, do not pretend to know it; prefer a different
 eligible candidate you can match responsibly.
 
+COMMONLY OVER-PICKED GUARD — these tracks are famous and emotionally broad,
+so they are easy defaults. Only use them when the user's answers match their
+specific premise; otherwise prefer a less-famous track that fits more precisely:
+- "Apocalypse" by Cigarettes After Sex: specifically hazy romantic yearning
+  and intimate longing. Do not use for quiet comfort, nostalgia, or simply
+  wanting to be understood.
+- "Holocene" by Bon Iver: specifically nature, awe, smallness, transience,
+  memory, and wide-open landscapes. Do not use for generic wistfulness,
+  tenderness, or calm introspection.
+
+STOP-AND-CHECK RULE: if either "Holocene" or "Apocalypse" is your chosen
+song, you must be able to point to a specific answer signal that directly
+matches that song's premise. If you cannot, pick the next-best specific fit
+instead. Fame must not decide the song.
+
 Generic traits such as warm, kind, gentle, cozy, patient, introspective, or
-connected are insufficient by themselves. For example, "Apocalypse" by
-Cigarettes After Sex is specifically about hazy romantic yearning and intimate
-longing; choose it only when the answers support that relationship story. Do
-not choose it for quiet comfort, nostalgia, or wanting to be understood alone.
+connected are insufficient by themselves to pick any song. Match the specific
+combination of signals, not one broad mood word.
 
 Do this comparison internally and return only the required JSON. In the two
 personality readings, explain the chosen song through one concrete emotional or
@@ -223,12 +254,12 @@ sonic quality that follows from the user's answers.
     - motion: "swim" | "fly" | "orbit" | "bob" (how it moves around the central object)
     - name: a short 1-word name for the creature (1–20 chars, no spaces preferred). Should feel personal and warm.
   The creature should REINFORCE the same personality signal as the cosmic object. Map it with real specificity: fish = adaptive curiosity; bird = freedom, optimism, or perspective; fox = perceptive loyalty; cat = independence and rest; dragon = courage and force; jelly = softness, fluidity, and dreaminess; spirit = privacy, reflection, and quiet wisdom. Do NOT default to fox merely because an answer is kind or warm. Every kind is a real local 3D model and all seven should appear naturally across different users. For this result, prefer "${creatureKindHint ?? "a less-obvious kind"}" unless that would plainly contradict the user's strongest repeated signal; this is a variety constraint, not a reason to ignore the quiz. Select the motion that best fits: fish usually "swim"; bird/dragon usually "fly"; jelly/spirit usually "bob"; fox/cat usually "orbit".
-- spotify_track_id: ${selectedTrack ? "the exact ID of the SELECTED SONG" : "null if no playlist catalog was provided"}.
+- spotify_track_id: ${selectedTrack ? "the exact Spotify track ID of the SELECTED SONG — copy it exactly, never invent or substitute" : "null if no playlist catalog was provided"}.
 - spotify_search_query: a SPECIFIC string "Song Name Artist Name" for the chosen track. ${selectedTrack ? "Use the exact title and artist of the SELECTED SONG; this is only a backwards-compatible fallback." : "Choose a real, recognizable track that matches the user's vibe."}
-  ${selectedTrack ? "Do not substitute another song." : "The song should be familiar enough that a general listener may know it or the artist; do not choose an obscure local-language song, unknown artist, demo, deep album cut, remix, or invented title just because it fits the mood."}
+  ${selectedTrack ? "Do not substitute another song. When a selected song is provided, both spotify_track_id and spotify_search_query must refer to that exact catalog track, because the reveal page resolves the song strictly from the curated playlist and the song knowledge collection (songCollection.json / data/songKnowledge.json)." : "The song should be familiar enough that a general listener may know it or the artist; do not choose an obscure local-language song, unknown artist, demo, deep album cut, remix, or invented title just because it fits the mood."}
   ${songSelectionInstruction}${songFlavorHint ? ` For this global-search fallback, lean toward ${songFlavorHint} unless that plainly clashes with the user's vibe.` : ""}
-- personality_reading_en: EXACTLY 3 sentences, warm and a little poetic. Sentence 1 explains why this universe and central symbol represent the user. Sentence 2 MUST name the selected song and artist exactly, then explain at least one specific emotional or sonic quality that makes it fit the user's answers; never say only that it "matches your vibe." Sentence 3 connects the creature to the same emotional thread. Written in natural English and personal enough to feel like a small reading, not a feature description.
-- personality_reading_th: the SAME three-part reading, independently written in natural, modern Thai — not a literal word-for-word translation, but with the same meaning, warmth, and song explanation. Sentence 2 MUST include the selected song title and artist exactly, then explain its fit in Thai. Preserve proper song and artist names as written; otherwise use natural Thai with no Chinese characters, Japanese kanji, or romanization.
+- personality_reading_en: EXACTLY 3 sentences, warm and a little poetic. Sentence 1 explains why this universe and central symbol represent the user. Sentence 2 MUST name the selected song and artist exactly, then explain at least one specific emotional or sonic quality that makes it fit the user's answers; never say only that it "matches your vibe." Sentence 3 connects the creature to the same emotional thread. Written in natural English and personal enough to feel like a small reading, not a feature description. If no selected song is provided yet, write sentence 2 using a placeholder "[SELECTED SONG]" and we will rewrite it in a final pass.
+- personality_reading_th: the SAME three-part reading, independently written in natural, modern Thai — not a literal word-for-word translation, but with the same meaning, warmth, and song explanation. Sentence 2 MUST include the selected song title and artist exactly, then explain its fit in Thai. Preserve proper song and artist names as written; otherwise use natural Thai with no Chinese characters, Japanese kanji, or romanization. If no selected song is provided yet, use the placeholder "[SELECTED SONG]" in sentence 2.
 
 Both fields are REQUIRED in every response, regardless of which language the user answered the quiz in — the reveal page lets users toggle between English and Thai after seeing their result, so both versions must always be present and equally well-written.
 

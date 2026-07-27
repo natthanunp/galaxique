@@ -157,10 +157,11 @@ export function QuizStepper() {
       return { questionId: q.id, questionText: qText, answer: ans };
     });
 
+    const recentTrackIds = useQuizStore.getState().recentTrackIds;
     fetch("/api/analyze", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ answers: finalAnswers, language }),
+      body: JSON.stringify({ answers: finalAnswers, language, recentTrackIds }),
     })
       .then(async (res) => {
         if (!res.ok) {

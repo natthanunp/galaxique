@@ -33,11 +33,18 @@ export const quizPayloadSchema = z.object({
  *  quiz answers without ever excluding a track outright: a single standout
  *  fit still always wins since nothing else lands within the tie margin. */
 export const songSelectionSchema = z.object({
-  answer_signals: z.array(z.string().min(1)).min(2).max(3),
+  // The selector prompt asks for 2-3 signals, but a model may provide a
+  // couple of additional useful signals. Accept those rather than spending
+  // multiple slow retries on an otherwise valid catalog selection.
+  answer_signals: z.array(z.string().min(1)).min(2).max(6),
   candidates: z
     .array(
       z.object({
-        spotify_track_id: z.string().min(1),
+        /** Helpful when the model can copy it, but title + artist are the
+         *  authoritative selection keys the server resolves to a catalog ID. */
+        spotify_track_id: z.string().min(1).optional(),
+        name: z.string().min(1),
+        artist: z.string().min(1),
         /** 0-100 — how well this specific track fits the derived signals.
          *  Scores must genuinely differentiate; don't hedge with several
          *  near-identical high scores. */

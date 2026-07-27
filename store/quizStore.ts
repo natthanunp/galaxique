@@ -23,6 +23,11 @@ interface QuizState {
    *  fresh angles before anything repeats, instead of only avoiding
    *  same-session retries. */
   seenAngles: string[];
+  /** Spotify track IDs the user has recently received as their universe
+   *  song, capped and persisted to localStorage. Sent as `recentTrackIds` on
+   *  every /api/analyze call so repeat quizzes don't keep landing on the
+   *  same famous tracks (Holocene, Apocalypse, etc.). */
+  recentTrackIds: string[];
   /** True while waiting on Gemini (question generation or analysis). */
   loading: boolean;
   /** Human-readable error, surfaced in the UI. */
@@ -42,6 +47,11 @@ interface QuizState {
  *  effectively never repeats an angle until the whole pool has been used. */
 const MAX_SEEN_ANGLES = 80;
 
+/** Cap on the persisted recent-song history. 20 is enough to break repeat
+ *  loops on famous defaults (Holocene, Apocalypse) without making the pool
+ *  so large that the user never hears a favorite again. */
+const MAX_RECENT_TRACK_IDS = 20;
+
 export const useQuizStore = create<QuizState>()(
   persist(
     (set) => ({
@@ -50,6 +60,7 @@ export const useQuizStore = create<QuizState>()(
       answers: [],
       reveal: null,
       seenAngles: [],
+      recentTrackIds: [],
       loading: false,
       error: null,
 
@@ -73,7 +84,16 @@ export const useQuizStore = create<QuizState>()(
           const deduped = Array.from(new Set(merged));
           return { seenAngles: deduped.slice(-MAX_SEEN_ANGLES) };
         }),
-      setReveal: (reveal) => set({ reveal }),
+      setReveal: (reveal) =>
+        set((state) => {
+          const trackId = reveal?.spotify_track_id ?? null;
+          const recentTrackIds = trackId
+            ? Array.from(new Set([...state.recentTrackIds, trackId])).slice(
+                -MAX_RECENT_TRACK_IDS,
+              )
+            : state.recentTrackIds;
+          return { reveal, recentTrackIds };
+        }),
       setLoading: (loading) => set({ loading }),
       setError: (error) => set({ error }),
       reset: () =>
@@ -94,6 +114,7 @@ export const useQuizStore = create<QuizState>()(
         answers: state.answers,
         reveal: state.reveal,
         seenAngles: state.seenAngles,
+        recentTrackIds: state.recentTrackIds,
       }),
     },
   ),

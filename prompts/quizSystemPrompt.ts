@@ -35,6 +35,8 @@ An angle is the real psychological thing a question is trying to reveal — a ge
 
 Invent exactly ${quizConfig.questionCount} NEW angles — one per question — that are meaningfully different from EACH OTHER and from the "recently used" list below. Cover a genuinely varied spread across the batch (e.g. don't secretly make 3 of them about romantic relationships, or 3 of them about childhood).
 
+CRITICAL VARIETY RULE: the batch must NOT be entirely dark, introspective, nostalgic, or melancholy. Include at least one angle about joy, play, curiosity, warmth, connection, or everyday delight. The overall mix should feel like a real person: light and shadow, not all shadow.
+
 STYLE REFERENCE ONLY — these show the kind of depth and phrasing to aim for. Do NOT reuse them verbatim or lightly reworded; invent genuinely new angles in the same spirit:
 ${formatAnglesForPrompt(exampleAngles)}
 ${
