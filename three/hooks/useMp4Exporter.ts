@@ -35,14 +35,20 @@ interface UseMp4ExporterResult {
 // the build fails loudly instead of silently shipping an incompatible
 // wasm.
 //
-// Use the multi-threaded core. It can run libx264 across browser pthreads,
-// reducing export time substantially. /reveal uses COOP/COEP headers and
-// proxies its third-party media through /api/media so SharedArrayBuffer is
-// available without breaking album art or preview playback.
-const CORE_PATH = "/ffmpeg-mt";
+// We try the multi-threaded core first (faster encode, runs libx264 across
+// browser pthreads) and fall back to the single-threaded core if the
+// document isn't cross-origin isolated. SharedArrayBuffer is gated behind
+// the COOP/COEP headers on the document, so even if /reveal normally has
+// them, edge cases (a proxied response that strips headers, a deployment
+// behind a different domain, etc.) can leave the page un-isolated. Loading
+// the multi-threaded core on such a page throws "SharedArrayBuffer is not
+// defined" inside the worker; the single-threaded core doesn't need SAB
+// and works in every browser, just slower.
+const CORE_PATH_MT = "/ffmpeg-mt";
+const CORE_PATH_ST = "/ffmpeg";
 // This is @ffmpeg/ffmpeg's module worker, not the ffmpeg-core pthread
 // worker. It stays with the wrapper assets in /ffmpeg/ and dynamically
-// imports the multi-thread core at CORE_PATH.
+// imports the chosen core at runtime.
 const WRAPPER_WORKER_PATH = "/ffmpeg/ffmpeg-worker.js";
 
 /**
@@ -134,19 +140,58 @@ export function useMp4Exporter(
             WRAPPER_WORKER_PATH,
             window.location.origin,
           ).toString();
+          // Pick the core at load time. Multi-thread needs SAB (only
+          // available on a cross-origin-isolated document); if it's not,
+          // load the single-threaded core instead. We deliberately try
+          // the single-thread fallback inside the same `try` so a
+          // mid-load SAB failure transparently retries on the slower
+          // but always-available core, instead of bubbling the cryptic
+          // "Can't find variable: SharedArrayBuffer" to the user.
+          const corePath =
+            typeof window !== "undefined" &&
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (window as any).crossOriginIsolated === true
+              ? CORE_PATH_MT
+              : CORE_PATH_ST;
           const coreURL = new URL(
-            `${CORE_PATH}/ffmpeg-core.js`,
+            `${corePath}/ffmpeg-core.js`,
             window.location.origin,
           ).toString();
           const wasmURL = new URL(
-            `${CORE_PATH}/ffmpeg-core.wasm`,
+            `${corePath}/ffmpeg-core.wasm`,
             window.location.origin,
           ).toString();
-          await ffmpeg.load({ coreURL, wasmURL, classWorkerURL });
+          try {
+            await ffmpeg.load({ coreURL, wasmURL, classWorkerURL });
+          } catch (loadErr) {
+            // If the mt core failed because the page isn't isolated, retry
+            // once on the single-thread core. Any other load error (network,
+            // bad wasm) is reported verbatim — we don't want to mask a
+            // genuine problem with a slower retry.
+            const needsFallback =
+              corePath === CORE_PATH_MT &&
+              /SharedArrayBuffer|worker/i.test(
+                loadErr instanceof Error ? loadErr.message : String(loadErr),
+              );
+            if (!needsFallback) throw loadErr;
+            const stCoreURL = new URL(
+              `${CORE_PATH_ST}/ffmpeg-core.js`,
+              window.location.origin,
+            ).toString();
+            const stWasmURL = new URL(
+              `${CORE_PATH_ST}/ffmpeg-core.wasm`,
+              window.location.origin,
+            ).toString();
+            await ffmpeg.load({
+              coreURL: stCoreURL,
+              wasmURL: stWasmURL,
+              classWorkerURL,
+            });
+          }
         } catch (err) {
           setLoadingCore(false);
           throw new Error(
-            `ffmpeg load failed: ${err instanceof Error ? (err.stack ?? err.message) : String(err)} (looked at ${CORE_PATH}/ffmpeg-core.{js,wasm} + ffmpeg-worker.js)`,
+            `ffmpeg load failed: ${err instanceof Error ? (err.stack ?? err.message) : String(err)} (looked at ${CORE_PATH_MT}/ffmpeg-core.{js,wasm} + ffmpeg-worker.js)`,
           );
         }
         ffmpegRef.current = ffmpeg;
