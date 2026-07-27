@@ -95,6 +95,7 @@ export default function RevealPage() {
   // this, getCanvas() returns null and handleShare throws the cryptic
   // "Universe canvas isn't ready yet." error.
   const [canvasReady, setCanvasReady] = useState(false);
+  const [captureQuality, setCaptureQuality] = useState(false);
 
   // zustand `persist` rehydrates from localStorage asynchronously. On a
   // hard reload / direct navigation to /reveal, the first render runs
@@ -154,7 +155,7 @@ export default function RevealPage() {
 
   if (!hydrated || !reveal) {
     return (
-      <main className="flex min-h-dvh items-center justify-center">
+      <main className="safe-area-page relative flex min-h-dvh items-center justify-center">
         <LoadingCosmos />
       </main>
     );
@@ -167,7 +168,7 @@ export default function RevealPage() {
           starfieldRef.current = c;
         }}
       />
-      <main className="relative min-h-dvh px-4 py-6 sm:px-6">
+      <main className="safe-area-page relative min-h-dvh px-4 sm:px-6">
         <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-2 py-2">
           <Button asChild variant="ghost" size="sm" className="gap-1">
             <Link href="/">
@@ -200,6 +201,7 @@ export default function RevealPage() {
           >
             <UniverseCanvas
               reveal={reveal as UniverseReveal}
+              captureQuality={captureQuality}
               onCanvasReady={(c) => {
                 canvasRef.current = c;
                 setCanvasReady(true);
@@ -229,6 +231,7 @@ export default function RevealPage() {
                 getCanvas={() => canvasRef.current}
                 getStarfield={() => starfieldRef.current}
                 disabled={!canvasReady}
+                onCaptureQualityChange={setCaptureQuality}
                 language={language}
               />
               <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">

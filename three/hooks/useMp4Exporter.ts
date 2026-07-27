@@ -10,8 +10,8 @@ interface UseMp4ExporterResult {
   transcoding: boolean;
   /** 0..1 transcode progress (experimental; may stay 0 for some inputs). */
   progress: number;
-  /** Transcode a webm Blob to an mp4 Blob and trigger a download. */
-  exportToMp4: (webm: Blob, filename?: string) => Promise<Blob>;
+  /** Transcode a recorded video Blob to an mp4 Blob. */
+  exportToMp4: (webm: Blob) => Promise<Blob>;
 }
 
 // MUST match the CORE_VERSION that the installed @ffmpeg/ffmpeg package was
@@ -29,7 +29,7 @@ const CORE_BASE = `https://cdn.jsdelivr.net/npm/@ffmpeg/core@${CORE_VERSION}/dis
  *
  * The ~31MB core is fetched from jsdelivr via toBlobURL (to satisfy CORS) ONLY
  * on the first export click, then reused for subsequent exports. The resulting
- * mp4 is returned and auto-downloaded for IG Story sharing.
+ * mp4 is returned to the caller for preview or saving.
  */
 export function useMp4Exporter(): UseMp4ExporterResult {
   const [loadingCore, setLoadingCore] = useState(false);
@@ -38,7 +38,7 @@ export function useMp4Exporter(): UseMp4ExporterResult {
   const ffmpegRef = useRef<InstanceType<typeof FFmpeg> | null>(null);
 
   const exportToMp4 = useCallback(
-    async (webm: Blob, filename = "galaxique-universe.mp4"): Promise<Blob> => {
+    async (webm: Blob): Promise<Blob> => {
       // Lazy-load ffmpeg + core on first use.
       const { toBlobURL, fetchFile } = await import("@ffmpeg/util");
 
@@ -86,11 +86,21 @@ export function useMp4Exporter(): UseMp4ExporterResult {
       const isAlreadyMp4 = webm.type.includes("mp4");
       const inputName = isAlreadyMp4 ? "input.mp4" : "input.webm";
       const outputName = "output.mp4";
+      const cleanupFiles = async () => {
+        try {
+          await ffmpeg.deleteFile(inputName);
+          await ffmpeg.deleteFile(outputName);
+        } catch {
+          /* ignore cleanup errors */
+        }
+      };
 
       try {
         const fileBytes = await fetchFile(webm);
         await ffmpeg.writeFile(inputName, fileBytes);
       } catch (err) {
+        setTranscoding(false);
+        setProgress(0);
         throw new Error(
           `ffmpeg writeFile failed: ${err instanceof Error ? (err.stack ?? err.message) : String(err)}`,
         );
@@ -147,6 +157,9 @@ export function useMp4Exporter(): UseMp4ExporterResult {
               ],
         );
       } catch (err) {
+        await cleanupFiles();
+        setTranscoding(false);
+        setProgress(0);
         throw new Error(
           `ffmpeg exec failed: ${err instanceof Error ? (err.stack ?? err.message) : String(err)} (last ffmpeg log: ${lastFfmpegLine || "none"})`,
         );
@@ -157,6 +170,9 @@ export function useMp4Exporter(): UseMp4ExporterResult {
       try {
         data = (await ffmpeg.readFile(outputName)) as Uint8Array;
       } catch (err) {
+        await cleanupFiles();
+        setTranscoding(false);
+        setProgress(0);
         throw new Error(
           `ffmpeg readFile failed: ${err instanceof Error ? (err.stack ?? err.message) : String(err)} (last ffmpeg log: ${lastFfmpegLine || "none"})`,
         );
@@ -167,6 +183,9 @@ export function useMp4Exporter(): UseMp4ExporterResult {
         // codec) can produce a 0-byte output without throwing. If the
         // output is empty, surface the last ffmpeg log line so the user
         // can see what actually went wrong instead of "0 bytes".
+        await cleanupFiles();
+        setTranscoding(false);
+        setProgress(0);
         throw new Error(
           `ffmpeg produced an empty output (last ffmpeg log: ${lastFfmpegLine || "none"})`,
         );
@@ -178,27 +197,10 @@ export function useMp4Exporter(): UseMp4ExporterResult {
       const mp4 = new Blob([mp4Bytes], { type: "video/mp4" });
       console.log("[debug] final mp4 blob size=", mp4.size);
 
-      // Clean up the virtual FS.
-      try {
-        await ffmpeg.deleteFile(inputName);
-        await ffmpeg.deleteFile(outputName);
-      } catch {
-        /* ignore cleanup errors */
-      }
+      await cleanupFiles();
 
       setTranscoding(false);
       setProgress(0);
-
-      // Trigger a download.
-      const url = URL.createObjectURL(mp4);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      // Revoke shortly after to let the download start.
-      setTimeout(() => URL.revokeObjectURL(url), 4000);
 
       return mp4;
     },

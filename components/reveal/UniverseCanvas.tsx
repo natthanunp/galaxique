@@ -14,6 +14,7 @@ import type { UniverseReveal } from "@/types/universe";
 
 interface UniverseCanvasProps {
   reveal: UniverseReveal;
+  captureQuality?: boolean;
   /** Called once R3F mounts its <canvas> — used to grab it for video recording. */
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
 }
@@ -33,6 +34,7 @@ interface UniverseCanvasProps {
  */
 export default function UniverseCanvas({
   reveal,
+  captureQuality = false,
   onCanvasReady,
 }: UniverseCanvasProps) {
   const tier = usePerfStore((s) => s.tier);
@@ -63,7 +65,7 @@ export default function UniverseCanvas({
         const canvas = gl.domElement;
         onCanvasReady?.(canvas);
       }}
-      dpr={tierDprCap(tier, targetDpr())}
+      dpr={captureQuality ? 2 : tierDprCap(tier, targetDpr())}
     >
       <PerformanceMonitor onIncline={upgrade} onDecline={downgrade} />
       <RenderPerformanceMetrics />

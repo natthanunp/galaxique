@@ -104,8 +104,9 @@ export function StarfieldBackground({ onCanvasReady }: StarfieldBackgroundProps 
     };
 
     const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
+      const bounds = canvas.getBoundingClientRect();
+      width = bounds.width || window.innerWidth;
+      height = bounds.height || window.innerHeight;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
@@ -262,7 +263,7 @@ export function StarfieldBackground({ onCanvasReady }: StarfieldBackgroundProps 
         if (el) onCanvasReady?.(el);
       }}
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10"
+      className="pointer-events-none fixed inset-0 h-dvh w-screen -z-10"
     />
   );
 }

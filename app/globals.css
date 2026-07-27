@@ -94,6 +94,16 @@
   top: calc(env(safe-area-inset-top) + 1rem);
 }
 
+.safe-area-page {
+  padding-top: calc(env(safe-area-inset-top) + 1.5rem);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 1.5rem);
+}
+
+.safe-area-page-lg {
+  padding-top: calc(env(safe-area-inset-top) + 2rem);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 2rem);
+}
+
 /* Thin custom scrollbar to match the theme. */
 ::-webkit-scrollbar {
   width: 8px;

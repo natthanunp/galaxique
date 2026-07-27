@@ -11,7 +11,7 @@ export default function QuizPage() {
   return (
     <>
       <StarfieldBackground />
-      <main className="relative flex min-h-dvh flex-col px-4 py-8 sm:px-6">
+      <main className="safe-area-page-lg relative flex min-h-dvh flex-col px-4 sm:px-6">
         <header className="mx-auto flex w-full max-w-2xl items-center py-2">
           <Button asChild variant="ghost" size="sm" className="gap-1">
             <Link href="/">

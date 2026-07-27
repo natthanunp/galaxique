@@ -51,6 +51,8 @@ export function useOverlayCanvas(): UseOverlayCanvasResult {
     canvas.height = IG_STORY_H;
     const ctx = canvas.getContext("2d");
     if (!ctx) return source; // Defensive fallback — should never happen.
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
 
     let art: HTMLImageElement | null = null;
     if (info.albumArtUrl) {
@@ -63,7 +65,10 @@ export function useOverlayCanvas(): UseOverlayCanvasResult {
       art.src = info.albumArtUrl;
     }
 
-    const draw = () => drawFrame(ctx, source, background ?? null, art, info);
+    const draw = () => {
+      drawFrame(ctx, source, background ?? null, art, info);
+      rafRef.current = requestAnimationFrame(draw);
+    };
     rafRef.current = requestAnimationFrame(draw);
 
     return canvas;
@@ -85,6 +90,8 @@ export function useOverlayCanvas(): UseOverlayCanvasResult {
       canvas.height = IG_STORY_H;
       const ctx = canvas.getContext("2d");
       if (!ctx) return Promise.resolve(source);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
 
       const artPromise = new Promise<HTMLImageElement | null>((resolve) => {
         if (!info.albumArtUrl) return resolve(null);

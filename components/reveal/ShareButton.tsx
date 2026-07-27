@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ShareIcon,
   VideoIcon,
+  DownloadIcon,
   Loader2Icon,
   CheckCircle2Icon,
   AlertCircleIcon,
@@ -36,6 +37,8 @@ interface ShareButtonProps {
   getStarfield?: () => HTMLCanvasElement | null;
   /** While false, the trigger is disabled (canvas still mounting). */
   disabled?: boolean;
+  /** Temporarily raises the live renderer DPR while a capture is prepared. */
+  onCaptureQualityChange?: (capturing: boolean) => void;
   language: Language;
 }
 
@@ -48,6 +51,13 @@ type Phase =
   | "done"
   | "error";
 
+function waitForFrames(count: number): Promise<void> {
+  if (count <= 0) return Promise.resolve();
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => resolve(waitForFrames(count - 1)));
+  });
+}
+
 /** Orchestrates the IG Story export: composite album art + song overlay onto
  *  the canvas → record with the Spotify preview audio muxed in → transcode
  *  webm→mp4 (or fast-remux if Safari already recorded mp4) → download. */
@@ -55,6 +65,7 @@ export function ShareButton({
   getCanvas,
   getStarfield,
   disabled = false,
+  onCaptureQualityChange,
   language,
 }: ShareButtonProps) {
   const [open, setOpen] = useState(false);
@@ -62,6 +73,7 @@ export function ShareButton({
   const [errorMsg, setErrorMsg] = useState("");
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [downloadKind, setDownloadKind] = useState<"image" | "video" | null>(null);
+  const [downloadFilename, setDownloadFilename] = useState("galaxique-universe.png");
   const cancelledRef = useRef(false);
   const audioRef = useRef<Awaited<ReturnType<typeof createAudioStreamFromUrl>>>(null);
 
@@ -80,7 +92,9 @@ export function ShareButton({
     setErrorMsg("");
     setDownloadUrl(null);
     setDownloadKind(null);
+    setDownloadFilename("galaxique-universe.png");
     setPhase("exporting-photo");
+    onCaptureQualityChange?.(true);
 
     try {
       const sourceCanvas = getCanvas();
@@ -130,20 +144,13 @@ export function ShareButton({
       setDownloadKind("image");
       setPhase("done");
 
-      // Trigger a download immediately (don't wait for the user to click
-      // a second button — the whole point of this path is one click).
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "galaxique-universe.png";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 4000);
     } catch (err) {
       if (cancelledRef.current) return;
       const msg = err instanceof Error ? err.message : String(err);
       setErrorMsg(msg);
       setPhase("error");
+    } finally {
+      onCaptureQualityChange?.(false);
     }
   };
 
@@ -153,8 +160,10 @@ export function ShareButton({
     setDownloadUrl(null);
     setDownloadKind(null);
     setPhase("recording");
+    onCaptureQualityChange?.(true);
 
     try {
+      await waitForFrames(2);
       const sourceCanvas = getCanvas();
       // Defensive: the trigger button is disabled until the canvas mounts,
       // so this should be unreachable in practice. If the canvas unmounts
@@ -194,14 +203,22 @@ export function ShareButton({
       if (cancelledRef.current) return;
 
       setPhase("loading-core");
-      // exportToMp4 flips its own loadingCore/transcoding flags; we mirror via phase.
-      const mp4 = await exporter.exportToMp4(webm, "galaxique-universe.mp4");
+      let video = webm;
+      let filename = "galaxique-universe.webm";
+      try {
+        video = await exporter.exportToMp4(webm);
+        filename = "galaxique-universe.mp4";
+      } catch (transcodeError) {
+        // Keep the browser-native recording usable when the optional ffmpeg
+        // core is blocked or unavailable.
+        console.warn("MP4 conversion failed; keeping the original recording.", transcodeError);
+      }
       if (cancelledRef.current) return;
 
-      // Provide an in-page preview link too.
-      const url = URL.createObjectURL(mp4);
+      const url = URL.createObjectURL(video);
       setDownloadUrl(url);
       setDownloadKind("video");
+      setDownloadFilename(filename);
       setPhase("done");
     } catch (err) {
       overlay.stop();
@@ -211,6 +228,8 @@ export function ShareButton({
       const msg = err instanceof Error ? err.message : String(err);
       setErrorMsg(msg);
       setPhase("error");
+    } finally {
+      onCaptureQualityChange?.(false);
     }
   };
 
@@ -218,6 +237,7 @@ export function ShareButton({
     if (downloadUrl) URL.revokeObjectURL(downloadUrl);
     setDownloadUrl(null);
     setDownloadKind(null);
+    setDownloadFilename("galaxique-universe.png");
     setErrorMsg("");
     setPhase("idle");
   };
@@ -298,8 +318,8 @@ export function ShareButton({
           </DialogTitle>
           <DialogDescription>
             {language === "th"
-              ? "บันทึกภาพจักรวาลของคุณ หรืออัดวิดีโอความยาว 12 วินาที"
-              : "Save a photo of your universe, or record a 12-second video."}
+              ? "บันทึกภาพจักรวาลของคุณ"
+              : "Save a photo of your universe."}
           </DialogDescription>
         </DialogHeader>
 
@@ -362,6 +382,14 @@ export function ShareButton({
                   className="w-full rounded-lg border border-border/70"
                 />
               )}
+              {phase === "done" && downloadUrl && (
+                <Button asChild className="self-end gap-2">
+                  <a href={downloadUrl} download={downloadFilename}>
+                    <DownloadIcon className="size-4" />
+                    {language === "th" ? "บันทึกไฟล์" : "Save file"}
+                  </a>
+                </Button>
+              )}
             </motion.div>
           </AnimatePresence>
 
@@ -376,9 +404,18 @@ export function ShareButton({
                   <ShareIcon className="size-4" />
                   {language === "th" ? "บันทึกภาพ" : "Save photo"}
                 </Button>
-                <Button onClick={handleShare} className="gap-2">
+                <Button
+                  onClick={handleShare}
+                  className="gap-2"
+                  disabled
+                  title={
+                    language === "th"
+                      ? "การส่งออกวิดีโอยังไม่พร้อมใช้งาน"
+                      : "Video export is temporarily unavailable."
+                  }
+                >
                   <VideoIcon className="size-4" />
-                  {language === "th" ? "อัดวิดีโอ 12 วินาที" : "Record 12s video"}
+                  {language === "th" ? "วิดีโอ (เร็ว ๆ นี้)" : "Video (coming soon)"}
                 </Button>
               </>
             )}
