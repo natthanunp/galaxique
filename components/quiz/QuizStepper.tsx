@@ -8,8 +8,8 @@ import { AlertCircleIcon } from "lucide-react";
 import { QuestionCard } from "@/components/quiz/QuestionCard";
 import { LoadingCosmos } from "@/components/shared/LoadingCosmos";
 import { Button } from "@/components/ui/button";
+import { prefetchQuiz, takePrefetchedQuiz } from "@/lib/quizPrefetch";
 import { useQuizStore } from "@/store/quizStore";
-import type { QuizQuestion } from "@/types/universe";
 
 /** Manages the multi-step quiz: fetches questions, collects answers, submits. */
 export function QuizStepper() {
@@ -62,25 +62,9 @@ export function QuizStepper() {
   const loadQuestions = useCallback(() => {
     setFetching(true);
     setFetchError(null);
-    // Unique per attempt: every "Try again" gets a fresh nonce so the
-    // server's LLM-call mutex doesn't dedupe it onto the previous call.
-    const nonce = crypto.randomUUID();
     const avoidAngles = useQuizStore.getState().seenAngles;
-    return fetch("/api/generate-quiz", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ avoidAngles, nonce }),
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({}));
-          throw new Error(body.error || `Failed (${res.status})`);
-        }
-        return res.json() as Promise<{
-          questions: QuizQuestion[];
-          pickedAngles?: string[];
-        }>;
-      })
+    const request = takePrefetchedQuiz(avoidAngles) ?? prefetchQuiz(avoidAngles);
+    return request
       .then((data) => {
         setQuestions(data.questions);
         addSeenAngles(data.pickedAngles ?? []);

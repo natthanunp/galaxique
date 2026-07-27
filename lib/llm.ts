@@ -50,6 +50,40 @@ export interface LlmCallOptions {
    *  "aborted due to timeout" failures even though the model was still
    *  actively generating). */
   timeoutMs?: number;
+  /** OpenRouter provider ordering for this specific call. Useful when a
+   *  route retries a timeout using the alternate strategy. */
+  providerSort?: "latency" | "throughput";
+}
+
+/** Explicit provider preference order for the configured model.
+ *
+ *  Why pin instead of relying on `provider.sort` alone: this OpenRouter
+ *  account only has a SUBSET of a model's providers enabled (verified by
+ *  probing every slug for deepseek/deepseek-v4-flash — only `deepinfra` and
+ *  `novita` were reachable; all others returned "No endpoints found"). A bare
+ *  `sort` can therefore resolve to a disallowed endpoint and fail INSTANTLY
+ *  with "No allowed providers are available for the selected model", which
+ *  surfaced as sub-second 502s from /api/generate-quiz that looked like a
+ *  schema bug rather than a routing one.
+ *
+ *  Order is measured, not assumed — benchmarked 3x each at this app's real
+ *  3200-token bilingual quiz budget: novita ~9.1-9.4s (tight spread),
+ *  deepinfra ~12-24s (wide spread). Novita first, deepinfra as fallback.
+ *
+ *  Override with OPENROUTER_PROVIDER_ORDER (comma-separated lowercase slugs)
+ *  after enabling more providers at https://openrouter.ai/settings/preferences
+ *  — the cheapest/fastest endpoints for this model (baidu, deepseek, alibaba,
+ *  ~0.7-0.9s TTFT, 68-75 tok/s) are currently NOT enabled on this account. */
+const DEFAULT_PROVIDER_ORDER = ["novita", "deepinfra"];
+
+function resolveProviderOrder(): string[] {
+  const raw = process.env.OPENROUTER_PROVIDER_ORDER;
+  if (!raw) return DEFAULT_PROVIDER_ORDER;
+  const parsed = raw
+    .split(",")
+    .map((slug) => slug.trim().toLowerCase())
+    .filter(Boolean);
+  return parsed.length > 0 ? parsed : DEFAULT_PROVIDER_ORDER;
 }
 
 /** Single in-flight LLM call keyed by nonce. Two concurrent calls with the
@@ -80,11 +114,11 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
   const start = Date.now();
   const purpose = opts.purpose ?? "unknown";
   const model = quizConfig.openrouterModel;
-  // Provider routing can be tuned per environment. "throughput" was once
-  // fastest, but OpenRouter's provider mix changes; let operators override.
-  // Default to "latency" because real tests now show it is consistently
-  // faster for time-to-first-token (the user-visible delay).
-  const providerSort = process.env.OPENROUTER_PROVIDER_SORT || "latency";
+  // Provider routing can be tuned per environment. Throughput is the default
+  // because a large, bilingual quiz needs sustained output speed; the quiz
+  // route retries a timeout once with the alternate latency strategy.
+  const providerSort =
+    opts.providerSort ?? process.env.OPENROUTER_PROVIDER_SORT ?? "throughput";
   const timeoutMs = opts.timeoutMs ?? 20_000;
   try {
     const result = await client.chat.send(
@@ -103,7 +137,15 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
           // reasoning tokens. This app only needs fast structured JSON, not
           // deep reasoning, so disable it explicitly.
           reasoning: { effort: "none" },
-          provider: { sort: providerSort as "latency" | "throughput" },
+          // `order` takes precedence over `sort` and keeps us on endpoints
+          // this account can actually reach. `allowFallbacks` stays true so a
+          // hiccup on the first provider rolls to the next one in the list
+          // instead of failing the request outright.
+          provider: {
+            order: resolveProviderOrder(),
+            allowFallbacks: true,
+            sort: providerSort as "latency" | "throughput",
+          },
         },
       },
       // Per-call `timeoutMs` lets large-output call sites (e.g.

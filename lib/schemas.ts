@@ -25,34 +25,59 @@ export const quizPayloadSchema = z.object({
   questions: z.array(quizQuestionSchema).min(1),
 });
 
-/** Structured result from the dedicated playlist-matching LLM pass. Instead
- *  of forcing a single deterministic pick, the model scores several
- *  candidates it genuinely considered — the server then weight-randomly
- *  samples among near-tied top scores (see pickWeightedCandidate() in
- *  app/api/analyze/route.ts). This gives real variety across repeat/similar
- *  quiz answers without ever excluding a track outright: a single standout
- *  fit still always wins since nothing else lands within the tie margin. */
+/** Per-dimension match score for one catalog candidate, 0–10 per axis.
+ *  Each axis corresponds to a curated descriptor field in songKnowledge.json,
+ *  so the model scores by matching the answer signals against the track's
+ *  actual `relationship_stance` / `mood` / `energy` / `setting` tags rather
+ *  than emitting one holistic vibe-number (which collapsed to famous defaults
+ *  and to meaningless "85" self-confidence). Mechanical per-axis scoring is
+ *  what forces genuine descriptor comparison. */
+const dimensionScoreSchema = z.object({
+  /** Do the track's curated themes match the specific ideas in the answers? */
+  themes: z.number().min(0).max(10),
+  /** Does the track's relationship stance match the emotional stance in the
+   *  answers (secure closeness vs. yearning vs. heartbreak vs. independence)? */
+  stance: z.number().min(0).max(10),
+  /** Does the track's emotional temperature match (dreamy/melancholic vs.
+   *  joyful vs. defiant vs. restrained)? */
+  mood: z.number().min(0).max(10),
+  /** Does the track's energy match (still/intimate vs. driving vs. expansive)? */
+  energy: z.number().min(0).max(10),
+  /** Does the track's setting/imagery match (late-night alone vs. wide-open
+   *  landscape vs. bright celebration)? */
+  setting: z.number().min(0).max(10),
+  /** Max 6 words naming the strongest signal this track matches. */
+  why: z.string(),
+});
+
+/** Structured result from the dedicated playlist-matching LLM pass.
+ *
+ *  The model first scores a small shortlist of catalog tracks across the four
+ *  curated descriptor dimensions, then the SERVER picks the highest-scoring
+ *  one deterministically. Two properties fall out of this for free:
+ *   - the model can't collapse to a famous default, because Holocene/Apocalypse
+ *     only win if their *specific* tags out-score every other candidate;
+ *   - the server gets a real, comparable score it can use to detect a weak
+ *     overall match (and to break ties on recent-use, not on randomness).
+ *  Generating the shortlist as tokens before the pick is also what engages
+ *  actual evaluation — at temperature 0.2 a direct single-pick pattern-matches
+ *  to the most famous song in the catalog. */
 export const songSelectionSchema = z.object({
-  // The selector prompt asks for 2-3 signals, but a model may provide a
-  // couple of additional useful signals. Accept those rather than spending
-  // multiple slow retries on an otherwise valid catalog selection.
+  // 2-3 requested; a couple extra useful signals are accepted rather than
+  // spending slow retries on an otherwise valid catalog selection.
   answer_signals: z.array(z.string().min(1)).min(2).max(6),
+  /** The scored shortlist. Server resolves each to a catalog track by
+   *  name/artist, applies the same total, and picks the max. */
   candidates: z
     .array(
-      z.object({
-        /** Helpful when the model can copy it, but title + artist are the
-         *  authoritative selection keys the server resolves to a catalog ID. */
-        spotify_track_id: z.string().min(1).optional(),
-        name: z.string().min(1),
-        artist: z.string().min(1),
-        /** 0-100 — how well this specific track fits the derived signals.
-         *  Scores must genuinely differentiate; don't hedge with several
-         *  near-identical high scores. */
-        fit_score: z.number().min(0).max(100),
-        match_summary: z.string().min(1),
+      dimensionScoreSchema.extend({
+        /** Opaque code assigned by the server for this prompt. Hiding song
+         *  names/artists prevents the model's popularity prior from biasing
+         *  descriptor-only comparison. */
+        catalog_code: z.string().regex(/^C\d{3}$/),
       }),
     )
-    .min(1)
+    .min(3)
     .max(6),
 });
 

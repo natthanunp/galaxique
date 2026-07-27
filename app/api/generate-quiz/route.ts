@@ -26,7 +26,8 @@ const requestBodySchema = z.object({
  *  style/depth reference examples per call. The model invents its own real
  *  angles — these are just grounding examples, not a fixed menu — so this
  *  can be smaller than questionCount without capping variety. */
-const EXAMPLE_ANGLE_COUNT = 10;
+const EXAMPLE_ANGLE_COUNT = 5;
+const MAX_AVOID_ANGLES_IN_PROMPT = 12;
 
 /** Pick `count` distinct random entries from `pool`, preferring entries that
  * aren't in `avoid`. Used to sample a fresh set of style-reference angles
@@ -60,6 +61,9 @@ export async function POST(request: Request) {
     const raw = await request.json().catch(() => ({}));
     const parsed = requestBodySchema.safeParse(raw);
     const avoidAngles = parsed.success ? parsed.data.avoidAngles ?? [] : [];
+    // Retain the most recent angles only. Sending an unbounded session history
+    // consumes context without making the next five questions more distinct.
+    const recentAvoidAngles = avoidAngles.slice(-MAX_AVOID_ANGLES_IN_PROMPT);
     const nonce = parsed.success ? parsed.data.nonce : undefined;
 
     // Sample a fresh batch of style-reference angles from the static pool.
@@ -70,32 +74,44 @@ export async function POST(request: Request) {
     const exampleAngles = pickAngles(
       QUESTION_ANGLES,
       EXAMPLE_ANGLE_COUNT,
-      new Set(avoidAngles),
+      new Set(recentAvoidAngles),
     );
 
-    const systemPrompt = buildQuizSystemPrompt(exampleAngles, avoidAngles);
-    const userPrompt = `Generate the quiz now for nonce=${nonce ?? cryptoRandomNonce()}. Invent ${count} distinct angles as instructed, then write the question for each.`;
+    const requestNonce = nonce ?? cryptoRandomNonce();
+    const systemPrompt = buildQuizSystemPrompt(exampleAngles, recentAvoidAngles);
+    const userPrompt = `Generate the quiz now for nonce=${requestNonce}. Invent ${count} distinct angles as instructed, then write the question for each.`;
+    const preferredProviderSort = process.env.OPENROUTER_PROVIDER_SORT === "latency"
+      ? "latency"
+      : "throughput";
+    const fallbackProviderSort = preferredProviderSort === "throughput"
+      ? "latency"
+      : "throughput";
 
     let validation: ReturnType<typeof quizPayloadSchema.safeParse> | null =
       null;
     for (let attempt = 0; attempt < 3; attempt++) {
-      const parsedLlm = await callLlm({
-        systemPrompt,
-        userPrompt,
-        temperature: 0.9,
-        // 4 bilingual MCQ options per question roughly quadruples the output
-        // text vs. question-text-only, so this needs meaningfully more room
-        // than the old free-text-answer format's 3072.
-        maxTokens: 4096,
-        // This much larger payload (5 questions \u00d7 4 bilingual options each)
-        // routinely needs more than the default 20s timeout, which was
-        // causing "aborted due to timeout" 500s even on successful
-        // generations that just took a bit longer than analyze's simpler
-        // payload. Give it real headroom.
-        timeoutMs: 40_000,
-        nonce,
-        purpose: "generate-quiz",
-      });
+      let parsedLlm: unknown;
+      try {
+        parsedLlm = await callLlm({
+          systemPrompt,
+          userPrompt,
+          temperature: 0.9,
+          // The requested wording keeps this safely below the old 4096-token
+          // ceiling while reducing provider generation time on slow routes.
+          maxTokens: 3200,
+          timeoutMs: 40_000,
+          nonce: `${requestNonce}:${attempt}`,
+          purpose: "generate-quiz",
+          providerSort:
+            attempt === 0 ? preferredProviderSort : fallbackProviderSort,
+        });
+      } catch (err) {
+        console.warn(
+          `[generate-quiz] attempt ${attempt + 1} failed; retrying with ${fallbackProviderSort} routing`,
+          err,
+        );
+        continue;
+      }
 
       // Safety net: some providers (Groq) don't enforce schema, so the model
       // may omit the `id` field. Auto-assign 1-based IDs if missing.

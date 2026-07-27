@@ -28,60 +28,28 @@ export function buildQuizSystemPrompt(
   exampleAngles: readonly string[],
   avoidAngles: readonly string[],
 ): string {
-  return `You are the voice of "Your Unique Universe", a short personality quiz that maps people to a 3D cosmic object. Your job in this call is TWO-FOLD: (1) invent the underlying angle for each question, then (2) write the question itself.
+  return `Create a ${quizConfig.questionCount}-question bilingual personality quiz for "Your Unique Universe".
 
-WHAT MAKES A GOOD ANGLE:
-An angle is the real psychological thing a question is trying to reveal — a genuine, durable facet of who someone IS: their instincts, values, emotional patterns, formative memories, comforts, fears, or the small unconscious ways they move through the world. A good angle is something a close friend would only learn about you after months of real conversation — NOT a shallow preference (favorite color, favorite food, favorite season) and not generic personality-test filler.
+Each question needs a distinct, durable identity angle: instincts, values, emotional patterns, comforts, or ways of relating. Avoid shallow preferences and generic personality-test filler. The batch must cover different facets, must not be all dark or introspective, and must include joy, play, curiosity, warmth, connection, or everyday delight.
 
-Invent exactly ${quizConfig.questionCount} NEW angles — one per question — that are meaningfully different from EACH OTHER and from the "recently used" list below. Cover a genuinely varied spread across the batch (e.g. don't secretly make 3 of them about romantic relationships, or 3 of them about childhood).
-
-CRITICAL VARIETY RULE: the batch must NOT be entirely dark, introspective, nostalgic, or melancholy. Include at least one angle about joy, play, curiosity, warmth, connection, or everyday delight. The overall mix should feel like a real person: light and shadow, not all shadow.
-
-STYLE REFERENCE ONLY — these show the kind of depth and phrasing to aim for. Do NOT reuse them verbatim or lightly reworded; invent genuinely new angles in the same spirit:
+Reference angles (inspiration only; do not copy or lightly reword):
 ${formatAnglesForPrompt(exampleAngles)}
 ${
   avoidAngles.length > 0
-    ? `\nRECENTLY USED — invent angles that explore a clearly different facet of identity than every one of these:\n${formatAnglesForPrompt(avoidAngles)}`
+    ? `\nRecently used (choose clearly different facets):\n${formatAnglesForPrompt(avoidAngles)}`
     : ""
 }
 
-For each invented angle, write a SHORT question — 1 sentence, under 18 words in English, ideally 8–14 words. Ask the way a curious friend would in a real conversation. No poetry, no metaphors, no "imagine you are…" openings. Just clear, concrete, human questions. Ground abstract angles with concrete, sensory example anchors baked into the question wording (e.g. "...their energy, how they talk, or something else?") so the question is instantly answerable — never leave an abstract topic fully open-ended.
+For each item:
+- Invent one concise angle (not a restatement of its question).
+- Write one clear, concrete English question, 8-14 words and never over 18; no metaphors, clichés, or double questions.
+- Supply a natural Thai translation in Thai script only: no English, pinyin, Chinese, or Japanese characters.
+- Supply exactly 4 distinct, plausible bilingual answer options. Each option is a concrete phrase under 8 English words.
 
-LANGUAGE RULES (critical):
-- Every question must have text_en (English) and text_th (Thai).
-- The Thai MUST be 100% Thai script only. NEVER mix in Chinese characters (汉字/中文), Japanese kanji, or any non-Thai logographs. If a single Chinese character appears, the output is wrong.
-- Translate the MEANING naturally into Thai, not word-for-word. Thai should read like a native Thai speaker wrote it.
-- Do not include romanization, pinyin, or English words inside text_th.
-- Keep Thai length proportional to the English (similar word count, not 3x longer).
+Tone: ${quizConfig.tone}
+Theme: ${quizConfig.theme}; use only as background flavor.
 
-GUIDELINES:
-- Multiple choice, not free text: for EACH question, also author exactly 4 short answer options (bilingual, text_en + text_th) that the user picks from. The 4 options must be genuinely distinct and plausible — a believable spread of real answers people might actually pick, not one "obviously correct" option plus 3 throwaway distractors. Keep each option short (a phrase, under 8 words), concrete, and mutually exclusive (no two options should mean basically the same thing).
-- Every question must be immediately answerable without needing clarification — the reader should instantly know what kind of answer to give. If a topic is abstract, ground it with concrete example options rather than leaving it fully open-ended.
-- Each question's "angle" field is your own 1-sentence description of the facet of identity it probes — write it in the same terse, descriptive style as the style-reference list above (not a restatement of the question text itself).
-- The order of the questions in the JSON array must match the order you invented your angles in — question at index 0 pairs with its own angle field, and so on.
-- Avoid clichés ("What's your favorite color?").
-- No double-barreled questions (one "and" or two ideas = bad).
-- Use simple words. No corporate personality-test language.
-- Tone: ${quizConfig.tone}
-- Theme: ${quizConfig.theme} (background flavor only — don't shoehorn cosmos words into every question).
-
-Return ONLY this JSON object, nothing else, no markdown, no commentary:
-{
-  "questions": [
-    {
-      "id": 1,
-      "angle": "...",
-      "text_en": "...",
-      "text_th": "...",
-      "options": [
-        { "text_en": "...", "text_th": "..." },
-        { "text_en": "...", "text_th": "..." },
-        { "text_en": "...", "text_th": "..." },
-        { "text_en": "...", "text_th": "..." }
-      ]
-    },
-    ...
-  ]
-}
-The id must be a 1-based integer (1, 2, 3, ...). Every question must have a non-empty "angle" string and EXACTLY 4 options, no more, no fewer.`;
+Return valid JSON only:
+{"questions":[{"id":1,"angle":"...","text_en":"...","text_th":"...","options":[{"text_en":"...","text_th":"..."},{"text_en":"...","text_th":"..."},{"text_en":"...","text_th":"..."},{"text_en":"...","text_th":"..."}]}]}
+Use sequential 1-based ids and exactly ${quizConfig.questionCount} questions.`;
 }

@@ -7,11 +7,15 @@ import { SparklesIcon, ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
 import { StarfieldBackground } from "@/components/shared/StarfieldBackground";
 import { LanguageToggle } from "@/components/quiz/LanguageToggle";
 import { Button } from "@/components/ui/button";
+import { prefetchQuiz } from "@/lib/quizPrefetch";
 import { useQuizStore } from "@/store/quizStore";
 
 export default function LandingPage() {
   const language = useQuizStore((s) => s.language);
   const reset = useQuizStore((s) => s.reset);
+  const prefetchNextQuiz = () => {
+    prefetchQuiz(useQuizStore.getState().seenAngles);
+  };
 
   const t = {
     eyebrow: language === "th" ? "กาแล็กซิก" : "Galaxique",
@@ -72,7 +76,13 @@ export default function LandingPage() {
 
           <div className="mt-4 flex flex-col items-center gap-3">
             <Button asChild size="lg" className="group">
-              <Link href="/quiz" onClick={reset}>
+              <Link
+                href="/quiz"
+                onPointerEnter={prefetchNextQuiz}
+                onFocus={prefetchNextQuiz}
+                onTouchStart={prefetchNextQuiz}
+                onClick={reset}
+              >
                 {t.cta}
                 <ArrowRightIcon className="transition-transform group-hover:translate-x-1" />
               </Link>
