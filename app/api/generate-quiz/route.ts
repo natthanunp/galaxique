@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
 
 import { callLlm } from "@/lib/llm";
 import { legacyQuizPayloadSchema, quizPayloadSchema } from "@/lib/schemas";
@@ -13,22 +12,6 @@ export const runtime = "nodejs";
 // Quiz generation is dynamic per call; don't cache at the framework level.
 export const dynamic = "force-dynamic";
 
-/** Body schema — both fields are optional. `avoidAngles` lets the client tell
- *  the server which angles it's already seen this session, so a refresh or
- *  retry can produce a meaningfully different set. We cap the array length to
- *  keep the prompt bounded. */
-const requestBodySchema = z.object({
-  avoidAngles: z.array(z.string()).max(50).optional(),
-  /** v2 clients send an explicit language and receive a single-language
-   *  payload. Its absence identifies the v1 bilingual contract, which must
-   *  remain available for an already-open pre-deploy browser tab. */
-  language: z.enum(["en", "th"]).optional(),
-  /** A unique token per request — used to break the LLM call mutex so a
-   *  retry isn't aliased to the previous in-flight call. Optional; the server
-   *  generates one if absent. */
-  nonce: z.string().max(100).optional(),
-});
-
 /** How many entries from the static QUESTION_ANGLES pool to show the LLM as
  *  style/depth reference examples per call. The model invents its own real
  *  angles — these are just grounding examples, not a fixed menu — so this
@@ -39,6 +22,47 @@ const LEGACY_QUESTION_COUNT = 5;
 const LETTER = /\p{L}/u;
 const LATIN_LETTER = /\p{Script=Latin}/u;
 const THAI_LETTER = /\p{Script=Thai}/u;
+
+type LegacyCompatibleQuestion = {
+  id: number;
+  text_en: string;
+  text_th: string;
+  text: string;
+  options: {
+    text_en: string;
+    text_th: string;
+    text: string;
+  }[];
+};
+
+/**
+ * Requests come from a browser bundle whose local storage can outlive several
+ * releases. These fields are optional optimization/context hints, not the
+ * user's quiz answers, so malformed values must be discarded rather than
+ * turning a recoverable stale-client state into a 400. Unknown language is
+ * deliberately treated as the bilingual v1 contract, never guessed as Thai
+ * or English.
+ */
+function parseRequestBody(raw: unknown): {
+  avoidAngles: string[];
+  language: "en" | "th" | undefined;
+  nonce: string | undefined;
+} {
+  const body = raw && typeof raw === "object" && !Array.isArray(raw)
+    ? raw as Record<string, unknown>
+    : {};
+  return {
+    avoidAngles: Array.isArray(body.avoidAngles)
+      ? body.avoidAngles.filter((angle): angle is string => typeof angle === "string").slice(-50)
+      : [],
+    language: body.language === "en" || body.language === "th"
+      ? body.language
+      : undefined,
+    nonce: typeof body.nonce === "string" && body.nonce.length <= 100
+      ? body.nonce
+      : undefined,
+  };
+}
 
 /**
  * JSON mode guarantees structure, not that an LLM obeys a natural-language
@@ -114,23 +138,15 @@ function pickAngles(
  *  Body (all optional): { avoidAngles?: string[], nonce?: string } */
 export async function POST(request: Request) {
   try {
-    // Parse the body defensively. A missing or malformed body is fine — we
-    // just regenerate with no avoidance context.
+    // Parse optional request metadata defensively. A stale bundle can send an
+    // old or malformed shape; normalize it into the compatible v1 contract
+    // instead of failing before the quiz can be generated.
     const raw = await request.json().catch(() => ({}));
-    const parsed = requestBodySchema.safeParse(raw);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Invalid request body." },
-        { status: 400 },
-      );
-    }
-    const avoidAngles = parsed.data.avoidAngles ?? [];
-    const language = parsed.data.language;
+    const { avoidAngles, language, nonce } = parseRequestBody(raw);
     const legacyClient = language === undefined;
     // Retain the most recent angles only. Sending an unbounded session history
     // consumes context without making the next five questions more distinct.
     const recentAvoidAngles = avoidAngles.slice(-MAX_AVOID_ANGLES_IN_PROMPT);
-    const nonce = parsed.data.nonce;
 
     // Sample a fresh batch of style-reference angles from the static pool.
     // These are only few-shot examples now — the model invents the actual
@@ -241,7 +257,30 @@ export async function POST(request: Request) {
       ({ angle: _angle, ...question }) => question,
     );
 
-    return NextResponse.json({ questions, pickedAngles });
+    // The original v1 renderer uses text_en/text_th based on its own toggle;
+    // the v2 renderer uses text. Include both fields for an unrecognized
+    // request so either already-deployed bundle can render a safe response
+    // while its local state/service worker catches up. `text` is English only
+    // because an unknown language cannot be honestly inferred; a valid Thai
+    // request always takes the v2 Thai-only branch above.
+    const compatibleQuestions: typeof questions | LegacyCompatibleQuestion[] =
+      legacyClient
+        ? (questions as {
+            id: number;
+            text_en: string;
+            text_th: string;
+            options: { text_en: string; text_th: string }[];
+          }[]).map((question) => ({
+            ...question,
+            text: question.text_en,
+            options: question.options.map((option) => ({
+              ...option,
+              text: option.text_en,
+            })),
+          }))
+        : questions;
+
+    return NextResponse.json({ questions: compatibleQuestions, pickedAngles });
   } catch (err) {
     console.error("[generate-quiz]", err);
     const message = err instanceof Error ? err.message : "Unknown error";
