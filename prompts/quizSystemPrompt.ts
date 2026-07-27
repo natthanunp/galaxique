@@ -1,4 +1,5 @@
 import { quizConfig } from "@/config/quizConfig";
+import type { Language } from "@/types/universe";
 
 /**
  * System prompt for the LLM call #1 — question generation.
@@ -14,8 +15,13 @@ import { quizConfig } from "@/config/quizConfig";
  * calls keep exploring new facets of identity instead of orbiting the same
  * few topics.
  *
+ * Single-language output: language now only switches on the landing page,
+ * before the quiz starts, so each call authors question text and options in
+ * ONLY the requested language instead of bilingual EN+TH — roughly halving
+ * this call's output tokens.
+ *
  * Interpolates {questionCount}, {theme}, {tone}, {exampleAngles},
- * {avoidAngles} from caller. Output is also constrained by the
+ * {avoidAngles}, {language} from caller. Output is also constrained by the
  * responseFormat on the LLM call.
  */
 
@@ -27,8 +33,15 @@ export function formatAnglesForPrompt(angles: readonly string[]): string {
 export function buildQuizSystemPrompt(
   exampleAngles: readonly string[],
   avoidAngles: readonly string[],
+  language: Language,
 ): string {
-  return `Create a ${quizConfig.questionCount}-question bilingual personality quiz for "Your Unique Universe".
+  const languageName = language === "th" ? "Thai" : "English";
+  const languageInstruction =
+    language === "th"
+      ? "Write every question and option in natural, modern Thai script only: no English, pinyin, Chinese, or Japanese characters."
+      : "Write every question and option in natural, concrete English.";
+
+  return `Create a ${quizConfig.questionCount}-question personality quiz for "Your Unique Universe", written entirely in ${languageName}.
 
 Each question needs a distinct, durable identity angle: instincts, values, emotional patterns, comforts, or ways of relating. Avoid shallow preferences and generic personality-test filler. The batch must cover different facets, must not be all dark or introspective, and must include joy, play, curiosity, warmth, connection, or everyday delight.
 
@@ -41,15 +54,14 @@ ${
 }
 
 For each item:
-- Invent one concise angle (not a restatement of its question).
-- Write one clear, concrete English question, 8-14 words and never over 18; no metaphors, clichés, or double questions.
-- Supply a natural Thai translation in Thai script only: no English, pinyin, Chinese, or Japanese characters.
-- Supply exactly 4 distinct, plausible bilingual answer options. Each option is a concrete phrase under 8 English words.
+- Invent one concise angle (not a restatement of its question), written in English regardless of the quiz language (it's stripped before the client ever sees it).
+- Write one clear, concrete question, 8-14 words and never over 18; no metaphors, clichés, or double questions. ${languageInstruction}
+- Supply exactly 4 distinct, plausible answer options, each a concrete phrase under 8 words, short and punchy with no filler.
 
 Tone: ${quizConfig.tone}
 Theme: ${quizConfig.theme}; use only as background flavor.
 
 Return valid JSON only:
-{"questions":[{"id":1,"angle":"...","text_en":"...","text_th":"...","options":[{"text_en":"...","text_th":"..."},{"text_en":"...","text_th":"..."},{"text_en":"...","text_th":"..."},{"text_en":"...","text_th":"..."}]}]}
+{"questions":[{"id":1,"angle":"...","text":"...","options":[{"text":"..."},{"text":"..."},{"text":"..."},{"text":"..."}]}]}
 Use sequential 1-based ids and exactly ${quizConfig.questionCount} questions.`;
 }

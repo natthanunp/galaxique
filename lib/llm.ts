@@ -58,23 +58,33 @@ export interface LlmCallOptions {
 /** Explicit provider preference order for the configured model.
  *
  *  Why pin instead of relying on `provider.sort` alone: this OpenRouter
- *  account only has a SUBSET of a model's providers enabled (verified by
- *  probing every slug for deepseek/deepseek-v4-flash — only `deepinfra` and
- *  `novita` were reachable; all others returned "No endpoints found"). A bare
- *  `sort` can therefore resolve to a disallowed endpoint and fail INSTANTLY
- *  with "No allowed providers are available for the selected model", which
- *  surfaced as sub-second 502s from /api/generate-quiz that looked like a
- *  schema bug rather than a routing one.
+ *  account only has a SUBSET of a model's providers enabled. A bare `sort`
+ *  can resolve to a disallowed endpoint and fail INSTANTLY with "No allowed
+ *  providers are available for the selected model", which surfaced as
+ *  sub-second 502s from /api/generate-quiz that looked like a schema bug
+ *  rather than a routing one.
  *
- *  Order is measured, not assumed — benchmarked 3x each at this app's real
- *  3200-token bilingual quiz budget: novita ~9.1-9.4s (tight spread),
- *  deepinfra ~12-24s (wide spread). Novita first, deepinfra as fallback.
+ *  IMPORTANT — this list is MODEL-SPECIFIC, not account-wide: each model on
+ *  OpenRouter is served by its own distinct set of backing providers (query
+ *  `GET /api/v1/models/<model>/endpoints` to check). The previous order
+ *  (baidu/deepseek/alibaba/deepinfra/novita) was benchmarked for
+ *  `deepseek/deepseek-v4-flash` — when `OPENROUTER_MODEL` was switched to
+ *  `mistralai/mistral-small-3.2-24b-instruct`, NONE of baidu/deepseek/
+ *  alibaba/novita serve this model at all, so `allowFallbacks` silently fell
+ *  through to `deepinfra` (the only overlapping entry) every single time —
+ *  which is the WORST-throughput of the 3 providers that actually serve this
+ *  model, explaining why latency didn't improve after the model swap.
+ *
+ *  Current values for `mistralai/mistral-small-3.2-24b-instruct` (live
+ *  30-min stats via the endpoints API): `mistral` (official) p50 308ms /
+ *  88 tok/s / 99.91% uptime — fastest and highest throughput by far;
+ *  `deepinfra` p50 410ms / 39 tok/s / 99.01%; `venice` p50 632ms / 29 tok/s
+ *  / 97.07% (worst of the three). Re-verify with the endpoints API any time
+ *  `OPENROUTER_MODEL` changes — do not assume a prior order still applies.
  *
  *  Override with OPENROUTER_PROVIDER_ORDER (comma-separated lowercase slugs)
- *  after enabling more providers at https://openrouter.ai/settings/preferences
- *  — the cheapest/fastest endpoints for this model (baidu, deepseek, alibaba,
- *  ~0.7-0.9s TTFT, 68-75 tok/s) are currently NOT enabled on this account. */
-const DEFAULT_PROVIDER_ORDER = ["novita", "deepinfra"];
+ *  — see https://openrouter.ai/settings/preferences for enabling providers. */
+const DEFAULT_PROVIDER_ORDER = ["mistral", "deepinfra", "venice"];
 
 function resolveProviderOrder(): string[] {
   const raw = process.env.OPENROUTER_PROVIDER_ORDER;
@@ -137,14 +147,33 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
           // reasoning tokens. This app only needs fast structured JSON, not
           // deep reasoning, so disable it explicitly.
           reasoning: { effort: "none" },
-          // `order` takes precedence over `sort` and keeps us on endpoints
-          // this account can actually reach. `allowFallbacks` stays true so a
-          // hiccup on the first provider rolls to the next one in the list
-          // instead of failing the request outright.
+          // `order` takes precedence over `sort` (and effectively disables it
+          // — the SDK/API docs confirm `sort` only applies "if order is not
+          // specified") and keeps us on endpoints this account can actually
+          // reach. `allowFallbacks` stays true so a hiccup on the first
+          // provider rolls to the next one in the list instead of failing
+          // the request outright.
+          //
+          // `zdr` is set EXPLICITLY here (not left to the account-wide
+          // dashboard toggle at openrouter.ai/settings/privacy) after a real
+          // incident: with the account's ZDR-enforcement setting on, the
+          // "mistral" (official) and "venice" endpoints for
+          // mistralai/mistral-small-3.2-24b-instruct both silently 404'd
+          // ("No endpoints found") with no indication it was ZDR-related,
+          // forcing every request onto the slowest remaining provider
+          // (deepinfra, ~39 tok/s vs mistral's ~88-105 tok/s) and causing
+          // ~13-26s completions plus a wasted 25s-timeout-then-retry on
+          // roughly half of all requests. Default `false` (matches the
+          // account setting as of this fix) so behavior is explicit and
+          // version-controlled instead of silently dependent on a dashboard
+          // toggle someone could flip back later. Override per-deployment
+          // with OPENROUTER_REQUIRE_ZDR=true if data-retention compliance is
+          // required (accept the throughput hit as a known tradeoff).
           provider: {
             order: resolveProviderOrder(),
             allowFallbacks: true,
             sort: providerSort as "latency" | "throughput",
+            zdr: process.env.OPENROUTER_REQUIRE_ZDR === "true",
           },
         },
       },

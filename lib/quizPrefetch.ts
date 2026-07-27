@@ -1,6 +1,6 @@
 "use client";
 
-import type { QuizQuestion } from "@/types/universe";
+import type { Language, QuizQuestion } from "@/types/universe";
 
 export interface GeneratedQuiz {
   questions: QuizQuestion[];
@@ -16,15 +16,18 @@ interface PrefetchedQuiz {
 const PREFETCH_TTL_MS = 2 * 60 * 1000;
 let prefetchedQuiz: PrefetchedQuiz | null = null;
 
-function getAvoidAnglesKey(avoidAngles: readonly string[]): string {
-  return JSON.stringify(avoidAngles);
+function getAvoidAnglesKey(avoidAngles: readonly string[], language: Language): string {
+  return JSON.stringify({ avoidAngles, language });
 }
 
-async function requestQuiz(avoidAngles: readonly string[]): Promise<GeneratedQuiz> {
+async function requestQuiz(
+  avoidAngles: readonly string[],
+  language: Language,
+): Promise<GeneratedQuiz> {
   const response = await fetch("/api/generate-quiz", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ avoidAngles, nonce: crypto.randomUUID() }),
+    body: JSON.stringify({ avoidAngles, language, nonce: crypto.randomUUID() }),
   });
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
@@ -37,8 +40,9 @@ async function requestQuiz(avoidAngles: readonly string[]): Promise<GeneratedQui
  *  angle history can later consume this exact promise rather than re-fetch. */
 export function prefetchQuiz(
   avoidAngles: readonly string[],
+  language: Language,
 ): Promise<GeneratedQuiz> {
-  const avoidAnglesKey = getAvoidAnglesKey(avoidAngles);
+  const avoidAnglesKey = getAvoidAnglesKey(avoidAngles, language);
   const now = Date.now();
   if (
     prefetchedQuiz &&
@@ -48,7 +52,7 @@ export function prefetchQuiz(
     return prefetchedQuiz.promise;
   }
 
-  const promise = requestQuiz(avoidAngles);
+  const promise = requestQuiz(avoidAngles, language);
   const next = { avoidAnglesKey, createdAt: now, promise };
   prefetchedQuiz = next;
   void promise.catch(() => {
@@ -61,12 +65,13 @@ export function prefetchQuiz(
  *  after consuming it, so retries will always make a genuinely new request. */
 export function takePrefetchedQuiz(
   avoidAngles: readonly string[],
+  language: Language,
 ): Promise<GeneratedQuiz> | undefined {
   const next = prefetchedQuiz;
   prefetchedQuiz = null;
   if (
     !next ||
-    next.avoidAnglesKey !== getAvoidAnglesKey(avoidAngles) ||
+    next.avoidAnglesKey !== getAvoidAnglesKey(avoidAngles, language) ||
     Date.now() - next.createdAt >= PREFETCH_TTL_MS
   ) {
     return undefined;

@@ -63,7 +63,8 @@ export function QuizStepper() {
     setFetching(true);
     setFetchError(null);
     const avoidAngles = useQuizStore.getState().seenAngles;
-    const request = takePrefetchedQuiz(avoidAngles) ?? prefetchQuiz(avoidAngles);
+    const request =
+      takePrefetchedQuiz(avoidAngles, language) ?? prefetchQuiz(avoidAngles, language);
     return request
       .then((data) => {
         setQuestions(data.questions);
@@ -74,7 +75,7 @@ export function QuizStepper() {
         setFetchError(err.message);
         setFetching(false);
       });
-  }, [setQuestions, addSeenAngles]);
+  }, [setQuestions, addSeenAngles, language]);
 
   useEffect(() => {
     if (didFetchRef.current) return;
@@ -101,7 +102,7 @@ export function QuizStepper() {
     ? answers.find((answer) => answer.questionId === currentQuestion.id)?.answer
     : undefined;
   const storedIndex = currentQuestion && storedAnswer
-    ? currentQuestion.options.findIndex((option) => option.text_en === storedAnswer)
+    ? currentQuestion.options.findIndex((option) => option.text === storedAnswer)
     : -1;
   const effectiveSelectedIndex = selectedIndex ?? (
     storedAnswer
@@ -114,10 +115,10 @@ export function QuizStepper() {
 
   const handleNext = useCallback(() => {
     if (!currentQuestion || effectiveSelectedIndex === null) return;
-    const text = language === "th" ? currentQuestion.text_th : currentQuestion.text_en;
+    const text = currentQuestion.text;
     const canonicalAnswer = effectiveSelectedIndex === currentQuestion.options.length
       ? effectiveCustomAnswer.trim()
-      : currentQuestion.options[effectiveSelectedIndex].text_en;
+      : currentQuestion.options[effectiveSelectedIndex].text;
     if (!canonicalAnswer) return;
     setAnswer(currentQuestion.id, text, canonicalAnswer);
 
@@ -136,7 +137,7 @@ export function QuizStepper() {
     // Build the final answers payload from the store + current selection.
     const finalAnswers = questions.map((q) => {
       const stored = answers.find((a) => a.questionId === q.id);
-      const qText = language === "th" ? q.text_th : q.text_en;
+      const qText = q.text;
       const ans = q.id === currentQuestion.id ? canonicalAnswer : stored?.answer ?? "";
       return { questionId: q.id, questionText: qText, answer: ans };
     });

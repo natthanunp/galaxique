@@ -16,6 +16,9 @@ export const dynamic = "force-dynamic";
  *  keep the prompt bounded. */
 const requestBodySchema = z.object({
   avoidAngles: z.array(z.string()).max(50).optional(),
+  /** Required: the language the quiz should be authored in. Language now
+   *  only switches on the landing page, before the quiz starts. */
+  language: z.enum(["en", "th"]),
   /** A unique token per request — used to break the LLM call mutex so a
    *  retry isn't aliased to the previous in-flight call. Optional; the server
    *  generates one if absent. */
@@ -60,11 +63,18 @@ export async function POST(request: Request) {
     // just regenerate with no avoidance context.
     const raw = await request.json().catch(() => ({}));
     const parsed = requestBodySchema.safeParse(raw);
-    const avoidAngles = parsed.success ? parsed.data.avoidAngles ?? [] : [];
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "language must be 'en' or 'th'." },
+        { status: 400 },
+      );
+    }
+    const avoidAngles = parsed.data.avoidAngles ?? [];
+    const language = parsed.data.language;
     // Retain the most recent angles only. Sending an unbounded session history
     // consumes context without making the next five questions more distinct.
     const recentAvoidAngles = avoidAngles.slice(-MAX_AVOID_ANGLES_IN_PROMPT);
-    const nonce = parsed.success ? parsed.data.nonce : undefined;
+    const nonce = parsed.data.nonce;
 
     // Sample a fresh batch of style-reference angles from the static pool.
     // These are only few-shot examples now — the model invents the actual
@@ -78,7 +88,7 @@ export async function POST(request: Request) {
     );
 
     const requestNonce = nonce ?? cryptoRandomNonce();
-    const systemPrompt = buildQuizSystemPrompt(exampleAngles, recentAvoidAngles);
+    const systemPrompt = buildQuizSystemPrompt(exampleAngles, recentAvoidAngles, language);
     const userPrompt = `Generate the quiz now for nonce=${requestNonce}. Invent ${count} distinct angles as instructed, then write the question for each.`;
     const preferredProviderSort = process.env.OPENROUTER_PROVIDER_SORT === "latency"
       ? "latency"
@@ -89,17 +99,19 @@ export async function POST(request: Request) {
 
     let validation: ReturnType<typeof quizPayloadSchema.safeParse> | null =
       null;
-    for (let attempt = 0; attempt < 3; attempt++) {
+    // 2 attempts, not 3: single-language output is faster to generate, and a
+    // third slow retry costs more latency than it's worth.
+    for (let attempt = 0; attempt < 2; attempt++) {
       let parsedLlm: unknown;
       try {
         parsedLlm = await callLlm({
           systemPrompt,
           userPrompt,
           temperature: 0.9,
-          // The requested wording keeps this safely below the old 4096-token
-          // ceiling while reducing provider generation time on slow routes.
+          // Single-language output for 10 questions is roughly the same total
+          // text volume as the old 5-question bilingual baseline.
           maxTokens: 3200,
-          timeoutMs: 40_000,
+          timeoutMs: 25_000,
           nonce: `${requestNonce}:${attempt}`,
           purpose: "generate-quiz",
           providerSort:

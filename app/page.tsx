@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { SparklesIcon, ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
@@ -14,8 +15,15 @@ export default function LandingPage() {
   const language = useQuizStore((s) => s.language);
   const reset = useQuizStore((s) => s.reset);
   const prefetchNextQuiz = () => {
-    prefetchQuiz(useQuizStore.getState().seenAngles);
+    prefetchQuiz(useQuizStore.getState().seenAngles, language);
   };
+
+  // Head start for mobile taps, which get little benefit from a touchstart
+  // prefetch alone (the request often hasn't progressed far by the time the
+  // tap navigates). Kick one off as soon as the landing page mounts.
+  useEffect(() => {
+    prefetchQuiz(useQuizStore.getState().seenAngles, language);
+  }, [language]);
 
   const t = {
     eyebrow: language === "th" ? "กาแล็กซิก" : "Galaxique",

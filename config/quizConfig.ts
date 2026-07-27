@@ -2,13 +2,16 @@
  * Customizable quiz configuration.
  *
  * `questionCount` is interpolated into the quiz system prompt. The brief allows
- * 5–10; we default to 5 to balance engagement against fatigue. Adjust freely.
+ * 5–10; set to 10 for richer per-user signal (single-language output roughly
+ * halves per-question token cost vs. the old bilingual 5-question baseline,
+ * so 10 single-language questions costs about the same total tokens as the
+ * old 5 bilingual ones — see docs/plan/analyze-and-generate-quiz-optimization.md).
  *
  * LLM calls go through OpenRouter exclusively (see lib/llm.ts).
  */
 export const quizConfig = {
   /** Number of questions the LLM generates per quiz (5–10 recommended). */
-  questionCount: 5,
+  questionCount: 10,
   /** Thematic lens the questions are written through. */
   theme: "the cosmos, nature, connection, and inner worlds",
   /** Emotional tone of the questions. */

@@ -87,10 +87,7 @@ export async function sendAnalyzeResultToTelegram({
     [
       "<b>Personality Reading</b>",
       "",
-      `<b>EN</b>`,
-      `<blockquote>${oneLine(reveal.personality_reading_en)}</blockquote>`,
-      `<b>TH</b>`,
-      `<blockquote>${oneLine(reveal.personality_reading_th)}</blockquote>`,
+      `<blockquote>${oneLine(reveal.personality_reading)}</blockquote>`,
     ].join("\n"),
   ];
 

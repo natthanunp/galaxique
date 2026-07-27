@@ -12,7 +12,6 @@ import { LoadingCosmos } from "@/components/shared/LoadingCosmos";
 import { SpotifyPlayer } from "@/components/reveal/SpotifyPlayer";
 import { PersonalityReading } from "@/components/reveal/PersonalityReading";
 import { ShareButton } from "@/components/reveal/ShareButton";
-import { LanguageToggle } from "@/components/quiz/LanguageToggle";
 import { Button } from "@/components/ui/button";
 import { useQuizStore } from "@/store/quizStore";
 import type { UniverseReveal } from "@/types/universe";
@@ -177,7 +176,6 @@ export default function RevealPage() {
             </Link>
           </Button>
           <div className="flex items-center gap-2">
-            <LanguageToggle />
             <Button
               asChild
               variant="outline"
@@ -217,11 +215,7 @@ export default function RevealPage() {
             className="flex min-w-0 flex-col gap-4"
           >
             <PersonalityReading
-              reading={
-                language === "th"
-                  ? reveal.personality_reading_th
-                  : reveal.personality_reading_en
-              }
+              reading={reveal.personality_reading}
               vibe={reveal.vibe}
               language={language}
             />

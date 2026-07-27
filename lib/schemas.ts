@@ -4,8 +4,7 @@ import { z } from "zod";
  *  at runtime (Gemini guarantees syntactic JSON, but values still need checking). */
 
 export const quizOptionSchema = z.object({
-  text_en: z.string().min(1),
-  text_th: z.string().min(1),
+  text: z.string().min(1),
 });
 
 export const quizQuestionSchema = z.object({
@@ -15,9 +14,8 @@ export const quizQuestionSchema = z.object({
    *  "seen" angles for future-call variety; stripped before the question is
    *  sent to the client. */
   angle: z.string().min(1),
-  text_en: z.string().min(1),
-  text_th: z.string().min(1),
-  /** Exactly 4 bilingual multiple-choice answer options. */
+  text: z.string().min(1),
+  /** Exactly 4 single-language multiple-choice answer options. */
   options: z.array(quizOptionSchema).length(4),
 });
 
@@ -32,7 +30,7 @@ export const quizPayloadSchema = z.object({
  *  than emitting one holistic vibe-number (which collapsed to famous defaults
  *  and to meaningless "85" self-confidence). Mechanical per-axis scoring is
  *  what forces genuine descriptor comparison. */
-const dimensionScoreSchema = z.object({
+export const dimensionScoreSchema = z.object({
   /** Do the track's curated themes match the specific ideas in the answers? */
   themes: z.number().min(0).max(10),
   /** Does the track's relationship stance match the emotional stance in the
@@ -50,35 +48,16 @@ const dimensionScoreSchema = z.object({
   why: z.string(),
 });
 
-/** Structured result from the dedicated playlist-matching LLM pass.
- *
- *  The model first scores a small shortlist of catalog tracks across the four
- *  curated descriptor dimensions, then the SERVER picks the highest-scoring
- *  one deterministically. Two properties fall out of this for free:
- *   - the model can't collapse to a famous default, because Holocene/Apocalypse
- *     only win if their *specific* tags out-score every other candidate;
- *   - the server gets a real, comparable score it can use to detect a weak
- *     overall match (and to break ties on recent-use, not on randomness).
- *  Generating the shortlist as tokens before the pick is also what engages
- *  actual evaluation — at temperature 0.2 a direct single-pick pattern-matches
- *  to the most famous song in the catalog. */
-export const songSelectionSchema = z.object({
-  // 2-3 requested; a couple extra useful signals are accepted rather than
-  // spending slow retries on an otherwise valid catalog selection.
-  answer_signals: z.array(z.string().min(1)).min(2).max(6),
-  /** The scored shortlist. Server resolves each to a catalog track by
-   *  name/artist, applies the same total, and picks the max. */
-  candidates: z
-    .array(
-      dimensionScoreSchema.extend({
-        /** Opaque code assigned by the server for this prompt. Hiding song
-         *  names/artists prevents the model's popularity prior from biasing
-         *  descriptor-only comparison. */
-        catalog_code: z.string().regex(/^C\d{3}$/),
-      }),
-    )
-    .min(3)
-    .max(6),
+/** One scored catalog candidate, folded directly into the single merged
+ *  reveal call (see prompts/revealSystemPrompt.ts "SONG SCORING" section and
+ *  app/api/analyze/route.ts). Optional — a malformed/missing shortlist must
+ *  not force a retry of the whole reveal response; it just falls through to
+ *  the catalog fallback for that attempt. */
+export const songCandidateSchema = dimensionScoreSchema.extend({
+  /** Opaque code assigned by the server for this prompt. Hiding song
+   *  names/artists prevents the model's popularity prior from biasing
+   *  descriptor-only comparison. */
+  catalog_code: z.string().regex(/^C\d{3}$/),
 });
 
 export const creatureSpecSchema = z.object({
@@ -160,11 +139,17 @@ export const universeRevealSchema = z.object({
   celestial_config: celestialVisualConfigSchema,
   spotify_track_id: z.string().min(1).nullable().optional(),
   spotify_search_query: z.string().min(2),
-  personality_reading_en: z.string().min(1),
-  personality_reading_th: z.string().min(1),
+  personality_reading: z.string().min(1),
 });
 
+/** Scored catalog shortlist, present only when a playlist catalog was
+ *  supplied (see "SONG SCORING" section in prompts/revealSystemPrompt.ts).
+ *  Deliberately validated SEPARATELY from `universeRevealSchema` (see
+ *  app/api/analyze/route.ts) so a malformed/missing shortlist doesn't force
+ *  a retry of an otherwise-good reveal response — it just falls through to
+ *  the catalog fallback pick for that attempt. */
+export const songCandidatesSchema = z.array(songCandidateSchema);
+
 export type QuizPayloadParsed = z.infer<typeof quizPayloadSchema>;
-export type SongSelectionParsed = z.infer<typeof songSelectionSchema>;
 export type UniverseRevealParsed = z.infer<typeof universeRevealSchema>;
 export type CreatureSpecParsed = z.infer<typeof creatureSpecSchema>;

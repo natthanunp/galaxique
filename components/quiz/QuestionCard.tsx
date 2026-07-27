@@ -42,7 +42,7 @@ export function QuestionCard({
   isLast,
   canProceed,
 }: QuestionCardProps) {
-  const text = language === "th" ? question.text_th : question.text_en;
+  const text = question.text;
   const stepLabel = `${index + 1} / ${total}`;
   const pct = ((index + 1) / total) * 100;
 
@@ -83,7 +83,7 @@ export function QuestionCard({
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {question.options.map((option, i) => {
-              const optionText = language === "th" ? option.text_th : option.text_en;
+              const optionText = option.text;
               const selected = value === i;
               return (
                 <Button
