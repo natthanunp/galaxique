@@ -2,20 +2,31 @@
 
 import { useEffect, useRef } from "react";
 
+import { isFirefoxOrEdgeUA } from "@/lib/perf";
+
 interface StarfieldBackgroundProps {
   /** Called once the starfield <canvas> is mounted, exposing the raw
    *  Canvas2D element. The /reveal page uses this so the export
-   *  pipeline can composite the starfield into the downloaded image. */
+   *  pipeline can composite the starfield into the downloaded image
+   *  (the live R3F canvas is transparent over the starfield; without
+   *  compositing both, exports look like a flat silhouette). */
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
 }
 
 /**
- * Lightweight cosmic background: soft nebula gradients, drifting dust,
- * and twinkling stars. Optimized for mobile Safari and low-end devices.
+ * A 2D canvas starfield that *feels* 3D:
+ *  - Three layers of stars at different "depths" (parallax), each with
+ *    independent size, alpha, and twinkle speed.
+ *  - A couple of large, soft, slowly-drifting nebula clouds painted as
+ *    radial gradients, tinted with the cosmic accent.
+ *  - Subtle mouse-driven parallax: when the user moves the mouse, the
+ *    foreground layer shifts a few pixels and the background layer shifts
+ *    slightly opposite — giving a sense of depth.
+ *  - A slow auto-pan so the background is never static, even when the
+ *    user isn't moving the mouse.
  *
- *  - Clouds/filaments are rendered to an offscreen canvas once and reused.
- *  - Stars use additive drawing and per-star twinkle timers.
- *  - No heavy filters/blurs in the hot path.
+ * Kept as plain Canvas2D (no Three.js) so it renders instantly on the
+ * landing and quiz pages before the heavy 3D canvas loads on /reveal.
  */
 export function StarfieldBackground({ onCanvasReady }: StarfieldBackgroundProps = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -23,146 +34,72 @@ export function StarfieldBackground({ onCanvasReady }: StarfieldBackgroundProps 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: false });
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     let raf = 0;
+    const reducedCanvasBudget = isFirefoxOrEdgeUA();
+    const dpr = Math.min(window.devicePixelRatio || 1, reducedCanvasBudget ? 1 : 2);
+    const cloudCanvas = document.createElement("canvas");
+    const cloudCtx = cloudCanvas.getContext("2d");
+    if (!cloudCtx) return;
+    let lastCloudRender = -Infinity;
+
     let width = 0;
     let height = 0;
-    let dpr = 1;
 
-    const isLowPower =
-      typeof navigator !== "undefined" &&
-      /iPhone|iPad|iPod|Android/.test(navigator.userAgent);
+    // Three star layers — far (small, slow), mid, near (big, fast).
+    type Star = { x: number; y: number; r: number; baseA: number; tw: number; phase: number; color: string };
+    let far: Star[] = [];
+    let mid: Star[] = [];
+    let near: Star[] = [];
 
-    // Nebula layer: painted once to an offscreen canvas and panned slowly.
-    const nebulaCanvas = document.createElement("canvas");
-    const nebulaCtx = nebulaCanvas.getContext("2d");
-    if (!nebulaCtx) return;
-    let nebulaOffset = 0;
-
-    type Star = {
+    // Layered, uneven clouds give the nebula a more photographic structure.
+    type Cloud = {
       x: number;
       y: number;
       r: number;
-      baseA: number;
-      tw: number;
+      hue: string;
+      speed: number;
       phase: number;
+      stretchX: number;
+      stretchY: number;
+    };
+    let clouds: Cloud[] = [];
+
+    type Filament = {
+      startX: number;
+      startY: number;
+      controlX: number;
+      controlY: number;
+      endX: number;
+      endY: number;
+      width: number;
       color: string;
+      speed: number;
+      phase: number;
     };
-    let stars: Star[] = [];
+    let filaments: Filament[] = [];
 
-    type Dust = {
-      x: number;
-      y: number;
-      r: number;
-      a: number;
-      dx: number;
-      dy: number;
-    };
-    let dust: Dust[] = [];
+    // Mouse-driven parallax offsets.
+    const parallax = { x: 0, y: 0, tx: 0, ty: 0 };
 
-    const buildNebula = () => {
-      const w = width;
-      const h = height;
-      nebulaCanvas.width = w * dpr;
-      nebulaCanvas.height = h * dpr;
-      nebulaCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      nebulaCtx.clearRect(0, 0, w, h);
-
-      // Deep base wash.
-      const base = nebulaCtx.createLinearGradient(0, 0, w, h);
-      base.addColorStop(0, "#0b0d1a");
-      base.addColorStop(0.5, "#0d0b18");
-      base.addColorStop(1, "#120b1c");
-      nebulaCtx.fillStyle = base;
-      nebulaCtx.fillRect(0, 0, w, h);
-
-      const max = Math.max(w, h);
-
-      // Large soft nebula clouds.
-      const clouds = [
-        { x: w * 0.25, y: h * 0.35, r: max * 0.55, color: "rgba(88, 66, 166, 0.22)" },
-        { x: w * 0.75, y: h * 0.28, r: max * 0.45, color: "rgba(66, 92, 166, 0.20)" },
-        { x: w * 0.55, y: h * 0.72, r: max * 0.50, color: "rgba(166, 72, 96, 0.16)" },
-        { x: w * 0.15, y: h * 0.78, r: max * 0.40, color: "rgba(56, 120, 160, 0.14)" },
-      ];
-
-      for (const c of clouds) {
-        const g = nebulaCtx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r);
-        g.addColorStop(0, c.color);
-        g.addColorStop(0.5, c.color.replace(/[\d.]+\)$/, "0.05)"));
-        g.addColorStop(1, "rgba(0,0,0,0)");
-        nebulaCtx.fillStyle = g;
-        nebulaCtx.fillRect(c.x - c.r, c.y - c.r, c.r * 2, c.r * 2);
-      }
-
-      // Subtle filament strands.
-      nebulaCtx.globalCompositeOperation = "screen";
-      const filaments = [
-        { x1: -w * 0.1, y1: h * 0.85, cpX: w * 0.35, cpY: h * 0.45, x2: w * 0.6, y2: h * 0.75, color: "rgba(200, 120, 255, 0.10)" },
-        { x1: w * 0.55, y1: -h * 0.1, cpX: w * 0.75, cpY: h * 0.55, x2: w * 1.1, y2: h * 0.65, color: "rgba(255, 140, 120, 0.08)" },
-        { x1: w * 0.1, y1: h * 0.2, cpX: w * 0.45, cpY: h * 0.5, x2: w * 0.7, y2: h * 0.25, color: "rgba(120, 180, 255, 0.07)" },
-      ];
-      for (const f of filaments) {
-        const g = nebulaCtx.createLinearGradient(f.x1, f.y1, f.x2, f.y2);
-        g.addColorStop(0, "rgba(0,0,0,0)");
-        g.addColorStop(0.4, f.color);
-        g.addColorStop(0.7, f.color);
-        g.addColorStop(1, "rgba(0,0,0,0)");
-        nebulaCtx.strokeStyle = g;
-        nebulaCtx.lineWidth = max * 0.045;
-        nebulaCtx.lineCap = "round";
-        nebulaCtx.beginPath();
-        nebulaCtx.moveTo(f.x1, f.y1);
-        nebulaCtx.quadraticCurveTo(f.cpX, f.cpY, f.x2, f.y2);
-        nebulaCtx.stroke();
-      }
-      nebulaCtx.globalCompositeOperation = "source-over";
+    const onPointerMove = (e: PointerEvent) => {
+      const nx = (e.clientX / window.innerWidth) * 2 - 1; // -1..1
+      const ny = (e.clientY / window.innerHeight) * 2 - 1;
+      parallax.tx = nx;
+      parallax.ty = ny;
     };
 
-    const buildStars = () => {
-      const area = width * height;
-      const budget = isLowPower ? 0.5 : 0.8;
-      const farCount = Math.floor(Math.min(220, area / 8000) * budget);
-      const midCount = Math.floor(Math.min(90, area / 20000) * budget);
-      const nearCount = Math.floor(Math.min(28, area / 70000) * budget);
-      const count = farCount + midCount + nearCount;
-
-      const palettes = {
-        far: ["200,210,255", "220,220,240", "255,235,225"],
-        mid: ["210,200,255", "200,220,255", "255,210,200"],
-        near: ["255,235,210", "200,230,255", "255,200,220"],
-      };
-
-      stars = Array.from({ length: count }, (_, i) => {
-        const layer =
-          i < farCount ? "far" : i < farCount + midCount ? "mid" : "near";
-        const r =
-          layer === "far" ? 0.4 + Math.random() * 0.6
-          : layer === "mid" ? 0.8 + Math.random() * 0.9
-          : 1.2 + Math.random() * 1.2;
-        return {
-          x: Math.random() * width,
-          y: Math.random() * height,
-          r,
-          baseA: layer === "far" ? 0.35 : layer === "mid" ? 0.55 : 0.8,
-          tw: 0.4 + Math.random() * 1.4,
-          phase: Math.random() * Math.PI * 2,
-          color: palettes[layer][Math.floor(Math.random() * palettes[layer].length)],
-        };
-      });
-    };
-
-    const buildDust = () => {
-      const count = isLowPower ? 18 : 32;
-      dust = Array.from({ length: count }, () => ({
+    const buildStars = (n: number, rMin: number, rMax: number, aBase: number, aJitter: number, twMin: number, twMax: number, palette: string[]): Star[] => {
+      return Array.from({ length: n }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        r: 0.5 + Math.random() * 1.2,
-        a: 0.05 + Math.random() * 0.12,
-        dx: (Math.random() - 0.5) * 0.15,
-        dy: (Math.random() - 0.5) * 0.15 - 0.05,
+        r: Math.random() * (rMax - rMin) + rMin,
+        baseA: aBase + Math.random() * aJitter,
+        tw: Math.random() * (twMax - twMin) + twMin,
+        phase: Math.random() * Math.PI * 2,
+        color: palette[Math.floor(Math.random() * palette.length)],
       }));
     };
 
@@ -170,63 +107,143 @@ export function StarfieldBackground({ onCanvasReady }: StarfieldBackgroundProps 
       const bounds = canvas.getBoundingClientRect();
       width = bounds.width || window.innerWidth;
       height = bounds.height || window.innerHeight;
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      buildNebula();
-      buildStars();
-      buildDust();
+
+      // Density scales with screen area, capped.
+      const area = width * height;
+      const starBudget = reducedCanvasBudget ? 0.6 : 1;
+      const farCount = Math.floor(Math.min(280, Math.floor(area / 6000)) * starBudget);
+      const midCount = Math.floor(Math.min(120, Math.floor(area / 14000)) * starBudget);
+      const nearCount = Math.floor(Math.min(40, Math.floor(area / 50000)) * starBudget);
+
+      const cool = ["200,210,255", "230,225,255", "255,235,225"];
+      const warm = ["255,210,200", "255,225,180", "240,200,255"];
+      const neutral = ["220,220,240", "255,250,255"];
+
+      far = buildStars(farCount, 0.3, 0.9, 0.25, 0.25, 0.3, 0.8, neutral);
+      mid = buildStars(midCount, 0.6, 1.4, 0.35, 0.3, 0.5, 1.2, cool);
+      near = buildStars(nearCount, 1.0, 2.2, 0.55, 0.3, 0.7, 1.6, warm);
+
+      const sceneSize = Math.max(width, height);
+      // On narrow phones the broad filament strokes read as hard bands, so
+      // scale them down relative to width while keeping the desktop look.
+      const filamentScale = Math.min(1, width / 768);
+      const filamentAlpha = Math.min(1, 0.6 + width / 768 * 0.4);
+      clouds = [
+        { x: width * 0.48, y: height * 0.36, r: sceneSize * 0.57, hue: "rgba(84, 152, 238, 0.32)", speed: 0.011, phase: 0.3, stretchX: 1.25, stretchY: 0.82 },
+        { x: width * 0.56, y: height * 0.52, r: sceneSize * 0.43, hue: "rgba(161, 208, 255, 0.27)", speed: 0.015, phase: 1.9, stretchX: 1.1, stretchY: 0.66 },
+        { x: width * 0.28, y: height * 0.62, r: sceneSize * 0.38, hue: "rgba(254, 119, 72, 0.22)", speed: 0.013, phase: 2.8, stretchX: 0.6, stretchY: 1.25 },
+        { x: width * 0.87, y: height * 0.29, r: sceneSize * 0.35, hue: "rgba(231, 81, 61, 0.19)", speed: 0.01, phase: 4.1, stretchX: 0.62, stretchY: 1.35 },
+        { x: width * 0.73, y: height * 0.74, r: sceneSize * 0.42, hue: "rgba(20, 44, 76, 0.5)", speed: 0.009, phase: 5.2, stretchX: 1.35, stretchY: 0.56 },
+      ];
+      filaments = [
+        { startX: -width * 0.08, startY: height * 0.82, controlX: width * 0.2, controlY: height * 0.38, endX: width * 0.55, endY: height * 0.7, width: sceneSize * 0.055 * filamentScale, color: `rgba(255, 132, 83, ${0.24 * filamentAlpha})`, speed: 0.018, phase: 0.2 },
+        { startX: width * 0.68, startY: -height * 0.04, controlX: width * 0.84, controlY: height * 0.42, endX: width * 1.04, endY: height * 0.72, width: sceneSize * 0.048 * filamentScale, color: `rgba(255, 104, 71, ${0.2 * filamentAlpha})`, speed: 0.014, phase: 1.6 },
+        { startX: width * 0.1, startY: height * 0.15, controlX: width * 0.34, controlY: height * 0.48, endX: width * 0.65, endY: height * 0.27, width: sceneSize * 0.034 * filamentScale, color: `rgba(161, 214, 255, ${0.16 * filamentAlpha})`, speed: 0.012, phase: 3.7 },
+      ];
+
+      cloudCanvas.width = canvas.width;
+      cloudCanvas.height = canvas.height;
+      cloudCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      renderClouds(0);
     };
 
-    const drawStar = (s: Star, t: number) => {
-      const tw = Math.sin(t * 0.002 * s.tw + s.phase);
-      const alpha = s.baseA + tw * 0.22;
-      if (alpha <= 0) return;
-      const a = Math.max(0, Math.min(1, alpha));
-      ctx.globalAlpha = a;
-      ctx.fillStyle = `rgb(${s.color})`;
+    const drawStar = (s: Star, t: number, ox: number, oy: number) => {
+      const a = Math.max(0, s.baseA + Math.sin(t * 0.001 * s.tw + s.phase) * 0.3);
       ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.arc(s.x + ox, s.y + oy, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${s.color}, ${a})`;
       ctx.fill();
-      if (s.r > 1.1) {
-        ctx.globalAlpha = a * 0.2;
+      // Subtle glow for the larger stars.
+      if (s.r > 1.2) {
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r * 3, 0, Math.PI * 2);
+        ctx.arc(s.x + ox, s.y + oy, s.r * 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${s.color}, ${a * 0.18})`;
         ctx.fill();
       }
-      ctx.globalAlpha = 1;
+    };
+
+    const drawCloud = (context: CanvasRenderingContext2D, c: Cloud, t: number) => {
+      const driftX = Math.sin(t * 0.001 * c.speed + c.phase) * 18;
+      const driftY = Math.cos(t * 0.001 * c.speed * 0.7 + c.phase) * 12;
+      const x = c.x + driftX;
+      const y = c.y + driftY;
+      context.save();
+      context.translate(x, y);
+      context.scale(c.stretchX, c.stretchY);
+      const g = context.createRadialGradient(0, 0, 0, 0, 0, c.r);
+      g.addColorStop(0, c.hue);
+      g.addColorStop(0.48, c.hue.replace(/[\d.]+\)$/, "0.09)"));
+      g.addColorStop(0.74, c.hue.replace(/[\d.]+\)$/, "0.025)"));
+      g.addColorStop(1, c.hue.replace(/[\d.]+\)$/, "0)"));
+      context.fillStyle = g;
+      context.fillRect(-c.r, -c.r, c.r * 2, c.r * 2);
+      context.restore();
+    };
+
+    const drawFilament = (context: CanvasRenderingContext2D, f: Filament, t: number) => {
+      const drift = Math.sin(t * 0.001 * f.speed + f.phase) * 14;
+      const gradient = context.createLinearGradient(f.startX, f.startY, f.endX, f.endY);
+      gradient.addColorStop(0, "rgba(255, 104, 71, 0)");
+      gradient.addColorStop(0.35, f.color);
+      gradient.addColorStop(0.7, f.color);
+      gradient.addColorStop(1, "rgba(255, 189, 126, 0)");
+
+      context.save();
+      context.globalCompositeOperation = "screen";
+      context.filter = `blur(${Math.max(8, f.width * 0.18)}px)`;
+      context.strokeStyle = gradient;
+      context.lineWidth = f.width;
+      context.lineCap = "round";
+      context.beginPath();
+      context.moveTo(f.startX, f.startY + drift);
+      context.quadraticCurveTo(f.controlX, f.controlY - drift, f.endX, f.endY + drift * 0.5);
+      context.stroke();
+      context.restore();
+    };
+
+    const renderClouds = (t: number) => {
+      cloudCtx.clearRect(0, 0, width, height);
+      for (const c of clouds) drawCloud(cloudCtx, c, t);
+      for (const f of filaments) drawFilament(cloudCtx, f, t);
+      lastCloudRender = t;
     };
 
     const draw = (t: number) => {
-      ctx.fillStyle = "#0a0b14";
-      ctx.fillRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
 
-      // Slowly pan nebula layer.
-      nebulaOffset = (nebulaOffset + 0.05) % width;
-      ctx.drawImage(nebulaCanvas, -nebulaOffset, 0, width * dpr, height * dpr);
-      ctx.drawImage(nebulaCanvas, width - nebulaOffset, 0, width * dpr, height * dpr);
+      // Radial gradients are expensive to paint in Firefox. Refresh them at a
+      // gentle cadence and reuse the cached layer for the intervening frames.
+      if (t - lastCloudRender >= 750) renderClouds(t);
+      ctx.drawImage(cloudCanvas, 0, 0, width, height);
 
-      // Stars flicker independently.
-      for (const s of stars) drawStar(s, t);
+      // Smooth parallax toward target.
+      parallax.x += (parallax.tx - parallax.x) * 0.05;
+      parallax.y += (parallax.ty - parallax.y) * 0.05;
 
-      // Drifting dust.
-      ctx.fillStyle = "rgba(255,255,255,0.35)";
-      for (const p of dust) {
-        p.x += p.dx;
-        p.y += p.dy;
-        if (p.x < 0) p.x += width;
-        if (p.x > width) p.x -= width;
-        if (p.y < 0) p.y += height;
-        if (p.y > height) p.y -= height;
-        ctx.globalAlpha = p.a;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
+      // Auto-pan drift (very slow).
+      const tSec = t * 0.001;
+      const autoX = Math.sin(tSec * 0.05) * 8;
+      const autoY = Math.cos(tSec * 0.04) * 6;
+
+      // 1. Far stars — small, slow, with mild parallax opposite to mouse.
+      const fx = -parallax.x * 6 + autoX * 0.3;
+      const fy = -parallax.y * 6 + autoY * 0.3;
+      for (const s of far) drawStar(s, t, fx, fy);
+
+      // 2. Mid stars — moderate parallax.
+      const mx = -parallax.x * 12 + autoX * 0.7;
+      const my = -parallax.y * 12 + autoY * 0.7;
+      for (const s of mid) drawStar(s, t, mx, my);
+
+      // 3. Near stars — strongest parallax, biggest twinkle.
+      const nx = -parallax.x * 22 + autoX;
+      const ny = -parallax.y * 22 + autoY;
+      for (const s of near) drawStar(s, t, nx, ny);
 
       raf = requestAnimationFrame(draw);
     };
@@ -234,10 +251,12 @@ export function StarfieldBackground({ onCanvasReady }: StarfieldBackgroundProps 
     resize();
     raf = requestAnimationFrame(draw);
     window.addEventListener("resize", resize);
+    window.addEventListener("pointermove", onPointerMove);
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
+      window.removeEventListener("pointermove", onPointerMove);
     };
   }, []);
 
