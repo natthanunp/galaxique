@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   title: "Galaxique Beta — Your Unique Universe",
   description:
     "A space-themed personality visualizer where the stars keep small secrets. Answer a short quiz and your inner universe unfolds in 3D, with a song that matches your vibe.",
+  icons: {
+    icon: "/icon?v=2",
+    apple: "/apple-icon?v=2",
+    shortcut: "/favicon.ico?v=2",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
