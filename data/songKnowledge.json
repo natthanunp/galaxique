@@ -2575,5 +2575,194 @@
     "energy": "driving",
     "setting": "late-night alone",
     "summary": "The song reflects on a close friendship and the changes that have occurred over time, with a mix of sadness and warmth, set to a catchy, guitar-driven melody."
+  },
+  "3pDGJRDN3p6kCNZcD97FYY": {
+    "name": "Cosmic",
+    "artist": "Red Velvet",
+    "known": true,
+    "themes": [
+      "space",
+      "dreamy",
+      "fantasy",
+      "love"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "whimsical",
+    "energy": "driving",
+    "setting": "late-night alone",
+    "summary": "The song explores a dreamy, fantastical love set in a cosmic landscape, with a mix of electronic and orchestral elements creating a dynamic and captivating sound."
+  },
+  "7982sGZuvo5OXsY6REzgIn": {
+    "name": "Boom Clap",
+    "artist": "Charli xcx",
+    "known": true,
+    "themes": [
+      "love",
+      "heartbreak",
+      "nostalgia"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "driving",
+    "setting": "late-night alone",
+    "summary": "The song explores the aftermath of a relationship, with a mix of sadness and longing, set to a catchy, upbeat pop melody."
+  },
+  "75enpZYDT6k0PNKu6SJ4W5": {
+    "name": "4am",
+    "artist": "girl in red",
+    "known": true,
+    "themes": [
+      "introspection",
+      "vulnerability",
+      "longing"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song explores feelings of isolation and longing, with a soft, intimate sound featuring delicate guitar and honest lyrics."
+  },
+  "1LeItUMezKA1HdCHxYICed": {
+    "name": "Say My Name",
+    "artist": "ODESZA, Zyra",
+    "known": true,
+    "themes": [
+      "longing",
+      "desire",
+      "intimacy"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "yearning",
+    "energy": "driving",
+    "setting": "late-night alone",
+    "summary": "The song explores a deep, yearning desire for connection and intimacy, with a driving electronic beat and soulful vocals that create a sense of longing and anticipation."
+  },
+  "1CSAUEapYQQOD50ardFG0K": {
+    "name": "Glide",
+    "artist": "NEIKED, Portugal. The Man",
+    "known": true,
+    "themes": [
+      "dreamy",
+      "nostalgic",
+      "romantic"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "setting": "late-night alone",
+    "summary": "The song explores a bittersweet longing for a past love, with a blend of electronic and acoustic elements creating a dreamy yet melancholic atmosphere."
+  },
+  "3GZD6HmiNUhxXYf8Gch723": {
+    "name": "Lost",
+    "artist": "Frank Ocean",
+    "known": true,
+    "themes": [
+      "heartbreak",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song explores themes of heartbreak and longing, with a melancholic mood and restrained energy, featuring a slow tempo and introspective lyrics."
+  },
+  "0l4DTppOxy7NUaEcwXuOb6": {
+    "name": "Animal",
+    "artist": "Neon Trees",
+    "known": true,
+    "themes": [
+      "self-acceptance",
+      "confidence",
+      "individuality"
+    ],
+    "relationship_stance": "independence",
+    "mood": "energetic",
+    "energy": "driving",
+    "setting": "late-night and social",
+    "summary": "The song is about embracing one's unique qualities and not conforming to societal expectations, with a powerful and upbeat musical character."
+  },
+  "75mFrseCKSI6Nz8WANXq90": {
+    "name": "ใจฉันตามเธอไป",
+    "artist": "YOUNGOHM",
+    "known": true,
+    "grounded": true,
+    "themes": [
+      "love",
+      "pain",
+      "longing",
+      "struggle"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "introspective",
+    "summary": "The song expresses a deep longing and love for someone, despite the pain and darkness that comes with it, set to a restrained and melancholic melody."
+  },
+  "3xAsJQO4g5ZBUL6U6k5CzW": {
+    "name": "Sunset In Pattaya",
+    "artist": "YOUNGOHM",
+    "known": true,
+    "grounded": true,
+    "themes": [
+      "romance",
+      "nature",
+      "evening",
+      "connection"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "romantic",
+    "energy": "still and intimate",
+    "setting": "coastal evening",
+    "summary": "The song captures a romantic moment on a beach at sunset, with lyrics expressing a deep connection and the desire to stay together to see the stars, set to a likely soft and intimate musical backdrop."
+  },
+  "2PP99Q3WvAlEongTB8PlLS": {
+    "name": "wanna be yours (อยากให้เธอรัก)",
+    "artist": "Violette Wautier",
+    "known": true,
+    "grounded": true,
+    "themes": [
+      "longing",
+      "love",
+      "yearning",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song expresses a deep desire to be loved and seen, with a soft and delicate musical arrangement that underscores the singer's vulnerability and longing for connection."
+  },
+  "6SAcZT7H44417uxybshTEy": {
+    "name": "จากกันโดยสมบูรณ์",
+    "artist": "guncharlie",
+    "known": true,
+    "grounded": true,
+    "themes": [
+      "heartbreak",
+      "growth",
+      "letting go"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "reflective",
+    "summary": "The song explores the complex emotions of a relationship that has gone through cycles of breaking up and getting back together, ultimately leading to a complete parting, with a somber and introspective musical tone."
+  },
+  "24VfUtHxbkCrscWC00toom": {
+    "name": "ความทรงจำ",
+    "artist": "Musketeers",
+    "known": true,
+    "grounded": true,
+    "themes": [
+      "nostalgia",
+      "memories",
+      "longing"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "reflective",
+    "summary": "The song reflects on past memories and longing for a loved one, with a melancholic and restrained musical character."
   }
 }
