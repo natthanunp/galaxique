@@ -143,6 +143,17 @@ export function isAudioMuted() {
   return mutedByUser;
 }
 
+/** Resume the audio context synchronously from inside a user gesture.
+ *  iOS Safari requires the resume call to be directly triggered by the
+ *  event handler, not deferred to a microtask. */
+export function resumeAudioFromGesture(): boolean {
+  const context = getContext();
+  if (context.state === "suspended") {
+    context.resume().catch(() => {});
+  }
+  return context.state !== "closed";
+}
+
 export async function unlockAudio() {
   if (unlockPromise) return unlockPromise;
   unlockPromise = (async () => {

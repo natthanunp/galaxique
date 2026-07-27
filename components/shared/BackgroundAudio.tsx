@@ -9,7 +9,7 @@ import {
   playSpotifyPreview,
   resumeAmbient,
   setAudioMuted,
-  unlockAudio,
+  resumeAudioFromGesture,
 } from "@/lib/audioEngine";
 import { cn } from "@/lib/utils";
 
@@ -64,25 +64,31 @@ export function BackgroundAudio({
   }, [mediaMode, spotifyUrl, ready]);
 
   // First user interaction unlocks the audio context and unmutes.
+  // We call resume synchronously inside the event handler because iOS
+  // Safari requires the resume to be directly tied to the gesture.
   useEffect(() => {
-    const arm = () => {
-      unlockAudio()
-        .then(() => {
-          setAudioMuted(false);
-          setEnabled(true);
-        })
-        .catch(() => {});
+    const arm = (event: Event) => {
+      resumeAudioFromGesture();
+      setAudioMuted(false);
+      setEnabled(true);
       window.removeEventListener("pointerdown", arm);
       window.removeEventListener("keydown", arm);
       window.removeEventListener("touchstart", arm);
+      // For touch events, also prevent the delayed mouse emulation from
+      // firing a second unlock attempt.
+      if (event.type === "touchstart") {
+        window.removeEventListener("click", arm);
+      }
     };
     window.addEventListener("pointerdown", arm, { once: true });
     window.addEventListener("keydown", arm, { once: true });
     window.addEventListener("touchstart", arm, { once: true });
+    window.addEventListener("click", arm, { once: true });
     return () => {
       window.removeEventListener("pointerdown", arm);
       window.removeEventListener("keydown", arm);
       window.removeEventListener("touchstart", arm);
+      window.removeEventListener("click", arm);
     };
   }, []);
 
@@ -90,7 +96,7 @@ export function BackgroundAudio({
     const next = !enabled;
     setEnabled(next);
     setAudioMuted(!next);
-    if (next) unlockAudio().catch(() => {});
+    if (next) resumeAudioFromGesture();
   };
 
   return (
