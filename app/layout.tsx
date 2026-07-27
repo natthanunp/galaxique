@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { AppShell } from "@/components/shared/AppShell";
+import { PwaUpdater } from "@/components/shared/PwaUpdater";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="cosmic-bg min-h-full flex flex-col">
+        <PwaUpdater />
         <AppShell>{children}</AppShell>
       </body>
     </html>

@@ -23,6 +23,26 @@ export const quizPayloadSchema = z.object({
   questions: z.array(quizQuestionSchema).min(1),
 });
 
+/** The v1 browser client expects both translations on every question and
+ * option. It remains supported only for requests without a `language` field
+ * so an already-open tab keeps working across the v1 -> v2 deployment. */
+const legacyQuizOptionSchema = z.object({
+  text_en: z.string().min(1),
+  text_th: z.string().min(1),
+});
+
+const legacyQuizQuestionSchema = z.object({
+  id: z.number().int().min(1),
+  angle: z.string().min(1),
+  text_en: z.string().min(1),
+  text_th: z.string().min(1),
+  options: z.array(legacyQuizOptionSchema).length(4),
+});
+
+export const legacyQuizPayloadSchema = z.object({
+  questions: z.array(legacyQuizQuestionSchema).min(1),
+});
+
 /** Per-dimension match score for one catalog candidate, 0–10 per axis.
  *  Each axis corresponds to a curated descriptor field in songKnowledge.json,
  *  so the model scores by matching the answer signals against the track's

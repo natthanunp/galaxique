@@ -65,3 +65,41 @@ Return valid JSON only:
 {"questions":[{"id":1,"angle":"...","text":"...","options":[{"text":"..."},{"text":"..."},{"text":"..."},{"text":"..."}]}]}
 Use sequential 1-based ids and exactly ${quizConfig.questionCount} questions.`;
 }
+
+/**
+ * Compatibility prompt for the v1 client contract. Older browser tabs sent
+ * no `language` field and render bilingual `text_en` / `text_th` fields,
+ * so their own language toggle remains authoritative until they load the
+ * current client bundle. Keep this separate from the v2 single-language
+ * prompt: it is a versioned response shape, not a guessed default language.
+ */
+export function buildLegacyBilingualQuizSystemPrompt(
+  exampleAngles: readonly string[],
+  avoidAngles: readonly string[],
+  questionCount: number,
+): string {
+  return `Create a ${questionCount}-question bilingual personality quiz for "Your Unique Universe".
+
+Each question needs a distinct, durable identity angle: instincts, values, emotional patterns, comforts, or ways of relating. Avoid shallow preferences and generic personality-test filler. The batch must cover different facets, must not be all dark or introspective, and must include joy, play, curiosity, warmth, connection, or everyday delight.
+
+Reference angles (inspiration only; do not copy or lightly reword):
+${formatAnglesForPrompt(exampleAngles)}
+${
+  avoidAngles.length > 0
+    ? `\nRecently used (choose clearly different facets):\n${formatAnglesForPrompt(avoidAngles)}`
+    : ""
+}
+
+For each item:
+- Invent one concise angle (not a restatement of its question).
+- Write one clear, concrete English question, 8-14 words and never over 18; no metaphors, cliches, or double questions.
+- Supply a natural Thai translation in Thai script only: no English, pinyin, Chinese, or Japanese characters.
+- Supply exactly 4 distinct, plausible bilingual answer options. Each option is a concrete phrase under 8 English words.
+
+Tone: ${quizConfig.tone}
+Theme: ${quizConfig.theme}; use only as background flavor.
+
+Return valid JSON only:
+{"questions":[{"id":1,"angle":"...","text_en":"...","text_th":"...","options":[{"text_en":"...","text_th":"..."},{"text_en":"...","text_th":"..."},{"text_en":"...","text_th":"..."},{"text_en":"...","text_th":"..."}]}]}
+Use sequential 1-based ids and exactly ${questionCount} questions.`;
+}

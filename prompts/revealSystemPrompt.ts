@@ -149,7 +149,7 @@ possibilities open. If the user's answers repeatedly mention people,
 connection, comfort, celebration, warmth, or playful curiosity, galaxy is the
 right home for them — not a consolation prize.
   - central_symbol → "heart" when connection, care, or belonging is the strongest repeated signal; "star" when curiosity, play, or hope dominates; otherwise "none"
-  - vibe → "cozy", "cute", or "whimsical"
+  - vibe → "cozy" for comfort, steadiness, home, or gentle care; "cute" for open affection, optimistic warmth, or light confidence; "whimsical" ONLY for repeated evidence of imaginative play, unusual associations, delight in the surreal, or a deliberately unconventional perspective. Never choose "whimsical" merely because someone is warm, creative, or a galaxy.
   - colors → warm gold, rose, coral, soft amber, cool aurora, lavender, ocean-blue, and green are all valid — match the emotional temperature, not a dark default
 
 Choose "black_hole" when the dominant pattern is INWARD, PRIVATE, or
@@ -182,7 +182,7 @@ ${songGuidance}
 ${songPending && catalogTracks ? buildSongScoringSection(catalogTracks) : ""}
 
 === OUTPUT FIELDS ===
-- vibe: one of "cute" | "cozy" | "mysterious" | "intense" | "whimsical"
+- vibe: one of "cute" | "cozy" | "mysterious" | "intense" | "whimsical". Choose it from the strongest repeated evidence in the answers, independently of celestial_type. "whimsical" is the narrowest label: use it only when the answers repeatedly show imaginative, playful, or unconventional thinking. For ordinary warmth, connection, calm, or creativity, choose the more precise "cozy" or "cute" instead.
 - celestial_type: one of "galaxy" | "black_hole" | "neutron_star"
 - central_symbol: one of "star" | "heart" | "none"
 - primary_color: hex string like "#FFB4A2" — the dominant glow color

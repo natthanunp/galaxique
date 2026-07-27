@@ -2,8 +2,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { callLlm } from "@/lib/llm";
-import { quizPayloadSchema } from "@/lib/schemas";
-import { buildQuizSystemPrompt } from "@/prompts/quizSystemPrompt";
+import { legacyQuizPayloadSchema, quizPayloadSchema } from "@/lib/schemas";
+import {
+  buildLegacyBilingualQuizSystemPrompt,
+  buildQuizSystemPrompt,
+} from "@/prompts/quizSystemPrompt";
 import { quizConfig, QUESTION_ANGLES } from "@/config/quizConfig";
 
 export const runtime = "nodejs";
@@ -16,9 +19,10 @@ export const dynamic = "force-dynamic";
  *  keep the prompt bounded. */
 const requestBodySchema = z.object({
   avoidAngles: z.array(z.string()).max(50).optional(),
-  /** Required: the language the quiz should be authored in. Language now
-   *  only switches on the landing page, before the quiz starts. */
-  language: z.enum(["en", "th"]),
+  /** v2 clients send an explicit language and receive a single-language
+   *  payload. Its absence identifies the v1 bilingual contract, which must
+   *  remain available for an already-open pre-deploy browser tab. */
+  language: z.enum(["en", "th"]).optional(),
   /** A unique token per request — used to break the LLM call mutex so a
    *  retry isn't aliased to the previous in-flight call. Optional; the server
    *  generates one if absent. */
@@ -31,6 +35,57 @@ const requestBodySchema = z.object({
  *  can be smaller than questionCount without capping variety. */
 const EXAMPLE_ANGLE_COUNT = 5;
 const MAX_AVOID_ANGLES_IN_PROMPT = 12;
+const LEGACY_QUESTION_COUNT = 5;
+const LETTER = /\p{L}/u;
+const LATIN_LETTER = /\p{Script=Latin}/u;
+const THAI_LETTER = /\p{Script=Thai}/u;
+
+/**
+ * JSON mode guarantees structure, not that an LLM obeys a natural-language
+ * script instruction. Reject visible text that contains letters from another
+ * writing system, e.g. Thai mixed with Cyrillic, then let the existing retry
+ * produce a clean quiz rather than showing malformed copy to the user.
+ */
+function usesExpectedScript(text: string, language: "en" | "th"): boolean {
+  for (const character of text) {
+    if (!LETTER.test(character)) continue;
+    const isExpected = language === "th"
+      ? THAI_LETTER.test(character)
+      : LATIN_LETTER.test(character);
+    if (!isExpected) return false;
+  }
+  return true;
+}
+
+function hasExpectedScript(
+  questions: { text: string; options: { text: string }[] }[],
+  language: "en" | "th",
+): boolean {
+  return questions.every(
+    (question) =>
+      usesExpectedScript(question.text, language) &&
+      question.options.every((option) => usesExpectedScript(option.text, language)),
+  );
+}
+
+function hasExpectedLegacyScripts(
+  questions: {
+    text_en: string;
+    text_th: string;
+    options: { text_en: string; text_th: string }[];
+  }[],
+): boolean {
+  return questions.every(
+    (question) =>
+      usesExpectedScript(question.text_en, "en") &&
+      usesExpectedScript(question.text_th, "th") &&
+      question.options.every(
+        (option) =>
+          usesExpectedScript(option.text_en, "en") &&
+          usesExpectedScript(option.text_th, "th"),
+      ),
+  );
+}
 
 /** Pick `count` distinct random entries from `pool`, preferring entries that
  * aren't in `avoid`. Used to sample a fresh set of style-reference angles
@@ -65,12 +120,13 @@ export async function POST(request: Request) {
     const parsed = requestBodySchema.safeParse(raw);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "language must be 'en' or 'th'." },
+        { error: "Invalid request body." },
         { status: 400 },
       );
     }
     const avoidAngles = parsed.data.avoidAngles ?? [];
     const language = parsed.data.language;
+    const legacyClient = language === undefined;
     // Retain the most recent angles only. Sending an unbounded session history
     // consumes context without making the next five questions more distinct.
     const recentAvoidAngles = avoidAngles.slice(-MAX_AVOID_ANGLES_IN_PROMPT);
@@ -80,7 +136,7 @@ export async function POST(request: Request) {
     // These are only few-shot examples now — the model invents the actual
     // angles it uses per call, so variety is no longer capped at the pool's
     // size.
-    const count = quizConfig.questionCount;
+    const count = legacyClient ? LEGACY_QUESTION_COUNT : quizConfig.questionCount;
     const exampleAngles = pickAngles(
       QUESTION_ANGLES,
       EXAMPLE_ANGLE_COUNT,
@@ -88,7 +144,13 @@ export async function POST(request: Request) {
     );
 
     const requestNonce = nonce ?? cryptoRandomNonce();
-    const systemPrompt = buildQuizSystemPrompt(exampleAngles, recentAvoidAngles, language);
+    const systemPrompt = legacyClient
+      ? buildLegacyBilingualQuizSystemPrompt(
+          exampleAngles,
+          recentAvoidAngles,
+          count,
+        )
+      : buildQuizSystemPrompt(exampleAngles, recentAvoidAngles, language);
     const userPrompt = `Generate the quiz now for nonce=${requestNonce}. Invent ${count} distinct angles as instructed, then write the question for each.`;
     const preferredProviderSort = process.env.OPENROUTER_PROVIDER_SORT === "latency"
       ? "latency"
@@ -97,8 +159,10 @@ export async function POST(request: Request) {
       ? "latency"
       : "throughput";
 
-    let validation: ReturnType<typeof quizPayloadSchema.safeParse> | null =
-      null;
+    let validation:
+      | ReturnType<typeof quizPayloadSchema.safeParse>
+      | ReturnType<typeof legacyQuizPayloadSchema.safeParse>
+      | null = null;
     // 2 attempts, not 3: single-language output is faster to generate, and a
     // third slow retry costs more latency than it's worth.
     for (let attempt = 0; attempt < 2; attempt++) {
@@ -108,9 +172,9 @@ export async function POST(request: Request) {
           systemPrompt,
           userPrompt,
           temperature: 0.9,
-          // Single-language output for 10 questions is roughly the same total
-          // text volume as the old 5-question bilingual baseline.
-          maxTokens: 3200,
+          // v1 uses the original five bilingual questions; v2 keeps the
+          // faster ten-question single-language format.
+          maxTokens: legacyClient ? 2400 : 3200,
           timeoutMs: 25_000,
           nonce: `${requestNonce}:${attempt}`,
           purpose: "generate-quiz",
@@ -135,8 +199,26 @@ export async function POST(request: Request) {
         }));
       }
 
-      validation = quizPayloadSchema.safeParse(rawLlm);
-      if (validation.success) break;
+      if (legacyClient) {
+        const candidate = legacyQuizPayloadSchema.safeParse(rawLlm);
+        validation = candidate;
+        if (candidate.success && !hasExpectedLegacyScripts(candidate.data.questions)) {
+          console.warn(
+            `[generate-quiz] attempt ${attempt + 1} contained mixed-script legacy quiz text; retrying`,
+          );
+          validation = null;
+        }
+      } else {
+        const candidate = quizPayloadSchema.safeParse(rawLlm);
+        validation = candidate;
+        if (candidate.success && !hasExpectedScript(candidate.data.questions, language)) {
+          console.warn(
+            `[generate-quiz] attempt ${attempt + 1} contained text outside the requested ${language} script; retrying`,
+          );
+          validation = null;
+        }
+      }
+      if (validation?.success) break;
     }
 
     if (!validation || !validation.success) {
