@@ -70,7 +70,16 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/galaxique-:path*",
+        source: "/galaxique-192-v2.png",
+        headers: [
+          {
+            key: "Cross-Origin-Resource-Policy",
+            value: "same-origin",
+          },
+        ],
+      },
+      {
+        source: "/galaxique-512-v2.png",
         headers: [
           {
             key: "Cross-Origin-Resource-Policy",
