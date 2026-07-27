@@ -72,6 +72,16 @@ export function ShareButton({
   const [downloadFilename, setDownloadFilename] = useState("galaxique-universe.png");
   const [exportFile, setExportFile] = useState<File | null>(null);
   const cancelledRef = useRef(false);
+  // A pending share intent. Mobile Safari/WebViews will reject
+  // navigator.share() unless the call happens inside (or very shortly
+  // after) the user gesture that started the export. A 12-second
+  // recording + ffmpeg encode loses that activation window, so the
+  // call from finishExport arrives "not user-activated" and silently
+  // resolves to false. We register the intent at click time: the
+  // gesture is fresh, and finishExport dispatches it as soon as the
+  // file is ready. Cleared on cancel/reset so a stale intent doesn't
+  // open the share sheet for the wrong export.
+  const pendingShareRef = useRef<boolean>(false);
 
   // Capture at the same stable frame rate we encode. Asking ffmpeg to turn
   // a 30fps canvas stream into 60fps only duplicates frames, while asking
@@ -122,7 +132,14 @@ export function ShareButton({
     setDownloadKind(kind);
     setDownloadFilename(filename);
     setPhase("done");
-    void shareFile(file);
+    if (pendingShareRef.current) {
+      // Consume the user-gesture intent registered in the click
+      // handler. We can't await here (we're not in an async path), so
+      // we kick off the share and let any rejection be silent — the
+      // visible Share file button stays as a retry path.
+      pendingShareRef.current = false;
+      void shareFile(file);
+    }
   };
 
   /** Static screenshot path: composite the universe + album art + song
@@ -131,6 +148,12 @@ export function ShareButton({
    *  wait — finishes in <1s. Works in every browser. */
   const handleSavePhoto = async () => {
     cancelledRef.current = false;
+    // Register the share intent immediately, while we're still inside
+    // the click handler's user gesture. The actual navigator.share()
+    // call lands in finishExport after the photo finishes encoding,
+    // but the browser honours the activation that was live when the
+    // intent was registered.
+    pendingShareRef.current = true;
     setErrorMsg("");
     setDownloadUrl(null);
     setDownloadKind(null);
@@ -184,6 +207,7 @@ export function ShareButton({
 
     } catch (err) {
       if (cancelledRef.current) return;
+      pendingShareRef.current = false;
       const msg = err instanceof Error ? err.message : String(err);
       setErrorMsg(msg);
       setPhase("error");
@@ -192,6 +216,12 @@ export function ShareButton({
 
   const handleShare = async () => {
     cancelledRef.current = false;
+    // Register the share intent while we're still in the click
+    // handler's user gesture. The 12-second recording and ffmpeg
+    // encode run after this returns, and navigator.share() would
+    // otherwise arrive "not user-activated" on iOS and silently
+    // resolve to false.
+    pendingShareRef.current = true;
     setErrorMsg("");
     setDownloadUrl(null);
     setDownloadKind(null);
@@ -252,6 +282,7 @@ export function ShareButton({
     } catch (err) {
       overlay.stop();
       if (cancelledRef.current) return;
+      pendingShareRef.current = false;
       const msg = err instanceof Error ? err.message : String(err);
       setErrorMsg(msg);
       setPhase("error");
@@ -259,6 +290,7 @@ export function ShareButton({
   };
 
   const handleReset = () => {
+    pendingShareRef.current = false;
     if (downloadUrl) URL.revokeObjectURL(downloadUrl);
     setDownloadUrl(null);
     setDownloadKind(null);
