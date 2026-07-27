@@ -8,8 +8,11 @@ import { AlertCircleIcon } from "lucide-react";
 import { QuestionCard } from "@/components/quiz/QuestionCard";
 import { LoadingCosmos } from "@/components/shared/LoadingCosmos";
 import { Button } from "@/components/ui/button";
+import { streamAnalyze } from "@/lib/analyzeStream";
+import { useMinDwell } from "@/lib/useMinDwell";
 import { prefetchQuiz, takePrefetchedQuiz } from "@/lib/quizPrefetch";
 import { useQuizStore } from "@/store/quizStore";
+import type { AnalyzeStage } from "@/lib/analyzeProgress";
 
 /** Manages the multi-step quiz: fetches questions, collects answers, submits. */
 export function QuizStepper() {
@@ -36,6 +39,36 @@ export function QuizStepper() {
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // Live progress stage from /api/analyze's SSE stream. The throttle
+  // (useMinDwell, ~750 ms) prevents the user from seeing two stages
+  // flash by in the same animation frame — the server fires Spotify and
+  // Enrich so close together on a warm cache that without throttling
+  // the Spotify label is wasted. Latest stage wins on collision so the
+  // user never sees a stale flash.
+  const [analyzeStage, setAnalyzeStageThrottled, resetStage] = useMinDwell<AnalyzeStage>(
+    "starting",
+    750,
+  );
+  // The server only sends msElapsed at stage boundaries, so the counter
+  // would jump 0 → 5000 in one frame on the LLM-stage arrival. To get
+  // a continuously-ticking counter we anchor a (serverElapsed, localArrival)
+  // pair on each event and add `Date.now() - localArrival` to it. This
+  // keeps the displayed elapsed monotonic without polling the server.
+  const [analyzeMsElapsed, setAnalyzeMsElapsed] = useState(0);
+  const elapsedAnchorRef = useRef<{ serverMs: number; localArrival: number } | null>(null);
+  // Tick the counter at 100 ms locally between SSE events so the bar
+  // grows visibly during the long LLM phase instead of sitting still
+  // for ~5 s. Started/stopped with the submitting flag so we don't
+  // tick when the loader is off-screen.
+  useEffect(() => {
+    if (!submitting) return;
+    const id = window.setInterval(() => {
+      const anchor = elapsedAnchorRef.current;
+      if (!anchor) return;
+      setAnalyzeMsElapsed(anchor.serverMs + (Date.now() - anchor.localArrival));
+    }, 100);
+    return () => window.clearInterval(id);
+  }, [submitting]);
 
   // Fetch questions on mount. Reuse cached questions ONLY when the user has
   // already started answering (i.e. a mid-quiz refresh). If there are no
@@ -143,29 +176,43 @@ export function QuizStepper() {
     });
 
     const recentTrackIds = useQuizStore.getState().recentTrackIds;
-    fetch("/api/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ answers: finalAnswers, language, recentTrackIds }),
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({}));
-          throw new Error(body.error || `Analysis failed (${res.status})`);
-        }
-        return res.json();
-      })
-      .then((reveal) => {
-        setReveal(reveal);
-        setLoading(false);
-        router.push("/reveal");
-      })
-      .catch((err: Error) => {
-        setSubmitError(err.message);
-        setSubmitting(false);
-        setLoading(false);
-        setError(err.message);
-      });
+    // Reset to "starting" so a re-submit (e.g. after an error) restarts
+    // the stage narrative instead of jumping into "picker" mid-way.
+    resetStage("starting");
+    setAnalyzeMsElapsed(0);
+    elapsedAnchorRef.current = { serverMs: 0, localArrival: Date.now() };
+    streamAnalyze(
+      { answers: finalAnswers, language, recentTrackIds },
+      {
+        onProgress: (event) => {
+          setAnalyzeStageThrottled(event.stage);
+          // Anchor the new server-reported elapsed to the local clock so
+          // the local ticker can interpolate until the next event lands.
+          elapsedAnchorRef.current = {
+            serverMs: event.msElapsed,
+            localArrival: Date.now(),
+          };
+          setAnalyzeMsElapsed(event.msElapsed);
+        },
+        onResult: (reveal) => {
+          // Snap the counter to whatever the last event said before we
+          // unmount, so the final reading on /reveal doesn't lag.
+          const anchor = elapsedAnchorRef.current;
+          if (anchor) {
+            setAnalyzeMsElapsed(anchor.serverMs + (Date.now() - anchor.localArrival));
+          }
+          setReveal(reveal);
+          setLoading(false);
+          router.push("/reveal");
+        },
+        onError: (message) => {
+          setSubmitError(message);
+          setSubmitting(false);
+          setLoading(false);
+          setError(message);
+        },
+      },
+    );
   }, [
     currentQuestion,
     effectiveSelectedIndex,
@@ -182,6 +229,11 @@ export function QuizStepper() {
     setReveal,
     setError,
     router,
+    // Throttled SSE setters — identities are stable across renders
+    // (defined inside useMinDwell), so including them is safe and
+    // keeps exhaustive-deps honest without needing a suppression.
+    setAnalyzeStageThrottled,
+    resetStage,
   ]);
 
   const handleBack = useCallback(() => {
@@ -229,11 +281,9 @@ export function QuizStepper() {
   if (submitting) {
     return (
       <LoadingCosmos
-        label={
-          language === "th"
-            ? "กำลังถอดรหัสจักรวาลของคุณ…"
-            : "Decoding your universe…"
-        }
+        stage={analyzeStage}
+        language={language}
+        msElapsed={analyzeMsElapsed}
       />
     );
   }

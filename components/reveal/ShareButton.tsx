@@ -25,7 +25,6 @@ import { Progress } from "@/components/ui/progress";
 import { useCanvasRecorder } from "@/three/hooks/useCanvasRecorder";
 import { useMp4Exporter } from "@/three/hooks/useMp4Exporter";
 import { useOverlayCanvas } from "@/three/hooks/useOverlayCanvas";
-import { createAudioStreamFromUrl } from "@/lib/audioCapture";
 import { useMediaStore } from "@/store/mediaStore";
 import type { Language } from "@/types/universe";
 
@@ -38,8 +37,6 @@ interface ShareButtonProps {
   getStarfield?: () => HTMLCanvasElement | null;
   /** While false, the trigger is disabled (canvas still mounting). */
   disabled?: boolean;
-  /** Temporarily raises the live renderer DPR while a capture is prepared. */
-  onCaptureQualityChange?: (capturing: boolean) => void;
   language: Language;
 }
 
@@ -60,13 +57,11 @@ function waitForFrames(count: number): Promise<void> {
 }
 
 /** Orchestrates the IG Story export: composite album art + song overlay onto
- *  the canvas → record with the Spotify preview audio muxed in → transcode
- *  webm→mp4 (or fast-remux if Safari already recorded mp4) → download. */
+ *  the canvas → record → transcode webm→mp4 → share or download. */
 export function ShareButton({
   getCanvas,
   getStarfield,
   disabled = false,
-  onCaptureQualityChange,
   language,
 }: ShareButtonProps) {
   const [open, setOpen] = useState(false);
@@ -75,14 +70,60 @@ export function ShareButton({
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [downloadKind, setDownloadKind] = useState<"image" | "video" | null>(null);
   const [downloadFilename, setDownloadFilename] = useState("galaxique-universe.png");
+  const [exportFile, setExportFile] = useState<File | null>(null);
   const cancelledRef = useRef(false);
-  const audioRef = useRef<Awaited<ReturnType<typeof createAudioStreamFromUrl>>>(null);
 
+  // Capture at the same stable frame rate we encode. Asking ffmpeg to turn
+  // a 30fps canvas stream into 60fps only duplicates frames, while asking
+  // the live renderer to sustain 60fps at capture DPR can cause uneven
+  // frame delivery. A true 30fps source and 30fps output looks smoother.
   const recorder = useCanvasRecorder({ durationMs: 12000, fps: 30 });
-  const exporter = useMp4Exporter();
+  // onLoad fires the moment the ffmpeg core is ready and the (much
+  // slower) transcode is about to start — we use it to swap the dialog
+  // from "Loading the local video converter…" to a transcode-specific
+  // label so the user sees real progress for the rest of the export.
+  const exporter = useMp4Exporter({
+    onLoad: () => {
+      if (!cancelledRef.current) setPhase("transcoding");
+    },
+  });
   const overlay = useOverlayCanvas();
   const track = useMediaStore((s) => s.track);
-  const spotifyUrl = useMediaStore((s) => s.spotifyUrl);
+
+  const shareFile = async (file: File) => {
+    if (!navigator.share || !navigator.canShare) return false;
+
+    try {
+      if (!navigator.canShare({ files: [file] })) return false;
+      await navigator.share({
+        files: [file],
+        title: "Galaxique universe",
+      });
+      return true;
+    } catch (err) {
+      // A dismissed sheet and browsers that require a fresh user gesture
+      // both arrive here. The visible Share file button remains available.
+      if (!(err instanceof DOMException && err.name === "AbortError")) {
+        console.warn("[share] Native share did not open:", err);
+      }
+      return false;
+    }
+  };
+
+  const finishExport = (
+    blob: Blob,
+    kind: "image" | "video",
+    filename: string,
+  ) => {
+    const file = new File([blob], filename, { type: blob.type });
+    const url = URL.createObjectURL(blob);
+    setExportFile(file);
+    setDownloadUrl(url);
+    setDownloadKind(kind);
+    setDownloadFilename(filename);
+    setPhase("done");
+    void shareFile(file);
+  };
 
   /** Static screenshot path: composite the universe + album art + song
    *  info onto an offscreen canvas (one frame, no recording), then
@@ -95,7 +136,6 @@ export function ShareButton({
     setDownloadKind(null);
     setDownloadFilename("galaxique-universe.png");
     setPhase("exporting-photo");
-    onCaptureQualityChange?.(true);
 
     try {
       const sourceCanvas = getCanvas();
@@ -140,18 +180,13 @@ export function ShareButton({
       });
       if (cancelledRef.current) return;
 
-      const url = URL.createObjectURL(blob);
-      setDownloadUrl(url);
-      setDownloadKind("image");
-      setPhase("done");
+      finishExport(blob, "image", "galaxique-universe.png");
 
     } catch (err) {
       if (cancelledRef.current) return;
       const msg = err instanceof Error ? err.message : String(err);
       setErrorMsg(msg);
       setPhase("error");
-    } finally {
-      onCaptureQualityChange?.(false);
     }
   };
 
@@ -161,7 +196,6 @@ export function ShareButton({
     setDownloadUrl(null);
     setDownloadKind(null);
     setPhase("recording");
-    onCaptureQualityChange?.(true);
 
     try {
       await waitForFrames(2);
@@ -178,6 +212,7 @@ export function ShareButton({
       const recordTarget = track
         ? overlay.start({
             source: sourceCanvas,
+            fps: 30,
             info: {
               albumArtUrl: track.albumArtUrl,
               trackName: track.name,
@@ -186,51 +221,40 @@ export function ShareButton({
           })
         : sourceCanvas;
 
-      // Decode the actual Spotify/iTunes preview audio (if any) into a
-      // MediaStream so it can be muxed into the recording. We don't rely on
-      // HTMLMediaElement.captureStream() since Safari never implemented it.
-      audioRef.current = spotifyUrl
-        ? await createAudioStreamFromUrl(spotifyUrl)
-        : null;
       if (cancelledRef.current) return;
 
-      const webm = await recorder.record(recordTarget, {
-        audioStream: audioRef.current?.stream ?? null,
-        onStart: () => audioRef.current?.start(),
-      });
+      // The final MP4 deliberately has no audio. Avoid fetching, decoding,
+      // mixing, and MediaRecorder-encoding a preview track only for ffmpeg
+      // to discard it later with `-an`.
+      const recorded = await recorder.record(recordTarget);
       overlay.stop();
-      audioRef.current?.stop();
-      audioRef.current = null;
       if (cancelledRef.current) return;
+
+      // Surface what the recorder actually produced. Chrome/Firefox give us
+      // webm; Safari gives us MP4/H.264 directly. Both go through ffmpeg so
+      // the final file is always an H.264 MP4 with no audio, compatible
+      // with Instagram and iOS Photos. We do NOT keep the
+      // raw webm as a fallback — it would download as `galaxique-universe.webm`
+      // and fail to open in iOS Photos / Instagram uploads, which is
+      // exactly the previous "0 bytes / can't open" symptom.
+      if (recorded.size === 0) {
+        throw new Error("Recording produced an empty file. Try again, and check the browser console for MediaRecorder errors.");
+      }
 
       setPhase("loading-core");
-      let video = webm;
-      let filename = "galaxique-universe.webm";
-      try {
-        video = await exporter.exportToMp4(webm);
-        filename = "galaxique-universe.mp4";
-      } catch (transcodeError) {
-        // Keep the browser-native recording usable when the optional ffmpeg
-        // core is blocked or unavailable.
-        console.warn("MP4 conversion failed; keeping the original recording.", transcodeError);
+      const video = await exporter.exportToMp4(recorded);
+      if (video.size === 0) {
+        throw new Error("The MP4 converter produced an empty file. This usually means ffmpeg's core failed to load — check your network or browser console.");
       }
       if (cancelledRef.current) return;
 
-      const url = URL.createObjectURL(video);
-      setDownloadUrl(url);
-      setDownloadKind("video");
-      setDownloadFilename(filename);
-      setPhase("done");
+      finishExport(video, "video", "galaxique-universe.mp4");
     } catch (err) {
       overlay.stop();
-      audioRef.current?.stop();
-      audioRef.current = null;
       if (cancelledRef.current) return;
       const msg = err instanceof Error ? err.message : String(err);
       setErrorMsg(msg);
       setPhase("error");
-    } finally {
-      onCaptureQualityChange?.(false);
     }
   };
 
@@ -238,6 +262,7 @@ export function ShareButton({
     if (downloadUrl) URL.revokeObjectURL(downloadUrl);
     setDownloadUrl(null);
     setDownloadKind(null);
+    setExportFile(null);
     setDownloadFilename("galaxique-universe.png");
     setErrorMsg("");
     setPhase("idle");
@@ -250,8 +275,6 @@ export function ShareButton({
       cancelledRef.current = true;
       recorder.cancel();
       overlay.stop();
-      audioRef.current?.stop();
-      audioRef.current = null;
       handleReset();
     }
   };
@@ -276,7 +299,7 @@ export function ShareButton({
           "exporting-photo": "กำลังบันทึกภาพจักรวาลของคุณ…",
           recording: "กำลังอัดวิดีโอจักรวาลที่หมุนอยู่…",
           "loading-core":
-            "กำลังโหลดตัวแปลงวิดีโอ (~31MB ครั้งเดียว)…",
+            "กำลังเตรียมตัวแปลงวิดีโอ MP4…",
           transcoding: "กำลังแปลงเป็น MP4 สำหรับ Instagram…",
           done: "จักรวาลของคุณพร้อมแชร์แล้ว!",
           error: "เกิดข้อผิดพลาดขึ้น",
@@ -286,7 +309,7 @@ export function ShareButton({
           "exporting-photo": "Saving your universe photo…",
           recording: "Recording your spinning universe…",
           "loading-core":
-            "Loading the video converter (~31MB, one-time)…",
+            "Loading the local video converter…",
           transcoding: "Converting to MP4 for Instagram…",
           done: "Your universe is ready to share!",
           error: "Something went wrong.",
@@ -384,12 +407,24 @@ export function ShareButton({
                 />
               )}
               {phase === "done" && downloadUrl && (
-                <Button asChild className="self-end gap-2">
-                  <a href={downloadUrl} download={downloadFilename}>
-                    <DownloadIcon className="size-4" />
-                    {language === "th" ? "บันทึกไฟล์" : "Save file"}
-                  </a>
-                </Button>
+                <div className="flex flex-wrap justify-end gap-2">
+                  {exportFile && (
+                    <Button
+                      variant="outline"
+                      onClick={() => void shareFile(exportFile)}
+                      className="gap-2"
+                    >
+                      <ShareIcon className="size-4" />
+                      {language === "th" ? "แชร์ไฟล์" : "Share file"}
+                    </Button>
+                  )}
+                  <Button asChild className="gap-2">
+                    <a href={downloadUrl} download={downloadFilename}>
+                      <DownloadIcon className="size-4" />
+                      {language === "th" ? "บันทึกไฟล์" : "Save file"}
+                    </a>
+                  </Button>
+                </div>
               )}
             </motion.div>
           </AnimatePresence>
@@ -402,8 +437,6 @@ export function ShareButton({
                   cancelledRef.current = true;
                   recorder.cancel();
                   overlay.stop();
-                  audioRef.current?.stop();
-                  audioRef.current = null;
                   handleReset();
                 }}
               >
@@ -423,15 +456,9 @@ export function ShareButton({
                 <Button
                   onClick={handleShare}
                   className="gap-2"
-                  disabled
-                  title={
-                    language === "th"
-                      ? "การส่งออกวิดีโอยังไม่พร้อมใช้งาน"
-                      : "Video export is temporarily unavailable."
-                  }
                 >
                   <VideoIcon className="size-4" />
-                  {language === "th" ? "วิดีโอ (เร็ว ๆ นี้)" : "Video (coming soon)"}
+                  {language === "th" ? "บันทึกวิดีโอ MP4" : "Save MP4 video"}
                 </Button>
               </>
             )}

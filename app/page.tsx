@@ -1,9 +1,17 @@
 "use client";
 
 import { useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { SparklesIcon, ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
+import {
+  SparklesIcon,
+  ArrowRightIcon,
+  ExternalLinkIcon,
+  DownloadIcon,
+  XIcon,
+  Share2Icon,
+} from "lucide-react";
 
 import { StarfieldBackground } from "@/components/shared/StarfieldBackground";
 import { LanguageToggle } from "@/components/quiz/LanguageToggle";
@@ -11,9 +19,40 @@ import { Button } from "@/components/ui/button";
 import { prefetchQuiz } from "@/lib/quizPrefetch";
 import { useQuizStore } from "@/store/quizStore";
 
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+};
+
+type InstallPromptMode = "none" | "native" | "ios" | "browser";
+
+const INSTALL_PROMPT_DISMISSED_KEY = "galaxique-install-prompt-dismissed-v1";
+
 export default function LandingPage() {
   const language = useQuizStore((s) => s.language);
   const reset = useQuizStore((s) => s.reset);
+  const [installPromptEvent, setInstallPromptEvent] =
+    useState<BeforeInstallPromptEvent | null>(null);
+  const [installPromptMode, setInstallPromptMode] =
+    useState<InstallPromptMode>("none");
+  const [canInstall, setCanInstall] = useState(false);
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+  const [showInstallSteps, setShowInstallSteps] = useState(false);
+
+  function dismissInstallPromptForever() {
+    try {
+      window.localStorage.setItem(INSTALL_PROMPT_DISMISSED_KEY, "1");
+    } catch {
+      // Ignore storage failures (private mode / quota), UI still closes.
+    }
+
+    setInstallPromptEvent(null);
+    setInstallPromptMode("none");
+    setCanInstall(false);
+    setShowInstallPrompt(false);
+    setShowInstallSteps(false);
+  }
+
   const prefetchNextQuiz = () => {
     prefetchQuiz(useQuizStore.getState().seenAngles, language);
   };
@@ -24,6 +63,80 @@ export default function LandingPage() {
   useEffect(() => {
     prefetchQuiz(useQuizStore.getState().seenAngles, language);
   }, [language]);
+
+  useEffect(() => {
+    let wasDismissed = false;
+    try {
+      wasDismissed =
+        window.localStorage.getItem(INSTALL_PROMPT_DISMISSED_KEY) === "1";
+    } catch {
+      wasDismissed = false;
+    }
+    if (wasDismissed) return;
+
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      ((navigator as Navigator & { standalone?: boolean }).standalone ?? false);
+    if (isStandalone) return;
+
+    const ua = navigator.userAgent.toLowerCase();
+    const isIos = /iphone|ipad|ipod/.test(ua);
+    const isSafari =
+      /safari/.test(ua) && !/crios|fxios|edgios|chrome|android/.test(ua);
+
+    if (isIos && isSafari) {
+      setInstallPromptMode("ios");
+      setCanInstall(true);
+      setShowInstallPrompt(true);
+      return;
+    }
+
+    let capturedNativePrompt = false;
+    const fallbackTimer = window.setTimeout(() => {
+      if (capturedNativePrompt) return;
+      setInstallPromptMode("browser");
+      setCanInstall(true);
+    }, 2500);
+
+    const onBeforeInstallPrompt = (event: Event) => {
+      capturedNativePrompt = true;
+      window.clearTimeout(fallbackTimer);
+      event.preventDefault();
+      setInstallPromptEvent(event as BeforeInstallPromptEvent);
+      setInstallPromptMode("native");
+      setCanInstall(true);
+      setShowInstallPrompt(true);
+    };
+
+    const onAppInstalled = () => {
+      dismissInstallPromptForever();
+    };
+
+    window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+    window.addEventListener("appinstalled", onAppInstalled);
+
+    return () => {
+      window.clearTimeout(fallbackTimer);
+      window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", onAppInstalled);
+    };
+  }, []);
+
+  async function handleInstallClick() {
+    if (installPromptMode !== "native" || !installPromptEvent) {
+      setShowInstallPrompt(true);
+      return;
+    }
+
+    await installPromptEvent.prompt();
+    const choice = await installPromptEvent.userChoice;
+    if (choice.outcome !== "accepted") {
+      dismissInstallPromptForever();
+      return;
+    }
+
+    dismissInstallPromptForever();
+  }
 
   const t = {
     eyebrow: language === "th" ? "กาแล็กซิก" : "Galaxique",
@@ -45,7 +158,59 @@ export default function LandingPage() {
         ? "ใช้เวลาเพียง 2 นาที · ปรับแต่งโดย AI"
         : "Takes about 2 minutes · AI-personalized",
     credits: language === "th" ? "เครดิตโมเดล 3 มิติ" : "3D model credits",
+    installTitle: language === "th" ? "ติดตั้ง Galaxique" : "Install Galaxique",
+    installDescriptionNative:
+      language === "th"
+        ? "เปิดได้เร็วขึ้นและใช้งานแบบแอปเต็มหน้าจอ"
+        : "Launch faster and use it like a full-screen app.",
+    installDescriptionIos:
+      language === "th"
+        ? "แตะไอคอนแชร์ แล้วเลือก \"Add to Home Screen\""
+        : 'Tap Share, then choose "Add to Home Screen".',
+    installDescriptionBrowser:
+      language === "th"
+        ? "เปิดเมนูเบราว์เซอร์ แล้วเลือก \"Install app\" หรือ \"Add to Home screen\""
+        : 'Open your browser menu and choose "Install app" or "Add to Home screen".',
+    installCta: language === "th" ? "ติดตั้งตอนนี้" : "Install now",
+    installHowTo: language === "th" ? "วิธีติดตั้ง" : "How to install",
+    installHideSteps: language === "th" ? "ซ่อนขั้นตอน" : "Hide steps",
+    installGotIt: language === "th" ? "เข้าใจแล้ว" : "Got it",
+    installDismiss: language === "th" ? "ภายหลัง" : "Later",
+    installStepsIos:
+      language === "th"
+        ? [
+            "แตะปุ่มแชร์ของ Safari",
+            'เลื่อนลงแล้วเลือก "Add to Home Screen"',
+            'แตะ "Add" เพื่อยืนยัน',
+          ]
+        : [
+            "Tap the Share button in Safari.",
+            'Scroll and choose "Add to Home Screen".',
+            'Tap "Add" to confirm.',
+          ],
+    installStepsBrowser:
+      language === "th"
+        ? [
+            "เปิดเมนูเบราว์เซอร์ (⋮ / ⋯)",
+            'เลือก "Install app" หรือ "Add to Home Screen"',
+            'กดยืนยันการติดตั้ง',
+          ]
+        : [
+            "Open the browser menu (⋮ / ⋯).",
+            'Choose "Install app" or "Add to Home Screen".',
+            "Confirm the installation.",
+          ],
   };
+
+  const installDescription =
+    installPromptMode === "ios"
+      ? t.installDescriptionIos
+      : installPromptMode === "browser"
+        ? t.installDescriptionBrowser
+        : t.installDescriptionNative;
+
+  const installSteps =
+    installPromptMode === "ios" ? t.installStepsIos : t.installStepsBrowser;
 
   return (
     <>
@@ -96,6 +261,21 @@ export default function LandingPage() {
               </Link>
             </Button>
             <p className="text-xs text-muted-foreground">{t.secondary}</p>
+            {canInstall ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="text-xs"
+                onClick={() => {
+                  setShowInstallPrompt(true);
+                  setShowInstallSteps(false);
+                }}
+              >
+                <DownloadIcon className="size-3.5" />
+                {installPromptMode === "native" ? t.installCta : t.installHowTo}
+              </Button>
+            ) : null}
           </div>
 
           {/* Subtle tribute — no name used, just a soft line of credit. */}
@@ -124,6 +304,67 @@ export default function LandingPage() {
             Bird: Tnkii <ExternalLinkIcon className="size-2.5" />
           </a>
         </footer>
+
+        {showInstallPrompt && canInstall ? (
+          <motion.aside
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+            className="fixed bottom-5 left-4 right-4 z-40 mx-auto max-w-md rounded-2xl border border-accent/30 bg-card/90 p-4 text-left shadow-2xl backdrop-blur-lg"
+            aria-label={t.installTitle}
+          >
+            <button
+              type="button"
+              onClick={dismissInstallPromptForever}
+              aria-label={t.installDismiss}
+              className="absolute right-3 top-3 rounded-md p-1 text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            >
+              <XIcon className="size-4" />
+            </button>
+
+            <div className="pr-8">
+              <p className="text-sm font-semibold text-foreground">{t.installTitle}</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                {installDescription}
+              </p>
+            </div>
+
+            <div className="mt-3 flex items-center gap-2">
+              {installPromptMode === "native" ? (
+                <Button type="button" size="sm" onClick={handleInstallClick}>
+                  <DownloadIcon className="size-4" />
+                  {t.installCta}
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => setShowInstallSteps((value) => !value)}
+                >
+                  <Share2Icon className="size-4" />
+                  {showInstallSteps ? t.installHideSteps : t.installHowTo}
+                </Button>
+              )}
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                onClick={dismissInstallPromptForever}
+              >
+                {installPromptMode === "native" ? t.installDismiss : t.installGotIt}
+              </Button>
+            </div>
+
+            {installPromptMode !== "native" && showInstallSteps ? (
+              <ol className="mt-3 list-decimal space-y-1 pl-5 text-xs leading-relaxed text-muted-foreground">
+                {installSteps.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
+            ) : null}
+          </motion.aside>
+        ) : null}
       </main>
     </>
   );

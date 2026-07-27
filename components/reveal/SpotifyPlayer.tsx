@@ -5,6 +5,7 @@ import { MusicIcon, AlertCircleIcon, ExternalLinkIcon, Volume2Icon } from "lucid
 
 import { useMediaStore } from "@/store/mediaStore";
 import { cn } from "@/lib/utils";
+import { mediaProxyUrl } from "@/lib/mediaProxy";
 import type { Language } from "@/types/universe";
 
 interface SpotifyPlayerProps {
@@ -60,14 +61,16 @@ export function SpotifyPlayer({ query, trackId, language, className }: SpotifyPl
         if (cancelled) return;
         setTrack(t);
         setStatus("ok");
+        const albumArtUrl = mediaProxyUrl(t.album_art_url);
+        const previewUrl = mediaProxyUrl(t.preview_url);
         setStoreTrack({
           name: t.name,
           artist: t.artist,
-          albumArtUrl: t.album_art_url,
+          albumArtUrl,
         });
-        if (t.preview_url) {
+        if (previewUrl) {
           // Autoplay immediately — no button, no extra click required.
-          setSpotifyUrl(t.preview_url);
+          setSpotifyUrl(previewUrl);
           setMediaMode("spotify");
         }
       })
@@ -113,9 +116,9 @@ export function SpotifyPlayer({ query, trackId, language, className }: SpotifyPl
           {track.preview_url ? (
             <div className="flex h-38 flex-col items-center justify-center gap-2 bg-linear-to-br from-[#1DB954]/15 to-secondary/40 px-4 text-center">
               {track.album_art_url ? (
-                // eslint-disable-next-line @next/next/no-img-element -- external Spotify CDN image, not worth next/image config for a small thumbnail
+                // eslint-disable-next-line @next/next/no-img-element -- this is a small same-origin proxy URL, so next/image adds no value here
                 <img
-                  src={track.album_art_url}
+                  src={mediaProxyUrl(track.album_art_url) ?? undefined}
                   alt=""
                   className="size-14 rounded-lg object-cover shadow-lg ring-1 ring-white/10"
                 />

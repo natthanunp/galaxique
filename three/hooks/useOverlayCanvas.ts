@@ -11,6 +11,10 @@ interface OverlayInfo {
 interface StartOverlayOptions {
   /** The live Three.js canvas to mirror frame-by-frame. */
   source: HTMLCanvasElement;
+  /** Maximum compositor rate. Match this to captureStream() so the overlay
+   *  does not redraw a full 1080x1920 frame more often than the recorder can
+   *  retain it. */
+  fps?: number;
   info: OverlayInfo;
   /** Optional starfield DOM canvas to use as the background of the export.
    *  The source R3F canvas has a transparent background, so without a
@@ -42,7 +46,7 @@ interface UseOverlayCanvasResult {
 export function useOverlayCanvas(): UseOverlayCanvasResult {
   const rafRef = useRef<number | null>(null);
 
-  const start = useCallback(({ source, background, info }: StartOverlayOptions) => {
+  const start = useCallback(({ source, background, info, fps = 30 }: StartOverlayOptions) => {
     // Always record in portrait 9:16 (1080x1920 = Instagram Story spec).
     // The R3F source is landscape to fit the page layout; the camera
     // framing and overlay bar are designed for this portrait frame.
@@ -65,8 +69,13 @@ export function useOverlayCanvas(): UseOverlayCanvasResult {
       art.src = info.albumArtUrl;
     }
 
-    const draw = () => {
-      drawFrame(ctx, source, background ?? null, art, info);
+    const frameIntervalMs = 1_000 / fps;
+    let lastDrawAt = -Infinity;
+    const draw = (now: number) => {
+      if (now - lastDrawAt >= frameIntervalMs) {
+        drawFrame(ctx, source, background ?? null, art, info);
+        lastDrawAt = now;
+      }
       rafRef.current = requestAnimationFrame(draw);
     };
     rafRef.current = requestAnimationFrame(draw);

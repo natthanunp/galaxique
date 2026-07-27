@@ -19,9 +19,15 @@ import { Redis } from "@upstash/redis";
  * Env var names vary by Vercel Marketplace integration version — check both.
  */
 const LIST_KEY = "galaxseea:song-selections";
-/** Matches the "~50-entry frequency log" from the optimization plan; the
- *  recency penalty (see route.ts) only looks at the first ~12 of these. */
-const MAX_LOG_LENGTH = 50;
+/** Matches the "frequency log" used by sampleCatalogForRequest +
+ *  pickWeightedSongSelection in app/api/analyze/route.ts. Trimmed from 50 →
+ *  30 so older selections fall off faster: with a 162-track catalog,
+ *  keeping 50 entries meant a song could keep ~31% of log presence for a
+ *  long stretch, slowing rotation through the long tail. 30 entries gives
+ *  each track a fair-share target of ~3.3% and means under-served tracks
+ *  resurface sooner once they've dropped out of the log. Still wide
+ *  enough that the recency penalty's 12-slot window stays meaningful. */
+const MAX_LOG_LENGTH = 30;
 
 export type SongSelectionSource = "upstash" | "memory";
 

@@ -95,7 +95,6 @@ export default function RevealPage() {
   // this, getCanvas() returns null and handleShare throws the cryptic
   // "Universe canvas isn't ready yet." error.
   const [canvasReady, setCanvasReady] = useState(false);
-  const [captureQuality, setCaptureQuality] = useState(false);
 
   // zustand `persist` rehydrates from localStorage asynchronously. On a
   // hard reload / direct navigation to /reveal, the first render runs
@@ -237,16 +236,33 @@ export default function RevealPage() {
         </header>
 
         <div className="mx-auto mt-2 grid w-full max-w-6xl min-w-0 gap-6 lg:grid-cols-[1.4fr_1fr]">
-          {/* 3D universe */}
+          {/* 3D universe — the R3F canvas is transparent over the page-level
+              StarfieldBackground, so we deliberately don't add a border or
+              backing fill on the OUTER wrapper (any visible bezel breaks
+              the illusion that the universe bleeds into the same starry sky
+              the user sees across the rest of the reveal page). Keep the
+              corner radius matched to the sibling cards (rounded-xl on
+              PersonalityReading and SpotifyPlayer) so the three live in one
+              visual family; `overflow-hidden` clips the Bloom postprocess
+              to those corners instead of letting it spill into the grid
+              gutter.
+
+              A 1px inset ring sits *inside* the rounded clip so all four
+              corners of the card read consistently against the page
+              background — without it, the rounded edge is only visible
+              where the canvas is bright, which makes one side look round
+              and the others look flat. The ring is kept on `pointer-events:
+              none` and lives below the canvas in the stacking order, so
+              it never intercepts orbit drags and the R3F scene still
+              fills 100% of the card. */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
-            className="relative h-[55vh] min-h-90 min-w-0 overflow-hidden rounded-2xl border border-border/70 bg-black/40 lg:h-[78vh]"
+            className="relative h-[55vh] min-h-90 min-w-0 overflow-hidden rounded-xl ring-1 ring-inset ring-white/10 lg:h-[78vh]"
           >
             <UniverseCanvas
               reveal={reveal as UniverseReveal}
-              captureQuality={captureQuality}
               onCanvasReady={(c) => {
                 canvasRef.current = c;
                 setCanvasReady(true);
@@ -276,7 +292,6 @@ export default function RevealPage() {
                 getCanvas={() => canvasRef.current}
                 getStarfield={() => starfieldRef.current}
                 disabled={!canvasReady}
-                onCaptureQualityChange={setCaptureQuality}
                 language={language}
               />
               <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">

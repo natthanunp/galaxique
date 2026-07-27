@@ -10,21 +10,6 @@ function hasDistinctOptionText(options: { text: string }[]): boolean {
   return new Set(normalized).size === normalized.length;
 }
 
-function hasDistinctLegacyOptionText(
-  options: { text_en: string; text_th: string }[],
-): boolean {
-  const normalizedEnglish = options.map((option) =>
-    option.text_en.normalize("NFC").trim().replace(/\s+/g, " ").toLocaleLowerCase(),
-  );
-  const normalizedThai = options.map((option) =>
-    option.text_th.normalize("NFC").trim().replace(/\s+/g, " "),
-  );
-  return (
-    new Set(normalizedEnglish).size === normalizedEnglish.length &&
-    new Set(normalizedThai).size === normalizedThai.length
-  );
-}
-
 export const quizOptionSchema = z.object({
   text: z.string().min(1),
 });
@@ -46,29 +31,6 @@ export const quizQuestionSchema = z.object({
 
 export const quizPayloadSchema = z.object({
   questions: z.array(quizQuestionSchema).min(1),
-});
-
-/** The v1 browser client expects both translations on every question and
- * option. It remains supported only for requests without a `language` field
- * so an already-open tab keeps working across the v1 -> v2 deployment. */
-const legacyQuizOptionSchema = z.object({
-  text_en: z.string().min(1),
-  text_th: z.string().min(1),
-});
-
-const legacyQuizQuestionSchema = z.object({
-  id: z.number().int().min(1),
-  angle: z.string().min(1),
-  text_en: z.string().min(1),
-  text_th: z.string().min(1),
-  options: z
-    .array(legacyQuizOptionSchema)
-    .length(4)
-    .refine(hasDistinctLegacyOptionText, "options must have distinct text"),
-});
-
-export const legacyQuizPayloadSchema = z.object({
-  questions: z.array(legacyQuizQuestionSchema).min(1),
 });
 
 /** Per-dimension match score for one catalog candidate, 0–10 per axis.

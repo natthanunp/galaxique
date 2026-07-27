@@ -1,7 +1,16 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
+
+interface UseMp4ExporterOptions {
+  /** Fired the moment ffmpeg's core finishes loading and the
+   *  transcoder is about to start. Lets callers flip their UI from
+   *  "Loading the local video converter…" to a transcode-specific
+   *  label without polling `loadingCore`. Fires once per export; not
+   *  fired when the core is already cached from a previous run. */
+  onLoad?: () => void;
+}
 
 interface UseMp4ExporterResult {
   /** True while the ffmpeg core is loading (~31MB from CDN). */
@@ -14,33 +23,72 @@ interface UseMp4ExporterResult {
   exportToMp4: (webm: Blob) => Promise<Blob>;
 }
 
-// MUST match the CORE_VERSION that the installed @ffmpeg/ffmpeg package was
-// built against — its worker imports the core JS as a module and the two
-// must speak the same ABI. As of @ffmpeg/ffmpeg@0.12.15 the bundled
-// CORE_VERSION is 0.12.9 (see node_modules/@ffmpeg/ffmpeg/dist/esm/const.js).
-// A mismatch silently throws "ErrnoError: FS error" from the virtual FS on
-// writeFile/exec/readFile.
-const CORE_VERSION = "0.12.9";
-// Single-thread core (no SharedArrayBuffer / COOP-COEP headers required).
-const CORE_BASE = `https://cdn.jsdelivr.net/npm/@ffmpeg/core@${CORE_VERSION}/dist/umd`;
+// Path inside the deployed app's /public directory where the postinstall
+// script copies @ffmpeg/core's ESM build (ffmpeg-core.js +
+// ffmpeg-core.wasm, ~31 MB) and the wrapper's own worker.js +
+// const.js + errors.js. Same-origin serving keeps the 32 MB transfer
+// inside Vercel's edge cache so the second user pays near-zero latency.
+//
+// The installed @ffmpeg/core version MUST match the wrapper's bundled
+// CORE_VERSION (see @ffmpeg/ffmpeg/dist/esm/const.js).
+// scripts/copy-ffmpeg-core.mjs refuses to copy if they disagree, so
+// the build fails loudly instead of silently shipping an incompatible
+// wasm.
+//
+// Use the multi-threaded core. It can run libx264 across browser pthreads,
+// reducing export time substantially. /reveal uses COOP/COEP headers and
+// proxies its third-party media through /api/media so SharedArrayBuffer is
+// available without breaking album art or preview playback.
+const CORE_PATH = "/ffmpeg-mt";
+// This is @ffmpeg/ffmpeg's module worker, not the ffmpeg-core pthread
+// worker. It stays with the wrapper assets in /ffmpeg/ and dynamically
+// imports the multi-thread core at CORE_PATH.
+const WRAPPER_WORKER_PATH = "/ffmpeg/ffmpeg-worker.js";
 
 /**
  * Lazy ffmpeg.wasm transcoder: webm → mp4.
  *
- * The ~31MB core is fetched from jsdelivr via toBlobURL (to satisfy CORS) ONLY
- * on the first export click, then reused for subsequent exports. The resulting
- * mp4 is returned to the caller for preview or saving.
+ * The copy script ships two cooperating sets of files:
+ *  - `/ffmpeg/ffmpeg-worker.js` plus its const/errors imports: the
+ *    @ffmpeg/ffmpeg wrapper's module worker.
+ *  - `/ffmpeg-mt/ffmpeg-core.{js,wasm,worker.js}`: the multi-threaded
+ *    @ffmpeg/core-mt core and its pthread worker.
+ *
+ * We must pass `classWorkerURL` to `ffmpeg.load()` because the wrapper's
+ * default worker construction (`new Worker(new URL("./worker.js",
+ * import.meta.url), { type: "module" })`) doesn't work when @ffmpeg/ffmpeg
+ * is bundled into our app: Turbopack bundles `classes.js` but doesn't emit
+ * `worker.js` as a sibling asset, and even if it did, Turbopack rewrites
+ * the worker's internal `await import(coreURL)` into a static module lookup
+ * that throws `Cannot find module as expression is too dynamic`. Serving
+ * the worker ourselves from origin side-steps both problems: the wrapper's
+ * `classWorkerURL` param points at our static file, and the worker's
+ * dynamic `import()` runs in the browser's native ESM loader against a
+ * same-origin module URL.
+ *
+ * Once the worker is up, the same-origin `coreURL` / `wasmURL` let it
+ * `import()` the ESM core directly — no `toBlobURL` round-trip needed
+ * (saves a ~31 MB Blob allocation per page load).
  */
-export function useMp4Exporter(): UseMp4ExporterResult {
+export function useMp4Exporter(
+  options: UseMp4ExporterOptions = {},
+): UseMp4ExporterResult {
   const [loadingCore, setLoadingCore] = useState(false);
   const [transcoding, setTranscoding] = useState(false);
   const [progress, setProgress] = useState(0);
   const ffmpegRef = useRef<InstanceType<typeof FFmpeg> | null>(null);
+  // Stash the latest onLoad in a ref so the exportToMp4 callback below
+  // can keep a stable identity (so ShareButton's effect doesn't refire
+  // on every render) while still invoking the freshest callback.
+  const onLoadRef = useRef(options.onLoad);
+  useEffect(() => {
+    onLoadRef.current = options.onLoad;
+  }, [options.onLoad]);
 
   const exportToMp4 = useCallback(
     async (webm: Blob): Promise<Blob> => {
       // Lazy-load ffmpeg + core on first use.
-      const { toBlobURL, fetchFile } = await import("@ffmpeg/util");
+      const { fetchFile } = await import("@ffmpeg/util");
 
       let ffmpeg = ffmpegRef.current;
 
@@ -57,23 +105,57 @@ export function useMp4Exporter(): UseMp4ExporterResult {
           console.log("[ffmpeg]", message);
         });
         try {
-          const coreURL = await toBlobURL(
-            `${CORE_BASE}/ffmpeg-core.js`,
-            "text/javascript",
-          );
-          const wasmURL = await toBlobURL(
-            `${CORE_BASE}/ffmpeg-core.wasm`,
-            "application/wasm",
-          );
-          await ffmpeg.load({ coreURL, wasmURL });
+          // The wrapper's default worker construction is
+          //   `new Worker(new URL("./worker.js", import.meta.url), { type: "module" })`
+          // When @ffmpeg/ffmpeg is imported from our app, Turbopack bundles
+          // `classes.js` into our chunk but does NOT emit `worker.js` as a
+          // sibling asset. The URL above resolves to something the browser
+          // can't fetch, and even if it could, Turbopack would rewrite the
+          // worker's internal `await import(coreURL)` into a static lookup
+          // that throws `Cannot find module as expression is too dynamic`.
+          //
+          // We side-step this by shipping the wrapper's `worker.js` from
+          // /public/ffmpeg/ffmpeg-worker.js (see scripts/copy-ffmpeg-core.mjs)
+          // and pointing the wrapper at it via `classWorkerURL`. The
+          // resulting module worker is a real one — its dynamic `import()`
+          // runs in the browser's native ESM loader against a same-origin
+          // module URL, which can then dynamically import the ESM core from
+          // /ffmpeg/ffmpeg-core.js the same way.
+          //
+          // We pass an *absolute* URL for classWorkerURL: the wrapper does
+          // `new URL(classWorkerURL, import.meta.url)`, and import.meta.url
+          // here points at our bundled `classes.js` chunk. In dev with
+          // Turbopack that base can resolve to a `file://`-style URL,
+          // which then makes the worker fetch `file:///ffmpeg/...` and the
+          // browser blocks it with "may not load data from file://".
+          // Resolving against `window.location.origin` here in the main
+          // thread gives a guaranteed http(s) absolute URL.
+          const classWorkerURL = new URL(
+            WRAPPER_WORKER_PATH,
+            window.location.origin,
+          ).toString();
+          const coreURL = new URL(
+            `${CORE_PATH}/ffmpeg-core.js`,
+            window.location.origin,
+          ).toString();
+          const wasmURL = new URL(
+            `${CORE_PATH}/ffmpeg-core.wasm`,
+            window.location.origin,
+          ).toString();
+          await ffmpeg.load({ coreURL, wasmURL, classWorkerURL });
         } catch (err) {
           setLoadingCore(false);
           throw new Error(
-            `ffmpeg load failed: ${err instanceof Error ? (err.stack ?? err.message) : String(err)}`,
+            `ffmpeg load failed: ${err instanceof Error ? (err.stack ?? err.message) : String(err)} (looked at ${CORE_PATH}/ffmpeg-core.{js,wasm} + ffmpeg-worker.js)`,
           );
         }
         ffmpegRef.current = ffmpeg;
         setLoadingCore(false);
+        // Notify the caller that the (potentially long) load is done and
+        // the transcode is about to start. They can use this to swap
+        // their UI label — otherwise the dialog stays on
+        // "Loading the local video converter…" for the full transcode.
+        onLoadRef.current?.();
       }
 
       setTranscoding(true);
@@ -110,49 +192,110 @@ export function useMp4Exporter(): UseMp4ExporterResult {
       // exit code without throwing — so a silent "0-byte output" used to be
       // the only symptom of e.g. libx264 refusing an odd-dimension input).
       let lastFfmpegLine = "";
+      // Progress parse — ffmpeg's `setProgress` callback (which would
+      // fire `ffmpeg.on("progress", ...)`) is unreliable in 0.12.x — it
+      // depends on the WASM core calling `receiveProgress` from native
+      // code, which doesn't happen for our exec args. Instead we parse
+      // the in-flight log lines ourselves: every progress line has
+      // `time=HH:MM:SS.xx` we can divide by the known 12 s duration.
+      // We only fire on the LAST log line per ~250 ms tick to avoid
+      // hammering React state during a frame-rate-dense stream.
+      const TOTAL_DURATION_SEC = 12;
+      let lastProgressAt = 0;
       const onLog = ({ message }: { message: string }) => {
         lastFfmpegLine = message;
+        const m = /time=(\d+):(\d+):(\d+\.\d+)/.exec(message);
+        if (!m) return;
+        const t =
+          Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3]);
+        const p = Math.max(0, Math.min(1, t / TOTAL_DURATION_SEC));
+        const now = performance.now();
+        if (now - lastProgressAt > 250 || p >= 1) {
+          lastProgressAt = now;
+          setProgress(p);
+        }
       };
       ffmpeg.on("log", onLog);
+      // Encode settings — 1080p30, no audio.
+      //   * The MediaRecorder's webm/mp4 stream declares tbr=1000 to
+      //     ffmpeg (a webm convention; actual content is ~30 fps). If
+      //     we leave the output framerate implicit, libx264 dup-frames
+      //     its way to ~33x more output frames than the video actually
+      //     contains, AND the resulting PTS timestamps confuse some
+      //     players into freezing after a few seconds (they read the
+      //     declared frame rate, find a mismatch, and skip to the end).
+      //   * `fps=30` *filter* (not `-r 30` *option*) re-times every
+      //     output frame to a clean 30 fps PTS series — the safest way
+      //     to get a player-friendly 30 fps from a tbr=1000 source.
+      //     It also drops the dup frames naturally because it picks
+      //     frames at the output cadence rather than mirroring input.
+      //   * `-an` drops audio entirely — not needed for IG Story use.
+      //   * `-threads 0` lets libx264 use the browser pthread pool from
+      //     @ffmpeg/core-mt. `-preset ultrafast` keeps the encode time
+      //     comfortably below the old single-threaded path while the
+      //     14 Mbps target retains the extra detail from the 8 Mbps
+      //     MediaRecorder source.
+      // We also drop `-movflags +faststart` because ffmpeg.wasm
+      // implements faststart by writing the moov atom at the end and
+      // then moving it; some players (notably QuickTime on macOS) read
+      // the moov size from the file header before all atoms arrive and
+      // then refuse to seek beyond the original moov location —
+      // manifesting as a video that plays the first 3 s and then
+      // freezes. mp4box.js-style players (IG, web) handle this fine.
       try {
-        // libx264 requires even width AND height. The R3F canvas can
-        // produce odd dimensions depending on DPR rounding (e.g. 985x538
-        // on a 1.5x retina viewport), which used to fail the encode
-        // silently. Round to the nearest even pair with a scale filter.
+        // -progress pipe:1 makes ffmpeg emit `frame=`/`time=` style
+        // progress lines on stderr, which we parse in the `onLog`
+        // handler above to drive the dialog's progress bar. Without
+        // it, our progress callback never sees `time=` updates and the
+        // bar stays at 0.
         await ffmpeg.exec(
           isAlreadyMp4
             ? [
+                "-progress",
+                "pipe:1",
                 "-i",
                 inputName,
                 "-vf",
-                "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+                "scale=1080:1920,fps=30",
+                "-an",
                 "-c:v",
                 "libx264",
+                "-threads",
+                "0",
                 "-preset",
-                "veryfast",
-                "-crf",
-                "23",
+                "ultrafast",
+                "-b:v",
+                "14M",
+                "-maxrate",
+                "18M",
+                "-bufsize",
+                "28M",
                 "-pix_fmt",
                 "yuv420p",
-                "-movflags",
-                "+faststart",
                 outputName,
               ]
             : [
+                "-progress",
+                "pipe:1",
                 "-i",
                 inputName,
                 "-vf",
-                "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+                "scale=1080:1920,fps=30",
+                "-an",
                 "-c:v",
                 "libx264",
+                "-threads",
+                "0",
                 "-preset",
-                "veryfast",
-                "-crf",
-                "23",
+                "ultrafast",
+                "-b:v",
+                "14M",
+                "-maxrate",
+                "18M",
+                "-bufsize",
+                "28M",
                 "-pix_fmt",
                 "yuv420p",
-                "-movflags",
-                "+faststart",
                 outputName,
               ],
         );
@@ -195,8 +338,6 @@ export function useMp4Exporter(): UseMp4ExporterResult {
       const mp4Bytes = new Uint8Array(data.byteLength);
       mp4Bytes.set(data);
       const mp4 = new Blob([mp4Bytes], { type: "video/mp4" });
-      console.log("[debug] final mp4 blob size=", mp4.size);
-
       await cleanupFiles();
 
       setTranscoding(false);
