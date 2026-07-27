@@ -119,6 +119,56 @@ function hasExpectedLegacyScripts(
   );
 }
 
+/** Coerce common LLM output quirks into the schema's expected shape in
+ *  place. Cheap to do once per call; saves a 25s retry on otherwise-good
+ *  output from models that drop object wrappers under JSON-schema pressure.
+ *  Handles both v2 single-language (`text`) and v1 bilingual (`text_en` /
+ *  `text_th`) shapes. */
+function normalizeLlmQuizShape(parsed: unknown): void {
+  if (!parsed || typeof parsed !== "object") return;
+  const root = parsed as { questions?: unknown };
+  if (!Array.isArray(root.questions)) return;
+  for (let qi = 0; qi < root.questions.length; qi++) {
+    const question = root.questions[qi] as Record<string, unknown> | string | null;
+    if (question === null || typeof question !== "object") {
+      root.questions[qi] = { text: String(question ?? "") };
+      continue;
+    }
+    if (typeof question.id !== "number") {
+      question.id = qi + 1;
+    }
+    if (typeof question.options !== "object" || !Array.isArray(question.options)) {
+      question.options = [];
+      continue;
+    }
+    for (let oi = 0; oi < question.options.length; oi++) {
+      const option = question.options[oi];
+      if (typeof option === "string" || option === null) {
+        question.options[oi] = { text: String(option ?? "") };
+        continue;
+      }
+      if (typeof option === "object" && option !== null) {
+        const obj = option as Record<string, unknown>;
+        if (typeof obj.text_en === "string" && typeof obj.text_th !== "string") {
+          obj.text_th = obj.text_en;
+        }
+        if (typeof obj.text_th === "string" && typeof obj.text_en !== "string") {
+          obj.text_en = obj.text_th;
+        }
+        if (typeof obj.text !== "string") {
+          const fallback = obj.text_en ?? obj.text_th;
+          if (typeof fallback === "string") obj.text = fallback;
+        }
+      }
+    }
+    if (typeof question.text !== "string") {
+      const fallback = (question as Record<string, unknown>).text_en
+        ?? (question as Record<string, unknown>).text_th;
+      if (typeof fallback === "string") question.text = fallback;
+    }
+  }
+}
+
 /** Pick `count` distinct random entries from `pool`, preferring entries that
  * aren't in `avoid`. Used to sample a fresh set of style-reference angles
  * each call so the few-shot examples themselves stay varied.
@@ -221,18 +271,15 @@ export async function POST(request: Request) {
         continue;
       }
 
-      // Safety net: some providers (Groq) don't enforce schema, so the model
-      // may omit the `id` field. Auto-assign 1-based IDs if missing.
-      const rawLlm = parsedLlm as { questions?: { id?: number }[] };
-      if (rawLlm.questions) {
-        rawLlm.questions = rawLlm.questions.map((q, i) => ({
-          ...q,
-          id: typeof q.id === "number" ? q.id : i + 1,
-        }));
-      }
+      // Safety net: small open-source models routed through Groq/DeepInfra
+      // frequently collapse `{"text":"..."}` options into bare strings, and
+      // some flatten the question object itself. Normalize both shapes back
+      // into the schema before validating so a single stringly-typed response
+      // doesn't burn a 25s retry on an otherwise-correct output.
+      normalizeLlmQuizShape(parsedLlm);
 
       if (legacyClient) {
-        const candidate = legacyQuizPayloadSchema.safeParse(rawLlm);
+        const candidate = legacyQuizPayloadSchema.safeParse(parsedLlm);
         validation = candidate;
         if (candidate.success && !hasExpectedLegacyScripts(candidate.data.questions)) {
           console.warn(
@@ -241,7 +288,7 @@ export async function POST(request: Request) {
           validation = null;
         }
       } else {
-        const candidate = quizPayloadSchema.safeParse(rawLlm);
+        const candidate = quizPayloadSchema.safeParse(parsedLlm);
         validation = candidate;
         if (candidate.success && !hasExpectedScript(candidate.data.questions, language)) {
           console.warn(
