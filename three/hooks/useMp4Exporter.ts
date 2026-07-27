@@ -96,112 +96,102 @@ export function useMp4Exporter(
       // Lazy-load ffmpeg + core on first use.
       const { fetchFile } = await import("@ffmpeg/util");
 
-      let ffmpeg = ffmpegRef.current;
-
-      if (!ffmpeg) {
-        setLoadingCore(true);
-        ffmpeg = new FFmpeg();
-        ffmpeg.on("progress", ({ progress: p }) => {
-          setProgress(Math.max(0, Math.min(1, p)));
-        });
-        ffmpeg.on("log", ({ message }) => {
-          // Useful diagnostic surface for the rare case exec() resolves
-          // on a non-zero ffmpeg exit. Kept always-on (one console line
-          // per ffmpeg message) but stripped of any user-data.
-          console.log("[ffmpeg]", message);
-        });
+      // Lazily-loaded FFmpeg instance. We build a fresh instance per
+      // export: caching across exports works on desktop Chrome but
+      // leaves the wrapper's module worker in an undefined state on
+      // some mobile browsers (Safari, Android in-app WebViews), where
+      // the second export hangs at the next ffmpeg.load() or exec()
+      // with no error. The browser's HTTP cache already serves the
+      // wasm bytes from disk on subsequent loads, so the network cost
+      // of going through load() again is essentially zero. The previous
+      // instance (if any) is terminated so its worker is freed.
+      const previous = ffmpegRef.current;
+      ffmpegRef.current = null;
+      if (previous) {
         try {
-          // The wrapper's default worker construction is
-          //   `new Worker(new URL("./worker.js", import.meta.url), { type: "module" })`
-          // When @ffmpeg/ffmpeg is imported from our app, Turbopack bundles
-          // `classes.js` into our chunk but does NOT emit `worker.js` as a
-          // sibling asset. The URL above resolves to something the browser
-          // can't fetch, and even if it could, Turbopack would rewrite the
-          // worker's internal `await import(coreURL)` into a static lookup
-          // that throws `Cannot find module as expression is too dynamic`.
-          //
-          // We side-step this by shipping the wrapper's `worker.js` from
-          // /public/ffmpeg/ffmpeg-worker.js (see scripts/copy-ffmpeg-core.mjs)
-          // and pointing the wrapper at it via `classWorkerURL`. The
-          // resulting module worker is a real one — its dynamic `import()`
-          // runs in the browser's native ESM loader against a same-origin
-          // module URL, which can then dynamically import the ESM core from
-          // /ffmpeg/ffmpeg-core.js the same way.
-          //
-          // We pass an *absolute* URL for classWorkerURL: the wrapper does
-          // `new URL(classWorkerURL, import.meta.url)`, and import.meta.url
-          // here points at our bundled `classes.js` chunk. In dev with
-          // Turbopack that base can resolve to a `file://`-style URL,
-          // which then makes the worker fetch `file:///ffmpeg/...` and the
-          // browser blocks it with "may not load data from file://".
-          // Resolving against `window.location.origin` here in the main
-          // thread gives a guaranteed http(s) absolute URL.
-          const classWorkerURL = new URL(
-            WRAPPER_WORKER_PATH,
-            window.location.origin,
-          ).toString();
-          // Pick the core at load time. Multi-thread needs SAB (only
-          // available on a cross-origin-isolated document); if it's not,
-          // load the single-threaded core instead. We deliberately try
-          // the single-thread fallback inside the same `try` so a
-          // mid-load SAB failure transparently retries on the slower
-          // but always-available core, instead of bubbling the cryptic
-          // "Can't find variable: SharedArrayBuffer" to the user.
-          const corePath =
-            typeof window !== "undefined" &&
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (window as any).crossOriginIsolated === true
-              ? CORE_PATH_MT
-              : CORE_PATH_ST;
-          const coreURL = new URL(
-            `${corePath}/ffmpeg-core.js`,
-            window.location.origin,
-          ).toString();
-          const wasmURL = new URL(
-            `${corePath}/ffmpeg-core.wasm`,
-            window.location.origin,
-          ).toString();
-          try {
-            await ffmpeg.load({ coreURL, wasmURL, classWorkerURL });
-          } catch (loadErr) {
-            // If the mt core failed because the page isn't isolated, retry
-            // once on the single-thread core. Any other load error (network,
-            // bad wasm) is reported verbatim — we don't want to mask a
-            // genuine problem with a slower retry.
-            const needsFallback =
-              corePath === CORE_PATH_MT &&
-              /SharedArrayBuffer|worker/i.test(
-                loadErr instanceof Error ? loadErr.message : String(loadErr),
-              );
-            if (!needsFallback) throw loadErr;
-            const stCoreURL = new URL(
-              `${CORE_PATH_ST}/ffmpeg-core.js`,
-              window.location.origin,
-            ).toString();
-            const stWasmURL = new URL(
-              `${CORE_PATH_ST}/ffmpeg-core.wasm`,
-              window.location.origin,
-            ).toString();
-            await ffmpeg.load({
-              coreURL: stCoreURL,
-              wasmURL: stWasmURL,
-              classWorkerURL,
-            });
-          }
-        } catch (err) {
-          setLoadingCore(false);
-          throw new Error(
-            `ffmpeg load failed: ${err instanceof Error ? (err.stack ?? err.message) : String(err)} (looked at ${CORE_PATH_MT}/ffmpeg-core.{js,wasm} + ffmpeg-worker.js)`,
-          );
+          previous.terminate();
+        } catch {
+          /* ignore terminate errors */
         }
-        ffmpegRef.current = ffmpeg;
-        setLoadingCore(false);
-        // Notify the caller that the (potentially long) load is done and
-        // the transcode is about to start. They can use this to swap
-        // their UI label — otherwise the dialog stays on
-        // "Loading the local video converter…" for the full transcode.
-        onLoadRef.current?.();
       }
+
+      const ffmpeg = new FFmpeg();
+      setLoadingCore(true);
+      ffmpeg.on("progress", ({ progress: p }) => {
+        setProgress(Math.max(0, Math.min(1, p)));
+      });
+      ffmpeg.on("log", ({ message }) => {
+        // Useful diagnostic surface for the rare case exec() resolves
+        // on a non-zero ffmpeg exit. Kept always-on (one console line
+        // per ffmpeg message) but stripped of any user-data.
+        console.log("[ffmpeg]", message);
+      });
+      try {
+        const classWorkerURL = new URL(
+          WRAPPER_WORKER_PATH,
+          window.location.origin,
+        ).toString();
+        // Pick the core at load time. Multi-thread needs SAB (only
+        // available on a cross-origin-isolated document); if it's not,
+        // load the single-threaded core instead. We deliberately try
+        // the single-thread fallback inside the same `try` so a
+        // mid-load SAB failure transparently retries on the slower
+        // but always-available core, instead of bubbling the cryptic
+        // "Can't find variable: SharedArrayBuffer" to the user.
+        const corePath =
+          typeof window !== "undefined" &&
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (window as any).crossOriginIsolated === true
+            ? CORE_PATH_MT
+            : CORE_PATH_ST;
+        const coreURL = new URL(
+          `${corePath}/ffmpeg-core.js`,
+          window.location.origin,
+        ).toString();
+        const wasmURL = new URL(
+          `${corePath}/ffmpeg-core.wasm`,
+          window.location.origin,
+        ).toString();
+        try {
+          await ffmpeg.load({ coreURL, wasmURL, classWorkerURL });
+        } catch (loadErr) {
+          // If the mt core failed because the page isn't isolated, retry
+          // once on the single-thread core. Any other load error (network,
+          // bad wasm) is reported verbatim — we don't want to mask a
+          // genuine problem with a slower retry.
+          const needsFallback =
+            corePath === CORE_PATH_MT &&
+            /SharedArrayBuffer|worker/i.test(
+              loadErr instanceof Error ? loadErr.message : String(loadErr),
+            );
+          if (!needsFallback) throw loadErr;
+          const stCoreURL = new URL(
+            `${CORE_PATH_ST}/ffmpeg-core.js`,
+            window.location.origin,
+          ).toString();
+          const stWasmURL = new URL(
+            `${CORE_PATH_ST}/ffmpeg-core.wasm`,
+            window.location.origin,
+          ).toString();
+          await ffmpeg.load({
+            coreURL: stCoreURL,
+            wasmURL: stWasmURL,
+            classWorkerURL,
+          });
+        }
+      } catch (err) {
+        setLoadingCore(false);
+        throw new Error(
+          `ffmpeg load failed: ${err instanceof Error ? (err.stack ?? err.message) : String(err)} (looked at ${CORE_PATH_MT}/ffmpeg-core.{js,wasm} + ffmpeg-worker.js)`,
+        );
+      }
+      ffmpegRef.current = ffmpeg;
+      setLoadingCore(false);
+      // Notify the caller that the (potentially long) load is done and
+      // the transcode is about to start. They can use this to swap
+      // their UI label — otherwise the dialog stays on
+      // "Loading the local video converter…" for the full transcode.
+      onLoadRef.current?.();
 
       setTranscoding(true);
       setProgress(0);
