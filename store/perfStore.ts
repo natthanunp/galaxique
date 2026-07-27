@@ -9,8 +9,11 @@ import {
 } from "@/lib/perf";
 
 const TIERS: QualityTier[] = ["low", "medium", "high"];
-const DOWNGRADE_COOLDOWN_MS = 2_500;
-const UPGRADE_COOLDOWN_MS = 12_000;
+// Cooldowns are short because we now START at "high" — a wrong initial
+// guess on a borderline device should be corrected within ~1s, not
+// the 12s+ it used to take to step back up to where it belongs.
+const DOWNGRADE_COOLDOWN_MS = 1_500;
+const UPGRADE_COOLDOWN_MS = 3_000;
 
 interface PerfState {
   tier: QualityTier;

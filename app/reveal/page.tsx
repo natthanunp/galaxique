@@ -153,6 +153,51 @@ export default function RevealPage() {
     return () => clearTimeout(handle);
   }, [hydrated, router]);
 
+  // Notify the owner via Telegram once the reveal has actually been shown
+  // to the user. Keyed off the resolved Spotify track id (or the reading
+  // hash) so a page refresh / direct navigation back to /reveal doesn't
+  // re-notify for the same reveal. We don't block on the request — failures
+  // are logged but never surfaced to the user.
+  const notifiedRef = useRef(false);
+  useEffect(() => {
+    if (notifiedRef.current) return;
+    if (!hydrated || !reveal) return;
+    if (typeof window === "undefined") return;
+
+    const answers = useQuizStore.getState().answers;
+    if (answers.length === 0) return;
+
+    // Stable per-reveal id: the resolved Spotify track id when known,
+    // otherwise a hash of the reading so we still de-dupe fallbacks.
+    const dedupeKey = reveal.spotify_track_id
+      ? `track:${reveal.spotify_track_id}`
+      : `reading:${reveal.personality_reading.length}:${reveal.vibe}`;
+    const sentKey = "galaxseea:telegram-notified";
+    try {
+      if (window.sessionStorage.getItem(sentKey) === dedupeKey) return;
+    } catch {
+      // sessionStorage may be disabled (Safari private mode, sandboxed
+      // iframe) — fall through and rely on the in-memory ref to dedupe
+      // within this tab.
+    }
+
+    notifiedRef.current = true;
+    try {
+      window.sessionStorage.setItem(sentKey, dedupeKey);
+    } catch {
+      // ignore — best-effort dedupe
+    }
+
+    void fetch("/api/telegram/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answers, language, reveal }),
+      keepalive: true,
+    }).catch((err) =>
+      console.error("[reveal] Telegram notify failed", err),
+    );
+  }, [hydrated, reveal, language]);
+
   if (!hydrated || !reveal) {
     return (
       <main className="safe-area-page relative flex min-h-dvh items-center justify-center">

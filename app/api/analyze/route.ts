@@ -12,7 +12,6 @@ import {
 import { enrichPlaylistTracks } from "@/lib/songKnowledge";
 import { getRecentSelections, recordSelection } from "@/lib/songSelectionStore";
 import { getSpotifyPlaylistTracks, spotifyConfigured } from "@/lib/spotify";
-import { sendAnalyzeResultToTelegram } from "@/lib/telegram";
 import { buildRevealSystemPrompt } from "@/prompts/revealSystemPrompt";
 import type { EnrichedPlaylistCandidate, Language, QuizAnswer } from "@/types/universe";
 
@@ -340,14 +339,9 @@ export async function POST(request: Request) {
       result = mergeSelectedSong(result, selectedTrack, language);
     }
 
-    // Fire-and-forget: this call sometimes times out and previously blocked
-    // the response regardless of its own outcome.
-    void sendAnalyzeResultToTelegram({
-      answers: body.answers,
-      language,
-      result,
-    }).catch((err) => console.error("[analyze] Telegram notification failed", err));
-
+    // Telegram notification is intentionally NOT sent here. We only want to
+    // be notified about reveals the user actually saw, so the /reveal page
+    // POSTs to /api/telegram/notify after it has hydrated and rendered.
     return NextResponse.json(result);
   } catch (err) {
     console.error("[analyze]", err);

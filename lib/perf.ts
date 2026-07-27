@@ -68,11 +68,16 @@ export interface RenderMetrics {
   sampledAt: number;
 }
 
-/** Conservative initial tier before any live FPS measurement is available. */
+/** Initial tier before any live FPS measurement is available. Starts at
+ *  "high" by default so the first paint is the best-looking frame, not the
+ *  worst — the live <PerformanceMonitor> will downgrade within ~1s if the
+ *  device can't sustain it. Only obviously low-power hardware (very old
+ *  Android, <2GB RAM, very small screen) is pre-seeded lower to avoid a
+ *  brief frame-rate cliff on the very first frame. A wrong "high" guess
+ *  on a borderline device is corrected within ~1s, which is a much
+ *  better failure mode than 12+ seconds of subpar visuals. */
 export function initialQualityTier(): QualityTier {
   if (isLowPowerDevice()) return "low";
-  if (isMobileDevice()) return "medium";
-  if (isFirefoxOrEdgeUA()) return "medium";
   return "high";
 }
 
@@ -95,13 +100,17 @@ export function tierDprCap(tier: QualityTier, baseDpr: number): number {
   return baseDpr;
 }
 
-/** Which expensive postprocessing passes are allowed at this tier. */
+/** Which expensive postprocessing passes are allowed at this tier.
+ *  Bloom and lensing are now always-on; the live <PerformanceMonitor>
+ *  adapts DPR and particle counts instead, which has a much smaller
+ *  visual impact than silently disabling bloom (which made the
+ *  accretion disk and central glow look "dead" on first paint). */
 export function tierEffectsEnabled(tier: QualityTier): {
   bloom: boolean;
   lensing: boolean;
 } {
   return {
-    bloom: tier !== "low",
-    lensing: tier === "high",
+    bloom: true,
+    lensing: true,
   };
 }

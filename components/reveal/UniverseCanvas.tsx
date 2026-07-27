@@ -8,7 +8,7 @@ import * as THREE from "three";
 import { UniverseScene } from "@/three/scene/UniverseScene";
 import { RenderPerformanceMetrics } from "@/three/scene/RenderPerformanceMetrics";
 import { Lensing } from "@/three/effects/Lensing";
-import { targetDpr, tierDprCap, tierEffectsEnabled } from "@/lib/perf";
+import { targetDpr, tierDprCap } from "@/lib/perf";
 import { usePerfStore } from "@/store/perfStore";
 import type { UniverseReveal } from "@/types/universe";
 
@@ -28,9 +28,11 @@ interface UniverseCanvasProps {
  * <PerformanceMonitor> measures live frame times and steps the shared
  * `usePerfStore` quality tier up/down, which in turn:
  *  - caps `dpr` further on top of the device-based `targetDpr()`
- *  - keeps black-hole lensing available from the first frame and disables
- *    bloom at the "low" tier
  *  - scales particle/segment counts in CosmicBackground/ParticleField/Galaxy
+ *
+ * Bloom and lensing are always-on (see lib/perf.ts's tierEffectsEnabled) so
+ * the first paint is the best-looking frame, not the worst. The live monitor
+ * only intervenes if measured FPS drops below 30 for two consecutive samples.
  */
 export default function UniverseCanvas({
   reveal,
@@ -40,7 +42,6 @@ export default function UniverseCanvas({
   const tier = usePerfStore((s) => s.tier);
   const upgrade = usePerfStore((s) => s.upgrade);
   const downgrade = usePerfStore((s) => s.downgrade);
-  const { bloom } = tierEffectsEnabled(tier);
   // Lensing is the defining visual of a black-hole result. It is a single
   // UV warp with no additional scene pass, so it should not wait for the
   // adaptive monitor to promote a mobile viewport from medium to high.
@@ -48,7 +49,6 @@ export default function UniverseCanvas({
   const blackHoleConfig = reveal.celestial_config?.celestial_type === "black_hole"
     ? reveal.celestial_config.black_hole
     : undefined;
-  const showEffects = bloom || showLensing;
 
   return (
     <Canvas
@@ -87,22 +87,12 @@ export default function UniverseCanvas({
         dampingFactor={0.08}
       />
 
-      {showEffects && (
-        <EffectComposer enableNormalPass={false}>
-          {bloom ? (
-            showLensing ? (
-              <>
-                <Bloom intensity={0.32} luminanceThreshold={1.1} luminanceSmoothing={0.15} mipmapBlur />
-                <Lensing strength={blackHoleConfig?.lens_strength ?? 1} radius={0.42} />
-              </>
-            ) : (
-              <Bloom intensity={0.32} luminanceThreshold={1.1} luminanceSmoothing={0.15} mipmapBlur />
-            )
-          ) : (
-            <Lensing strength={blackHoleConfig?.lens_strength ?? 1} radius={0.42} />
-          )}
-        </EffectComposer>
-      )}
+      <EffectComposer enableNormalPass={false}>
+        <Bloom intensity={0.32} luminanceThreshold={1.1} luminanceSmoothing={0.15} mipmapBlur />
+        {showLensing && (
+          <Lensing strength={blackHoleConfig?.lens_strength ?? 1} radius={0.42} />
+        )}
+      </EffectComposer>
     </Canvas>
   );
 }

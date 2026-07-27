@@ -2481,5 +2481,99 @@
     "energy": "mid-tempo, pop-rock with a steady beat",
     "setting": "high school or teenage social scene",
     "summary": "The song expresses the desire to be part of the popular, confident crowd, set to a bright but melancholic synth-pop melody with a driving rhythm."
+  },
+  "5gatbCb4evWxs0CMMuiqGX": {
+    "name": "In Too Deep",
+    "artist": "Franc Moody",
+    "known": true,
+    "themes": [
+      "love",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "setting": "late-night alone",
+    "summary": "The song explores the deep emotions of love and longing, with a melancholic yet driving energy, evoking a sense of nostalgia and yearning for a past relationship."
+  },
+  "6RUUaEumPDW1ZDSUUluOyg": {
+    "name": "Speedracer",
+    "artist": "CAPYAC",
+    "known": true,
+    "grounded": true,
+    "themes": [
+      "love",
+      "impatience",
+      "yearning"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "longing",
+    "energy": "driving",
+    "setting": "open road",
+    "summary": "The song expresses a desire to be closer to a loved one and seize the moment, with a sense of urgency and longing, set against a backdrop of speed and movement."
+  },
+  "2PL9IBLQvJjE7hqCQyJl2g": {
+    "name": "Turn",
+    "artist": "The Wombats",
+    "known": true,
+    "themes": [
+      "heartbreak",
+      "nostalgia",
+      "longing"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song explores the pain of a failed relationship and the struggle to move on, with a soft, introspective sound and emotional lyrics."
+  },
+  "59wlTaYOL5tDUgXnbBQ3my": {
+    "name": "A Moment Apart",
+    "artist": "ODESZA",
+    "known": true,
+    "themes": [
+      "connection",
+      "introspection",
+      "harmony"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "warm",
+    "energy": "driving",
+    "setting": "sunlit and social",
+    "summary": "The track blends electronic and organic elements to create a sense of unity and shared experience, with a steady rhythm and layered instrumentation that evokes a feeling of togetherness and reflection."
+  },
+  "2gYTC8DsplN3RNdpdBcCOQ": {
+    "name": "Die On This Hill",
+    "artist": "SIENNA SPIRO",
+    "known": true,
+    "grounded": true,
+    "themes": [
+      "stubborn love",
+      "inner conflict",
+      "pride",
+      "heartbreak"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "heartbreaking",
+    "energy": "restrained",
+    "setting": "intimate",
+    "summary": "The song explores the painful struggle of holding onto a failing relationship, driven by a piano and marked by a sense of stubborn pride and emotional turmoil."
+  },
+  "2OzhQlSqBEmt7hmkYxfT6m": {
+    "name": "Fortnight (feat. Post Malone)",
+    "artist": "Taylor Swift, Post Malone",
+    "known": true,
+    "themes": [
+      "nostalgia",
+      "reflection",
+      "growth",
+      "friendship"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "melancholic",
+    "energy": "driving",
+    "setting": "late-night alone",
+    "summary": "The song reflects on a close friendship and the changes that have occurred over time, with a mix of sadness and warmth, set to a catchy, guitar-driven melody."
   }
 }
