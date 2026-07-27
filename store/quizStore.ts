@@ -52,6 +52,45 @@ const MAX_SEEN_ANGLES = 80;
  *  so large that the user never hears a favorite again. */
 const MAX_RECENT_TRACK_IDS = 20;
 
+type PersistedQuizState = Pick<
+  QuizState,
+  | "language"
+  | "questions"
+  | "answers"
+  | "reveal"
+  | "seenAngles"
+  | "recentTrackIds"
+>;
+
+function isLanguage(value: unknown): value is Language {
+  return value === "en" || value === "th";
+}
+
+function asStringList(value: unknown, limit: number): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is string => typeof item === "string").slice(-limit);
+}
+
+/**
+ * Client state is untrusted at the persistence boundary: a browser can hold
+ * state from an older app version, an interrupted write, or manually altered
+ * localStorage. This release changed both the quiz response shape and its API
+ * contract, so keep durable preference/history data only when well-formed and
+ * reset in-progress serialized quiz/reveal data to avoid mixing old client
+ * state with new code.
+ */
+function migratePersistedQuizState(state: unknown): PersistedQuizState {
+  const persisted = (state ?? {}) as Partial<PersistedQuizState>;
+  return {
+    language: isLanguage(persisted.language) ? persisted.language : "en",
+    questions: [],
+    answers: [],
+    reveal: null,
+    seenAngles: asStringList(persisted.seenAngles, MAX_SEEN_ANGLES),
+    recentTrackIds: asStringList(persisted.recentTrackIds, MAX_RECENT_TRACK_IDS),
+  };
+}
+
 export const useQuizStore = create<QuizState>()(
   persist(
     (set) => ({
@@ -107,6 +146,8 @@ export const useQuizStore = create<QuizState>()(
     }),
     {
       name: "galaxique-quiz",
+      version: 1,
+      migrate: (persistedState) => migratePersistedQuizState(persistedState),
       // Persist everything except the transient loading flag.
       partialize: (state) => ({
         language: state.language,
