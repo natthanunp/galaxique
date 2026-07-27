@@ -21,12 +21,31 @@ export const dynamic = "force-dynamic";
 
 interface AnalyzeBody {
   answers: QuizAnswer[];
-  language: Language;
+  /** Runtime request data is untrusted even though current clients type this
+   * as `Language`; a stale browser can rehydrate an older/corrupt value. */
+  language?: unknown;
   /** Retained for client compatibility; no longer used server-side. Song
    *  variety is now driven by the shared rolling log in
    *  lib/songSelectionStore.ts (see pickWeightedSongSelection below), which
    *  works across users/instances instead of per-client history. */
   recentTrackIds?: string[];
+}
+
+const THAI_CHARACTER = /\p{Script=Thai}/u;
+
+/**
+ * Honor explicit valid selections. If an old browser bundle sends an invalid
+ * or absent value, infer the contract language from the submitted visible
+ * quiz text rather than guessing a default: Thai question/answer text means
+ * Thai output, otherwise the legacy English path. This is only a bridge for
+ * stale clients; current clients always send "en" or "th" explicitly.
+ */
+function resolveLanguage(value: unknown, answers: QuizAnswer[]): Language {
+  if (value === "en" || value === "th") return value;
+  const visibleText = answers
+    .map((answer) => `${answer.questionText} ${answer.answer}`)
+    .join(" ");
+  return THAI_CHARACTER.test(visibleText) ? "th" : "en";
 }
 
 interface ScoredSongCandidate {
@@ -208,12 +227,7 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
-  if (body.language !== "en" && body.language !== "th") {
-    return NextResponse.json(
-      { error: "language must be 'en' or 'th'." },
-      { status: 400 },
-    );
-  }
+  const language = resolveLanguage(body.language, body.answers);
 
   try {
     const transcript = body.answers
@@ -251,7 +265,7 @@ export async function POST(request: Request) {
     // available, the selected track is always from the sampled catalog.
     const songFlavorHint = sampledTracks.length === 0 ? pickSongFlavorHint() : undefined;
     const systemPrompt = buildRevealSystemPrompt(
-      body.language,
+      language,
       songFlavorHint,
       creatureKindHint,
       sampledTracks.length > 0 ? sampledTracks : undefined,
@@ -323,14 +337,14 @@ export async function POST(request: Request) {
         );
         selectedTrack = await pickCatalogFallback(enrichedTracks);
       }
-      result = mergeSelectedSong(result, selectedTrack, body.language);
+      result = mergeSelectedSong(result, selectedTrack, language);
     }
 
     // Fire-and-forget: this call sometimes times out and previously blocked
     // the response regardless of its own outcome.
     void sendAnalyzeResultToTelegram({
       answers: body.answers,
-      language: body.language,
+      language,
       result,
     }).catch((err) => console.error("[analyze] Telegram notification failed", err));
 
