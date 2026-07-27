@@ -3,600 +3,775 @@
     "name": "Apocalypse",
     "artist": "Cigarettes After Sex",
     "known": true,
-    "themes": ["longing", "intimacy", "nostalgia"],
+    "themes": [
+      "longing",
+      "memory",
+      "intimacy"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and melancholic",
     "energy": "still and intimate",
     "setting": "late-night alone",
-    "summary": "The song uses sparse, reverb-drenched instrumentation and hushed vocals to evoke a sense of yearning for a past lover, with lyrics that paint a picture of quiet, intimate moments and the desire to hold onto them."
+    "summary": "A hazy, slow-burning song about remembering a past lover and the desire to rekindle that connection, with whispered vocals and reverb-drenched guitar."
   },
   "1ujxjsoNvh4XgS2fUNwkZ2": {
     "name": "Space Song",
     "artist": "Beach House",
     "known": true,
-    "themes": ["loss", "memory", "longing"],
+    "themes": [
+      "loss",
+      "longing",
+      "cosmic escape"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "dreamy and melancholic",
     "energy": "restrained",
     "setting": "late-night alone",
-    "summary": "The song drifts through hazy, reverb-soaked imagery of a past relationship fading like a dream, with a slow, shoegaze-influenced sound that feels both weightless and sorrowful."
+    "summary": "A hazy, reverb-drenched track about drifting through memories of a lost love, with ethereal vocals and a slow, pulsing synth melody that evokes floating in space."
   },
   "51EMSRpNm9Rg5rGViVCczv": {
     "name": "Andromeda",
     "artist": "Weyes Blood",
     "known": true,
-    "themes": ["longing", "cosmic isolation", "search for connection"],
+    "themes": [
+      "cosmic longing",
+      "spiritual connection",
+      "emotional isolation"
+    ],
     "relationship_stance": "romantic yearning",
-    "mood": "melancholic and dreamy",
+    "mood": "dreamy and melancholic",
     "energy": "restrained, building",
     "setting": "late-night alone",
-    "summary": "The song uses the Andromeda galaxy as a metaphor for a distant, idealized love, blending soft orchestral pop with a slow, swelling arrangement that mirrors the ache of waiting for someone who feels unreachable."
+    "summary": "A lush, orchestral pop song about reaching out for a transcendent love or connection, set against a backdrop of cosmic imagery and a slow, swelling arrangement."
   },
   "35KiiILklye1JRRctaLUb4": {
     "name": "Holocene",
     "artist": "Bon Iver",
     "known": true,
-    "themes": ["memory", "transience", "awe", "smallness"],
-    "relationship_stance": "solitary reflection",
-    "mood": "wistful and tender",
+    "themes": [
+      "nature",
+      "memory",
+      "transcendence",
+      "smallness"
+    ],
+    "relationship_stance": "awe",
+    "mood": "reverent and reflective",
     "energy": "still and intimate",
-    "setting": "wide-open landscape at dusk",
-    "summary": "A quiet, fingerpicked meditation on a fleeting moment of beauty in nature that makes the speaker feel both insignificant and connected, with Justin Vernon's falsetto floating over sparse guitar and soft brass."
+    "setting": "vast landscape at dawn",
+    "summary": "A hushed, fingerpicked meditation on feeling small yet connected within a vast natural landscape, with layered falsetto harmonies and a slow-building crescendo."
   },
   "21iSFtrC2VHP3PfImVTglV": {
     "name": "Everybody Wants to Love You",
     "artist": "Japanese Breakfast",
     "known": true,
-    "themes": ["longing", "devotion", "vulnerability"],
+    "themes": [
+      "longing",
+      "devotion",
+      "vulnerability"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "tender and wistful",
     "energy": "gentle and building",
-    "setting": "intimate, late-night",
-    "summary": "The singer expresses a deep desire to be loved and accepted, offering her whole self while acknowledging the risk of heartbreak, set to a dreamy, synth-laced indie pop arrangement."
+    "setting": "late-night reflection",
+    "summary": "A dreamy, synth-laced pop song about the desire to be fully loved and accepted by someone, with a soft, building arrangement that mirrors emotional openness."
   },
   "6IPwKM3fUUzlElbvKw2sKl": {
     "name": "we fell in love in october",
     "artist": "girl in red",
     "known": true,
-    "themes": ["young love", "autumn nostalgia", "queer romance"],
+    "themes": [
+      "young love",
+      "autumn nostalgia",
+      "devotion"
+    ],
     "relationship_stance": "secure closeness",
-    "mood": "tender and nostalgic",
+    "mood": "tender and wistful",
     "energy": "gentle and intimate",
-    "setting": "autumn, cozy",
-    "summary": "A dreamy indie pop song about the warmth and intimacy of falling in love during October, with soft guitar and a quiet, heartfelt delivery."
+    "setting": "crisp autumn day",
+    "summary": "A soft indie-pop song about the comfort and sweetness of a relationship that began in October, with warm guitar and a dreamy, understated vocal delivery."
   },
   "46RNrAkGsqWTDrv2ZPOAbx": {
     "name": "Moon Song",
     "artist": "Phoebe Bridgers",
     "known": true,
-    "themes": ["codependency", "emotional labor", "unrequited love"],
-    "relationship_stance": "unequal devotion",
+    "themes": [
+      "unrequited love",
+      "self-doubt",
+      "emotional distance"
+    ],
+    "relationship_stance": "yearning with resignation",
     "mood": "melancholic and tender",
-    "energy": "restrained",
+    "energy": "restrained, intimate",
     "setting": "late-night alone",
-    "summary": "A quiet, fingerpicked folk song in which the narrator describes giving constant, self-sacrificing care to a partner who is emotionally unavailable, using vivid domestic and celestial imagery to convey the imbalance."
+    "summary": "A quiet, fingerpicked acoustic song about loving someone who is emotionally unavailable, with lyrics that contrast the speaker's devotion with the other person's indifference, set to a sparse, haunting arrangement."
   },
   "0bkW98npv8EsWQ2fXFzK56": {
     "name": "From Eden",
     "artist": "Hozier",
     "known": true,
     "themes": [
-      "flawed love",
-      "mutual brokenness",
-      "acceptance",
-      "dark intimacy"
+      "love as refuge",
+      "flawed intimacy",
+      "escape from darkness"
     ],
-    "relationship_stance": "devoted despite imperfection",
-    "mood": "tender and melancholic",
+    "relationship_stance": "devoted but wary closeness",
+    "mood": "tender and haunted",
     "energy": "restrained, building",
-    "setting": "intimate, quiet space",
-    "summary": "The song presents a love story where both people are deeply flawed, yet the narrator offers unwavering acceptance and devotion, set to a sparse, folk-inflected arrangement that swells with emotional weight."
+    "setting": "late-night, isolated",
+    "summary": "A slow-burning folk-rock song about finding solace in a flawed partner while fleeing one's own inner turmoil, with a warm yet eerie arrangement of fingerpicked guitar and swelling strings."
   },
   "0fBSs3fRoh1yJcne77fdu9": {
     "name": "Video Games",
     "artist": "Lana Del Rey",
     "known": true,
-    "themes": ["domestic bliss", "devotion", "escapism"],
+    "themes": [
+      "nostalgia",
+      "devotion",
+      "escapism"
+    ],
     "relationship_stance": "romantic yearning",
-    "mood": "dreamy and nostalgic",
-    "energy": "restrained",
-    "setting": "intimate home life",
-    "summary": "The song pairs a slow, hazy trip-hop beat with lyrics that celebrate a simple, all-consuming love, finding paradise in shared domestic moments and the lover's presence."
+    "mood": "dreamy and melancholic",
+    "energy": "languid and intimate",
+    "setting": "late-night alone",
+    "summary": "A hazy, trip-hop-influenced ballad where the singer equates love with the simple, immersive comfort of playing video games, delivered in a breathy, nostalgic vocal over a sparse beat and orchestral swells."
   },
   "1LzNfuep1bnAUR9skqdHCK": {
     "name": "Fade Into You",
     "artist": "Mazzy Star",
     "known": true,
-    "themes": ["longing", "emotional distance", "addiction"],
-    "relationship_stance": "unrequited yearning",
+    "themes": [
+      "longing",
+      "emotional distance",
+      "yearning"
+    ],
+    "relationship_stance": "unrequited or distant love",
     "mood": "dreamy and melancholic",
-    "energy": "still and intimate",
+    "energy": "restrained and drifting",
     "setting": "late-night alone",
-    "summary": "The singer addresses a distant, unreachable person, expressing a desire to connect and be consumed by them, set to a slow, hazy blend of slide guitar and hushed vocals."
+    "summary": "A hazy, slow-burning track about wanting to connect with someone who remains emotionally unreachable, built on a simple, hypnotic guitar riff and Hope Sandoval's ethereal, languid vocals."
   },
   "0AxZUYeQ9bZwSdt1LmZuok": {
     "name": "Heaven or Las Vegas",
     "artist": "Cocteau Twins",
     "known": true,
-    "themes": ["longing", "uncertainty", "devotion"],
-    "relationship_stance": "yearning devotion",
-    "mood": "dreamy and ethereal",
+    "themes": [
+      "rebirth",
+      "transcendence",
+      "devotion"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "ethereal and blissful",
     "energy": "buoyant and shimmering",
-    "setting": "luminous and otherworldly",
-    "summary": "The song's lyrics are impressionistic and abstract, expressing a deep, almost desperate desire for connection and reassurance, while the music is a lush, swirling blend of reverb-heavy guitars, driving drums, and Elizabeth Fraser's soaring, wordless vocals, creating a euphoric yet melancholic atmosphere."
+    "setting": "dreamlike, open space",
+    "summary": "A swirling, reverb-drenched dream-pop track with Elizabeth Fraser's wordless, emotive vocals conveying a sense of joyful surrender and celestial love, built on a bright, cascading synth melody and driving rhythm."
   },
   "7fax7NlxOq2X9kMZw8QLE2": {
     "name": "Tailwhip",
     "artist": "Men I Trust",
     "known": true,
-    "themes": ["nostalgia", "youthful freedom", "fleeting moments"],
-    "relationship_stance": "reminiscent longing",
+    "themes": [
+      "nostalgia",
+      "youthful freedom",
+      "fleeting moments"
+    ],
+    "relationship_stance": "independence",
     "mood": "dreamy and wistful",
-    "energy": "restrained, gentle groove",
-    "setting": "late-night drive or quiet reflection",
-    "summary": "The song reflects on a past relationship or memory with a sense of tender nostalgia, set to a smooth, bass-driven indie pop beat with soft, murmured vocals."
+    "energy": "restrained, mid-tempo",
+    "setting": "late-night drive",
+    "summary": "The song reflects on a past relationship or memory with a sense of bittersweet nostalgia, set to a smooth, bass-driven indie pop groove with soft, hazy vocals."
   },
   "0KVWVuutF9Dn8li4HdyAeU": {
     "name": "Archie, Marry Me",
     "artist": "Alvvays",
     "known": true,
     "themes": [
-      "commitment anxiety",
-      "working-class realism",
-      "romantic urgency"
+      "marriage proposal",
+      "commitment",
+      "youthful uncertainty"
     ],
-    "relationship_stance": "yearning for commitment despite practical doubts",
-    "mood": "wistful but urgent",
-    "energy": "jangly and driving",
-    "setting": "daylight realism with social pressure",
-    "summary": "The song blends jangly, upbeat indie pop with lyrics that express a narrator's earnest desire to marry their partner, contrasting mundane domestic details with a sense of hopeful urgency."
+    "relationship_stance": "romantic yearning",
+    "mood": "wistful and hopeful",
+    "energy": "driving",
+    "setting": "sunlit and social",
+    "summary": "A dreamy indie pop song where the narrator urgently asks a partner to marry her, blending jangly guitars and a steady beat with lyrics that mix devotion with a sense of youthful impatience."
   },
   "4vHNeBWDQpVCmGbaccrRzi": {
     "name": "Goodie Bag",
     "artist": "Still Woozy",
     "known": true,
-    "themes": ["infatuation", "vulnerability", "desire"],
+    "themes": [
+      "infatuation",
+      "vulnerability",
+      "longing"
+    ],
     "relationship_stance": "romantic yearning",
-    "mood": "dreamy and warm",
-    "energy": "bouncy and relaxed",
-    "setting": "intimate, late-night",
-    "summary": "The song captures the giddy, anxious feeling of falling for someone and wanting to be close, set to a lo-fi, funk-infused groove with hazy vocals and a playful beat."
+    "mood": "dreamy and tender",
+    "energy": "bouncy yet relaxed",
+    "setting": "late-night bedroom",
+    "summary": "The song captures the giddy, anxious feeling of falling for someone and wanting to be close, set to a lo-fi blend of fuzzy guitar, shuffling beats, and warm, hazy vocals."
   },
   "1zHUEIQ6yzaWBzhNCV1SGW": {
     "name": "Sofia",
     "artist": "Clairo",
     "known": true,
-    "themes": ["secret love", "queer romance", "family disapproval"],
-    "relationship_stance": "yearning and closeted devotion",
-    "mood": "dreamy and bittersweet",
-    "energy": "bouncy but restrained",
-    "setting": "suburban indoors, possibly at a party",
-    "summary": "The narrator confesses her love for a girl named Sofia while hinting at the tension of keeping their relationship hidden from her family, all set to a bright, synth-driven indie pop track."
+    "themes": [
+      "young love",
+      "confusion",
+      "self-discovery"
+    ],
+    "relationship_stance": "romantic uncertainty",
+    "mood": "dreamy and introspective",
+    "energy": "gentle and restrained",
+    "setting": "bedroom late at night",
+    "summary": "A soft, lo-fi pop song about the mixed feelings and hesitation in a budding same-sex romance, with a hazy, intimate production and a simple, catchy melody."
   },
   "7ASFZh1D0DPZro7UXUKGmd": {
     "name": "Loving Is Easy",
     "artist": "Rex Orange County, Benny Sings",
     "known": true,
-    "themes": ["simple joy", "everyday romance", "contentment"],
+    "themes": [
+      "effortless love",
+      "simple joy",
+      "contentment"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "warm and breezy",
     "energy": "relaxed and upbeat",
     "setting": "sunlit and social",
-    "summary": "The song celebrates the effortless happiness of a loving relationship, with a light, groovy arrangement of piano, bass, and soft vocals that feels like a carefree afternoon."
+    "summary": "A buoyant, soul-pop duet celebrating the ease and naturalness of a loving relationship, with bright horns, gentle piano, and a laid-back groove."
   },
   "3sslYZcFKtUvIEWN9lADgr": {
     "name": "First Love/Late Spring",
     "artist": "Mitski",
     "known": true,
-    "themes": ["first love", "loss", "growing up"],
-    "relationship_stance": "heartbreak",
-    "mood": "melancholic and tender",
-    "energy": "restrained",
+    "themes": [
+      "first love",
+      "vulnerability",
+      "self-doubt",
+      "spring"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "tender and anxious",
+    "energy": "restrained, building",
     "setting": "late-night alone",
-    "summary": "A wistful reflection on a past first love, set to a gentle, piano-driven melody that swells with quiet emotion."
+    "summary": "A soft, piano-driven indie rock song about the overwhelming, almost painful intensity of a first love, where the narrator feels both consumed by the other person and terrified of her own neediness."
   },
   "17UaCbdhkzTaCj4DbKTrPW": {
     "name": "Soft Sounds from Another Planet",
     "artist": "Japanese Breakfast",
     "known": true,
-    "themes": ["alienation", "longing", "self-reflection"],
-    "relationship_stance": "romantic yearning",
-    "mood": "melancholic and dreamy",
+    "themes": [
+      "loss",
+      "grief",
+      "memory"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic and reflective",
     "energy": "restrained",
     "setting": "late-night alone",
-    "summary": "The song uses a sci-fi metaphor of a distant planet to explore feelings of disconnection and desire for closeness, set to a hazy, synth-laden indie pop sound."
+    "summary": "A dreamy, synth-laden track about processing the death of a loved one, with soft vocals and a hauntingly beautiful melody."
   },
   "2X485T9Z5Ly0xyaghN73ed": {
     "name": "Let It Happen",
     "artist": "Tame Impala",
     "known": true,
-    "themes": ["surrender", "transformation", "letting go"],
-    "relationship_stance": "self-reflection and acceptance",
-    "mood": "psychedelic and determined",
-    "energy": "building and euphoric",
-    "setting": "internal journey, disoriented yet forward-moving",
-    "summary": "The song narrates a surreal, almost hallucinatory experience of losing control and embracing change, driven by a propulsive, layered synth groove and a gradual crescendo into a blissful, distorted climax."
+    "themes": [
+      "surrender",
+      "change",
+      "letting go"
+    ],
+    "relationship_stance": "self-reflection",
+    "mood": "hypnotic and expansive",
+    "energy": "driving and building",
+    "setting": "psychedelic dreamscape",
+    "summary": "The song explores the anxiety and liberation of embracing inevitable change, with a hypnotic, layered production that builds from a pulsing synth groove into a euphoric, distorted climax."
   },
   "3Rg3dajXXNOuWLC95gPMrq": {
     "name": "A Hymn",
     "artist": "Khruangbin",
     "known": true,
-    "themes": ["devotion", "mutual support", "faith in love"],
-    "relationship_stance": "secure partnership",
-    "mood": "warm and reflective",
-    "energy": "steady and gentle",
-    "setting": "quiet evening together",
-    "summary": "A tender, soulful vow of unwavering support and trust between two people, delivered over a laid-back, groovy instrumental with delicate vocals."
-  },
-  "5MhMXTuVODDF234VDvSxQx": {
-    "name": "Awake",
-    "artist": "Tycho",
-    "known": true,
-    "themes": ["introspection", "renewal", "atmospheric"],
+    "themes": [
+      "spiritual longing",
+      "devotion",
+      "transcendence"
+    ],
     "relationship_stance": "awe",
-    "mood": "serene and contemplative",
-    "energy": "restrained, building",
-    "setting": "early morning, solitary",
-    "summary": "An instrumental piece built on warm synthesizers, gentle guitar arpeggios, and a steady, evolving beat that evokes a sense of waking up to a new day, with a calm yet forward-moving energy."
-  },
-  "4V0x90QcMh4ZxwHzEWOdtK": {
-    "name": "Feel It All Around",
-    "artist": "Washed Out",
-    "known": true,
-    "themes": ["nostalgia", "longing", "memory"],
-    "relationship_stance": "romantic yearning",
-    "mood": "dreamy and wistful",
-    "energy": "restrained, hazy",
-    "setting": "late-night alone, reflective",
-    "summary": "The song's lyrics are minimal and impressionistic, repeating a few lines about waiting and feeling a presence, while the music blends soft synths, a steady beat, and a hazy, lo-fi production that evokes a nostalgic, floating sensation."
+    "mood": "reverent and dreamy",
+    "energy": "restrained",
+    "setting": "meditative space",
+    "summary": "A gentle, instrumental piece built on a slow, echoing guitar melody and subtle percussion, evoking a sense of quiet prayer or cosmic reflection."
   },
   "1YpRBLuUWsdahTFhZr9pwK": {
     "name": "So Many Details",
     "artist": "Toro y Moi",
     "known": true,
-    "themes": ["modern romance", "digital intimacy", "uncertainty"],
-    "relationship_stance": "ambivalent connection",
-    "mood": "dreamy and introspective",
-    "energy": "restrained and hazy",
-    "setting": "late-night alone with technology",
-    "summary": "The song explores the blurred lines of a relationship mediated by screens and texts, with a laid-back, synth-laden groove that mirrors the narrator's emotional detachment and longing for clarity."
+    "themes": [
+      "obsessive thoughts",
+      "longing",
+      "uncertainty"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy and anxious",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song explores the narrator's fixation on a romantic interest, with lyrics circling around the inability to stop thinking about them, set to a hazy, lo-fi synth-pop backdrop with a steady, understated beat."
   },
   "3JsA2sWDNR9oQogGAzqqtH": {
     "name": "Open",
     "artist": "Rhye",
     "known": true,
-    "themes": ["vulnerability", "desire", "surrender"],
-    "relationship_stance": "romantic yearning and openness",
+    "themes": [
+      "vulnerability",
+      "desire",
+      "surrender"
+    ],
+    "relationship_stance": "romantic yearning",
     "mood": "sensual and tender",
     "energy": "restrained and intimate",
     "setting": "late-night alone",
-    "summary": "The song explores the tension between holding back and giving in to emotional and physical intimacy, with a soft, breathy vocal over a minimal, slow-burning R&B groove."
-  },
-  "1DfRCC2qpjjzc6l5DmTjkG": {
-    "name": "Queen",
-    "artist": "Perfume Genius",
-    "known": true,
-    "themes": ["self-empowerment", "queer defiance", "reclaiming power"],
-    "relationship_stance": "self-assertion, not romantic",
-    "mood": "bold and confrontational",
-    "energy": "driving",
-    "setting": "defiant, public-facing",
-    "summary": "A synth-pop anthem of queer resilience and defiance, where the narrator challenges societal norms and declares their own regal power over a pulsating, insistent beat."
+    "summary": "A slow, sultry R&B track built on a soft piano loop and hushed vocals, exploring the tension between holding back and giving in to emotional openness."
   },
   "3jt1ZVIuluGkV0sWWLSUzw": {
     "name": "Appointments",
     "artist": "Julien Baker",
     "known": true,
-    "themes": ["mental health", "self-criticism", "fragility"],
-    "relationship_stance": "loneliness and self-isolation",
-    "mood": "vulnerable and confessional",
-    "energy": "restrained and intimate",
-    "setting": "late-night alone",
-    "summary": "The song is a sparse, piano-driven confession where the narrator grapples with self-destructive thoughts and the difficulty of keeping appointments with life, set against a backdrop of quiet desperation."
+    "themes": [
+      "addiction",
+      "self-destruction",
+      "failed promises",
+      "vulnerability"
+    ],
+    "relationship_stance": "loneliness and self-blame",
+    "mood": "wistful and aching",
+    "energy": "restrained, building to cathartic",
+    "setting": "late-night alone, reflecting on past mistakes",
+    "summary": "A sparse, piano-driven confession about breaking promises to a loved one due to addiction, with Baker's raw vocals escalating from a whisper to a desperate cry over swelling strings and guitar."
   },
   "2VYnlKxB8jpbCeLUjQsebc": {
     "name": "In A Good Way",
     "artist": "Faye Webster",
     "known": true,
-    "themes": ["longing", "uncertainty", "quiet devotion"],
-    "relationship_stance": "unrequited or hesitant closeness",
-    "mood": "tender and wistful",
-    "energy": "restrained and gentle",
-    "setting": "late-night alone, reflecting",
-    "summary": "The song explores the narrator's patient, hopeful feelings for someone who may not feel the same, set to a soft, pedal-steel-laced indie folk arrangement."
+    "themes": [
+      "contentment",
+      "reciprocated love",
+      "everyday romance"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "warm and tender",
+    "energy": "gentle and steady",
+    "setting": "cozy domestic evening",
+    "summary": "A soft, country-tinged indie folk song about the quiet joy of being with someone who loves you back just as much, with pedal steel guitar and a relaxed, unhurried groove."
   },
   "2shjBGgizuyd0g71xzN0HE": {
     "name": "I-80",
     "artist": "Squirrel Flower",
     "known": true,
-    "grounded": true,
-    "themes": ["escape", "self-discovery", "giving up", "rebirth"],
-    "relationship_stance": "heartbreak and letting go",
-    "mood": "reflective and bittersweet",
-    "energy": "driving",
-    "setting": "westward road trip on I-80",
-    "summary": "The singer abandons poetry and love, drives west on I-80, and emerges from a summer of burning away the past to find something new."
+    "themes": [
+      "longing",
+      "distance",
+      "travel"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic and reflective",
+    "energy": "restrained",
+    "setting": "lonely highway at night",
+    "summary": "A sparse, folk-tinged song about driving alone on Interstate 80, aching for a distant lover, with hushed vocals and gentle guitar."
   },
   "0Jirkb7LGNWyVhKOsKFdZ2": {
     "name": "Run Away With Me",
     "artist": "Carly Rae Jepsen",
     "known": true,
-    "themes": ["escape", "romantic urgency", "adventure", "vulnerability"],
+    "themes": [
+      "romantic escape",
+      "desire",
+      "vulnerability"
+    ],
     "relationship_stance": "romantic yearning",
-    "mood": "euphoric and hopeful",
-    "energy": "driving",
-    "setting": "sunlit and social",
-    "summary": "The song is a synth-pop anthem about pleading with a lover to abandon their current life and run away together, driven by a pulsing saxophone riff and a sense of desperate, joyful longing."
+    "mood": "hopeful and breathless",
+    "energy": "euphoric",
+    "setting": "late-night city streets",
+    "summary": "A synth-pop anthem about the overwhelming urge to leave everything behind with a lover, driven by a soaring saxophone hook and pulsing electronic production."
   },
   "30VHURM5NOfoZmqp2iKawS": {
     "name": "Butterflies",
     "artist": "Kacey Musgraves",
     "known": true,
-    "themes": ["new love", "transformation", "joy", "freedom"],
-    "relationship_stance": "secure closeness and romantic exhilaration",
-    "mood": "warm and uplifting",
-    "energy": "gentle and breezy",
-    "setting": "sunlit and open air",
-    "summary": "A song about the liberating, butterfly-inducing rush of a new love, set to a soft, dreamy country-pop sound."
+    "themes": [
+      "romantic infatuation",
+      "nervous excitement",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "giddy and tender",
+    "energy": "gentle and buoyant",
+    "setting": "intimate, dreamy",
+    "summary": "A soft, country-pop song about the fluttery, nervous feeling of being captivated by someone new, with delicate guitar and warm vocals."
   },
   "4Jv7lweGIUOFQ7Oq2AtAh9": {
     "name": "I Follow Rivers - The Magician Remix",
     "artist": "Lykke Li, The Magician",
     "known": true,
-    "themes": ["devotion", "obsession", "love"],
-    "relationship_stance": "devoted following",
-    "mood": "passionate, determined",
-    "energy": "driving, euphoric",
-    "setting": "dance floor, night",
-    "summary": "A remix that transforms the original's yearning into a euphoric dance track about unwavering devotion."
+    "themes": [
+      "obsessive love",
+      "following",
+      "devotion"
+    ],
+    "relationship_stance": "romantic obsession",
+    "mood": "yearning and hypnotic",
+    "energy": "driving and euphoric",
+    "setting": "late-night alone",
+    "summary": "Lykke Li's lyrics describe an intense, almost desperate devotion to a lover she will follow anywhere, while The Magician's remix transforms the original into a pulsing, dancefloor-ready house track with a driving beat and shimmering synths."
   },
   "1myEOhXztRxUVfaAEQiKkU": {
     "name": "Cosmic Love",
     "artist": "Florence + The Machine",
     "known": true,
     "themes": [
-      "cosmic imagery",
-      "overwhelming love",
+      "cosmic love",
+      "overwhelming emotion",
       "transformation",
       "vulnerability"
     ],
-    "relationship_stance": "total surrender to love",
-    "mood": "awe-struck and intense",
+    "relationship_stance": "romantic yearning",
+    "mood": "ethereal and intense",
     "energy": "building and euphoric",
-    "setting": "vast, celestial space",
-    "summary": "The song uses astronomical metaphors to describe being consumed by a powerful, all-encompassing love, with a driving harp and soaring vocals that create a sense of cosmic scale and emotional release."
+    "setting": "alone in a vast, starry night",
+    "summary": "The song uses celestial imagery to describe being consumed by a powerful, all-encompassing love, with Florence Welch's soaring vocals and a driving harp-and-drum arrangement creating a sense of both vulnerability and ecstatic release."
   },
   "11ozIUBoXAgRTVWelDn4pL": {
     "name": "Lights",
     "artist": "Ellie Goulding",
     "known": true,
-    "themes": ["self-discovery", "inner strength", "overcoming darkness"],
+    "themes": [
+      "self-discovery",
+      "inner strength",
+      "illumination"
+    ],
     "relationship_stance": "independence",
     "mood": "hopeful and determined",
     "energy": "driving",
     "setting": "late-night alone",
-    "summary": "The song uses the metaphor of lights to represent finding one's own path and inner resilience after a period of confusion or struggle, set to a pulsing synth-pop beat."
+    "summary": "A synth-pop anthem about finding one's own path and inner light, with pulsing beats and soaring vocals."
   },
   "4BY4V1T0RJK1HmD2Q0ClyK": {
     "name": "Oblivion",
     "artist": "Grimes",
     "known": true,
-    "themes": ["vulnerability", "trust", "letting go"],
-    "relationship_stance": "seeking closeness and surrender",
-    "mood": "dreamy and anxious",
+    "themes": [
+      "vulnerability",
+      "fear of intimacy",
+      "self-protection"
+    ],
+    "relationship_stance": "guarded distance",
+    "mood": "ethereal and anxious",
     "energy": "restrained but pulsing",
     "setting": "late-night alone",
-    "summary": "The song uses a sparse, ethereal synth backdrop and a repeated plea for someone to catch her as she falls, expressing a desire to be vulnerable and trust another person completely."
+    "summary": "A dreamy, synth-driven track about the struggle to let someone in while fearing emotional harm, with Grimes' breathy vocals floating over a minimal, hypnotic beat."
   },
   "20Dw7Jar5hUbwX5FwHdQoG": {
     "name": "The Mother We Share",
     "artist": "CHVRCHES",
     "known": true,
-    "themes": ["loss", "memory", "shared past"],
+    "themes": [
+      "loss",
+      "memory",
+      "shared history"
+    ],
     "relationship_stance": "ambiguous separation",
-    "mood": "melancholic yet driving",
+    "mood": "bittersweet and driving",
     "energy": "propulsive synth-pop",
-    "setting": "reflective, nocturnal",
-    "summary": "The song reflects on a fractured relationship and the lingering remnants of a shared history, set to bright, layered synthesizers and a steady, upbeat rhythm that contrasts with its wistful lyrics."
+    "setting": "late-night reflection",
+    "summary": "The song uses bright, layered synthesizers and a steady beat to explore the lingering emotional ties and fragmented memories of a past relationship, with Lauren Mayberry's clear vocals conveying both distance and attachment."
   },
   "3y1EzRl5UEQxxd1f6Bv2aN": {
     "name": "When I'm Small",
     "artist": "Phantogram",
     "known": true,
-    "themes": ["longing", "isolation", "vulnerability"],
+    "themes": [
+      "nostalgia",
+      "longing",
+      "vulnerability"
+    ],
     "relationship_stance": "romantic yearning",
-    "mood": "haunting and melancholic",
-    "energy": "restrained",
+    "mood": "dreamy and melancholic",
+    "energy": "restrained but building",
     "setting": "late-night alone",
-    "summary": "The song explores a desire for closeness and intimacy while feeling small and disconnected, set against a sparse, atmospheric electronic soundscape with ethereal vocals."
+    "summary": "A hazy, synth-driven track about wanting to return to a simpler, more intimate time with a loved one, with ethereal vocals and a slow, pulsing beat."
   },
   "2Ck6gblyk3UFCVPTh8o3TN": {
     "name": "Youth",
     "artist": "Daughter",
     "known": true,
-    "themes": ["loss of innocence", "generational pain", "escapism"],
-    "relationship_stance": "longing for protection",
-    "mood": "melancholic and fragile",
-    "energy": "restrained, building to cathartic",
-    "setting": "dark, introspective space",
-    "summary": "The song reflects on the end of youth and the weight of inherited trauma, with a sparse, echoing arrangement that swells into a raw, emotional climax."
+    "themes": [
+      "loss of innocence",
+      "nostalgia",
+      "fragility"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "melancholic and tender",
+    "energy": "restrained, building",
+    "setting": "late-night alone",
+    "summary": "A sparse, reverb-drenched folk song that reflects on the painful transition from childhood to adulthood, with whispered vocals and a slow crescendo of guitar and strings."
   },
   "5DNODaGLQJIKWWsHaWT7fk": {
     "name": "Hey Now - ARTY Remix",
     "artist": "London Grammar, ARTY",
     "known": true,
-    "themes": ["longing", "escape", "emotional vulnerability"],
-    "relationship_stance": "romantic yearning",
-    "mood": "melancholic yet hopeful",
-    "energy": "building and euphoric",
+    "grounded": true,
+    "themes": [
+      "fascination and fear",
+      "romantic anxiety",
+      "urgency"
+    ],
+    "relationship_stance": "romantic yearning mixed with fear",
+    "mood": "tense and electrifying",
+    "energy": "driving",
     "setting": "late-night alone",
-    "summary": "The song expresses a desire to be taken away from emotional pain, with the remix adding a driving, uplifting electronic pulse to the original's haunting vocals."
+    "summary": "The lyrics capture a person caught between fascination and fear as romantic feelings create both excitement and anxiety, while the remix's driving production amplifies the sense of urgency."
   },
   "4RL77hMWUq35NYnPLXBpih": {
     "name": "Skinny Love",
     "artist": "Birdy",
     "known": true,
-    "themes": ["fragile love", "emotional exhaustion", "letting go"],
-    "relationship_stance": "heartbreak and resignation",
-    "mood": "melancholic and vulnerable",
-    "energy": "still and intimate",
+    "themes": [
+      "heartbreak",
+      "vulnerability",
+      "loss"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic and fragile",
+    "energy": "restrained",
     "setting": "late-night alone",
-    "summary": "The song portrays a failing relationship where both partners are emotionally drained, with sparse piano and Birdy's trembling vocals creating a raw, aching atmosphere."
+    "summary": "A sparse piano-and-vocal ballad about the painful end of a relationship, with raw, trembling vocals and minimal instrumentation that emphasize emotional fragility."
   },
   "1v1oIWf2Xgh54kIWuKsDf6": {
     "name": "Runaway",
     "artist": "AURORA",
     "known": true,
-    "themes": ["escape", "self-discovery", "vulnerability"],
+    "themes": [
+      "escape",
+      "self-discovery",
+      "vulnerability"
+    ],
     "relationship_stance": "independence",
     "mood": "yearning and introspective",
-    "energy": "building and soaring",
-    "setting": "open road or vast landscape",
-    "summary": "The song explores the desire to leave behind a confining situation and find one's true self, set to a driving, atmospheric pop production that swells into a powerful, anthemic chorus."
+    "energy": "building, ethereal",
+    "setting": "alone in a vast landscape",
+    "summary": "AURORA sings about the desire to flee from emotional pain and societal expectations, finding solace in running away to a place of inner truth, set to a sparse, atmospheric production that swells with her soaring vocals."
   },
   "3CWuU5kIw8zsWJTcgreUwl": {
     "name": "Strangers",
     "artist": "Sigrid",
     "known": true,
-    "themes": ["heartbreak", "nostalgia", "moving on"],
-    "relationship_stance": "heartbreak and loss",
-    "mood": "bittersweet",
-    "energy": "driving pop",
-    "setting": "reflective after a breakup",
-    "summary": "The song explores the painful realization that a former lover has become a stranger, set to an upbeat pop production with an emotional vocal delivery."
+    "themes": [
+      "self-doubt",
+      "emotional distance",
+      "fear of intimacy"
+    ],
+    "relationship_stance": "guarded vulnerability",
+    "mood": "melancholic and introspective",
+    "energy": "restrained, building",
+    "setting": "late-night alone",
+    "summary": "A synth-pop track about the anxiety of letting someone close, with a sparse, pulsing production that mirrors the tension between wanting connection and pushing it away."
   },
   "6bpBsotzL05UzS1rHsIqk8": {
     "name": "Livewire",
     "artist": "Oh Wonder",
     "known": true,
-    "themes": ["electric connection", "vulnerability", "desire"],
-    "relationship_stance": "romantic yearning",
-    "mood": "intimate and charged",
-    "energy": "restrained, building",
-    "setting": "late-night alone",
-    "summary": "The song uses the metaphor of a live wire to describe an intense, almost dangerous attraction, with sparse, pulsing production and breathy vocals that create a sense of tension and longing."
-  },
-  "66dQdXAbtuPdSasezCQVZE": {
-    "name": "SUMMER",
-    "artist": "BROCKHAMPTON",
-    "known": true,
     "grounded": true,
-    "themes": ["summer romance", "exclusivity", "desire"],
+    "themes": [
+      "longing for connection",
+      "rescue from darkness",
+      "emotional dependency"
+    ],
     "relationship_stance": "romantic yearning",
-    "mood": "warm and certain",
-    "energy": "relaxed and intimate",
-    "setting": "summer heat",
-    "summary": "The song expresses a narrator's strong desire for a specific person to be their partner during the summer, emphasizing that person's uniqueness and the narrator's certainty about the choice, delivered with a warm, intimate energy."
+    "mood": "hauntingly beautiful",
+    "energy": "building and impassioned",
+    "setting": "rock bottom, reaching out",
+    "summary": "The narrator, feeling weighed down by past losses and sinking into despair, pleads for someone to be their 'livewire'—a source of strength, fire, and love that lifts them higher."
   },
   "6tDDoYIxWvMLTdKpjFkc1B": {
     "name": "telepatía",
     "artist": "Kali Uchis",
     "known": true,
-    "themes": ["long-distance connection", "telepathy", "intimacy"],
-    "relationship_stance": "romantic yearning with playful closeness",
-    "mood": "dreamy and sensual",
-    "energy": "restrained and hypnotic",
-    "setting": "late-night alone, thinking of a lover",
-    "summary": "Kali Uchis sings about a psychic, intimate bond with a distant lover over a slow, bass-heavy R&B beat with Spanish verses and a hazy, bedroom-pop atmosphere."
+    "themes": [
+      "longing",
+      "telepathic connection",
+      "distance",
+      "desire"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy and intimate",
+    "energy": "restrained and sensual",
+    "setting": "late-night alone",
+    "summary": "Kali Uchis sings about a deep, almost psychic bond with a lover she can't be with physically, over a slow, airy, bedroom-pop beat with soft Spanish verses and a hazy, romantic atmosphere."
   },
   "19woxaSpjOefa2JnAOoqW5": {
     "name": "Garden (Say It Like Dat)",
     "artist": "SZA",
     "known": true,
-    "themes": ["vulnerability", "self-doubt", "romantic uncertainty"],
-    "relationship_stance": "anxious longing",
-    "mood": "tender and hesitant",
-    "energy": "restrained, simmering",
-    "setting": "intimate, private space",
-    "summary": "SZA sings about overthinking a romantic connection, asking her partner to be direct and say how they feel, over a sparse, warm R&B beat with soft harmonies."
+    "themes": [
+      "vulnerability",
+      "self-doubt",
+      "desire for reassurance"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "tender and anxious",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "SZA pleads for her partner to say their feelings plainly, over a sparse, R&B-tinged beat that mirrors her emotional fragility."
   },
   "2ZWlPOoWh0626oTaHrnl2a": {
     "name": "Ivy",
     "artist": "Frank Ocean",
     "known": true,
-    "themes": ["nostalgia", "lost love", "regret"],
-    "relationship_stance": "heartbreak and longing",
+    "themes": [
+      "nostalgia",
+      "regret",
+      "lost love"
+    ],
+    "relationship_stance": "heartbreak",
     "mood": "melancholic and reflective",
-    "energy": "restrained and intimate",
+    "energy": "restrained",
     "setting": "late-night alone",
-    "summary": "Frank Ocean reflects on a past relationship that ended painfully, with a sparse, atmospheric production and his tender, layered vocals conveying deep regret."
+    "summary": "Frank Ocean reflects on a past relationship that ended painfully, with lyrics about being left behind and the lingering ache of what was lost, set to a sparse, guitar-driven production with a wistful melody."
   },
   "3EaJDYHA0KnX88JvDhL9oa": {
     "name": "Dark Red",
     "artist": "Steve Lacy",
     "known": true,
-    "themes": ["jealousy", "possessiveness", "insecurity"],
-    "relationship_stance": "anxious attachment",
-    "mood": "tense and brooding",
-    "energy": "restrained, simmering",
+    "themes": [
+      "infatuation",
+      "vulnerability",
+      "devotion"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "tender and anxious",
+    "energy": "restrained",
     "setting": "late-night alone",
-    "summary": "The song expresses a lover's obsessive fear that their partner might be unfaithful, set to a minimalist, bass-driven groove with a dark, hypnotic vocal delivery."
+    "summary": "A minimalist R&B track with a gentle guitar loop and soft vocals, expressing the nervous excitement and deep affection of being completely captivated by someone."
   },
   "2uP6t2J5MEwhr9rDkAAzwh": {
     "name": "Get You (feat. Kali Uchis)",
     "artist": "Daniel Caesar, Kali Uchis",
     "known": true,
-    "themes": ["devotion", "vulnerability", "romantic longing", "being seen"],
-    "relationship_stance": "secure closeness",
-    "mood": "tender and reverent",
+    "themes": [
+      "devotion",
+      "vulnerability",
+      "intimacy"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "tender and longing",
     "energy": "still and intimate",
     "setting": "late-night alone",
-    "summary": "A slow, soulful R&B duet where the singers express a deep, almost spiritual devotion to a partner who makes them feel fully known and accepted, set to a warm, minimalist production with gentle guitar and soft harmonies."
+    "summary": "A soulful R&B duet where the singers express a deep, almost desperate desire to be emotionally and physically close to their partner, set to a slow, warm groove with gentle guitar and soft harmonies."
   },
   "2UBwvSk8tTMqydEdWsfBb8": {
     "name": "(No One Knows Me) Like the Piano",
     "artist": "Sampha",
     "known": true,
-    "themes": ["maternal love", "memory", "comfort", "solace"],
-    "relationship_stance": "familial devotion and being understood",
-    "mood": "tender and bittersweet",
+    "themes": [
+      "motherly love",
+      "nostalgia",
+      "gratitude",
+      "loss"
+    ],
+    "relationship_stance": "familial devotion",
+    "mood": "tender and reflective",
     "energy": "restrained and intimate",
-    "setting": "at home, piano bench",
-    "summary": "Sampha reflects on his mother's love and the piano as a source of understanding and emotional grounding, with a sparse, piano-led arrangement and vulnerable vocal delivery."
+    "setting": "quiet, personal space",
+    "summary": "Sampha sings a heartfelt tribute to his mother, recalling how her piano playing shaped his childhood and emotional world, set to a sparse, warm piano-and-voice arrangement."
+  },
+  "3RamvFV2OtTv3kozKLZnvP": {
+    "name": "Quarrel",
+    "artist": "Moses Sumney",
+    "known": true,
+    "themes": [
+      "conflict",
+      "vulnerability",
+      "intimacy"
+    ],
+    "relationship_stance": "tension within closeness",
+    "mood": "tense and tender",
+    "energy": "restrained, simmering",
+    "setting": "a quiet, charged room",
+    "summary": "A sparse, atmospheric track where Sumney's layered falsetto navigates the push-pull of a romantic quarrel, with minimal instrumentation of guitar and subtle electronics underscoring the emotional fragility."
+  },
+  "2gjidmxtA1pyj2HYrdOTG1": {
+    "name": "I Want You Around",
+    "artist": "Snoh Aalegra",
+    "known": true,
+    "themes": [
+      "longing",
+      "vulnerability",
+      "desire for closeness"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "tender and wistful",
+    "energy": "restrained, simmering",
+    "setting": "late-night alone",
+    "summary": "The song expresses a quiet, aching plea for emotional and physical intimacy, set to a lush, slow-burning R&B production with delicate piano and soft, breathy vocals."
   },
   "5ptViFrfoKdGPTdd9oQCwr": {
     "name": "Universe",
     "artist": "EXO",
     "known": true,
-    "themes": ["devotion", "cosmic love", "eternity"],
-    "relationship_stance": "romantic yearning",
+    "themes": [
+      "cosmic love",
+      "devotion",
+      "eternity"
+    ],
+    "relationship_stance": "romantic devotion",
     "mood": "dreamy and tender",
-    "energy": "restrained",
-    "setting": "starry night",
-    "summary": "A slow, synth-driven ballad where the singer compares his love to the vast universe, promising to be a constant presence and guide for his beloved."
+    "energy": "gentle and building",
+    "setting": "starry night, intimate",
+    "summary": "A slow-building pop ballad that compares a deep romantic bond to the vastness of the universe, with soft piano, layered harmonies, and a soaring chorus."
   },
   "6rVCUwfnuYTAsX4P9fIdIu": {
     "name": "Dreams Come True",
     "artist": "aespa",
     "known": true,
-    "themes": ["ambition", "self-belief", "unity"],
+    "themes": [
+      "aspiration",
+      "self-belief",
+      "determination"
+    ],
     "relationship_stance": "self-empowerment",
     "mood": "uplifting and determined",
     "energy": "driving and anthemic",
-    "setting": "aspirational and communal",
-    "summary": "The song is a motivational pop anthem about pursuing one's goals with confidence and the support of a group, built on a bright, synth-driven production with a strong beat."
+    "setting": "bright and aspirational",
+    "summary": "A high-energy K-pop track that blends synth-pop and hyperpop elements with a message of chasing one's goals and trusting in one's own potential, delivered through layered vocals and a propulsive beat."
   },
   "4ytyLpIwUXbdFsNOvgNnmP": {
     "name": "Four Seasons",
     "artist": "TAEYEON",
     "known": true,
-    "themes": ["seasonal change", "enduring love", "memory"],
-    "relationship_stance": "secure closeness",
-    "mood": "warm and reflective",
-    "energy": "restrained",
-    "setting": "quiet, intimate space",
-    "summary": "The song uses the metaphor of four seasons to describe a love that remains constant through life's changes, with a gentle, piano-driven pop ballad arrangement that feels like a soft embrace."
+    "themes": [
+      "seasons",
+      "change",
+      "nostalgia",
+      "acceptance"
+    ],
+    "relationship_stance": "romantic reflection",
+    "mood": "melancholic and tender",
+    "energy": "restrained, building",
+    "setting": "quiet evening, looking back",
+    "summary": "TAEYEON reflects on a past relationship through the metaphor of changing seasons, with a soft piano-driven ballad that swells into emotional, soaring choruses."
   },
   "41lw42I7uyqwPEQOPZwcOG": {
     "name": "Star",
     "artist": "Heize",
     "known": true,
-    "themes": ["longing", "distance", "devotion", "night sky"],
-    "relationship_stance": "romantic yearning from afar",
+    "themes": [
+      "longing",
+      "distance",
+      "devotion"
+    ],
+    "relationship_stance": "romantic yearning",
     "mood": "melancholic and tender",
-    "energy": "restrained, building gently",
-    "setting": "late-night alone, looking at the stars",
-    "summary": "Heize compares a distant lover to a star she can see but never reach, over a soft, atmospheric R&B beat with a slow, emotional build."
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "Heize sings about waiting for a distant loved one, comparing them to a star that shines from afar, over a soft, piano-driven R&B ballad with gentle strings."
   },
   "5umsgsPfAd0eKxzfxuVm1X": {
     "name": "Citizen Kane",
@@ -610,124 +785,137 @@
       "loneliness"
     ],
     "relationship_stance": "loneliness",
-    "mood": "empty and introspective",
+    "mood": "melancholic and introspective",
     "energy": "restrained",
-    "setting": "bustling city at night",
-    "summary": "The song uses a Hong Kong taxi driver as a metaphor for feeling lost and disconnected, questioning life decisions and happiness amid materialism and societal expectations."
+    "setting": "late-night taxi ride in a bustling city",
+    "summary": "The song uses a Hong Kong taxi driver as a metaphor for feeling lost and disconnected, questioning life decisions and happiness amid materialism and societal expectations, with a subdued, reflective musical character."
   },
   "7q9cMJ0oDZFZSnqatZNabo": {
     "name": "เมื่อถูกค้นพบ (Finally She Found.)",
     "artist": "FREEHAND",
     "known": true,
+    "grounded": true,
     "themes": [
-      "being seen",
-      "self-worth",
-      "finding love",
-      "emotional awakening"
+      "being found",
+      "gratitude",
+      "love's transformative power"
     ],
-    "relationship_stance": "romantic discovery / being truly seen",
-    "mood": "tender and hopeful",
-    "energy": "warm, building",
-    "setting": "emerging from isolation into connection",
-    "summary": "The song describes feeling invisible and overlooked before finally being discovered and deeply loved by someone, set to warm indie-pop instrumentation that shifts from somber to uplifting.",
-    "grounded": true
+    "relationship_stance": "being seen and cherished",
+    "mood": "warm and hopeful",
+    "energy": "gentle and uplifting",
+    "setting": "intimate, reflective",
+    "summary": "A love song written from gratitude to fans, comparing the feeling of being loved to a song or sculpture finally discovered, with a gentle, positive musical character."
   },
   "6K4t31amVTZDgR3sKmwUJJ": {
     "name": "The Less I Know The Better",
     "artist": "Tame Impala",
     "known": true,
-    "themes": ["jealousy", "denial", "love triangle"],
-    "relationship_stance": "heartbreak and jealousy",
-    "mood": "melancholic but upbeat",
-    "energy": "driving and funky",
-    "setting": "late-night, introspective",
-    "summary": "The narrator tries to ignore his ex-girlfriend's new relationship, but the cool, funky production masks a deep sense of jealousy and hurt."
+    "themes": [
+      "unrequited love",
+      "jealousy",
+      "self-deception"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic and wistful",
+    "energy": "driving",
+    "setting": "late-night alone",
+    "summary": "The narrator tries to convince himself that ignorance is bliss after his crush chooses someone else, set to a propulsive, psychedelic pop groove with a prominent bassline and falsetto vocals."
   },
   "1GexRDFzRQpNkflfXgI2lM": {
     "name": "Tough Luck",
     "artist": "Laufey",
     "known": true,
-    "grounded": true,
-    "themes": ["self-worth", "toxic relationship", "empowerment", "betrayal"],
-    "relationship_stance": "post-breakup independence",
-    "mood": "sarcastic and cutting",
-    "energy": "restrained but sharp",
-    "setting": "aftermath of a breakup",
-    "summary": "Laufey reclaims her self-worth after a toxic relationship, using sarcastic, biting lyrics over a jazz-influenced melody to turn emotional pain into quiet empowerment."
+    "themes": [
+      "self-doubt",
+      "romantic frustration",
+      "bad timing"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "wistful and self-deprecating",
+    "energy": "gentle and restrained",
+    "setting": "late-night alone",
+    "summary": "The narrator reflects on a pattern of romantic failures and bad timing, set to a soft, jazz-tinged pop arrangement with a conversational vocal delivery."
   },
   "72Z17vmmeQKAg8bptWvpVG": {
     "name": "Space Oddity - 2015 Remaster",
     "artist": "David Bowie",
     "known": true,
     "themes": [
-      "space exploration",
       "isolation",
-      "detachment",
-      "existential crisis"
+      "space exploration",
+      "detachment"
     ],
-    "relationship_stance": "loneliness and disconnection",
+    "relationship_stance": "loneliness",
     "mood": "eerie and melancholic",
-    "energy": "building from restrained to driving",
-    "setting": "a spacecraft drifting away from Earth",
-    "summary": "A countdown and launch sequence gives way to an astronaut's calm but increasingly disconnected reports from space, set to a sparse, evolving arrangement of acoustic guitar, Mellotron, and phased vocals."
+    "energy": "restrained",
+    "setting": "alone in a capsule",
+    "summary": "A countdown and launch sequence gives way to a drifting astronaut's calm but increasingly disconnected radio transmissions, set to a sparse, folk-inflected arrangement with a haunting Mellotron."
   },
   "2G6eCn19b5NcRxImqgpCNa": {
     "name": "ให้เธอหายไป",
     "artist": "Television off",
     "known": true,
-    "themes": ["heartbreak", "letting go", "lingering memory", "closure"],
-    "relationship_stance": "trying to move on from a lingering ex",
-    "mood": "melancholic and resigned",
-    "energy": "restrained, aching",
-    "setting": "waking alone with tearstained memories",
-    "summary": "The narrator wakes each day still marked by tears over an ex who lingers in memory even though the relationship is over, grappling with confessing love one last time as a way to finally let her go, set to a wistful, mid-tempo indie-pop arrangement.",
-    "grounded": true
+    "grounded": true,
+    "themes": [
+      "confession of love",
+      "ending a relationship",
+      "letting go"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "bittersweet and reflective",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song explores the paradox of confessing love as a way to end a relationship, set to a gentle indie arrangement that underscores the emotional weight of letting go."
   },
   "48SGNp7AHeujwoPID3UCmn": {
     "name": "ฝันที่ไม่ปลอดภัย",
     "artist": "Television off",
     "known": true,
-    "themes": ["heartbreak", "insomnia", "haunting memory", "denial"],
-    "relationship_stance": "unable to move on from an ended relationship",
-    "mood": "melancholic and uneasy",
-    "energy": "restrained, aching",
-    "setting": "waking from a troubling dream about an ex",
-    "summary": "The narrator wakes from an unsettling dream to find nothing has really changed, still haunted by tears and memories of a relationship that has ended but won't let go, set to a somber, mid-tempo indie-pop arrangement in the same emotional register as the artist's other breakup songs.",
-    "grounded": true
+    "grounded": true,
+    "themes": [
+      "memory",
+      "dreams",
+      "painful longing",
+      "escapism"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic and wistful",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song explores how painful memories resurface in dreams, turning what should be a safe escape into an unsafe space where the singer cannot forget someone, set to a subdued, introspective indie pop sound."
   },
   "2Ab1HQjbMcqHY3TkTycrYr": {
     "name": "รสหวาน",
     "artist": "FREEHAND",
     "known": true,
+    "grounded": true,
     "themes": [
       "nostalgia",
-      "fading memory",
-      "cherished love",
-      "bittersweet longing"
+      "past love",
+      "cherished memories"
     ],
-    "relationship_stance": "wistful nostalgia for a past love",
-    "mood": "bittersweet and tender",
-    "energy": "gentle, wistful",
-    "setting": "winter, recalling an embrace",
-    "summary": "The song recalls the fading but still-cherished sweetness of a past embrace, using seasonal imagery like flowers and winter wind to describe how a faint kiss and memory still linger warmly in the heart, set to a soft, nostalgic indie-pop arrangement.",
-    "grounded": true
+    "relationship_stance": "romantic reminiscence",
+    "mood": "wistful and tender",
+    "energy": "restrained",
+    "setting": "cold winter breeze, reminiscent",
+    "summary": "The song reflects on a past relationship, recalling the warmth of a lover's embrace and the beauty of their eyes, set to an alternative/pop rock sound that underscores the bittersweet longing for those moments."
   },
   "7uMQlau2mW31kf0prr1ir9": {
     "name": "ขอให้เธอใจดี (May she be kind)",
     "artist": "FREEHAND",
     "known": true,
+    "grounded": true,
     "themes": [
-      "emotional exhaustion",
-      "seeking comfort",
-      "urban loneliness",
-      "vulnerability"
+      "letting go",
+      "wishing happiness for a loved one",
+      "heartache",
+      "hope"
     ],
-    "relationship_stance": "seeking gentleness and support from a partner",
-    "mood": "weary and tender",
-    "energy": "soft, aching",
-    "setting": "a starless, neon-lit city at night",
-    "summary": "Exhausted by a harsh, glittering but soulless city that keeps luring people into empty pursuits, the narrator asks a partner to be gentle with them since the rest of the world isn't, set to a delicate, intimate indie ballad.",
-    "grounded": true
+    "relationship_stance": "heartbreak with selfless love",
+    "mood": "bittersweet and tender",
+    "energy": "restrained",
+    "setting": "lonely night",
+    "summary": "The song is about releasing a loved one to pursue their own path, hoping they will be kind and find happiness, set to a gentle, melancholic melody."
   },
   "1lD1Pjy7rNDOny7nFqmUHJ": {
     "name": "คำตอบ ( Answer )",
@@ -735,49 +923,61 @@
     "known": true,
     "themes": [
       "uncertainty",
-      "unspoken feelings",
-      "overthinking",
-      "ambiguous relationship"
+      "longing",
+      "self-reflection"
     ],
-    "relationship_stance": "anxious yearning for clarity",
-    "mood": "wistful and uncertain",
-    "energy": "gentle, introspective",
-    "setting": "quiet reflection on an undefined relationship",
-    "summary": "The narrator is consumed by unanswered questions about whether a close, ambiguous connection is mutual, caught between hope and doubt while searching for 'the answer' about their true feelings, set to a soft, contemplative indie-pop arrangement.",
-    "grounded": true
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic and introspective",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song explores the emotional turmoil of waiting for an answer from a loved one, set to a gentle, mid-tempo indie rock arrangement with soft vocals and a wistful guitar melody."
   },
   "2FHegFORo2cE19Rph47N0d": {
     "name": "ดินแดน ( Din Dan )",
     "artist": "Safeplanet",
     "known": true,
-    "themes": ["sacred space", "nostalgia", "yearning"],
+    "grounded": true,
+    "themes": [
+      "love",
+      "hope",
+      "journey",
+      "imagination"
+    ],
     "relationship_stance": "romantic yearning",
-    "mood": "dreamy and nostalgic",
-    "energy": "relaxed mid-tempo",
-    "setting": "introspective and intimate",
-    "summary": "A gentle indie rock song that paints a personal, almost sacred land or relationship as a place of emotional refuge, with a wistful melody and soft guitar-driven arrangement."
+    "mood": "tender and hopeful",
+    "energy": "gentle and restrained",
+    "setting": "anticipating a shared future",
+    "summary": "The song expresses a longing for a place where love exists, making the journey toward that land feel meaningful and removing the need to imagine it."
   },
   "36vmaZyO0iAE6FZ7287fg2": {
     "name": "Dive",
     "artist": "Olivia Dean",
     "known": true,
-    "themes": ["vulnerability", "trust", "commitment", "new love"],
-    "relationship_stance": "cautious openness",
+    "themes": [
+      "vulnerability",
+      "trust",
+      "new love"
+    ],
+    "relationship_stance": "romantic yearning",
     "mood": "tender and hopeful",
-    "energy": "gentle and building",
-    "setting": "intimate, quiet moment",
-    "summary": "The singer asks a partner to take a leap of faith with her, promising to be honest and present, over a warm, soulful arrangement that swells with emotion."
+    "energy": "building, then soaring",
+    "setting": "intimate, late-night",
+    "summary": "A soulful pop song about the fear and excitement of opening up to a new partner, with a gentle piano-led verse that swells into a powerful, brass-accented chorus."
   },
   "4o0LyB69tylqDG6eTGhmig": {
     "name": "Fire for You",
     "artist": "Cannons",
     "known": true,
-    "themes": ["longing", "obsession", "emotional vulnerability"],
-    "relationship_stance": "unrequited yearning",
-    "mood": "dreamy and melancholic",
-    "energy": "restrained, slow-burning",
+    "themes": [
+      "longing",
+      "obsession",
+      "desire"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy and hypnotic",
+    "energy": "restrained, building",
     "setting": "late-night alone",
-    "summary": "The song expresses a deep, almost desperate desire for someone's attention and affection, set to a hazy, synth-driven soundscape with a steady, hypnotic beat."
+    "summary": "The narrator is consumed by a powerful, almost obsessive desire for someone, expressing a willingness to wait and burn for them, set to a lush, synth-driven slow-burn with a hazy, sensual groove."
   },
   "32XaqPVTVkkuOiOPQZ3SpA": {
     "name": "midnight love",
@@ -786,289 +986,374 @@
     "grounded": true,
     "themes": [
       "unrequited love",
-      "self-reflection",
+      "self-awareness",
       "being used",
       "false hope"
     ],
-    "relationship_stance": "heartbreak and realization",
-    "mood": "melancholic and introspective",
-    "energy": "restrained and intimate",
+    "relationship_stance": "heartbreak",
+    "mood": "intimate and melancholic",
+    "energy": "restrained",
     "setting": "late-night alone",
-    "summary": "The song narrates the experience of being a secret, late-night convenience for someone who gives false hope, written from the perspective of the person the artist mistreated, set to a sparse piano arrangement."
+    "summary": "The song is written from the perspective of someone who is being treated as a last resort, receiving late-night texts that give false hope, and it uses a piano-driven arrangement to convey the anguish of feeling second best."
   },
   "6rYgEHuyhO064Lgj48qlIe": {
     "name": "I'll Call You Mine",
     "artist": "girl in red",
     "known": true,
-    "themes": ["romantic devotion", "vulnerability", "commitment"],
+    "themes": [
+      "romantic devotion",
+      "vulnerability",
+      "commitment"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "tender and earnest",
-    "energy": "restrained, building to a gentle swell",
-    "setting": "intimate, personal space",
-    "summary": "The song expresses a deep, committed love where the narrator offers their whole self to a partner, promising to be there and claiming them as their own, set to a soft indie-pop arrangement with warm guitars and a steady, heartfelt vocal delivery."
+    "energy": "building, anthemic",
+    "setting": "intimate, reflective",
+    "summary": "A heartfelt declaration of love where the narrator offers their full self, promising to be a safe and devoted partner, set to a dreamy indie-pop sound that swells into a euphoric chorus."
   },
   "4ntIPuXf6DpvrZExXrn5QA": {
     "name": "กลัวว่าฉันจะไม่เสียใจ (Fear)",
     "artist": "PURPEECH",
     "known": true,
+    "grounded": true,
     "themes": [
-      "fear of forgetting",
-      "nostalgia",
-      "grief",
-      "clinging to memory"
+      "fear of emotional numbness",
+      "loss of feeling over time",
+      "anxiety about forgetting love"
     ],
-    "relationship_stance": "afraid to let go of the last feelings tied to a lost love",
-    "mood": "tender and quietly devastating",
-    "energy": "restrained, gentle",
-    "setting": "quiet reflection on a fading relationship",
-    "summary": "The narrator is afraid not of heartbreak itself but of the day their heart stops aching over a lost love, since that would mean truly forgetting they ever loved each other, set to a soft, melancholic indie ballad.",
-    "grounded": true
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic and introspective",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song explores the anxiety that after a long time, a once-powerful feeling may fade and no longer hurt, capturing a complex mix of letting go and the fear of losing the meaning of love."
   },
   "57RA3JGafJm5zRtKJiKPIm": {
     "name": "Are You Bored Yet? (feat. Clairo)",
     "artist": "Wallows, Clairo",
     "known": true,
-    "themes": ["restlessness", "young love", "boredom", "uncertainty"],
-    "relationship_stance": "casual but anxious",
-    "mood": "wistful and slightly uneasy",
-    "energy": "mid-tempo, laid-back but driving",
+    "themes": [
+      "boredom",
+      "restlessness",
+      "young love"
+    ],
+    "relationship_stance": "uncertain longing",
+    "mood": "wistful and laid-back",
+    "energy": "mid-tempo, relaxed",
     "setting": "suburban evening, hanging out",
-    "summary": "The song captures a narrator feeling bored and restless in a relationship, questioning whether their partner is also losing interest, set to a jangly indie-pop groove with a conversational duet between Wallows and Clairo."
+    "summary": "The song captures a feeling of youthful ennui and the desire for a partner to share in that aimless time, set to a jangly, indie-pop groove with a conversational duet between Wallows and Clairo."
   },
   "0dpyzcT3RMNNSd2xKBf35I": {
     "name": "Be Sweet",
     "artist": "Japanese Breakfast",
     "known": true,
-    "themes": ["self-empowerment", "moving on", "emotional honesty"],
-    "relationship_stance": "assertive independence",
-    "mood": "hopeful and determined",
+    "themes": [
+      "self-empowerment",
+      "moving on",
+      "setting boundaries"
+    ],
+    "relationship_stance": "independence after a breakup",
+    "mood": "bright and defiant",
     "energy": "upbeat and driving",
-    "setting": "bright and forward-looking",
-    "summary": "The song is a synth-pop anthem about breaking free from a toxic relationship and reclaiming one's own strength, with a buoyant, 80s-inspired production and a confident, declarative vocal delivery."
+    "setting": "sunlit and forward-looking",
+    "summary": "A synth-pop track about reclaiming one's own worth and refusing to be treated poorly, with a buoyant melody and crisp production that contrasts the assertive lyrics."
   },
   "3hUxzQpSfdDqwM3ZTFQY0K": {
     "name": "august",
     "artist": "Taylor Swift",
     "known": true,
-    "themes": ["summer romance", "nostalgia", "secret affair", "loss"],
-    "relationship_stance": "yearning for a past lover",
+    "themes": [
+      "summer romance",
+      "nostalgia",
+      "longing",
+      "fleeting love"
+    ],
+    "relationship_stance": "reminiscent yearning for a past affair",
     "mood": "bittersweet and wistful",
-    "energy": "dreamy and building",
+    "energy": "gentle, building to a dreamy swell",
     "setting": "late summer, by the water",
-    "summary": "A woman recalls a fleeting, secret summer romance with an older man, set to a hazy, indie-folk production with swelling drums and layered vocals."
+    "summary": "A reflective song about a brief, intense summer romance remembered with a mix of tenderness and regret, set to a soft, folk-pop arrangement with layered harmonies and a driving, nostalgic beat."
   },
   "1dGr1c8CrMLDpV6mPbImSI": {
     "name": "Lover",
     "artist": "Taylor Swift",
     "known": true,
-    "themes": ["devotion", "domestic intimacy", "commitment"],
+    "themes": [
+      "devotion",
+      "domestic bliss",
+      "commitment"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "tender and affectionate",
     "energy": "gentle and swaying",
-    "setting": "cozy domestic space",
-    "summary": "A soft, mid-tempo love song that paints a picture of everyday togetherness and a promise of lifelong partnership, built around a simple, warm guitar melody and a heartfelt chorus."
+    "setting": "cozy, intimate evening",
+    "summary": "A soft, mid-tempo love song built on a simple guitar riff and warm production, celebrating the comfort and permanence of a committed partnership through everyday moments and future promises."
   },
   "4R2kfaDFhslZEMJqAFNpdd": {
     "name": "cardigan",
     "artist": "Taylor Swift",
     "known": true,
-    "themes": ["young love", "nostalgia", "betrayal", "self-worth"],
-    "relationship_stance": "heartbreak and reflection",
-    "mood": "melancholic and wistful",
-    "energy": "restrained and intimate",
-    "setting": "late-night alone",
-    "summary": "A woman reflects on a past relationship from her youth, recalling the intimacy and eventual betrayal, set to a sparse, piano-driven production with a soft, aching vocal delivery."
+    "themes": [
+      "lost youth",
+      "nostalgia",
+      "betrayal",
+      "self-worth"
+    ],
+    "relationship_stance": "heartbreak and disillusionment",
+    "mood": "melancholic and reflective",
+    "energy": "restrained, building to a gentle swell",
+    "setting": "lonely bedroom, rainy night",
+    "summary": "A piano-driven ballad where the narrator recalls a past relationship that felt like a safe haven but ended in betrayal, using the metaphor of a worn cardigan left behind to explore memory and emotional residue."
   },
   "19UnXjpLshSLobPspdyxlD": {
     "name": "Less than a Lover",
     "artist": "JENNIE",
     "known": true,
     "grounded": true,
-    "themes": ["summer romance", "casual intimacy", "emotional limbo"],
-    "relationship_stance": "desiring connection without commitment",
-    "mood": "dreamy and nostalgic",
-    "energy": "restrained",
-    "setting": "sunlit and social",
-    "summary": "The song explores a deliberate pause in a love story, capturing the excitement and lingering emotions of a relationship that exists between friendship and romance, with a dreamy, restrained energy."
+    "themes": [
+      "summer situationship",
+      "emotional limbo",
+      "preserving memories"
+    ],
+    "relationship_stance": "deliberate distance",
+    "mood": "dreamy and intimate",
+    "energy": "gentle and restrained",
+    "setting": "sunlit summer",
+    "summary": "The song captures the bittersweet choice to pause a romance that hovers between friendship and love, with a soft, atmospheric production that lets Jennie's vocals convey lingering emotion and peaceful acceptance."
   },
   "799KrpEbhZp0MHeiA8YK9P": {
     "name": "Guilty as Sin?",
     "artist": "Taylor Swift",
     "known": true,
-    "themes": ["forbidden desire", "fantasy vs. reality", "internal conflict"],
-    "relationship_stance": "yearning from a distance",
-    "mood": "brooding and wistful",
-    "energy": "restrained, simmering",
-    "setting": "late-night alone, in thought",
-    "summary": "The song explores the tension between a person's vivid fantasies about a forbidden lover and the guilt of those thoughts, set to a moody, synth-driven pop production with a slow, pulsing beat."
+    "themes": [
+      "forbidden desire",
+      "fantasy",
+      "self-deception"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "conflicted and dreamy",
+    "energy": "restrained, building tension",
+    "setting": "late-night alone, lost in thought",
+    "summary": "A woman wrestles with intense, imagined romantic feelings for someone she shouldn't want, set to a moody, synth-laden pop production with a slow-burning, almost breathless delivery."
   },
   "62E2nR0od0M5HYxuYLaDz7": {
     "name": "The Black Dog",
     "artist": "Taylor Swift",
     "known": true,
-    "themes": ["heartbreak", "betrayal", "moving on"],
-    "relationship_stance": "heartbreak and anger",
-    "mood": "wistful and bitter",
+    "themes": [
+      "betrayal",
+      "grief",
+      "moving on"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic and bitter",
     "energy": "restrained, building",
     "setting": "late-night alone",
-    "summary": "The song reflects on a past relationship where the narrator feels betrayed by a partner who quickly moved on, set to a synth-pop production with a melancholic yet driving beat."
+    "summary": "A slow-burning, synth-driven track about discovering a former partner has moved on, using the image of a pub called The Black Dog as a symbol of shared memories now tainted by betrayal."
   },
   "4pvb0WLRcMtbPGmtejJJ6y": {
     "name": "exile (feat. Bon Iver)",
     "artist": "Taylor Swift, Bon Iver",
     "known": true,
-    "themes": ["miscommunication", "breakup aftermath", "mutual regret"],
-    "relationship_stance": "estranged ex-lovers",
+    "themes": [
+      "heartbreak",
+      "miscommunication",
+      "nostalgia"
+    ],
+    "relationship_stance": "mutual regret and unresolved longing",
     "mood": "melancholic and reflective",
-    "energy": "restrained, building to a cathartic climax",
-    "setting": "a quiet, empty house after a breakup",
-    "summary": "Two former partners recount the same failed relationship from opposing perspectives, each feeling unheard and exiled by the other, set to a sparse piano-driven duet that swells with layered harmonies."
+    "energy": "restrained and building",
+    "setting": "lonely, looking back at a failed relationship",
+    "summary": "A duet about two former lovers recalling the same breakup from different perspectives, set to a sparse piano and strings arrangement with layered harmonies."
   },
   "77zf87QsAz3H4XrENZOerR": {
     "name": "Death Stranding",
     "artist": "CHVRCHES",
     "known": true,
-    "themes": ["connection", "isolation", "perseverance"],
-    "relationship_stance": "longing for closeness",
+    "themes": [
+      "connection",
+      "perseverance",
+      "loneliness",
+      "hope"
+    ],
+    "relationship_stance": "yearning for reconnection",
     "mood": "melancholic yet hopeful",
-    "energy": "driving",
-    "setting": "vast, lonely landscape",
-    "summary": "The song explores the struggle to maintain a bond across physical or emotional distance, set to a propulsive synth-pop backdrop with a soaring chorus."
+    "energy": "building, anthemic",
+    "setting": "isolated, vast landscape",
+    "summary": "A synth-driven, atmospheric track about bridging distance and holding onto someone despite separation, with a soaring chorus and layered electronic production."
   },
   "2jpKZFnBk98Ud3EoZiBOTf": {
     "name": "Here With Me",
     "artist": "Marshmello, CHVRCHES",
     "known": true,
-    "themes": ["longing", "distance", "devotion"],
+    "themes": [
+      "longing",
+      "distance",
+      "devotion"
+    ],
     "relationship_stance": "romantic yearning",
-    "mood": "melancholic yet hopeful",
-    "energy": "driving",
+    "mood": "wistful and hopeful",
+    "energy": "buoyant yet restrained",
     "setting": "late-night alone",
-    "summary": "The song expresses a plea for a distant lover to stay close, blending CHVRCHES' ethereal vocals with Marshmello's buoyant, synth-driven production."
+    "summary": "A synth-pop track about desperately wanting someone to stay close, blending CHVRCHES' ethereal vocals with Marshmello's polished, melodic production."
   },
   "0oxYB9GoOIDrdzniNdKC44": {
     "name": "When the Sun Hits",
     "artist": "Slowdive",
     "known": true,
-    "themes": ["love", "intimacy", "transience", "beauty"],
-    "relationship_stance": "romantic intimacy",
-    "mood": "dreamy and nostalgic",
-    "energy": "floating and ethereal",
-    "setting": "sunlit and hazy",
-    "summary": "The song captures a fleeting moment of shared closeness and beauty under the sun, with a swirling, reverb-laden soundscape that evokes both euphoria and melancholy."
+    "themes": [
+      "longing",
+      "intimacy",
+      "transience"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy and melancholic",
+    "energy": "languid and swirling",
+    "setting": "late-night alone",
+    "summary": "A hazy, reverb-drenched shoegaze track where the narrator watches a lover bathed in sunlight, blending desire with the ache of impermanence, carried by ethereal guitars and hushed vocals."
   },
   "37LhFxchiyAJVop5JgRZgY": {
     "name": "Like Water",
     "artist": "WENDY",
     "known": true,
-    "themes": ["longing", "emotional vulnerability", "connection"],
+    "themes": [
+      "longing",
+      "emotional vulnerability",
+      "connection"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "tender and wistful",
-    "energy": "restrained, building",
-    "setting": "quiet, introspective space",
-    "summary": "The song uses the metaphor of water to express a deep desire for emotional closeness and the fear of being left behind, set to a soft, piano-driven R&B ballad that swells with restrained emotion."
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "WENDY sings about a deep desire to be close to someone, comparing her feelings to the natural flow of water, over a soft, piano-driven R&B ballad."
   },
   "6mavVLsxaa4YcPje9qZKcf": {
     "name": "When This Rain Stops",
     "artist": "WENDY",
     "known": true,
-    "themes": ["longing", "waiting", "hope", "emotional release"],
-    "relationship_stance": "romantic yearning",
-    "mood": "melancholic yet hopeful",
-    "energy": "restrained, building",
-    "setting": "rainy day, alone",
-    "summary": "The song expresses the ache of waiting for a loved one during a rainstorm, with a gentle, piano-driven melody that swells with emotion as it anticipates the rain's end and reunion."
+    "grounded": true,
+    "themes": [
+      "self-care",
+      "healing",
+      "hope"
+    ],
+    "relationship_stance": "self-compassion",
+    "mood": "warm and comforting",
+    "energy": "restrained",
+    "setting": "introspective, rainy day",
+    "summary": "A slow-tempo piano ballad where Wendy offers comfort to herself and others, acknowledging exhaustion and encouraging rest before moving forward, with the rain symbolizing emotional struggles that will eventually clear."
   },
   "1CzBBeZ0OQr7Fvh9VzMAv1": {
     "name": "สักวันจะไม่แตกสลาย (Dear Trauma)",
     "artist": "FREEHAND",
     "known": true,
-    "themes": ["self-doubt", "trauma", "healing", "resilience"],
-    "relationship_stance": "recovering from a hurtful past relationship",
-    "mood": "raw and aching but hopeful",
-    "energy": "restrained, building toward resolve",
-    "setting": "internal reckoning with past pain",
-    "summary": "The narrator confronts repeated self-loathing and lingering longing for someone who once hurt them, while holding onto the hope that one day they'll no longer be broken by it, set to an emotionally raw indie-pop ballad.",
-    "grounded": true
+    "grounded": true,
+    "themes": [
+      "self-hatred",
+      "healing from trauma",
+      "self-worth",
+      "letting go"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "vulnerable and reflective",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song addresses the pain of lingering attachment to someone who hurt you, the struggle with self-blame, and the gradual process of reclaiming self-worth and moving toward emotional recovery."
   },
   "70pOmngGTSMHPjgIqVRFsI": {
     "name": "ไกลกว่าดาว (Million Light-Years)",
     "artist": "FREEHAND",
     "known": true,
-    "themes": ["longing", "nostalgia", "distant memory", "unfading love"],
-    "relationship_stance": "yearning across distance/time",
-    "mood": "wistful and tender",
-    "energy": "gentle, dreamy",
-    "setting": "night sky, lost in memory",
-    "summary": "The narrator is haunted by the still-vivid memory of someone's smile and voice, comparing the ache of that lingering longing to distances measured in light-years, set to a soft, dreamy indie-pop ballad.",
-    "grounded": true
+    "grounded": true,
+    "themes": [
+      "longing",
+      "memory",
+      "distance",
+      "love enduring"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "nostalgic and tender",
+    "energy": "restrained",
+    "setting": "stargazing alone at night",
+    "summary": "The song uses the metaphor of a star's light traveling a million light-years to express enduring love and memory after a separation, with a gentle, melodic string-based arrangement."
   },
   "2GMENhG1ga12aWFMfzq9vN": {
     "name": "ความลับของดวงจันทร์",
     "artist": "FREEHAND",
     "known": true,
+    "grounded": true,
     "themes": [
-      "idealization",
       "fear of intimacy",
-      "hidden imperfection",
-      "attraction anxiety"
+      "self-doubt",
+      "hidden flaws"
     ],
-    "relationship_stance": "anxious attraction, afraid closeness will break the illusion",
-    "mood": "wistful and nervous",
-    "energy": "gentle, quietly tense",
-    "setting": "moonlit, keeping a careful distance",
-    "summary": "Using the moon as a metaphor for how distance makes something seem flawless while hiding its true imperfections, the narrator admits their own fear and nervous trembling whenever the person they admire draws near, set to a tender, quietly anxious indie-pop ballad.",
-    "grounded": true
+    "relationship_stance": "romantic anxiety",
+    "mood": "vulnerable and melancholic",
+    "energy": "restrained",
+    "setting": "late-night introspection",
+    "summary": "The song uses the moon as a metaphor for hiding one's dark side, expressing fear that closeness will shatter a lover's idealized perception."
   },
   "2Wi2Tk4V4ctEZNkHkQBsZ2": {
     "name": "ดอกไม้ของดาวหาง",
     "artist": "FREEHAND",
     "known": true,
+    "grounded": true,
     "themes": [
       "unrequited love",
-      "fleeting connection",
-      "distance",
-      "longing to be noticed"
+      "longing",
+      "transience"
     ],
-    "relationship_stance": "quiet, one-sided admiration from afar",
-    "mood": "wistful and tender",
-    "energy": "gentle, drifting",
-    "setting": "cosmic/celestial metaphor, passing by",
-    "summary": "The narrator compares themselves to a fleeting comet fragment passing by someone they admire from afar (likened to a bright flower on a planet), hoping to be truly seen just once before drifting away forever, set to a dreamy, gentle indie-pop ballad.",
-    "grounded": true
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic and wistful",
+    "energy": "restrained",
+    "setting": "starry night, solitary",
+    "summary": "The singer compares himself to a comet fragment passing by a bright flower on a distant planet, hoping to be noticed and remembered before they part, set to a gentle, introspective pop-rock arrangement."
   },
   "0JmnkIqdlnUzPaf8sqBRs3": {
     "name": "Moonlight",
     "artist": "Kali Uchis",
     "known": true,
-    "themes": ["romance", "desire", "intimacy"],
+    "themes": [
+      "desire",
+      "escapism",
+      "intimacy"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and sensual",
-    "energy": "smooth and restrained",
-    "setting": "late-night intimate",
-    "summary": "The speaker expresses deep infatuation and a desire for closeness with a lover, set to a lush, slow-burning R&B beat."
+    "energy": "languid and smooth",
+    "setting": "late-night alone or with a lover",
+    "summary": "Kali Uchis sings about wanting to escape with a lover into a private, moonlit world, blending R&B and psychedelic soul with a hazy, seductive production."
   },
   "0wzCQjc8JRa39ej1TFkAFt": {
     "name": "Endlessly",
     "artist": "Kali Uchis",
     "known": true,
-    "themes": ["eternal love", "devotion", "intimacy", "romance"],
-    "relationship_stance": "romantic devotion",
-    "mood": "dreamy and intimate",
-    "energy": "restrained and smooth",
-    "setting": "late-night intimate",
-    "summary": "A lush, hazy R&B track where the singer vows to love someone endlessly, blending sensual imagery with a promise of timeless commitment."
+    "themes": [
+      "devotion",
+      "eternal love",
+      "vulnerability"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "dreamy and tender",
+    "energy": "lush and restrained",
+    "setting": "intimate bedroom at night",
+    "summary": "A slow-burning, synth-laced R&B ballad where the singer promises unwavering commitment and emotional openness, floating over a hazy, romantic production."
   },
   "6ewcR0FnLdKjIt9gcMghrQ": {
     "name": "All I Can Say",
     "artist": "Kali Uchis",
     "known": true,
-    "themes": ["devotion", "vulnerability", "emotional surrender"],
+    "grounded": true,
+    "themes": [
+      "self-acceptance",
+      "unapologetic love",
+      "following dreams",
+      "inner peace"
+    ],
     "relationship_stance": "secure closeness",
-    "mood": "tender and intimate",
-    "energy": "still and intimate",
+    "mood": "tender and soothing",
+    "energy": "restrained",
     "setting": "late-night alone",
-    "summary": "A soft, dreamy R&B ballad where the singer offers her full emotional availability and commitment to a partner, expressing that all she can give is her honest self, over a minimal, warm production."
+    "summary": "The song is a gentle, self-assured declaration of embracing one's identity, love, and dreams without apology, set to a soothing melody that reinforces a message of inner peace and resilience against negativity."
   },
   "1uvyZBs4IZYRebHIB1747m": {
     "name": "Purple Rain",
@@ -1076,37 +1361,44 @@
     "known": true,
     "themes": [
       "spiritual longing",
-      "emotional surrender",
-      "transformation",
-      "grief"
+      "reconciliation",
+      "transcendence"
     ],
-    "relationship_stance": "vulnerable devotion",
-    "mood": "mournful yet transcendent",
-    "energy": "building to cathartic release",
-    "setting": "rain-soaked, solitary reflection",
-    "summary": "A plea for a lover to stay and help the narrator through a dark emotional storm, set to a slow-burning rock ballad that swells into a soaring, guitar-driven climax."
+    "relationship_stance": "pleading for connection",
+    "mood": "melancholic yet hopeful",
+    "energy": "building to cathartic",
+    "setting": "rain-soaked night",
+    "summary": "A slow-building rock ballad where the narrator asks a lover to stay and find a higher, purer love, set to a gospel-tinged guitar solo and a dramatic, anthemic arrangement."
   },
   "2ctvdKmETyOzPb2GiJJT53": {
     "name": "Breathe (In the Air)",
     "artist": "Pink Floyd",
     "known": true,
-    "themes": ["life", "time", "anxiety", "reflection"],
-    "relationship_stance": "existential introspection",
-    "mood": "contemplative and serene",
-    "energy": "calm and restrained",
-    "setting": "quiet introspective space",
-    "summary": "The song urges the listener to slow down, appreciate the present, and not be consumed by the relentless pressures of life, carried by a soft, atmospheric rock arrangement with gentle vocals and a floating instrumental backdrop."
+    "themes": [
+      "birth",
+      "consciousness",
+      "existential awakening"
+    ],
+    "relationship_stance": "awe",
+    "mood": "serene and contemplative",
+    "energy": "restrained and spacious",
+    "setting": "dawn, a quiet room",
+    "summary": "The track opens with a gentle, echoing piano and a soft, breathy vocal that muses on the moment of entering the world, gradually building with atmospheric synths and a distant heartbeat-like pulse, creating a sense of fragile, cosmic arrival."
   },
   "2TjdnqlpwOjhijHCwHCP2d": {
     "name": "The Great Gig in the Sky",
     "artist": "Pink Floyd",
     "known": true,
-    "themes": ["mortality", "existential reflection", "emotional release"],
-    "relationship_stance": "universal human experience",
+    "themes": [
+      "mortality",
+      "existential release",
+      "emotional catharsis"
+    ],
+    "relationship_stance": "awe",
     "mood": "transcendent and sorrowful",
-    "energy": "swelling and cathartic",
-    "setting": "cosmic or timeless",
-    "summary": "An instrumental piece with wordless vocal cries that evoke the fear and acceptance of death, building from a quiet piano meditation to a powerful, soaring climax."
+    "energy": "swelling then serene",
+    "setting": "cosmic or liminal space",
+    "summary": "A wordless vocal performance over a slow, gospel-tinged piano progression builds from quiet contemplation to a raw, anguished cry, then fades into peaceful acceptance, evoking the passage from life to death."
   },
   "325toqbCzE1g1pYIED7U4C": {
     "name": "Take It Back",
@@ -1115,24 +1407,28 @@
     "themes": [
       "political disillusionment",
       "environmental decay",
-      "moral failure"
+      "loss of innocence"
     ],
     "relationship_stance": "societal critique",
-    "mood": "somber and accusatory",
-    "energy": "building and restrained",
-    "setting": "a bleak, decaying landscape",
-    "summary": "A slow-burning, synth-driven track that laments humanity's greed and destruction of the natural world, with a spoken-word section and a climactic guitar solo."
+    "mood": "brooding and urgent",
+    "energy": "building and driving",
+    "setting": "bleak urban landscape",
+    "summary": "A critique of political and environmental decline, with a tense, building rock arrangement featuring sharp guitar and a spoken-word bridge."
   },
   "5JGEAz15LkPoOtFHttDtVs": {
     "name": "With Or Without You - Remastered 2007",
     "artist": "U2",
     "known": true,
-    "themes": ["ambivalence", "emotional dependence", "sacrifice"],
-    "relationship_stance": "conflicted devotion",
-    "mood": "aching and introspective",
-    "energy": "building and restrained",
-    "setting": "emotional limbo",
-    "summary": "The song explores the painful paradox of needing someone so deeply that you cannot live with or without them, set to a slow, pulsing rock arrangement that swells from a sparse, echoing verse into a soaring, anthemic chorus."
+    "themes": [
+      "longing",
+      "ambivalence",
+      "emotional conflict"
+    ],
+    "relationship_stance": "torn between devotion and frustration",
+    "mood": "aching and yearning",
+    "energy": "restrained, building to soaring",
+    "setting": "late-night alone, introspective",
+    "summary": "A slow-burning rock ballad about the painful push-pull of a relationship where the singer feels both unable to live with or without their partner, driven by a simple, repeating guitar arpeggio and Bono's strained, emotive vocals."
   },
   "6aNhdTO95TOWpkdunBJPFK": {
     "name": "Late Night Walks",
@@ -1140,131 +1436,171 @@
     "known": true,
     "grounded": true,
     "themes": [
-      "romantic yearning",
-      "deep connection",
+      "romantic connection",
       "healing",
       "vulnerability"
     ],
-    "relationship_stance": "romantic yearning and secure closeness",
-    "mood": "tender and introspective",
+    "relationship_stance": "romantic yearning",
+    "mood": "tender and reflective",
     "energy": "still and intimate",
-    "setting": "late-night walks under the stars",
-    "summary": "The song portrays a couple sharing deep conversations and emotional healing during late-night walks, with the singer expressing boundless love and a desire for commitment."
+    "setting": "late-night under the stars",
+    "summary": "The song captures a couple sharing deep conversations and stargazing on late-night walks, with the singer expressing a love that feels boundless and healing."
   },
   "3siwsiaEoU4Kuuc9WKMUy5": {
     "name": "No One Noticed",
     "artist": "The Marías",
     "known": true,
-    "themes": ["invisibility", "emotional neglect", "longing for connection"],
-    "relationship_stance": "unseen and unheard",
+    "themes": [
+      "invisibility",
+      "longing",
+      "self-doubt"
+    ],
+    "relationship_stance": "unrequited yearning",
     "mood": "melancholic and dreamy",
-    "energy": "restrained and intimate",
+    "energy": "restrained",
     "setting": "late-night alone",
-    "summary": "The song explores the pain of feeling invisible in a relationship, with soft, hazy production and a gentle, aching vocal delivery that mirrors the theme of being overlooked."
+    "summary": "A hazy, slow-burning indie pop track about feeling unseen and unheard by a lover, with whispered vocals and lush, reverb-drenched instrumentation."
   },
   "3iEUDvanZwQhLCIqUmCR7N": {
     "name": "The Spins",
     "artist": "Mac Miller, Empire Of The Sun",
     "known": true,
     "grounded": true,
-    "themes": ["ambition", "pleasure", "authenticity", "boastful lifestyle"],
+    "themes": [
+      "ambition",
+      "pleasure",
+      "boastfulness",
+      "search for authenticity"
+    ],
     "relationship_stance": "playful connection",
-    "mood": "introspective yet defiant",
+    "mood": "playful and introspective",
     "energy": "driving",
-    "setting": "sunlit and social",
-    "summary": "The song blends a boastful, playful narrative about material wealth and female attention with introspective themes of ambition and the search for authenticity, set to an upbeat, sample-driven beat."
+    "setting": "party or social gathering",
+    "summary": "Mac Miller boasts about his lifestyle, wealth, and fame over a sample of Empire of the Sun's 'Half Mast', blending playful bravado with introspective undertones."
   },
   "34WI9hCaE3AzbOYT9wFXLP": {
     "name": "High And Low",
     "artist": "Empire Of The Sun",
     "known": true,
-    "themes": ["longing", "searching", "emotional duality"],
-    "relationship_stance": "yearning",
-    "mood": "dreamy yet urgent",
-    "energy": "driving",
-    "setting": "nocturnal journey",
-    "summary": "A synth-pop track about riding emotional extremes while searching for connection, with a pulsing electronic beat and ethereal vocals."
+    "themes": [
+      "longing",
+      "distance",
+      "connection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy and wistful",
+    "energy": "mid-tempo, building",
+    "setting": "late-night, reflective",
+    "summary": "A synth-pop track about reaching across physical or emotional distance to maintain a bond, with shimmering production and a chorus that swells with hopeful tension."
   },
   "0I1cHghDEtreiO6tRrh2wm": {
     "name": "Llego",
     "artist": "Empire Of The Sun, Danny Ocean, FIFA Sound",
     "known": true,
     "grounded": true,
-    "themes": ["triumph", "unity", "overcoming obstacles", "celebration"],
-    "relationship_stance": "collective camaraderie",
-    "mood": "triumphant and uplifting",
-    "energy": "driving and euphoric",
-    "setting": "stadium or celebration",
-    "summary": "A FIFA World Cup anthem that blends electronic pop with Latin rhythms, celebrating the journey of overcoming adversity and arriving together in victory."
+    "themes": [
+      "triumph",
+      "unity",
+      "overcoming obstacles"
+    ],
+    "relationship_stance": "celebratory togetherness",
+    "mood": "vibrant and uplifting",
+    "energy": "euphoric and driving",
+    "setting": "stadium or festive gathering",
+    "summary": "A FIFA World Cup anthem that blends English and Spanish lyrics to celebrate arriving at success after struggle, with a bright, energetic production designed for communal celebration."
   },
   "4BU11QcrwQfB2iN5amWMrD": {
     "name": "MJ",
     "artist": "Now, Now",
     "known": true,
     "grounded": true,
-    "themes": ["betrayal", "longing", "deception", "self-reflection"],
+    "themes": [
+      "betrayal",
+      "longing",
+      "deception"
+    ],
     "relationship_stance": "heartbreak",
-    "mood": "melancholic and regretful",
+    "mood": "melancholic and reflective",
     "energy": "restrained",
     "setting": "late-night alone",
-    "summary": "The narrator addresses Michael Jackson as a confidant while lamenting a relationship where a partner was unfaithful and manipulative, leaving the narrator feeling foolish and desperate to reclaim what was lost."
+    "summary": "The song uses a conversation with Michael Jackson as a framing device to explore a relationship where the narrator feels used and betrayed, wishing they could reclaim what they lost."
   },
   "7KNFJbMvPdplvrolBUkK2N": {
     "name": "Shy Girl",
     "artist": "Haute & Freddy",
     "known": true,
     "grounded": true,
-    "themes": ["self-acceptance", "rebellion", "breaking free"],
-    "relationship_stance": "self-empowerment",
-    "mood": "defiant and encouraging",
+    "themes": [
+      "self-acceptance",
+      "rebellion",
+      "breaking free"
+    ],
+    "relationship_stance": "independence",
+    "mood": "defiant and playful",
     "energy": "driving",
-    "setting": "nighttime, personal",
-    "summary": "The song is a pep talk urging a shy person to stop hiding their true, wild self and defy the judgments of family and society, delivered with bold, audacious energy."
+    "setting": "nighttime, personal awakening",
+    "summary": "The song is a pep talk and rebellious anthem urging a shy person to stop pretending, embrace their inner wildness, and live without apology, set to a bold, audacious sound."
   },
   "1KCMF9fdF7sNE74R2V46af": {
     "name": "You",
     "artist": "Lane 8, Kasablanca",
     "known": true,
     "grounded": true,
-    "themes": ["closeness", "nostalgia", "desire for connection"],
+    "themes": [
+      "closeness",
+      "nostalgia",
+      "desire for connection"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "longing and intimate",
     "energy": "restrained",
-    "setting": "intimate, present moment",
-    "summary": "The song expresses a deep desire for physical and emotional closeness, centering on the wish to wake up beside a loved one every day, and is delivered with a restrained, atmospheric electronic production."
+    "setting": "early morning intimacy",
+    "summary": "The song expresses a deep desire to be physically and emotionally close to a loved one, with a repeated wish to wake up together, set to a melodic electronic production that builds a sense of yearning and warmth."
   },
   "1tGmXu0s8ob0VFjNoQlyKc": {
     "name": "Never Say Die",
     "artist": "CHVRCHES",
     "known": true,
-    "themes": ["resilience", "defiance", "mortality"],
-    "relationship_stance": "fierce independence",
-    "mood": "determined and urgent",
-    "energy": "driving and anthemic",
-    "setting": "facing a challenge head-on",
-    "summary": "The song confronts the idea of not giving up in the face of inevitable endings or opposition, driven by pulsing synth-pop production and Lauren Mayberry's commanding vocals."
+    "themes": [
+      "resilience",
+      "defiance",
+      "hope"
+    ],
+    "relationship_stance": "self-empowerment",
+    "mood": "determined and anthemic",
+    "energy": "driving",
+    "setting": "facing a challenge",
+    "summary": "A synth-pop anthem about refusing to give up in the face of adversity, driven by pulsing synthesizers and Lauren Mayberry's soaring vocals."
   },
   "2PRXyTkFmU0itou1ii4BPa": {
     "name": "Shine",
     "artist": "Olly Alexander (Years & Years)",
     "known": true,
-    "themes": ["self-empowerment", "inner strength", "overcoming struggle"],
-    "relationship_stance": "self-affirmation",
-    "mood": "uplifting and determined",
-    "energy": "driving and anthemic",
-    "setting": "a personal journey of growth",
-    "summary": "The song is a triumphant pop anthem about finding resilience and letting your true self shine through adversity, built on a pulsing synth beat and Alexander's soaring vocals."
+    "themes": [
+      "self-empowerment",
+      "inner strength",
+      "overcoming adversity"
+    ],
+    "relationship_stance": "self-love",
+    "mood": "uplifting and triumphant",
+    "energy": "driving",
+    "setting": "empowering moment",
+    "summary": "An anthemic pop song about finding inner light and resilience, with a soaring chorus and pulsing electronic production."
   },
   "1ggsR5kCepKTW4F64bCFdV": {
     "name": "Cheerleader",
     "artist": "Porter Robinson",
     "known": true,
-    "themes": ["self-doubt", "performance", "validation", "vulnerability"],
-    "relationship_stance": "yearning for reassurance",
+    "themes": [
+      "self-doubt",
+      "performance anxiety",
+      "seeking validation"
+    ],
+    "relationship_stance": "loneliness",
     "mood": "anxious yet hopeful",
-    "energy": "driving and bright",
-    "setting": "internal emotional landscape",
-    "summary": "The song explores the pressure of being someone's idealized partner and the fear of not living up to that role, set to a buoyant, synth-driven electronic pop production."
+    "energy": "building, euphoric",
+    "setting": "alone in a crowd",
+    "summary": "A track about feeling like a fraud on stage, craving reassurance from a loved one, set to a shimmering synth-pop production that shifts from tense verses to a soaring, cathartic chorus."
   },
   "5y2ijHECwFYWqcAHKTZgzD": {
     "name": "Risk It All",
@@ -1272,27 +1608,31 @@
     "known": true,
     "grounded": true,
     "themes": [
-      "total commitment",
+      "unconditional love",
       "sacrifice",
-      "emotional vulnerability",
-      "all-or-nothing love"
+      "total commitment",
+      "emotional vulnerability"
     ],
-    "relationship_stance": "devoted surrender",
-    "mood": "romantic and intense",
-    "energy": "restrained, downtempo",
-    "setting": "intimate, high-stakes emotional moment",
-    "summary": "A downtempo pop-R&B ballad in which the singer vows to do anything—even face destruction—for his lover, framing love as a zero-sum gamble of absolute devotion."
+    "relationship_stance": "romantic devotion",
+    "mood": "passionate and tender",
+    "energy": "restrained",
+    "setting": "intimate late-night",
+    "summary": "A downtempo pop R&B ballad with Latin and mariachi touches, in which the singer vows to risk everything—even his own heart—for his lover, framing love as an all-or-nothing gamble."
   },
   "161DnLWsx1i3u1JT05lzqU": {
     "name": "Talking to the Moon",
     "artist": "Bruno Mars",
     "known": true,
-    "themes": ["longing", "distance", "hope"],
+    "themes": [
+      "loneliness",
+      "longing",
+      "hope"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic and wistful",
-    "energy": "restrained",
+    "energy": "restrained, building",
     "setting": "late-night alone",
-    "summary": "A piano-driven ballad about a person who feels separated from a loved one and speaks to the moon as a way to reach them, expressing a deep desire for reconnection."
+    "summary": "A piano-driven ballad about reaching out to a lost love by speaking to the moon, with a gentle, aching vocal delivery and a slow crescendo of strings and percussion."
   },
   "79RJg6MqIJlBuedcMqB9F0": {
     "name": "My Body Isn't Ready",
@@ -1302,391 +1642,494 @@
     "themes": [
       "body insecurity",
       "low self-esteem",
-      "self-sabotage",
-      "vulnerability"
+      "self-sabotage in dating",
+      "unfinished self-acceptance"
     ],
-    "relationship_stance": "unrequited self-doubt",
-    "mood": "introspective and vulnerable",
+    "relationship_stance": "romantic yearning blocked by insecurity",
+    "mood": "vulnerable and introspective",
     "energy": "restrained",
     "setting": "alone with one's reflection",
-    "summary": "The song explores how deep body insecurities prevent the narrator from pursuing a romantic connection, as he feels his physical self isn't ready for intimacy despite emotional desire."
+    "summary": "The song explores the artist's struggle with body image and low self-worth, which prevents him from pursuing a romantic connection despite his feelings, captured in a vulnerable and introspective tone."
   },
   "6wpGqhRvJGNNXwWlPmkMyO": {
     "name": "I Still Haven't Found What I'm Looking For",
     "artist": "U2",
     "known": true,
-    "themes": ["spiritual seeking", "disillusionment", "persistence"],
-    "relationship_stance": "yearning for transcendence",
-    "mood": "earnest and restless",
+    "themes": [
+      "spiritual longing",
+      "restlessness",
+      "search for meaning"
+    ],
+    "relationship_stance": "solitary yearning",
+    "mood": "hopeful and earnest",
     "energy": "driving and anthemic",
-    "setting": "open road, searching",
-    "summary": "The singer recounts having experienced love, faith, and worldly achievements, yet still feels an unfulfilled spiritual or existential longing, set to a propulsive, ringing guitar-driven rock arrangement."
+    "setting": "open road, vast landscape",
+    "summary": "A rock anthem driven by a chiming guitar riff and powerful drums, expressing a persistent, unfulfilled quest for spiritual or existential fulfillment despite having experienced love, faith, and community."
   },
   "1qbmS6ep2hbBRaEZFpn7BX": {
     "name": "Man I Need",
     "artist": "Olivia Dean",
     "known": true,
-    "themes": ["vulnerability", "need for reassurance", "emotional honesty"],
-    "relationship_stance": "romantic yearning with insecurity",
-    "mood": "tender and confessional",
+    "themes": [
+      "self-worth",
+      "vulnerability",
+      "emotional honesty"
+    ],
+    "relationship_stance": "romantic yearning with self-respect",
+    "mood": "tender and introspective",
     "energy": "restrained, building",
-    "setting": "intimate, quiet space",
-    "summary": "The song is a soulful, understated plea where the singer admits she needs her partner's love and presence, revealing her fear of being too much or not enough, set to a warm, slow-burning arrangement with gospel-tinged backing vocals."
+    "setting": "late-night alone",
+    "summary": "A soulful, piano-led ballad where the singer admits her need for a partner while asserting her own value, blending vulnerability with quiet strength."
   },
   "6wkYQMrFfb0huLB5Qn19Iv": {
     "name": "We Almost Broke Up Again Last Night",
     "artist": "Sabrina Carpenter",
     "known": true,
-    "themes": ["relationship conflict", "reconciliation", "vulnerability"],
-    "relationship_stance": "tender reconciliation",
-    "mood": "reflective and hopeful",
+    "themes": [
+      "relationship conflict",
+      "vulnerability",
+      "reconciliation"
+    ],
+    "relationship_stance": "turbulent but committed",
+    "mood": "tense yet tender",
     "energy": "restrained",
-    "setting": "intimate late-night",
-    "summary": "The song recounts a near-breakup argument that resolves into a reaffirmation of love, set to a gentle, acoustic-driven melody."
+    "setting": "late-night alone",
+    "summary": "A reflective, acoustic-driven song about a couple on the verge of breaking up, capturing the raw emotion of a heated argument and the relief of not actually ending things."
   },
   "6dOtVTDdiauQNBQEDOtlAB": {
     "name": "BIRDS OF A FEATHER",
     "artist": "Billie Eilish",
     "known": true,
-    "themes": ["devotion", "eternal togetherness", "mortality"],
-    "relationship_stance": "secure, lifelong commitment",
-    "mood": "tender, dreamy",
-    "energy": "restrained, gentle",
-    "setting": "intimate, quiet night",
-    "summary": "A tender declaration of an unbreakable bond, set to a soft piano-driven melody with Billie's whispery vocals."
+    "themes": [
+      "closeness",
+      "devotion",
+      "fate"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "intimate and tender",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "A soft, synth-driven ballad about an unbreakable bond, with Billie's hushed vocals over a minimal beat and atmospheric production."
   },
   "43iIQbw5hx986dUEZbr3eN": {
     "name": "From The Start",
     "artist": "Laufey",
     "known": true,
-    "themes": ["unrequited love", "hidden feelings", "confession"],
+    "themes": [
+      "unrequited love",
+      "hidden feelings",
+      "longing"
+    ],
     "relationship_stance": "romantic yearning",
-    "mood": "sweet and wistful",
-    "energy": "restrained, bossa nova groove",
-    "setting": "intimate, quiet conversation",
-    "summary": "The narrator confesses to a close friend that she has secretly loved him from the beginning, delivered with a gentle, jazzy bossa nova arrangement."
+    "mood": "wistful and tender",
+    "energy": "gentle and restrained",
+    "setting": "quiet, introspective",
+    "summary": "A soft, jazz-pop ballad where the singer confesses her secret love for a friend, set to a delicate piano and string arrangement."
   },
   "5Ohxk2dO5COHF1krpoPigN": {
     "name": "Sign of the Times",
     "artist": "Harry Styles",
     "known": true,
-    "themes": ["escape", "hope", "mortality"],
-    "relationship_stance": "universal empathy",
-    "mood": "soaring and bittersweet",
-    "energy": "building and anthemic",
-    "setting": "a vast, open landscape",
-    "summary": "The song urges a listener to leave a troubled situation behind and look toward a better future, set to a piano-driven, gradually swelling rock ballad with a dramatic, stadium-filling chorus."
+    "themes": [
+      "hope",
+      "escape",
+      "mortality"
+    ],
+    "relationship_stance": "solitary reflection",
+    "mood": "melancholic yet uplifting",
+    "energy": "building, anthemic",
+    "setting": "lonely, vast landscape",
+    "summary": "A piano-driven ballad that swells into a soaring rock anthem, urging listeners to leave behind a troubled world and embrace the unknown, with lyrics that confront pain and mortality while reaching for transcendence."
   },
   "1bjeWoagtHmUKputLVyDxQ": {
     "name": "Saturn",
     "artist": "SZA",
     "known": true,
-    "themes": ["escape", "self-doubt", "longing for change"],
-    "relationship_stance": "romantic yearning with hesitation",
-    "mood": "dreamy and introspective",
-    "energy": "restrained and floating",
-    "setting": "late-night alone, looking up at the sky",
-    "summary": "SZA sings about wanting to leave Earth and its emotional weight behind, blending airy vocals with a slow, atmospheric R&B production."
+    "themes": [
+      "self-reflection",
+      "growth",
+      "letting go",
+      "cosmic perspective"
+    ],
+    "relationship_stance": "self-focused independence",
+    "mood": "introspective and bittersweet",
+    "energy": "restrained, building",
+    "setting": "late-night alone",
+    "summary": "SZA contemplates personal change and the vastness of the universe, using Saturn as a metaphor for a fresh start, over a dreamy, slow-burning R&B production with gentle strings and a subdued beat."
   },
   "0yuAWlxq59xT3agQ965OxE": {
     "name": "Sunsetz",
     "artist": "Cigarettes After Sex",
     "known": true,
-    "themes": ["nostalgia", "longing", "memory"],
+    "themes": [
+      "longing",
+      "memory",
+      "distance"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and melancholic",
     "energy": "still and intimate",
     "setting": "late-night alone",
-    "summary": "The song recalls a past lover through hazy, sensory memories, set to a slow, reverb-drenched instrumental that feels like a quiet, wistful reverie."
+    "summary": "The song reflects on a past relationship through hazy, nostalgic imagery, set to a slow, reverb-drenched instrumental with a hushed, breathy vocal delivery."
   },
   "3FtYbEfBqAlGO46NUDQSAt": {
     "name": "Electric Feel",
     "artist": "MGMT",
     "known": true,
-    "themes": ["psychedelic love", "electric connection", "euphoria"],
-    "relationship_stance": "playful mystical connection",
-    "mood": "euphoric and dreamy",
-    "energy": "driving and groovy",
-    "setting": "nighttime party",
-    "summary": "The song celebrates a magnetic, almost supernatural romantic bond with a girl, set to a funky, synth-heavy groove that blends psychedelic wonder with danceable energy."
+    "themes": [
+      "psychedelic love",
+      "sensory immersion",
+      "natural metaphor"
+    ],
+    "relationship_stance": "playful, hypnotic connection",
+    "mood": "dreamy and euphoric",
+    "energy": "groove-driven, shimmering",
+    "setting": "late-night dance floor or hazy summer evening",
+    "summary": "A synth-pop track that uses electric and natural imagery to describe a magnetic, almost mystical romantic attraction, set to a funky bassline and swirling, psychedelic production."
   },
   "3hEfpBHxgieRLz4t3kLNEg": {
     "name": "About You",
     "artist": "The 1975",
     "known": true,
-    "themes": ["nostalgia", "memory", "longing"],
-    "relationship_stance": "romantic yearning with emotional distance",
-    "mood": "bittersweet and reflective",
-    "energy": "restrained and intimate",
-    "setting": "late-night alone, lost in thought",
-    "summary": "A nostalgic ballad about remembering a past love, with a soft, driving guitar riff and a sense of holding onto the memory despite the absence."
+    "themes": [
+      "memory",
+      "longing",
+      "identity"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "nostalgic and bittersweet",
+    "energy": "restrained, building",
+    "setting": "late-night alone",
+    "summary": "A reflective track where the narrator recalls a past relationship, questioning if they are still remembered, set to a sparse, atmospheric synth-pop arrangement that swells with emotional intensity."
   },
   "6wOYnPq1hPihRepcDClPUw": {
     "name": "Meet Me Halfway",
     "artist": "Black Eyed Peas",
     "known": true,
-    "themes": ["compromise", "distance", "effort", "commitment"],
-    "relationship_stance": "romantic yearning for compromise",
-    "mood": "hopeful and determined",
-    "energy": "driving and euphoric",
-    "setting": "personal space or club",
-    "summary": "A synth-driven pop song where the singer pleads for their partner to meet them halfway, expressing willingness to travel any distance and make the relationship work."
+    "themes": [
+      "longing",
+      "compromise",
+      "connection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "hopeful and pleading",
+    "energy": "driving, mid-tempo",
+    "setting": "late-night alone, reaching out",
+    "summary": "The song is about a person asking their partner to make an effort to meet them halfway in the relationship, blending pop and hip-hop with a catchy, synth-driven beat and Fergie's earnest vocals."
   },
   "0FDzzruyVECATHXKHFs9eJ": {
     "name": "A Sky Full of Stars",
     "artist": "Coldplay",
     "known": true,
-    "themes": ["devotion", "awe", "transformation"],
+    "themes": [
+      "devotion",
+      "overwhelming love",
+      "surrender"
+    ],
     "relationship_stance": "romantic devotion",
-    "mood": "euphoric and grateful",
-    "energy": "driving and explosive",
-    "setting": "starry night, open and expansive",
-    "summary": "A declaration of overwhelming love and gratitude, set to a bright, pulsing electronic beat that builds into a euphoric, anthemic chorus."
+    "mood": "euphoric and heartfelt",
+    "energy": "driving and anthemic",
+    "setting": "starry night, open sky",
+    "summary": "A pulsing, euphoric electronic-rock anthem about being completely overwhelmed by a lover's presence, with shimmering piano and a four-on-the-floor beat building to a soaring, stadium-sized chorus."
   },
   "2nvC4i2aMo4CzRjRflysah": {
     "name": "In My Place",
     "artist": "Coldplay",
     "known": true,
-    "themes": ["regret", "longing", "self-doubt", "reconciliation"],
-    "relationship_stance": "apologetic yearning",
+    "themes": [
+      "longing",
+      "regret",
+      "reconciliation"
+    ],
+    "relationship_stance": "romantic yearning",
     "mood": "melancholic yet hopeful",
     "energy": "restrained, building",
-    "setting": "introspective, solitary",
-    "summary": "The song reflects on a past relationship with regret and a desire to make amends, set to a gentle, piano-driven arrangement that swells into a cathartic chorus."
+    "setting": "late-night alone",
+    "summary": "A song about wishing to make amends and return to a former closeness, driven by a gentle guitar arpeggio and Chris Martin's aching vocal delivery."
   },
   "5CZ40GBx1sQ9agT82CLQCT": {
     "name": "traitor",
     "artist": "Olivia Rodrigo",
     "known": true,
-    "themes": ["betrayal", "heartbreak", "self-blame", "moving on"],
-    "relationship_stance": "heartbreak after being cheated on",
-    "mood": "wistful and bitter",
+    "themes": [
+      "betrayal",
+      "heartbreak",
+      "jealousy",
+      "moving on"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic and bitter",
     "energy": "restrained, building to cathartic",
-    "setting": "late-night alone, reflecting",
-    "summary": "The narrator processes the pain of being replaced and lied to after a breakup, set to a piano-driven ballad that swells into a raw, emotional chorus."
-  },
-  "4xF4ZBGPZKxECeDFrqSAG4": {
-    "name": "snowfall",
-    "artist": "Øneheart, reidenshi",
-    "known": true,
-    "grounded": true,
-    "themes": ["nostalgia", "introspection", "passage of time", "solitude"],
-    "relationship_stance": "loneliness",
-    "mood": "reflective and bittersweet",
-    "energy": "still and intimate",
-    "setting": "winter, alone",
-    "summary": "An ambient track that uses winter imagery to evoke memories, coping with the past, and a quiet, ongoing personal journey."
+    "setting": "late-night alone",
+    "summary": "A piano-driven ballad about feeling betrayed when an ex quickly moves on, with raw vocals and a swelling chorus."
   },
   "7uzmGiiJyRfuViKKK3lVmR": {
     "name": "Mine",
     "artist": "Bazzi",
     "known": true,
-    "themes": ["possessiveness", "devotion", "romantic idealization"],
-    "relationship_stance": "secure closeness",
-    "mood": "tender and confident",
-    "energy": "smooth and mid-tempo",
-    "setting": "intimate, late-night",
-    "summary": "Bazzi sings about claiming a partner as his own, expressing unwavering commitment and adoration over a sleek, R&B-infused pop production with a gentle, melodic flow."
+    "themes": [
+      "possessiveness",
+      "devotion",
+      "romantic idealization"
+    ],
+    "relationship_stance": "possessive devotion",
+    "mood": "yearning and confident",
+    "energy": "smooth and building",
+    "setting": "late-night intimate",
+    "summary": "A pop-R&B track where the singer declares his partner is 'mine' with a mix of tenderness and territoriality, set to a minimalist beat that swells into a catchy chorus."
   },
   "0ofHAoxe9vBkTCp2UQIavz": {
     "name": "Dreams - 2004 Remaster",
     "artist": "Fleetwood Mac",
     "known": true,
-    "themes": ["longing", "uncertainty", "emotional vulnerability"],
-    "relationship_stance": "romantic yearning with doubt",
+    "themes": [
+      "longing",
+      "uncertainty",
+      "emotional vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
     "mood": "melancholic and reflective",
-    "energy": "restrained and dreamy",
+    "energy": "restrained",
     "setting": "late-night alone",
-    "summary": "The song explores the ache of wanting someone who may not feel the same, set to a soft, hypnotic rhythm with layered harmonies and a gentle, drifting melody."
+    "summary": "A wistful meditation on a relationship's fragility, set to a gentle, rolling rhythm and Stevie Nicks' airy, aching vocals."
   },
   "2hKdd3qO7cWr2Jo0Bcs0MA": {
     "name": "Drops of Jupiter (Tell Me)",
     "artist": "Train",
     "known": true,
-    "themes": ["transformation", "wonder", "journey", "awe"],
-    "relationship_stance": "admiring curiosity",
-    "mood": "reflective and awe-inspired",
+    "themes": [
+      "self-discovery",
+      "transformation",
+      "cosmic wonder"
+    ],
+    "relationship_stance": "romantic yearning and admiration",
+    "mood": "hopeful and reflective",
     "energy": "building, anthemic",
-    "setting": "after a return from a journey",
-    "summary": "A man asks a woman about the profound experiences she had during a transformative journey, set to a piano-driven, soaring pop-rock melody."
+    "setting": "starry night, introspective",
+    "summary": "A man marvels at the changes in a loved one who has returned from a journey of self-discovery, set to a piano-driven pop-rock arrangement that swells into a soaring chorus."
   },
   "5RdhBLmB4DyFHLglRrfx63": {
     "name": "I'll Be There",
     "artist": "The Jackson 5",
     "known": true,
-    "themes": ["devotion", "reassurance", "support"],
-    "relationship_stance": "committed presence",
-    "mood": "tender and heartfelt",
-    "energy": "gentle and soulful",
+    "themes": [
+      "reassurance",
+      "devotion",
+      "presence"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "tender and hopeful",
+    "energy": "restrained, building to earnest",
     "setting": "intimate, quiet moment",
-    "summary": "A soulful promise of unwavering support and comfort, delivered with tender vocals and gentle harmonies."
+    "summary": "A promise of unwavering support and love, delivered with Michael Jackson's earnest lead vocals over a gentle, soulful arrangement of piano, strings, and soft harmonies."
   },
   "5tz69p7tJuGPeMGwNTxYuV": {
     "name": "1-800-273-8255",
     "artist": "Logic, Alessia Cara, Khalid",
     "known": true,
-    "themes": ["suicidal ideation", "reaching out", "hope", "connection"],
+    "themes": [
+      "suicidal ideation",
+      "hope",
+      "connection",
+      "reaching out"
+    ],
     "relationship_stance": "being seen and supported",
-    "mood": "vulnerable then uplifting",
+    "mood": "emotional and uplifting",
     "energy": "building from restrained to anthemic",
-    "setting": "a moment of crisis and a phone call",
-    "summary": "The song follows a person in deep despair who calls a suicide hotline, and through the conversation finds a reason to live, set to a pop-rap track that swells from a sparse piano intro into a full, triumphant chorus."
+    "setting": "a moment of crisis turning toward hope",
+    "summary": "The song follows a narrative of someone calling a suicide prevention hotline, moving from despair to a decision to stay alive, supported by a gradual musical build from sparse piano and vocals to a full, soaring pop chorus."
   },
   "6dGnYIeXmHdcikdzNNDMm2": {
     "name": "Here Comes The Sun - Remastered 2009",
     "artist": "The Beatles",
     "known": true,
-    "themes": ["renewal", "hope", "nature"],
-    "relationship_stance": "solitary contentment",
-    "mood": "hopeful and joyful",
-    "energy": "gentle and uplifting",
-    "setting": "sunlit outdoors",
-    "summary": "The song celebrates the arrival of spring and the end of a long, dark winter, with a bright acoustic guitar melody and a sense of relief and optimism."
+    "themes": [
+      "renewal",
+      "relief",
+      "hope"
+    ],
+    "relationship_stance": "independence",
+    "mood": "gentle optimism",
+    "energy": "lifting and warm",
+    "setting": "early spring morning",
+    "summary": "George Harrison's acoustic-driven song celebrates the arrival of spring and the end of a long, cold winter, with a bright, fingerpicked guitar melody and layered harmonies that evoke a sense of joyful release."
   },
   "2mlNgAeIBnL78ZriXgrRHz": {
     "name": "Glimpse of Us",
     "artist": "Joji",
     "known": true,
-    "themes": ["nostalgia", "longing", "emotional conflict"],
+    "themes": [
+      "lost love",
+      "nostalgia",
+      "unrequited longing"
+    ],
     "relationship_stance": "yearning for a past love",
-    "mood": "melancholic, tender",
-    "energy": "restrained, intimate",
-    "setting": "late-night solitude",
-    "summary": "A person in a new relationship finds themselves haunted by memories of a former lover, conveyed through a sparse piano ballad and Joji's vulnerable vocal delivery."
+    "mood": "melancholic and tender",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "A piano-driven ballad where the singer confesses that even in a new relationship, he still sees glimpses of a former lover, blending soft falsetto with sparse, aching production."
   },
   "6SwnPNYCf3q4WsUQkMzAiI": {
     "name": "Hearsay",
     "artist": "LANDOKMAI",
     "known": true,
     "grounded": true,
-    "themes": ["defying rumors", "trusting actions over words", "loyal love"],
+    "themes": [
+      "defying rumors",
+      "trusting actions over words",
+      "defending a partner"
+    ],
     "relationship_stance": "defensive devotion",
     "mood": "defiant yet tender",
     "energy": "driving",
-    "setting": "social judgment",
-    "summary": "The singer defends a partner against gossip and friends' warnings, insisting that the partner's kind actions prove the rumors false, and chooses to love despite external doubt."
+    "setting": "social circle under scrutiny",
+    "summary": "The singer dismisses gossip about their partner, insisting that firsthand experience of warmth and sincerity outweighs any hearsay, set to a pop track with a confident, affectionate tone."
   },
   "55WNlLuVqXJM4DQRxXWSTh": {
     "name": "give up, give in",
     "artist": "Violette Wautier",
     "known": true,
     "grounded": true,
-    "themes": ["burnout", "self-doubt", "exhaustion"],
-    "relationship_stance": "loneliness",
+    "themes": [
+      "burnout",
+      "self-doubt",
+      "exhaustion",
+      "surrender"
+    ],
+    "relationship_stance": "internal struggle",
     "mood": "vulnerable and weary",
-    "energy": "restrained",
+    "energy": "restrained, introspective",
     "setting": "late-night alone",
-    "summary": "The song captures the raw feeling of emotional burnout and self-alienation, using a metaphor of running on empty to express a state of deep exhaustion and disconnection from oneself."
+    "summary": "The song captures the raw feeling of emotional burnout and reaching a breaking point, with lyrics about emptiness and not recognizing oneself, set to a subdued, introspective musical backdrop."
   },
   "27OEf7iSIOJ14txp16xweP": {
     "name": "ลา ลา ลา",
     "artist": "Dept",
     "known": true,
-    "themes": ["nostalgia", "farewell", "memory"],
-    "relationship_stance": "heartbreak and longing",
-    "mood": "melancholic and wistful",
-    "energy": "restrained, soft",
-    "setting": "late-night alone",
-    "summary": "A gentle Thai indie pop song about remembering a past love and saying goodbye, with a dreamy, nostalgic sound and a repeated 'la la la' refrain that echoes the feeling of loss."
+    "grounded": true,
+    "themes": [
+      "regret",
+      "past mistakes",
+      "longing"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic and reflective",
+    "energy": "restrained",
+    "setting": "alone with memories",
+    "summary": "The song expresses the feelings of someone who cannot go back and fix mistakes from the past, set to a gentle, sorrowful indie pop arrangement."
   },
   "4MOHCAGlvAcD6WBF73Yt1k": {
     "name": "คล้าย",
     "artist": "Dept",
     "known": true,
-    "themes": ["heartbreak", "feeling disposable", "betrayal", "self-worth"],
-    "relationship_stance": "realizing you're just another in a pattern of hurt",
-    "mood": "bitter and wounded",
-    "energy": "melancholic, mid-tempo",
-    "setting": "reflecting after being discarded",
-    "summary": "The narrator realizes they are just another person hurt and discarded by someone with a history of doing this, feeling as though their own significance never truly mattered, set to a melancholic indie-pop arrangement.",
-    "grounded": true
+    "grounded": true,
+    "themes": [
+      "love",
+      "transformation",
+      "discovery"
+    ],
+    "relationship_stance": "romantic devotion",
+    "mood": "hopeful and tender",
+    "energy": "restrained yet uplifting",
+    "setting": "intimate, reflective",
+    "summary": "The song describes someone who once thought love wasn't real until meeting a person who changed their perspective, set to a blend of guitar and synthesizer sounds."
   },
   "0cHtr7i0P0TpEODZr2WZDE": {
     "name": "ดาวหางฮัลเลย์",
     "artist": "fellow fellow",
     "known": true,
+    "grounded": true,
     "themes": [
-      "rare connection",
+      "cosmic romance",
       "transformation",
-      "wonder",
-      "once-in-a-lifetime love"
+      "shared wonder"
     ],
-    "relationship_stance": "awe-struck devotion to a rare, transformative connection",
-    "mood": "wistful and wondrous",
-    "energy": "gentle, dreamy, building",
-    "setting": "gazing at the night sky together",
-    "summary": "Using the rarity of Halley's Comet (visible only once every 76 years) as a metaphor, the narrator describes how sharing that rare moment with someone changed the way they see everything beautiful in life since, set to a dreamy, wistful indie-pop arrangement.",
-    "grounded": true
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy and hopeful",
+    "energy": "gentle and building",
+    "setting": "stargazing together",
+    "summary": "The song uses the rare appearance of Halley's Comet as a metaphor for a love that changes one's entire perspective, with a tender, melodic pop arrangement that evokes the awe of watching the night sky with someone special."
   },
   "2gf1kAZFkjS8SPXsk7yNk9": {
     "name": "Lavender",
     "artist": "FOLK9",
     "known": true,
     "grounded": true,
-    "themes": ["comfort", "nostalgia", "transience of memories"],
-    "relationship_stance": "soothing closeness",
-    "mood": "soothing and reflective",
-    "energy": "gentle and intimate",
-    "setting": "quiet, restful moment",
-    "summary": "The song offers a comforting message to a loved one, urging them to rest and relax, while also reflecting on the fleeting beauty of past memories, using lavender as a metaphor for transience."
+    "themes": [
+      "comfort",
+      "nostalgia",
+      "transience"
+    ],
+    "relationship_stance": "soothing care for a loved one",
+    "mood": "gentle and reflective",
+    "energy": "restrained and calming",
+    "setting": "quiet, intimate moment",
+    "summary": "The song offers a soothing, comforting message to a loved one while also reflecting nostalgically on the fleeting beauty of past memories, using lavender as a metaphor for transience."
   },
   "6qOWwJlt1TOQ0V4Mji4Ytx": {
     "name": "ดำสนิท",
     "artist": "Hugo",
     "known": true,
+    "grounded": true,
     "themes": [
-      "moral corruption",
       "loss of innocence",
-      "social critique",
-      "conformity"
+      "life's inevitable stains",
+      "human imperfection"
     ],
-    "relationship_stance": "societal/philosophical, not romantic",
-    "mood": "somber and critical",
-    "energy": "restrained, contemplative",
-    "setting": "reflecting on society and human nature",
-    "summary": "A philosophical, socially critical song comparing people to white cloth that gradually accumulates stains and creases until it turns completely black, reflecting how compromise, forced conformity, and the hypocrisy of adulthood erode a person's original innocence, set to a somber, contemplative arrangement.",
-    "grounded": true
+    "relationship_stance": "universal reflection",
+    "mood": "contemplative and sobering",
+    "energy": "restrained",
+    "setting": "introspective moment",
+    "summary": "The song reflects on how everyone starts pure but inevitably becomes marked by life's experiences, turning from white to gray to pitch black, urging acceptance of failure and imperfection."
   },
   "4ZuflCpdf22z8J94WPIGrp": {
     "name": "ดาวนำทาง (Quiet Night)",
     "artist": "loserpop",
     "known": true,
-    "themes": ["hope", "waiting", "guidance", "longing for reunion"],
-    "relationship_stance": "romantic yearning, waiting for someone to return",
-    "mood": "tender and hopeful",
-    "energy": "gentle, restrained",
-    "setting": "a quiet night, praying to the stars",
-    "summary": "In the stillness of a quiet night, the narrator prays to the stars as a guiding light, hoping for the safe return of someone they're waiting for and that things can stay as beautiful as when it was just the two of them, set to a soft, atmospheric indie-pop ballad.",
-    "grounded": true
+    "grounded": true,
+    "themes": [
+      "longing",
+      "hope",
+      "guidance",
+      "heartbreak"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic yet hopeful",
+    "energy": "restrained",
+    "setting": "quiet night alone",
+    "summary": "A Thai ballad about praying to the stars for the return of a lost love, offering comfort to those unlucky in love with a gentle, soothing musical character."
   },
   "1P1X8ona1Bcbf85rbuCbGc": {
     "name": "Secretive (บอกไม่ได้)",
     "artist": "Sqweez Animal",
     "known": true,
-    "themes": ["unspoken feelings", "longing", "silent understanding"],
-    "relationship_stance": "hidden romantic longing",
-    "mood": "wistful and tender",
-    "energy": "gentle, mid-tempo pop-rock",
-    "setting": "quiet longing, unable to voice feelings",
-    "summary": "The narrator silently hopes their crush understands the depth of their feelings even though they can't bring themselves to say it out loud, set to a warm, mid-tempo Thai pop-rock arrangement (from the Gossip Girl Thailand soundtrack).",
-    "grounded": true
+    "grounded": true,
+    "themes": [
+      "forbidden love",
+      "heartbreak",
+      "secrecy"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic and regretful",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song is about a love that must be hidden because it is with the wrong person, leading to inevitable disappointment and loneliness, delivered with a subdued, sorrowful tone."
   },
   "0D9lpJts3mXxe0fvovYUFv": {
     "name": "จากตรงนี้ที่(เคย)สวยงาม [La La Bye]",
     "artist": "AYLA's",
     "known": true,
+    "grounded": true,
     "themes": [
-      "farewell",
-      "bittersweet nostalgia",
-      "graceful goodbye",
-      "cherished memories"
+      "loss",
+      "memory",
+      "farewell"
     ],
-    "relationship_stance": "amicable parting, choosing to remember fondly",
-    "mood": "bittersweet and tender",
-    "energy": "gentle, wistful",
-    "setting": "reflecting on a place/relationship that once felt beautiful",
-    "summary": "The narrator says a gentle, understanding goodbye to a love that has ended, choosing to hold onto the good memories rather than dwell on sadness as they let go of a place and relationship that once felt beautiful, set to a soft, melancholic indie-pop ballad.",
-    "grounded": true
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic and reflective",
+    "energy": "restrained",
+    "setting": "alone with memories",
+    "summary": "A sad song about parting and the beautiful memories that remain after a relationship ends, with a gentle, immersive melody that carries the listener through the emotion."
   },
   "4qW3BbQAwZsrnu8a3ZRdyT": {
     "name": "Self Aware",
@@ -1696,47 +2139,60 @@
     "themes": [
       "self-awareness",
       "emotional limits",
-      "pretend romance",
-      "modern heartbreak"
+      "temporary romance",
+      "pretending"
     ],
-    "relationship_stance": "unable to fall for someone",
+    "relationship_stance": "bittersweet distance",
     "mood": "bittersweet and introspective",
     "energy": "restrained",
     "setting": "late-night alone",
-    "summary": "The song explores the pain of being too self-aware to fully invest in a relationship that has no future, capturing a quiet, resigned tension between wanting to pretend and knowing it won't last."
+    "summary": "The song explores the tension of wanting to indulge a romantic moment while knowing it cannot last, with a protagonist whose hyper-awareness prevents them from lying to themselves or their partner."
   },
   "4SqWKzw0CbA05TGszDgMlc": {
     "name": "I Love You So",
     "artist": "The Walters",
     "known": true,
-    "themes": ["longing", "unrequited love", "emotional vulnerability"],
+    "themes": [
+      "unrequited love",
+      "longing",
+      "self-doubt"
+    ],
     "relationship_stance": "romantic yearning",
-    "mood": "melancholic and tender",
-    "energy": "restrained",
+    "mood": "melancholic and wistful",
+    "energy": "gentle and restrained",
     "setting": "late-night alone",
-    "summary": "The song expresses the pain of loving someone who doesn't feel the same, set to a gentle, jangly indie pop arrangement with a wistful melody."
+    "summary": "A soft indie pop song about loving someone who doesn't feel the same, with jangly guitars and a bittersweet, introspective tone."
   },
   "12YJ22eobkNvns5hYqt2Ye": {
     "name": "A Moment - from \"Project Hail Mary\"",
     "artist": "Daniel Pemberton",
     "known": true,
-    "themes": ["scientific discovery", "sacrifice", "hope", "isolation"],
-    "relationship_stance": "awe and wonder",
-    "mood": "tender and contemplative",
-    "energy": "restrained and building",
-    "setting": "vast, solitary space",
-    "summary": "An instrumental piece from the Project Hail Mary soundtrack, blending soft piano and swelling strings to evoke the emotional weight of a lone astronaut's moment of profound realization and connection to a distant star."
+    "grounded": true,
+    "themes": [
+      "awe",
+      "wonder",
+      "cosmic beauty"
+    ],
+    "relationship_stance": "awe",
+    "mood": "emotional, uplifting",
+    "energy": "swelling, majestic",
+    "setting": "space, witnessing a celestial phenomenon",
+    "summary": "An instrumental track with non-lyrical vocals that accompanies a scene where the protagonist witnesses the stunning Petrova Lines, evoking a sense of awe and emotional release."
   },
   "2g0LdZQce9xlcHb1mBJyuz": {
     "name": "strawberry moon",
     "artist": "IU",
     "known": true,
-    "themes": ["romantic devotion", "tender intimacy", "fleeting beauty"],
+    "themes": [
+      "nostalgia",
+      "tender love",
+      "cherished moments"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "warm and dreamy",
     "energy": "gentle and swaying",
     "setting": "quiet evening together",
-    "summary": "A soft, acoustic-driven love song that compares a cherished partner to a rare strawberry moon, celebrating the preciousness of shared moments and the desire to hold onto them."
+    "summary": "A soft, acoustic pop ballad where the singer compares a loved one to a rare, sweet strawberry moon, celebrating the beauty of a fleeting yet perfect moment."
   },
   "3A02hWQ2ebOFDWSbAMNnpw": {
     "name": "bittersweet",
@@ -1745,47 +2201,60 @@
     "themes": [
       "toxic love",
       "emotional conflict",
-      "self-awareness",
-      "addiction"
+      "self-awareness"
     ],
-    "relationship_stance": "trapped in a painful cycle",
-    "mood": "melancholic and conflicted",
-    "energy": "restrained, simmering",
-    "setting": "late-night alone, reflecting",
-    "summary": "The song explores the push-pull of a relationship that is both damaging and irresistible, set to a moody, mid-tempo pop production with a haunting vocal delivery."
+    "relationship_stance": "conflicted attachment",
+    "mood": "melancholic yet defiant",
+    "energy": "restrained, building",
+    "setting": "late-night alone",
+    "summary": "The song explores the push-pull of a relationship that is both painful and addictive, with a minimalist pop production that shifts from subdued verses to a soaring, anthemic chorus."
   },
   "01aNqddaggrPJYUIdRApRD": {
     "name": "bad enough",
     "artist": "Madison Beer",
     "known": true,
-    "themes": ["self-doubt", "emotional exhaustion", "relationship strain"],
-    "relationship_stance": "fear of not being enough",
-    "mood": "vulnerable and weary",
+    "themes": [
+      "self-doubt",
+      "emotional vulnerability",
+      "fear of rejection"
+    ],
+    "relationship_stance": "anxious longing",
+    "mood": "melancholic and introspective",
     "energy": "restrained, building tension",
-    "setting": "late-night alone, introspective",
-    "summary": "The song explores the anxiety of feeling inadequate in a relationship, with a sparse, atmospheric production that swells into a cathartic chorus."
+    "setting": "late-night alone",
+    "summary": "The song explores the narrator's internal struggle with feeling inadequate in a relationship, fearing they are not enough for their partner, set to a moody pop production with a slow-burning, atmospheric beat."
   },
   "20jbSiX29FDX4oQxBXyUEi": {
     "name": "hate that i made you love me",
     "artist": "Ariana Grande",
     "known": true,
-    "themes": ["regret", "self-blame", "guilt", "heartbreak"],
-    "relationship_stance": "regretful self-blame",
-    "mood": "melancholic and remorseful",
-    "energy": "restrained, mid-tempo",
-    "setting": "reflective, alone",
-    "summary": "Ariana Grande takes responsibility for making someone fall in love with her while knowing she would leave, conveyed through a subdued pop-R&B sound with vulnerable vocals."
+    "grounded": true,
+    "themes": [
+      "regret",
+      "fame and fandom",
+      "self-blame",
+      "defiance"
+    ],
+    "relationship_stance": "conflicted regret",
+    "mood": "melancholic yet defiant",
+    "energy": "restrained",
+    "setting": "introspective, late-night",
+    "summary": "Ariana Grande reflects on the pain of being loved and then mistreated, whether by a romantic partner or the public, balancing vulnerability with a resolve to trust her own instincts."
   },
   "67QGnT1Vdfuuy4HkLTUVjj": {
     "name": "11:11",
     "artist": "TAEYEON",
     "known": true,
-    "themes": ["time", "longing", "waiting", "hope"],
+    "themes": [
+      "time",
+      "longing",
+      "wishful thinking"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic and hopeful",
-    "energy": "restrained, building",
+    "energy": "restrained",
     "setting": "late-night alone",
-    "summary": "The song captures the ache of waiting for a loved one at a specific hour, blending tender piano and strings with Taeyeon's emotive vocals to convey both sadness and quiet anticipation."
+    "summary": "The song uses the recurring time 11:11 as a symbol for making a wish, expressing a desire for a past lover to return, set against a soft, piano-driven pop ballad with gentle electronic touches."
   },
   "1eZyd1mtOmlQu3YhSYmes7": {
     "name": "lovergirl",
@@ -1799,32 +2268,218 @@
       "choosing love despite risk"
     ],
     "relationship_stance": "secure closeness",
-    "mood": "sincere and vulnerable",
+    "mood": "unabashedly sincere",
     "energy": "restrained",
-    "setting": "intimate, reflective",
-    "summary": "The song is a candid, sincere declaration of embracing deep love and emotional openness even after past pain, delivered with vulnerable yet powerful restraint."
+    "setting": "intimate and reflective",
+    "summary": "Madison Beer embraces the identity of a 'lovergirl' who loves deeply and openly, acknowledging past pain but choosing vulnerability and forgiveness in a romantic relationship."
   },
   "4qpOmcLuLFjaSvmbQIq4ft": {
     "name": "To Love Somebody",
     "artist": "Holly Humberstone",
     "known": true,
-    "themes": ["longing", "vulnerability", "emotional distance"],
-    "relationship_stance": "unrequited love",
-    "mood": "melancholic and tender",
-    "energy": "restrained, building",
+    "grounded": true,
+    "themes": [
+      "love and loss",
+      "human experience",
+      "emotional vulnerability"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "bittersweet",
+    "energy": "euphoric",
     "setting": "late-night alone",
-    "summary": "The song expresses the ache of loving someone who cannot or will not love you back, set to a sparse, piano-driven arrangement that swells with aching emotion."
+    "summary": "The song reframes heartbreak as a testament to having loved fully, blending glistening pop production with a gut-punch emotional core."
   },
   "5ThLZ2ecykVqTRcRlsWNby": {
     "name": "OFFLINE",
     "artist": "HYOLYN",
+    "known": false,
+    "themes": [],
+    "relationship_stance": "",
+    "mood": "",
+    "energy": "",
+    "setting": "",
+    "summary": ""
+  },
+  "51t4KpMubQMCQXV8T4lK3F": {
+    "name": "Self Love",
+    "artist": "BLOND:ISH",
     "known": true,
     "grounded": true,
-    "themes": ["digital disconnect", "self-assertion", "independence"],
-    "relationship_stance": "self-empowered detachment",
-    "mood": "defiant and cool",
+    "themes": [
+      "self-acceptance",
+      "self-worth",
+      "inner struggle"
+    ],
+    "relationship_stance": "self-love",
+    "mood": "introspective and uplifting",
+    "energy": "restrained",
+    "setting": "alone with one's thoughts",
+    "summary": "The song explores the journey of overcoming self-doubt and learning to embrace one's own worth, set to an electronic backdrop that balances introspection with a hopeful tone."
+  },
+  "0qwcGscxUHGZTgq0zcaqk1": {
+    "name": "Here's to Never Growing Up",
+    "artist": "Avril Lavigne",
+    "known": true,
+    "themes": [
+      "youthful rebellion",
+      "nostalgia",
+      "living in the moment"
+    ],
+    "relationship_stance": "playful connection",
+    "mood": "carefree and defiant",
     "energy": "driving",
-    "setting": "nighttime, urban",
-    "summary": "The song uses the concept of going offline as a metaphor for cutting off a relationship and reclaiming personal space, set to a confident, beat-driven production."
+    "setting": "night out with friends",
+    "summary": "A pop-rock anthem celebrating the refusal to conform to adult expectations, with a driving beat, shouted gang vocals, and a nostalgic nod to teenage freedom."
+  },
+  "3cLXrotzCjYCkN73PewALM": {
+    "name": "Good Goodbye",
+    "artist": "HWASA",
+    "known": true,
+    "themes": [
+      "goodbye",
+      "self-empowerment",
+      "moving on"
+    ],
+    "relationship_stance": "independence",
+    "mood": "defiant yet wistful",
+    "energy": "mid-tempo, driving",
+    "setting": "late-night alone",
+    "summary": "HWASA sings about ending a relationship on her own terms, blending a confident, sultry vocal delivery with a pop-R&B beat that balances regret with resolve."
+  },
+  "5tSmAABuoOfR59lrtXdDqm": {
+    "name": "If This Was A Movie",
+    "artist": "Taylor Swift",
+    "known": true,
+    "themes": [
+      "nostalgia",
+      "heartbreak",
+      "what-if"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic and wistful",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "A woman imagines a past lover returning to her door like in a movie, set to a gentle piano-driven ballad with soft strings."
+  },
+  "2GiJYvgVaD2HtM8GqD9EgQ": {
+    "name": "Electric Love",
+    "artist": "BØRNS",
+    "known": true,
+    "themes": [
+      "infatuation",
+      "electric connection",
+      "youthful passion"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy and euphoric",
+    "energy": "buoyant and driving",
+    "setting": "summer night, dancing under lights",
+    "summary": "A synth-pop track about being overwhelmed by a magnetic, almost supernatural attraction to someone, with a shimmering, upbeat production and a soaring chorus."
+  },
+  "1WYrTfvKjQYaYfVziGG1ET": {
+    "name": "Linger - Remastered 2026",
+    "artist": "The Cranberries",
+    "known": true,
+    "themes": [
+      "vulnerability",
+      "unrequited love",
+      "regret"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic and tender",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "A bittersweet reflection on a relationship where the singer's feelings were not reciprocated, set to a gentle, jangly guitar melody and Dolores O'Riordan's aching, ethereal vocals."
+  },
+  "61OJxhoY3Ix50rYVKo8zRK": {
+    "name": "Can I Call You Tonight?",
+    "artist": "Dayglow",
+    "known": true,
+    "themes": [
+      "late-night longing",
+      "uncertainty",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "wistful and hopeful",
+    "energy": "buoyant but restrained",
+    "setting": "late-night alone",
+    "summary": "A synth-pop track about hesitantly reaching out to a crush after dark, blending nervous introspection with a bright, bouncy instrumental."
+  },
+  "2Kerz9H9IejzeIpjhDJoYG": {
+    "name": "Love",
+    "artist": "Lana Del Rey",
+    "known": true,
+    "themes": [
+      "romantic devotion",
+      "vulnerability",
+      "transformation"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "tender and intimate",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "A slow, piano-driven ballad where the singer reflects on the profound, almost redemptive power of being loved, with a hushed vocal delivery and sparse, cinematic production."
+  },
+  "3vQ4T78TTMOjQXGfXVKQJo": {
+    "name": "Redbone",
+    "artist": "Childish Gambino",
+    "known": true,
+    "themes": [
+      "paranoia",
+      "betrayal",
+      "self-preservation"
+    ],
+    "relationship_stance": "distrustful caution",
+    "mood": "tense and groovy",
+    "energy": "restrained but simmering",
+    "setting": "late-night alone",
+    "summary": "A slow-burning funk track about staying alert to deception and protecting oneself from emotional harm, with a laid-back yet ominous groove."
+  },
+  "7yFMhCJOsH7khgpdnyrZAZ": {
+    "name": "Ride",
+    "artist": "Lana Del Rey",
+    "known": true,
+    "themes": [
+      "escape",
+      "freedom",
+      "rebellion",
+      "self-discovery"
+    ],
+    "relationship_stance": "independence",
+    "mood": "defiant and wistful",
+    "energy": "driving",
+    "setting": "open road at night",
+    "summary": "A woman embraces a transient, hedonistic lifestyle as a form of liberation, set to a cinematic blend of trip-hop beats and orchestral swells."
+  },
+  "086myS9r57YsLbJpU0TgK9": {
+    "name": "Why'd You Only Call Me When You're High?",
+    "artist": "Arctic Monkeys",
+    "known": true,
+    "themes": [
+      "late-night longing",
+      "one-sided attraction",
+      "substance use"
+    ],
+    "relationship_stance": "frustrated yearning",
+    "mood": "melancholic and restless",
+    "energy": "mid-tempo, brooding",
+    "setting": "late-night alone",
+    "summary": "The narrator laments that a love interest only reaches out when under the influence, set to a moody, bass-driven indie rock groove with a sense of resigned frustration."
+  },
+  "13P5rwmk2EsoFRIz9UCeh9": {
+    "name": "Cool Kids",
+    "artist": "Echosmith",
+    "known": true,
+    "themes": [
+      "fitting in",
+      "social insecurity",
+      "longing for acceptance"
+    ],
+    "relationship_stance": "unrequited social belonging",
+    "mood": "yearning and wistful",
+    "energy": "mid-tempo, pop-rock with a steady beat",
+    "setting": "high school or teenage social scene",
+    "summary": "The song expresses the desire to be part of the popular, confident crowd, set to a bright but melancholic synth-pop melody with a driving rhythm."
   }
 }
