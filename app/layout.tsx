@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   title: "Galaxique Beta 2 — Your Unique Universe",
   description:
     "A space-themed personality visualizer where the stars keep small secrets. Answer a short quiz and your inner universe unfolds in 3D, with a song that matches your vibe.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#080b1c",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
