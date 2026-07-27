@@ -88,6 +88,12 @@
     hsl(var(--background));
 }
 
+/* Full-bleed iOS PWAs render beneath the status bar. Keep floating controls
+   below that inset while preserving the normal offset in Safari and desktop. */
+.safe-area-top-4 {
+  top: calc(env(safe-area-inset-top) + 1rem);
+}
+
 /* Thin custom scrollbar to match the theme. */
 ::-webkit-scrollbar {
   width: 8px;

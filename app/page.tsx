@@ -55,7 +55,7 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="absolute right-4 top-4 sm:right-6 sm:top-6"
+          className="safe-area-top-4 absolute right-4 sm:right-6"
         >
           <LanguageToggle />
         </motion.div>
