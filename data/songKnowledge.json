@@ -3,7 +3,11 @@
     "name": "Apocalypse",
     "artist": "Cigarettes After Sex",
     "known": true,
-    "themes": ["longing", "memory", "intimacy"],
+    "themes": [
+      "longing",
+      "memory",
+      "intimacy"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and melancholic",
     "energy": "still and intimate",
@@ -14,7 +18,11 @@
     "name": "Space Song",
     "artist": "Beach House",
     "known": true,
-    "themes": ["loss", "longing", "cosmic escape"],
+    "themes": [
+      "loss",
+      "longing",
+      "cosmic escape"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "dreamy and melancholic",
     "energy": "restrained",
@@ -25,7 +33,11 @@
     "name": "Andromeda",
     "artist": "Weyes Blood",
     "known": true,
-    "themes": ["cosmic longing", "spiritual connection", "emotional isolation"],
+    "themes": [
+      "cosmic longing",
+      "spiritual connection",
+      "emotional isolation"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and melancholic",
     "energy": "restrained, building",
@@ -36,7 +48,12 @@
     "name": "Holocene",
     "artist": "Bon Iver",
     "known": true,
-    "themes": ["nature", "memory", "transcendence", "smallness"],
+    "themes": [
+      "nature",
+      "memory",
+      "transcendence",
+      "smallness"
+    ],
     "relationship_stance": "awe",
     "mood": "reverent and reflective",
     "energy": "still and intimate",
@@ -47,7 +64,11 @@
     "name": "Everybody Wants to Love You",
     "artist": "Japanese Breakfast",
     "known": true,
-    "themes": ["longing", "devotion", "vulnerability"],
+    "themes": [
+      "longing",
+      "devotion",
+      "vulnerability"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "tender and wistful",
     "energy": "gentle and building",
@@ -58,7 +79,11 @@
     "name": "we fell in love in october",
     "artist": "girl in red",
     "known": true,
-    "themes": ["young love", "autumn nostalgia", "devotion"],
+    "themes": [
+      "young love",
+      "autumn nostalgia",
+      "devotion"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "tender and wistful",
     "energy": "gentle and intimate",
@@ -69,7 +94,11 @@
     "name": "Moon Song",
     "artist": "Phoebe Bridgers",
     "known": true,
-    "themes": ["unrequited love", "self-doubt", "emotional distance"],
+    "themes": [
+      "unrequited love",
+      "self-doubt",
+      "emotional distance"
+    ],
     "relationship_stance": "yearning with resignation",
     "mood": "melancholic and tender",
     "energy": "restrained, intimate",
@@ -80,7 +109,11 @@
     "name": "From Eden",
     "artist": "Hozier",
     "known": true,
-    "themes": ["love as refuge", "flawed intimacy", "escape from darkness"],
+    "themes": [
+      "love as refuge",
+      "flawed intimacy",
+      "escape from darkness"
+    ],
     "relationship_stance": "devoted but wary closeness",
     "mood": "tender and haunted",
     "energy": "restrained, building",
@@ -91,7 +124,11 @@
     "name": "Video Games",
     "artist": "Lana Del Rey",
     "known": true,
-    "themes": ["nostalgia", "devotion", "escapism"],
+    "themes": [
+      "nostalgia",
+      "devotion",
+      "escapism"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and melancholic",
     "energy": "languid and intimate",
@@ -102,7 +139,11 @@
     "name": "Fade Into You",
     "artist": "Mazzy Star",
     "known": true,
-    "themes": ["longing", "emotional distance", "yearning"],
+    "themes": [
+      "longing",
+      "emotional distance",
+      "yearning"
+    ],
     "relationship_stance": "unrequited or distant love",
     "mood": "dreamy and melancholic",
     "energy": "restrained and drifting",
@@ -113,7 +154,11 @@
     "name": "Heaven or Las Vegas",
     "artist": "Cocteau Twins",
     "known": true,
-    "themes": ["rebirth", "transcendence", "devotion"],
+    "themes": [
+      "rebirth",
+      "transcendence",
+      "devotion"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "ethereal and blissful",
     "energy": "buoyant and shimmering",
@@ -124,7 +169,11 @@
     "name": "Tailwhip",
     "artist": "Men I Trust",
     "known": true,
-    "themes": ["nostalgia", "youthful freedom", "fleeting moments"],
+    "themes": [
+      "nostalgia",
+      "youthful freedom",
+      "fleeting moments"
+    ],
     "relationship_stance": "independence",
     "mood": "dreamy and wistful",
     "energy": "restrained, mid-tempo",
@@ -135,7 +184,11 @@
     "name": "Archie, Marry Me",
     "artist": "Alvvays",
     "known": true,
-    "themes": ["marriage proposal", "commitment", "youthful uncertainty"],
+    "themes": [
+      "marriage proposal",
+      "commitment",
+      "youthful uncertainty"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "wistful and hopeful",
     "energy": "driving",
@@ -146,7 +199,11 @@
     "name": "Goodie Bag",
     "artist": "Still Woozy",
     "known": true,
-    "themes": ["infatuation", "vulnerability", "longing"],
+    "themes": [
+      "infatuation",
+      "vulnerability",
+      "longing"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and tender",
     "energy": "bouncy yet relaxed",
@@ -157,7 +214,11 @@
     "name": "Sofia",
     "artist": "Clairo",
     "known": true,
-    "themes": ["young love", "confusion", "self-discovery"],
+    "themes": [
+      "young love",
+      "confusion",
+      "self-discovery"
+    ],
     "relationship_stance": "romantic uncertainty",
     "mood": "dreamy and introspective",
     "energy": "gentle and restrained",
@@ -168,7 +229,11 @@
     "name": "Loving Is Easy",
     "artist": "Rex Orange County, Benny Sings",
     "known": true,
-    "themes": ["effortless love", "simple joy", "contentment"],
+    "themes": [
+      "effortless love",
+      "simple joy",
+      "contentment"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "warm and breezy",
     "energy": "relaxed and upbeat",
@@ -179,7 +244,12 @@
     "name": "First Love/Late Spring",
     "artist": "Mitski",
     "known": true,
-    "themes": ["first love", "vulnerability", "self-doubt", "spring"],
+    "themes": [
+      "first love",
+      "vulnerability",
+      "self-doubt",
+      "spring"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "tender and anxious",
     "energy": "restrained, building",
@@ -190,7 +260,11 @@
     "name": "Soft Sounds from Another Planet",
     "artist": "Japanese Breakfast",
     "known": true,
-    "themes": ["loss", "grief", "memory"],
+    "themes": [
+      "loss",
+      "grief",
+      "memory"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic and reflective",
     "energy": "restrained",
@@ -201,7 +275,11 @@
     "name": "Let It Happen",
     "artist": "Tame Impala",
     "known": true,
-    "themes": ["surrender", "change", "letting go"],
+    "themes": [
+      "surrender",
+      "change",
+      "letting go"
+    ],
     "relationship_stance": "self-reflection",
     "mood": "hypnotic and expansive",
     "energy": "driving and building",
@@ -212,7 +290,11 @@
     "name": "A Hymn",
     "artist": "Khruangbin",
     "known": true,
-    "themes": ["spiritual longing", "devotion", "transcendence"],
+    "themes": [
+      "spiritual longing",
+      "devotion",
+      "transcendence"
+    ],
     "relationship_stance": "awe",
     "mood": "reverent and dreamy",
     "energy": "restrained",
@@ -223,7 +305,11 @@
     "name": "So Many Details",
     "artist": "Toro y Moi",
     "known": true,
-    "themes": ["obsessive thoughts", "longing", "uncertainty"],
+    "themes": [
+      "obsessive thoughts",
+      "longing",
+      "uncertainty"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and anxious",
     "energy": "restrained",
@@ -234,7 +320,11 @@
     "name": "Open",
     "artist": "Rhye",
     "known": true,
-    "themes": ["vulnerability", "desire", "surrender"],
+    "themes": [
+      "vulnerability",
+      "desire",
+      "surrender"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "sensual and tender",
     "energy": "restrained and intimate",
@@ -261,7 +351,11 @@
     "name": "In A Good Way",
     "artist": "Faye Webster",
     "known": true,
-    "themes": ["contentment", "reciprocated love", "everyday romance"],
+    "themes": [
+      "contentment",
+      "reciprocated love",
+      "everyday romance"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "warm and tender",
     "energy": "gentle and steady",
@@ -272,7 +366,11 @@
     "name": "I-80",
     "artist": "Squirrel Flower",
     "known": true,
-    "themes": ["longing", "distance", "travel"],
+    "themes": [
+      "longing",
+      "distance",
+      "travel"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic and reflective",
     "energy": "restrained",
@@ -283,7 +381,11 @@
     "name": "Run Away With Me",
     "artist": "Carly Rae Jepsen",
     "known": true,
-    "themes": ["romantic escape", "desire", "vulnerability"],
+    "themes": [
+      "romantic escape",
+      "desire",
+      "vulnerability"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "hopeful and breathless",
     "energy": "euphoric",
@@ -294,7 +396,11 @@
     "name": "Butterflies",
     "artist": "Kacey Musgraves",
     "known": true,
-    "themes": ["romantic infatuation", "nervous excitement", "vulnerability"],
+    "themes": [
+      "romantic infatuation",
+      "nervous excitement",
+      "vulnerability"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "giddy and tender",
     "energy": "gentle and buoyant",
@@ -305,7 +411,11 @@
     "name": "I Follow Rivers - The Magician Remix",
     "artist": "Lykke Li, The Magician",
     "known": true,
-    "themes": ["obsessive love", "following", "devotion"],
+    "themes": [
+      "obsessive love",
+      "following",
+      "devotion"
+    ],
     "relationship_stance": "romantic obsession",
     "mood": "yearning and hypnotic",
     "energy": "driving and euphoric",
@@ -332,7 +442,11 @@
     "name": "Lights",
     "artist": "Ellie Goulding",
     "known": true,
-    "themes": ["self-discovery", "inner strength", "illumination"],
+    "themes": [
+      "self-discovery",
+      "inner strength",
+      "illumination"
+    ],
     "relationship_stance": "independence",
     "mood": "hopeful and determined",
     "energy": "driving",
@@ -343,7 +457,11 @@
     "name": "Oblivion",
     "artist": "Grimes",
     "known": true,
-    "themes": ["vulnerability", "fear of intimacy", "self-protection"],
+    "themes": [
+      "vulnerability",
+      "fear of intimacy",
+      "self-protection"
+    ],
     "relationship_stance": "guarded distance",
     "mood": "ethereal and anxious",
     "energy": "restrained but pulsing",
@@ -354,7 +472,11 @@
     "name": "The Mother We Share",
     "artist": "CHVRCHES",
     "known": true,
-    "themes": ["loss", "memory", "shared history"],
+    "themes": [
+      "loss",
+      "memory",
+      "shared history"
+    ],
     "relationship_stance": "ambiguous separation",
     "mood": "bittersweet and driving",
     "energy": "propulsive synth-pop",
@@ -365,7 +487,11 @@
     "name": "When I'm Small",
     "artist": "Phantogram",
     "known": true,
-    "themes": ["nostalgia", "longing", "vulnerability"],
+    "themes": [
+      "nostalgia",
+      "longing",
+      "vulnerability"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and melancholic",
     "energy": "restrained but building",
@@ -376,7 +502,11 @@
     "name": "Youth",
     "artist": "Daughter",
     "known": true,
-    "themes": ["loss of innocence", "nostalgia", "fragility"],
+    "themes": [
+      "loss of innocence",
+      "nostalgia",
+      "fragility"
+    ],
     "relationship_stance": "loneliness",
     "mood": "melancholic and tender",
     "energy": "restrained, building",
@@ -388,7 +518,11 @@
     "artist": "London Grammar, ARTY",
     "known": true,
     "grounded": true,
-    "themes": ["fascination and fear", "romantic anxiety", "urgency"],
+    "themes": [
+      "fascination and fear",
+      "romantic anxiety",
+      "urgency"
+    ],
     "relationship_stance": "romantic yearning mixed with fear",
     "mood": "tense and electrifying",
     "energy": "driving",
@@ -399,7 +533,11 @@
     "name": "Skinny Love",
     "artist": "Birdy",
     "known": true,
-    "themes": ["heartbreak", "vulnerability", "loss"],
+    "themes": [
+      "heartbreak",
+      "vulnerability",
+      "loss"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic and fragile",
     "energy": "restrained",
@@ -410,7 +548,11 @@
     "name": "Runaway",
     "artist": "AURORA",
     "known": true,
-    "themes": ["escape", "self-discovery", "vulnerability"],
+    "themes": [
+      "escape",
+      "self-discovery",
+      "vulnerability"
+    ],
     "relationship_stance": "independence",
     "mood": "yearning and introspective",
     "energy": "building, ethereal",
@@ -421,7 +563,11 @@
     "name": "Strangers",
     "artist": "Sigrid",
     "known": true,
-    "themes": ["self-doubt", "emotional distance", "fear of intimacy"],
+    "themes": [
+      "self-doubt",
+      "emotional distance",
+      "fear of intimacy"
+    ],
     "relationship_stance": "guarded vulnerability",
     "mood": "melancholic and introspective",
     "energy": "restrained, building",
@@ -448,7 +594,12 @@
     "name": "telepatía",
     "artist": "Kali Uchis",
     "known": true,
-    "themes": ["longing", "telepathic connection", "distance", "desire"],
+    "themes": [
+      "longing",
+      "telepathic connection",
+      "distance",
+      "desire"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and intimate",
     "energy": "restrained and sensual",
@@ -459,7 +610,11 @@
     "name": "Garden (Say It Like Dat)",
     "artist": "SZA",
     "known": true,
-    "themes": ["vulnerability", "self-doubt", "desire for reassurance"],
+    "themes": [
+      "vulnerability",
+      "self-doubt",
+      "desire for reassurance"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "tender and anxious",
     "energy": "restrained",
@@ -470,7 +625,11 @@
     "name": "Ivy",
     "artist": "Frank Ocean",
     "known": true,
-    "themes": ["nostalgia", "regret", "lost love"],
+    "themes": [
+      "nostalgia",
+      "regret",
+      "lost love"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic and reflective",
     "energy": "restrained",
@@ -481,7 +640,11 @@
     "name": "Dark Red",
     "artist": "Steve Lacy",
     "known": true,
-    "themes": ["infatuation", "vulnerability", "devotion"],
+    "themes": [
+      "infatuation",
+      "vulnerability",
+      "devotion"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "tender and anxious",
     "energy": "restrained",
@@ -492,7 +655,11 @@
     "name": "Get You (feat. Kali Uchis)",
     "artist": "Daniel Caesar, Kali Uchis",
     "known": true,
-    "themes": ["devotion", "vulnerability", "intimacy"],
+    "themes": [
+      "devotion",
+      "vulnerability",
+      "intimacy"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "tender and longing",
     "energy": "still and intimate",
@@ -503,7 +670,12 @@
     "name": "(No One Knows Me) Like the Piano",
     "artist": "Sampha",
     "known": true,
-    "themes": ["motherly love", "nostalgia", "gratitude", "loss"],
+    "themes": [
+      "motherly love",
+      "nostalgia",
+      "gratitude",
+      "loss"
+    ],
     "relationship_stance": "familial devotion",
     "mood": "tender and reflective",
     "energy": "restrained and intimate",
@@ -514,7 +686,11 @@
     "name": "Quarrel",
     "artist": "Moses Sumney",
     "known": true,
-    "themes": ["conflict", "vulnerability", "intimacy"],
+    "themes": [
+      "conflict",
+      "vulnerability",
+      "intimacy"
+    ],
     "relationship_stance": "tension within closeness",
     "mood": "tense and tender",
     "energy": "restrained, simmering",
@@ -525,7 +701,11 @@
     "name": "I Want You Around",
     "artist": "Snoh Aalegra",
     "known": true,
-    "themes": ["longing", "vulnerability", "desire for closeness"],
+    "themes": [
+      "longing",
+      "vulnerability",
+      "desire for closeness"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "tender and wistful",
     "energy": "restrained, simmering",
@@ -536,7 +716,11 @@
     "name": "Universe",
     "artist": "EXO",
     "known": true,
-    "themes": ["cosmic love", "devotion", "eternity"],
+    "themes": [
+      "cosmic love",
+      "devotion",
+      "eternity"
+    ],
     "relationship_stance": "romantic devotion",
     "mood": "dreamy and tender",
     "energy": "gentle and building",
@@ -547,7 +731,11 @@
     "name": "Dreams Come True",
     "artist": "aespa",
     "known": true,
-    "themes": ["aspiration", "self-belief", "determination"],
+    "themes": [
+      "aspiration",
+      "self-belief",
+      "determination"
+    ],
     "relationship_stance": "self-empowerment",
     "mood": "uplifting and determined",
     "energy": "driving and anthemic",
@@ -558,7 +746,12 @@
     "name": "Four Seasons",
     "artist": "TAEYEON",
     "known": true,
-    "themes": ["seasons", "change", "nostalgia", "acceptance"],
+    "themes": [
+      "seasons",
+      "change",
+      "nostalgia",
+      "acceptance"
+    ],
     "relationship_stance": "romantic reflection",
     "mood": "melancholic and tender",
     "energy": "restrained, building",
@@ -569,7 +762,11 @@
     "name": "Star",
     "artist": "Heize",
     "known": true,
-    "themes": ["longing", "distance", "devotion"],
+    "themes": [
+      "longing",
+      "distance",
+      "devotion"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic and tender",
     "energy": "restrained",
@@ -581,7 +778,11 @@
     "artist": "FREEHAND",
     "known": true,
     "grounded": true,
-    "themes": ["being found", "gratitude", "love's transformative power"],
+    "themes": [
+      "being found",
+      "gratitude",
+      "love's transformative power"
+    ],
     "relationship_stance": "being seen and cherished",
     "mood": "warm and hopeful",
     "energy": "gentle and uplifting",
@@ -592,7 +793,11 @@
     "name": "The Less I Know The Better",
     "artist": "Tame Impala",
     "known": true,
-    "themes": ["unrequited love", "jealousy", "self-deception"],
+    "themes": [
+      "unrequited love",
+      "jealousy",
+      "self-deception"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic and wistful",
     "energy": "driving",
@@ -603,7 +808,11 @@
     "name": "Tough Luck",
     "artist": "Laufey",
     "known": true,
-    "themes": ["self-doubt", "romantic frustration", "bad timing"],
+    "themes": [
+      "self-doubt",
+      "romantic frustration",
+      "bad timing"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "wistful and self-deprecating",
     "energy": "gentle and restrained",
@@ -614,7 +823,11 @@
     "name": "Space Oddity - 2015 Remaster",
     "artist": "David Bowie",
     "known": true,
-    "themes": ["isolation", "space exploration", "detachment"],
+    "themes": [
+      "isolation",
+      "space exploration",
+      "detachment"
+    ],
     "relationship_stance": "loneliness",
     "mood": "eerie and melancholic",
     "energy": "restrained",
@@ -626,7 +839,11 @@
     "artist": "Television off",
     "known": true,
     "grounded": true,
-    "themes": ["confession of love", "ending a relationship", "letting go"],
+    "themes": [
+      "confession of love",
+      "ending a relationship",
+      "letting go"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "bittersweet and reflective",
     "energy": "restrained",
@@ -638,7 +855,12 @@
     "artist": "Television off",
     "known": true,
     "grounded": true,
-    "themes": ["memory", "dreams", "painful longing", "escapism"],
+    "themes": [
+      "memory",
+      "dreams",
+      "painful longing",
+      "escapism"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic and wistful",
     "energy": "restrained",
@@ -650,7 +872,11 @@
     "artist": "FREEHAND",
     "known": true,
     "grounded": true,
-    "themes": ["nostalgia", "past love", "cherished memories"],
+    "themes": [
+      "nostalgia",
+      "past love",
+      "cherished memories"
+    ],
     "relationship_stance": "romantic reminiscence",
     "mood": "wistful and tender",
     "energy": "restrained",
@@ -678,7 +904,11 @@
     "name": "คำตอบ ( Answer )",
     "artist": "Safeplanet",
     "known": true,
-    "themes": ["uncertainty", "longing", "self-reflection"],
+    "themes": [
+      "uncertainty",
+      "longing",
+      "self-reflection"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic and introspective",
     "energy": "restrained",
@@ -690,7 +920,12 @@
     "artist": "Safeplanet",
     "known": true,
     "grounded": true,
-    "themes": ["love", "hope", "journey", "imagination"],
+    "themes": [
+      "love",
+      "hope",
+      "journey",
+      "imagination"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "tender and hopeful",
     "energy": "gentle and restrained",
@@ -701,7 +936,11 @@
     "name": "Dive",
     "artist": "Olivia Dean",
     "known": true,
-    "themes": ["vulnerability", "trust", "new love"],
+    "themes": [
+      "vulnerability",
+      "trust",
+      "new love"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "tender and hopeful",
     "energy": "building, then soaring",
@@ -712,7 +951,11 @@
     "name": "Fire for You",
     "artist": "Cannons",
     "known": true,
-    "themes": ["longing", "obsession", "desire"],
+    "themes": [
+      "longing",
+      "obsession",
+      "desire"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and hypnotic",
     "energy": "restrained, building",
@@ -724,7 +967,12 @@
     "artist": "girl in red",
     "known": true,
     "grounded": true,
-    "themes": ["unrequited love", "self-awareness", "being used", "false hope"],
+    "themes": [
+      "unrequited love",
+      "self-awareness",
+      "being used",
+      "false hope"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "intimate and melancholic",
     "energy": "restrained",
@@ -735,7 +983,11 @@
     "name": "I'll Call You Mine",
     "artist": "girl in red",
     "known": true,
-    "themes": ["romantic devotion", "vulnerability", "commitment"],
+    "themes": [
+      "romantic devotion",
+      "vulnerability",
+      "commitment"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "tender and earnest",
     "energy": "building, anthemic",
@@ -762,7 +1014,11 @@
     "name": "Are You Bored Yet? (feat. Clairo)",
     "artist": "Wallows, Clairo",
     "known": true,
-    "themes": ["boredom", "restlessness", "young love"],
+    "themes": [
+      "boredom",
+      "restlessness",
+      "young love"
+    ],
     "relationship_stance": "uncertain longing",
     "mood": "wistful and laid-back",
     "energy": "mid-tempo, relaxed",
@@ -773,7 +1029,11 @@
     "name": "Be Sweet",
     "artist": "Japanese Breakfast",
     "known": true,
-    "themes": ["self-empowerment", "moving on", "setting boundaries"],
+    "themes": [
+      "self-empowerment",
+      "moving on",
+      "setting boundaries"
+    ],
     "relationship_stance": "independence after a breakup",
     "mood": "bright and defiant",
     "energy": "upbeat and driving",
@@ -784,7 +1044,12 @@
     "name": "august",
     "artist": "Taylor Swift",
     "known": true,
-    "themes": ["summer romance", "nostalgia", "longing", "fleeting love"],
+    "themes": [
+      "summer romance",
+      "nostalgia",
+      "longing",
+      "fleeting love"
+    ],
     "relationship_stance": "reminiscent yearning for a past affair",
     "mood": "bittersweet and wistful",
     "energy": "gentle, building to a dreamy swell",
@@ -795,7 +1060,11 @@
     "name": "Lover",
     "artist": "Taylor Swift",
     "known": true,
-    "themes": ["devotion", "domestic bliss", "commitment"],
+    "themes": [
+      "devotion",
+      "domestic bliss",
+      "commitment"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "tender and affectionate",
     "energy": "gentle and swaying",
@@ -806,7 +1075,12 @@
     "name": "cardigan",
     "artist": "Taylor Swift",
     "known": true,
-    "themes": ["lost youth", "nostalgia", "betrayal", "self-worth"],
+    "themes": [
+      "lost youth",
+      "nostalgia",
+      "betrayal",
+      "self-worth"
+    ],
     "relationship_stance": "heartbreak and disillusionment",
     "mood": "melancholic and reflective",
     "energy": "restrained, building to a gentle swell",
@@ -833,7 +1107,11 @@
     "name": "Guilty as Sin?",
     "artist": "Taylor Swift",
     "known": true,
-    "themes": ["forbidden desire", "fantasy", "self-deception"],
+    "themes": [
+      "forbidden desire",
+      "fantasy",
+      "self-deception"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "conflicted and dreamy",
     "energy": "restrained, building tension",
@@ -844,7 +1122,11 @@
     "name": "The Black Dog",
     "artist": "Taylor Swift",
     "known": true,
-    "themes": ["betrayal", "grief", "moving on"],
+    "themes": [
+      "betrayal",
+      "grief",
+      "moving on"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic and bitter",
     "energy": "restrained, building",
@@ -855,7 +1137,11 @@
     "name": "exile (feat. Bon Iver)",
     "artist": "Taylor Swift, Bon Iver",
     "known": true,
-    "themes": ["heartbreak", "miscommunication", "nostalgia"],
+    "themes": [
+      "heartbreak",
+      "miscommunication",
+      "nostalgia"
+    ],
     "relationship_stance": "mutual regret and unresolved longing",
     "mood": "melancholic and reflective",
     "energy": "restrained and building",
@@ -866,7 +1152,12 @@
     "name": "Death Stranding",
     "artist": "CHVRCHES",
     "known": true,
-    "themes": ["connection", "perseverance", "loneliness", "hope"],
+    "themes": [
+      "connection",
+      "perseverance",
+      "loneliness",
+      "hope"
+    ],
     "relationship_stance": "yearning for reconnection",
     "mood": "melancholic yet hopeful",
     "energy": "building, anthemic",
@@ -877,7 +1168,11 @@
     "name": "Here With Me",
     "artist": "Marshmello, CHVRCHES",
     "known": true,
-    "themes": ["longing", "distance", "devotion"],
+    "themes": [
+      "longing",
+      "distance",
+      "devotion"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "wistful and hopeful",
     "energy": "buoyant yet restrained",
@@ -888,7 +1183,11 @@
     "name": "When the Sun Hits",
     "artist": "Slowdive",
     "known": true,
-    "themes": ["longing", "intimacy", "transience"],
+    "themes": [
+      "longing",
+      "intimacy",
+      "transience"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and melancholic",
     "energy": "languid and swirling",
@@ -899,7 +1198,11 @@
     "name": "Like Water",
     "artist": "WENDY",
     "known": true,
-    "themes": ["longing", "emotional vulnerability", "connection"],
+    "themes": [
+      "longing",
+      "emotional vulnerability",
+      "connection"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "tender and wistful",
     "energy": "restrained",
@@ -911,7 +1214,11 @@
     "artist": "WENDY",
     "known": true,
     "grounded": true,
-    "themes": ["self-care", "healing", "hope"],
+    "themes": [
+      "self-care",
+      "healing",
+      "hope"
+    ],
     "relationship_stance": "self-compassion",
     "mood": "warm and comforting",
     "energy": "restrained",
@@ -940,7 +1247,12 @@
     "artist": "FREEHAND",
     "known": true,
     "grounded": true,
-    "themes": ["longing", "memory", "distance", "love enduring"],
+    "themes": [
+      "longing",
+      "memory",
+      "distance",
+      "love enduring"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "nostalgic and tender",
     "energy": "restrained",
@@ -952,7 +1264,11 @@
     "artist": "FREEHAND",
     "known": true,
     "grounded": true,
-    "themes": ["fear of intimacy", "self-doubt", "hidden flaws"],
+    "themes": [
+      "fear of intimacy",
+      "self-doubt",
+      "hidden flaws"
+    ],
     "relationship_stance": "romantic anxiety",
     "mood": "vulnerable and melancholic",
     "energy": "restrained",
@@ -964,7 +1280,11 @@
     "artist": "FREEHAND",
     "known": true,
     "grounded": true,
-    "themes": ["unrequited love", "longing", "transience"],
+    "themes": [
+      "unrequited love",
+      "longing",
+      "transience"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic and wistful",
     "energy": "restrained",
@@ -975,7 +1295,11 @@
     "name": "Moonlight",
     "artist": "Kali Uchis",
     "known": true,
-    "themes": ["desire", "escapism", "intimacy"],
+    "themes": [
+      "desire",
+      "escapism",
+      "intimacy"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and sensual",
     "energy": "languid and smooth",
@@ -986,7 +1310,11 @@
     "name": "Endlessly",
     "artist": "Kali Uchis",
     "known": true,
-    "themes": ["devotion", "eternal love", "vulnerability"],
+    "themes": [
+      "devotion",
+      "eternal love",
+      "vulnerability"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "dreamy and tender",
     "energy": "lush and restrained",
@@ -1014,7 +1342,11 @@
     "name": "Purple Rain",
     "artist": "Prince",
     "known": true,
-    "themes": ["spiritual longing", "reconciliation", "transcendence"],
+    "themes": [
+      "spiritual longing",
+      "reconciliation",
+      "transcendence"
+    ],
     "relationship_stance": "pleading for connection",
     "mood": "melancholic yet hopeful",
     "energy": "building to cathartic",
@@ -1025,7 +1357,11 @@
     "name": "Breathe (In the Air)",
     "artist": "Pink Floyd",
     "known": true,
-    "themes": ["birth", "consciousness", "existential awakening"],
+    "themes": [
+      "birth",
+      "consciousness",
+      "existential awakening"
+    ],
     "relationship_stance": "awe",
     "mood": "serene and contemplative",
     "energy": "restrained and spacious",
@@ -1036,7 +1372,11 @@
     "name": "The Great Gig in the Sky",
     "artist": "Pink Floyd",
     "known": true,
-    "themes": ["mortality", "existential release", "emotional catharsis"],
+    "themes": [
+      "mortality",
+      "existential release",
+      "emotional catharsis"
+    ],
     "relationship_stance": "awe",
     "mood": "transcendent and sorrowful",
     "energy": "swelling then serene",
@@ -1062,7 +1402,11 @@
     "name": "With Or Without You - Remastered 2007",
     "artist": "U2",
     "known": true,
-    "themes": ["longing", "ambivalence", "emotional conflict"],
+    "themes": [
+      "longing",
+      "ambivalence",
+      "emotional conflict"
+    ],
     "relationship_stance": "torn between devotion and frustration",
     "mood": "aching and yearning",
     "energy": "restrained, building to soaring",
@@ -1074,7 +1418,11 @@
     "artist": "Teddy Vogel",
     "known": true,
     "grounded": true,
-    "themes": ["romantic connection", "healing", "vulnerability"],
+    "themes": [
+      "romantic connection",
+      "healing",
+      "vulnerability"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "tender and reflective",
     "energy": "still and intimate",
@@ -1085,7 +1433,11 @@
     "name": "No One Noticed",
     "artist": "The Marías",
     "known": true,
-    "themes": ["invisibility", "longing", "self-doubt"],
+    "themes": [
+      "invisibility",
+      "longing",
+      "self-doubt"
+    ],
     "relationship_stance": "unrequited yearning",
     "mood": "melancholic and dreamy",
     "energy": "restrained",
@@ -1113,7 +1465,11 @@
     "name": "High And Low",
     "artist": "Empire Of The Sun",
     "known": true,
-    "themes": ["longing", "distance", "connection"],
+    "themes": [
+      "longing",
+      "distance",
+      "connection"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and wistful",
     "energy": "mid-tempo, building",
@@ -1125,7 +1481,11 @@
     "artist": "Empire Of The Sun, Danny Ocean, FIFA Sound",
     "known": true,
     "grounded": true,
-    "themes": ["triumph", "unity", "overcoming obstacles"],
+    "themes": [
+      "triumph",
+      "unity",
+      "overcoming obstacles"
+    ],
     "relationship_stance": "celebratory togetherness",
     "mood": "vibrant and uplifting",
     "energy": "euphoric and driving",
@@ -1137,7 +1497,11 @@
     "artist": "Now, Now",
     "known": true,
     "grounded": true,
-    "themes": ["betrayal", "longing", "deception"],
+    "themes": [
+      "betrayal",
+      "longing",
+      "deception"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic and reflective",
     "energy": "restrained",
@@ -1149,7 +1513,11 @@
     "artist": "Haute & Freddy",
     "known": true,
     "grounded": true,
-    "themes": ["self-acceptance", "rebellion", "breaking free"],
+    "themes": [
+      "self-acceptance",
+      "rebellion",
+      "breaking free"
+    ],
     "relationship_stance": "independence",
     "mood": "defiant and playful",
     "energy": "driving",
@@ -1161,7 +1529,11 @@
     "artist": "Lane 8, Kasablanca",
     "known": true,
     "grounded": true,
-    "themes": ["closeness", "nostalgia", "desire for connection"],
+    "themes": [
+      "closeness",
+      "nostalgia",
+      "desire for connection"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "longing and intimate",
     "energy": "restrained",
@@ -1172,7 +1544,11 @@
     "name": "Never Say Die",
     "artist": "CHVRCHES",
     "known": true,
-    "themes": ["resilience", "defiance", "hope"],
+    "themes": [
+      "resilience",
+      "defiance",
+      "hope"
+    ],
     "relationship_stance": "self-empowerment",
     "mood": "determined and anthemic",
     "energy": "driving",
@@ -1183,7 +1559,11 @@
     "name": "Shine",
     "artist": "Olly Alexander (Years & Years)",
     "known": true,
-    "themes": ["self-empowerment", "inner strength", "overcoming adversity"],
+    "themes": [
+      "self-empowerment",
+      "inner strength",
+      "overcoming adversity"
+    ],
     "relationship_stance": "self-love",
     "mood": "uplifting and triumphant",
     "energy": "driving",
@@ -1194,7 +1574,11 @@
     "name": "Cheerleader",
     "artist": "Porter Robinson",
     "known": true,
-    "themes": ["self-doubt", "performance anxiety", "seeking validation"],
+    "themes": [
+      "self-doubt",
+      "performance anxiety",
+      "seeking validation"
+    ],
     "relationship_stance": "loneliness",
     "mood": "anxious yet hopeful",
     "energy": "building, euphoric",
@@ -1222,7 +1606,11 @@
     "name": "Talking to the Moon",
     "artist": "Bruno Mars",
     "known": true,
-    "themes": ["loneliness", "longing", "hope"],
+    "themes": [
+      "loneliness",
+      "longing",
+      "hope"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic and wistful",
     "energy": "restrained, building",
@@ -1250,7 +1638,11 @@
     "name": "I Still Haven't Found What I'm Looking For",
     "artist": "U2",
     "known": true,
-    "themes": ["spiritual longing", "restlessness", "search for meaning"],
+    "themes": [
+      "spiritual longing",
+      "restlessness",
+      "search for meaning"
+    ],
     "relationship_stance": "solitary yearning",
     "mood": "hopeful and earnest",
     "energy": "driving and anthemic",
@@ -1261,7 +1653,11 @@
     "name": "Man I Need",
     "artist": "Olivia Dean",
     "known": true,
-    "themes": ["self-worth", "vulnerability", "emotional honesty"],
+    "themes": [
+      "self-worth",
+      "vulnerability",
+      "emotional honesty"
+    ],
     "relationship_stance": "romantic yearning with self-respect",
     "mood": "tender and introspective",
     "energy": "restrained, building",
@@ -1272,7 +1668,11 @@
     "name": "We Almost Broke Up Again Last Night",
     "artist": "Sabrina Carpenter",
     "known": true,
-    "themes": ["relationship conflict", "vulnerability", "reconciliation"],
+    "themes": [
+      "relationship conflict",
+      "vulnerability",
+      "reconciliation"
+    ],
     "relationship_stance": "turbulent but committed",
     "mood": "tense yet tender",
     "energy": "restrained",
@@ -1283,7 +1683,11 @@
     "name": "BIRDS OF A FEATHER",
     "artist": "Billie Eilish",
     "known": true,
-    "themes": ["closeness", "devotion", "fate"],
+    "themes": [
+      "closeness",
+      "devotion",
+      "fate"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "intimate and tender",
     "energy": "restrained",
@@ -1294,7 +1698,11 @@
     "name": "From The Start",
     "artist": "Laufey",
     "known": true,
-    "themes": ["unrequited love", "hidden feelings", "longing"],
+    "themes": [
+      "unrequited love",
+      "hidden feelings",
+      "longing"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "wistful and tender",
     "energy": "gentle and restrained",
@@ -1305,7 +1713,11 @@
     "name": "Sign of the Times",
     "artist": "Harry Styles",
     "known": true,
-    "themes": ["hope", "escape", "mortality"],
+    "themes": [
+      "hope",
+      "escape",
+      "mortality"
+    ],
     "relationship_stance": "solitary reflection",
     "mood": "melancholic yet uplifting",
     "energy": "building, anthemic",
@@ -1316,7 +1728,12 @@
     "name": "Saturn",
     "artist": "SZA",
     "known": true,
-    "themes": ["self-reflection", "growth", "letting go", "cosmic perspective"],
+    "themes": [
+      "self-reflection",
+      "growth",
+      "letting go",
+      "cosmic perspective"
+    ],
     "relationship_stance": "self-focused independence",
     "mood": "introspective and bittersweet",
     "energy": "restrained, building",
@@ -1327,7 +1744,11 @@
     "name": "Sunsetz",
     "artist": "Cigarettes After Sex",
     "known": true,
-    "themes": ["longing", "memory", "distance"],
+    "themes": [
+      "longing",
+      "memory",
+      "distance"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and melancholic",
     "energy": "still and intimate",
@@ -1338,7 +1759,11 @@
     "name": "Electric Feel",
     "artist": "MGMT",
     "known": true,
-    "themes": ["psychedelic love", "sensory immersion", "natural metaphor"],
+    "themes": [
+      "psychedelic love",
+      "sensory immersion",
+      "natural metaphor"
+    ],
     "relationship_stance": "playful, hypnotic connection",
     "mood": "dreamy and euphoric",
     "energy": "groove-driven, shimmering",
@@ -1349,7 +1774,11 @@
     "name": "About You",
     "artist": "The 1975",
     "known": true,
-    "themes": ["memory", "longing", "identity"],
+    "themes": [
+      "memory",
+      "longing",
+      "identity"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "nostalgic and bittersweet",
     "energy": "restrained, building",
@@ -1360,7 +1789,11 @@
     "name": "Meet Me Halfway",
     "artist": "Black Eyed Peas",
     "known": true,
-    "themes": ["longing", "compromise", "connection"],
+    "themes": [
+      "longing",
+      "compromise",
+      "connection"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "hopeful and pleading",
     "energy": "driving, mid-tempo",
@@ -1371,7 +1804,11 @@
     "name": "A Sky Full of Stars",
     "artist": "Coldplay",
     "known": true,
-    "themes": ["devotion", "overwhelming love", "surrender"],
+    "themes": [
+      "devotion",
+      "overwhelming love",
+      "surrender"
+    ],
     "relationship_stance": "romantic devotion",
     "mood": "euphoric and heartfelt",
     "energy": "driving and anthemic",
@@ -1382,7 +1819,11 @@
     "name": "In My Place",
     "artist": "Coldplay",
     "known": true,
-    "themes": ["longing", "regret", "reconciliation"],
+    "themes": [
+      "longing",
+      "regret",
+      "reconciliation"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic yet hopeful",
     "energy": "restrained, building",
@@ -1393,7 +1834,12 @@
     "name": "traitor",
     "artist": "Olivia Rodrigo",
     "known": true,
-    "themes": ["betrayal", "heartbreak", "jealousy", "moving on"],
+    "themes": [
+      "betrayal",
+      "heartbreak",
+      "jealousy",
+      "moving on"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic and bitter",
     "energy": "restrained, building to cathartic",
@@ -1404,7 +1850,11 @@
     "name": "Mine",
     "artist": "Bazzi",
     "known": true,
-    "themes": ["possessiveness", "devotion", "romantic idealization"],
+    "themes": [
+      "possessiveness",
+      "devotion",
+      "romantic idealization"
+    ],
     "relationship_stance": "possessive devotion",
     "mood": "yearning and confident",
     "energy": "smooth and building",
@@ -1415,7 +1865,11 @@
     "name": "Dreams - 2004 Remaster",
     "artist": "Fleetwood Mac",
     "known": true,
-    "themes": ["longing", "uncertainty", "emotional vulnerability"],
+    "themes": [
+      "longing",
+      "uncertainty",
+      "emotional vulnerability"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic and reflective",
     "energy": "restrained",
@@ -1426,7 +1880,11 @@
     "name": "Drops of Jupiter (Tell Me)",
     "artist": "Train",
     "known": true,
-    "themes": ["self-discovery", "transformation", "cosmic wonder"],
+    "themes": [
+      "self-discovery",
+      "transformation",
+      "cosmic wonder"
+    ],
     "relationship_stance": "romantic yearning and admiration",
     "mood": "hopeful and reflective",
     "energy": "building, anthemic",
@@ -1437,7 +1895,11 @@
     "name": "I'll Be There",
     "artist": "The Jackson 5",
     "known": true,
-    "themes": ["reassurance", "devotion", "presence"],
+    "themes": [
+      "reassurance",
+      "devotion",
+      "presence"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "tender and hopeful",
     "energy": "restrained, building to earnest",
@@ -1448,7 +1910,11 @@
     "name": "Here Comes The Sun - Remastered 2009",
     "artist": "The Beatles",
     "known": true,
-    "themes": ["renewal", "relief", "hope"],
+    "themes": [
+      "renewal",
+      "relief",
+      "hope"
+    ],
     "relationship_stance": "independence",
     "mood": "gentle optimism",
     "energy": "lifting and warm",
@@ -1459,7 +1925,11 @@
     "name": "Glimpse of Us",
     "artist": "Joji",
     "known": true,
-    "themes": ["lost love", "nostalgia", "unrequited longing"],
+    "themes": [
+      "lost love",
+      "nostalgia",
+      "unrequited longing"
+    ],
     "relationship_stance": "yearning for a past love",
     "mood": "melancholic and tender",
     "energy": "restrained",
@@ -1487,7 +1957,12 @@
     "artist": "Violette Wautier",
     "known": true,
     "grounded": true,
-    "themes": ["burnout", "self-doubt", "exhaustion", "surrender"],
+    "themes": [
+      "burnout",
+      "self-doubt",
+      "exhaustion",
+      "surrender"
+    ],
     "relationship_stance": "internal struggle",
     "mood": "vulnerable and weary",
     "energy": "restrained, introspective",
@@ -1499,7 +1974,11 @@
     "artist": "Dept",
     "known": true,
     "grounded": true,
-    "themes": ["regret", "past mistakes", "longing"],
+    "themes": [
+      "regret",
+      "past mistakes",
+      "longing"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic and reflective",
     "energy": "restrained",
@@ -1511,7 +1990,11 @@
     "artist": "Dept",
     "known": true,
     "grounded": true,
-    "themes": ["love", "transformation", "discovery"],
+    "themes": [
+      "love",
+      "transformation",
+      "discovery"
+    ],
     "relationship_stance": "romantic devotion",
     "mood": "hopeful and tender",
     "energy": "restrained yet uplifting",
@@ -1523,7 +2006,11 @@
     "artist": "fellow fellow",
     "known": true,
     "grounded": true,
-    "themes": ["cosmic romance", "transformation", "shared wonder"],
+    "themes": [
+      "cosmic romance",
+      "transformation",
+      "shared wonder"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and hopeful",
     "energy": "gentle and building",
@@ -1535,7 +2022,11 @@
     "artist": "FOLK9",
     "known": true,
     "grounded": true,
-    "themes": ["comfort", "nostalgia", "transience"],
+    "themes": [
+      "comfort",
+      "nostalgia",
+      "transience"
+    ],
     "relationship_stance": "soothing care for a loved one",
     "mood": "gentle and reflective",
     "energy": "restrained and calming",
@@ -1563,7 +2054,12 @@
     "artist": "loserpop",
     "known": true,
     "grounded": true,
-    "themes": ["longing", "hope", "guidance", "heartbreak"],
+    "themes": [
+      "longing",
+      "hope",
+      "guidance",
+      "heartbreak"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic yet hopeful",
     "energy": "restrained",
@@ -1575,7 +2071,11 @@
     "artist": "Sqweez Animal",
     "known": true,
     "grounded": true,
-    "themes": ["forbidden love", "heartbreak", "secrecy"],
+    "themes": [
+      "forbidden love",
+      "heartbreak",
+      "secrecy"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic and regretful",
     "energy": "restrained",
@@ -1587,7 +2087,11 @@
     "artist": "AYLA's",
     "known": true,
     "grounded": true,
-    "themes": ["loss", "memory", "farewell"],
+    "themes": [
+      "loss",
+      "memory",
+      "farewell"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic and reflective",
     "energy": "restrained",
@@ -1615,7 +2119,11 @@
     "name": "I Love You So",
     "artist": "The Walters",
     "known": true,
-    "themes": ["unrequited love", "longing", "self-doubt"],
+    "themes": [
+      "unrequited love",
+      "longing",
+      "self-doubt"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic and wistful",
     "energy": "gentle and restrained",
@@ -1627,7 +2135,11 @@
     "artist": "Daniel Pemberton",
     "known": true,
     "grounded": true,
-    "themes": ["awe", "wonder", "cosmic beauty"],
+    "themes": [
+      "awe",
+      "wonder",
+      "cosmic beauty"
+    ],
     "relationship_stance": "awe",
     "mood": "emotional, uplifting",
     "energy": "swelling, majestic",
@@ -1638,7 +2150,11 @@
     "name": "strawberry moon",
     "artist": "IU",
     "known": true,
-    "themes": ["nostalgia", "tender love", "cherished moments"],
+    "themes": [
+      "nostalgia",
+      "tender love",
+      "cherished moments"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "warm and dreamy",
     "energy": "gentle and swaying",
@@ -1649,7 +2165,11 @@
     "name": "bittersweet",
     "artist": "Madison Beer",
     "known": true,
-    "themes": ["toxic love", "emotional conflict", "self-awareness"],
+    "themes": [
+      "toxic love",
+      "emotional conflict",
+      "self-awareness"
+    ],
     "relationship_stance": "conflicted attachment",
     "mood": "melancholic yet defiant",
     "energy": "restrained, building",
@@ -1660,7 +2180,11 @@
     "name": "bad enough",
     "artist": "Madison Beer",
     "known": true,
-    "themes": ["self-doubt", "emotional vulnerability", "fear of rejection"],
+    "themes": [
+      "self-doubt",
+      "emotional vulnerability",
+      "fear of rejection"
+    ],
     "relationship_stance": "anxious longing",
     "mood": "melancholic and introspective",
     "energy": "restrained, building tension",
@@ -1672,7 +2196,12 @@
     "artist": "Ariana Grande",
     "known": true,
     "grounded": true,
-    "themes": ["regret", "fame and fandom", "self-blame", "defiance"],
+    "themes": [
+      "regret",
+      "fame and fandom",
+      "self-blame",
+      "defiance"
+    ],
     "relationship_stance": "conflicted regret",
     "mood": "melancholic yet defiant",
     "energy": "restrained",
@@ -1683,7 +2212,11 @@
     "name": "11:11",
     "artist": "TAEYEON",
     "known": true,
-    "themes": ["time", "longing", "wishful thinking"],
+    "themes": [
+      "time",
+      "longing",
+      "wishful thinking"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic and hopeful",
     "energy": "restrained",
@@ -1712,7 +2245,11 @@
     "artist": "Holly Humberstone",
     "known": true,
     "grounded": true,
-    "themes": ["love and loss", "human experience", "emotional vulnerability"],
+    "themes": [
+      "love and loss",
+      "human experience",
+      "emotional vulnerability"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "bittersweet",
     "energy": "euphoric",
@@ -1741,7 +2278,11 @@
     "artist": "BLOND:ISH",
     "known": true,
     "grounded": true,
-    "themes": ["self-acceptance", "self-worth", "inner struggle"],
+    "themes": [
+      "self-acceptance",
+      "self-worth",
+      "inner struggle"
+    ],
     "relationship_stance": "self-love",
     "mood": "introspective and uplifting",
     "energy": "restrained",
@@ -1752,7 +2293,11 @@
     "name": "Here's to Never Growing Up",
     "artist": "Avril Lavigne",
     "known": true,
-    "themes": ["youthful rebellion", "nostalgia", "living in the moment"],
+    "themes": [
+      "youthful rebellion",
+      "nostalgia",
+      "living in the moment"
+    ],
     "relationship_stance": "playful connection",
     "mood": "carefree and defiant",
     "energy": "driving",
@@ -1763,7 +2308,11 @@
     "name": "Good Goodbye",
     "artist": "HWASA",
     "known": true,
-    "themes": ["goodbye", "self-empowerment", "moving on"],
+    "themes": [
+      "goodbye",
+      "self-empowerment",
+      "moving on"
+    ],
     "relationship_stance": "independence",
     "mood": "defiant yet wistful",
     "energy": "mid-tempo, driving",
@@ -1774,7 +2323,11 @@
     "name": "If This Was A Movie",
     "artist": "Taylor Swift",
     "known": true,
-    "themes": ["nostalgia", "heartbreak", "what-if"],
+    "themes": [
+      "nostalgia",
+      "heartbreak",
+      "what-if"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic and wistful",
     "energy": "restrained",
@@ -1785,7 +2338,11 @@
     "name": "Electric Love",
     "artist": "BØRNS",
     "known": true,
-    "themes": ["infatuation", "electric connection", "youthful passion"],
+    "themes": [
+      "infatuation",
+      "electric connection",
+      "youthful passion"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "dreamy and euphoric",
     "energy": "buoyant and driving",
@@ -1796,7 +2353,11 @@
     "name": "Linger - Remastered 2026",
     "artist": "The Cranberries",
     "known": true,
-    "themes": ["vulnerability", "unrequited love", "regret"],
+    "themes": [
+      "vulnerability",
+      "unrequited love",
+      "regret"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic and tender",
     "energy": "restrained",
@@ -1807,7 +2368,11 @@
     "name": "Can I Call You Tonight?",
     "artist": "Dayglow",
     "known": true,
-    "themes": ["late-night longing", "uncertainty", "vulnerability"],
+    "themes": [
+      "late-night longing",
+      "uncertainty",
+      "vulnerability"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "wistful and hopeful",
     "energy": "buoyant but restrained",
@@ -1818,7 +2383,11 @@
     "name": "Love",
     "artist": "Lana Del Rey",
     "known": true,
-    "themes": ["romantic devotion", "vulnerability", "transformation"],
+    "themes": [
+      "romantic devotion",
+      "vulnerability",
+      "transformation"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "tender and intimate",
     "energy": "restrained",
@@ -1829,7 +2398,11 @@
     "name": "Redbone",
     "artist": "Childish Gambino",
     "known": true,
-    "themes": ["paranoia", "betrayal", "self-preservation"],
+    "themes": [
+      "paranoia",
+      "betrayal",
+      "self-preservation"
+    ],
     "relationship_stance": "distrustful caution",
     "mood": "tense and groovy",
     "energy": "restrained but simmering",
@@ -1840,7 +2413,12 @@
     "name": "Ride",
     "artist": "Lana Del Rey",
     "known": true,
-    "themes": ["escape", "freedom", "rebellion", "self-discovery"],
+    "themes": [
+      "escape",
+      "freedom",
+      "rebellion",
+      "self-discovery"
+    ],
     "relationship_stance": "independence",
     "mood": "defiant and wistful",
     "energy": "driving",
@@ -1851,7 +2429,11 @@
     "name": "Why'd You Only Call Me When You're High?",
     "artist": "Arctic Monkeys",
     "known": true,
-    "themes": ["late-night longing", "one-sided attraction", "substance use"],
+    "themes": [
+      "late-night longing",
+      "one-sided attraction",
+      "substance use"
+    ],
     "relationship_stance": "frustrated yearning",
     "mood": "melancholic and restless",
     "energy": "mid-tempo, brooding",
@@ -1862,7 +2444,11 @@
     "name": "Cool Kids",
     "artist": "Echosmith",
     "known": true,
-    "themes": ["fitting in", "social insecurity", "longing for acceptance"],
+    "themes": [
+      "fitting in",
+      "social insecurity",
+      "longing for acceptance"
+    ],
     "relationship_stance": "unrequited social belonging",
     "mood": "yearning and wistful",
     "energy": "mid-tempo, pop-rock with a steady beat",
@@ -1873,7 +2459,11 @@
     "name": "In Too Deep",
     "artist": "Franc Moody",
     "known": true,
-    "themes": ["love", "longing", "nostalgia"],
+    "themes": [
+      "love",
+      "longing",
+      "nostalgia"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "melancholic",
     "energy": "driving",
@@ -1885,7 +2475,11 @@
     "artist": "CAPYAC",
     "known": true,
     "grounded": true,
-    "themes": ["love", "impatience", "yearning"],
+    "themes": [
+      "love",
+      "impatience",
+      "yearning"
+    ],
     "relationship_stance": "romantic yearning",
     "mood": "longing",
     "energy": "driving",
@@ -1896,7 +2490,11 @@
     "name": "Turn",
     "artist": "The Wombats",
     "known": true,
-    "themes": ["heartbreak", "nostalgia", "longing"],
+    "themes": [
+      "heartbreak",
+      "nostalgia",
+      "longing"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "melancholic",
     "energy": "restrained",
@@ -1907,7 +2505,11 @@
     "name": "A Moment Apart",
     "artist": "ODESZA",
     "known": true,
-    "themes": ["connection", "introspection", "harmony"],
+    "themes": [
+      "connection",
+      "introspection",
+      "harmony"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "warm",
     "energy": "driving",
@@ -1919,7 +2521,12 @@
     "artist": "SIENNA SPIRO",
     "known": true,
     "grounded": true,
-    "themes": ["stubborn love", "inner conflict", "pride", "heartbreak"],
+    "themes": [
+      "stubborn love",
+      "inner conflict",
+      "pride",
+      "heartbreak"
+    ],
     "relationship_stance": "heartbreak",
     "mood": "heartbreaking",
     "energy": "restrained",
@@ -1930,11 +2537,254 @@
     "name": "Fortnight (feat. Post Malone)",
     "artist": "Taylor Swift, Post Malone",
     "known": true,
-    "themes": ["nostalgia", "reflection", "growth", "friendship"],
+    "themes": [
+      "nostalgia",
+      "reflection",
+      "growth",
+      "friendship"
+    ],
     "relationship_stance": "secure closeness",
     "mood": "melancholic",
     "energy": "driving",
     "setting": "late-night alone",
     "summary": "The song reflects on a close friendship and the changes that have occurred over time, with a mix of sadness and warmth, set to a catchy, guitar-driven melody."
+  },
+  "24VfUtHxbkCrscWC00toom": {
+    "name": "ความทรงจำ",
+    "artist": "Musketeers",
+    "known": true,
+    "grounded": true,
+    "themes": [
+      "nostalgia",
+      "longing",
+      "memories"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "reflective",
+    "summary": "The song reflects on past memories and the enduring presence of love, with a melancholic and restrained musical character."
+  },
+  "6SAcZT7H44417uxybshTEy": {
+    "name": "จากกันโดยสมบูรณ์",
+    "artist": "guncharlie",
+    "known": true,
+    "grounded": true,
+    "themes": [
+      "heartbreak",
+      "closure",
+      "growth"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "reflective",
+    "summary": "The song explores the complex emotions of a relationship that has gone through cycles of breaking up and reconciling, ultimately leading to a complete parting, with a soft and introspective musical arrangement."
+  },
+  "1LeItUMezKA1HdCHxYICed": {
+    "name": "Say My Name",
+    "artist": "ODESZA, Zyra",
+    "known": true,
+    "themes": [
+      "longing",
+      "connection",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "setting": "late-night alone",
+    "summary": "The song explores a deep sense of longing and yearning for a lost connection, with a blend of electronic and organic instrumentation creating a driving yet melancholic atmosphere."
+  },
+  "2PP99Q3WvAlEongTB8PlLS": {
+    "name": "wanna be yours (อยากให้เธอรัก)",
+    "artist": "Violette Wautier",
+    "known": true,
+    "grounded": true,
+    "themes": [
+      "longing",
+      "love",
+      "desire",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song expresses a deep desire to be loved and seen, with a soft and delicate musical arrangement that underscores the singer's vulnerability and longing for connection."
+  },
+  "3GZD6HmiNUhxXYf8Gch723": {
+    "name": "Lost",
+    "artist": "Frank Ocean",
+    "known": true,
+    "themes": [
+      "longing",
+      "nostalgia",
+      "reflection"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song explores feelings of isolation and longing, with a soft, intimate sound and a sense of quiet reflection."
+  },
+  "1CSAUEapYQQOD50ardFG0K": {
+    "name": "Glide",
+    "artist": "NEIKED, Portugal. The Man",
+    "known": true,
+    "themes": [
+      "dreamy",
+      "nostalgic",
+      "longing",
+      "escape"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "setting": "late-night alone",
+    "summary": "The song explores a sense of longing and escape, with a dreamy and nostalgic atmosphere, driven by a steady beat and melancholic vocals."
+  },
+  "7982sGZuvo5OXsY6REzgIn": {
+    "name": "Boom Clap",
+    "artist": "Charli xcx",
+    "known": true,
+    "themes": [
+      "love",
+      "heartbreak",
+      "nostalgia"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "driving",
+    "setting": "late-night alone",
+    "summary": "The song explores the aftermath of a relationship, with a mix of sadness and longing, set to a catchy, upbeat pop melody."
+  },
+  "75mFrseCKSI6Nz8WANXq90": {
+    "name": "ใจฉันตามเธอไป",
+    "artist": "YOUNGOHM",
+    "known": true,
+    "grounded": true,
+    "themes": [
+      "love",
+      "pain",
+      "longing",
+      "struggle"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "introspective",
+    "summary": "The song expresses a deep longing and love for someone, acknowledging the pain and darkness that comes with it, set to a restrained and melancholic melody."
+  },
+  "3xAsJQO4g5ZBUL6U6k5CzW": {
+    "name": "Sunset In Pattaya",
+    "artist": "YOUNGOHM",
+    "known": true,
+    "grounded": true,
+    "themes": [
+      "romantic",
+      "nature",
+      "evening",
+      "connection"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "romantic",
+    "energy": "still and intimate",
+    "setting": "coastal evening",
+    "summary": "The song describes a romantic evening at the beach in Pattaya, with the singer and their partner enjoying the sunset and each other's company, set to a gentle and intimate musical backdrop."
+  },
+  "75enpZYDT6k0PNKu6SJ4W5": {
+    "name": "4am",
+    "artist": "girl in red",
+    "known": true,
+    "themes": [
+      "introspection",
+      "vulnerability",
+      "longing",
+      "self-reflection"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "setting": "late-night alone",
+    "summary": "The song explores feelings of isolation and introspection, with a soft, intimate sound and lyrics that delve into personal struggles and self-reflection."
+  },
+  "0l4DTppOxy7NUaEcwXuOb6": {
+    "name": "Animal",
+    "artist": "Neon Trees",
+    "known": true,
+    "themes": [
+      "self-acceptance",
+      "confidence",
+      "individuality"
+    ],
+    "relationship_stance": "independence",
+    "mood": "defiant",
+    "energy": "driving",
+    "setting": "anywhere, anytime",
+    "summary": "The song is about embracing one's unique qualities and not conforming to societal expectations, with a powerful and energetic rock sound."
+  },
+  "3pDGJRDN3p6kCNZcD97FYY": {
+    "name": "Cosmic",
+    "artist": "Red Velvet",
+    "known": true,
+    "themes": [
+      "space",
+      "dreamy",
+      "fantasy",
+      "escape"
+    ],
+    "relationship_stance": "awe",
+    "mood": "whimsical",
+    "energy": "euphoric",
+    "setting": "late-night alone",
+    "summary": "The song explores a fantastical journey through space, with a dreamy and euphoric sound that evokes a sense of wonder and escape."
+  },
+  "0kN8xEmgMW9mh7UmDYHlJP": {
+    "name": "Versace on the Floor",
+    "artist": "Bruno Mars",
+    "known": true,
+    "themes": [
+      "luxury",
+      "love",
+      "desire",
+      "intimacy"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "sensual",
+    "energy": "driving",
+    "setting": "late-night together",
+    "summary": "The song expresses a deep desire and admiration for a lover, with a smooth and sultry R&B sound, featuring a prominent bassline and a catchy, repetitive hook."
+  },
+  "0PG9fbaaHFHfre2gUVo7AN": {
+    "name": "Please Me",
+    "artist": "Cardi B, Bruno Mars",
+    "known": true,
+    "themes": [
+      "romance",
+      "desire",
+      "intimacy",
+      "passion"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "playful",
+    "energy": "driving",
+    "setting": "late-night together",
+    "summary": "The song is about a couple's intimate and passionate connection, with Cardi B and Bruno Mars expressing their desire to please each other, set to a lively and rhythmic beat."
+  },
+  "1G93i9ga7ZPEOqpiNhM1mq": {
+    "name": "I Wanna Fuck You",
+    "artist": "Snoop Dogg, Akon",
+    "known": true,
+    "themes": [
+      "desire",
+      "seduction",
+      "intimacy"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "provocative",
+    "energy": "driving",
+    "setting": "late-night alone",
+    "summary": "The song is a bold and explicit expression of sexual desire, with a heavy bass-driven beat and a seductive, rhythmic flow."
   }
 }
