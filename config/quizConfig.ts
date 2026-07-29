@@ -15,7 +15,7 @@ export const quizConfig = {
   /** Thematic lens the questions are written through. */
   theme: "the cosmos, nature, connection, and inner worlds",
   /** Emotional tone of the questions. */
-  tone: "warm, dreamy, honest, and varied — include light, playful, and connective angles alongside reflective ones",
+  tone: "honest, varied, and emotionally wide-ranging — from warm and playful to dark, intense, and private",
   /** OpenRouter model id. deepseek/deepseek-v4-flash: ~$0.09/M input,
    *  $0.18/M output, ~0.7-1.1s P50 latency, and a very low structured-output
    *  error rate (~0.2-0.6% on its best provider routes) — cheaper than
@@ -74,6 +74,19 @@ export const QUESTION_ANGLES = [
   "A piece of media (book, show, film, game) that changed how the user sees something",
   "How the user likes to be comforted when they're down — words, silence, presence, distraction, or something else",
   "The first thing the user notices about someone new — MUST bake 2-3 concrete example anchors into the question wording (e.g. 'What's the first thing you notice about someone new — their energy, how they talk, or something else?')",
+  // Dark, intense, private, and inward
+  "What the user does when they need to be completely alone — not to recharge, but to disappear for a while",
+  "A thought or feeling the user keeps private, even from people close to them",
+  "What intensity looks like for the user — a drive, a fixation, or something they feel very strongly",
+  "Something the user is quietly driven or ambitious about, even if they don't say it out loud",
+  "A darkness or melancholy the user sits with comfortably — not a problem to fix, just a part of them",
+  "What the user avoids or fears most, and how that shapes their choices",
+  "How the user handles conflict or confrontation — do they meet it, deflect it, or walk away?",
+  "A time the user had to be resilient under pressure — what carried them through",
+  "What mystery, the unknown, or the vast means to the user — do they seek it or let it be?",
+  "How the user relates to solitude versus being alone — is it a refuge, a weight, or both?",
+  "An emotion the user feels more deeply than most people seem to",
+  "What the user does when they feel restless or unsettled and can't explain why",
 ] as const;
 
 /** Song era/origin pools used to mechanically force variety in the

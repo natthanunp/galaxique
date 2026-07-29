@@ -178,6 +178,23 @@ export interface SongKnowledgeEntry {
    *  generation model wasn't confident from memory alone — mostly affects
    *  non-English/niche tracks) rather than the model's direct recall. */
   grounded?: boolean;
+  /** The single best-fit vibe for this track's overall emotional character,
+   *  mapping to the app's vibe enum. Lets the reveal LLM score song
+   *  candidates deterministically instead of inferring from free-text
+   *  mood/energy fields. Required when known:true. */
+  vibe?: "cute" | "cozy" | "mysterious" | "intense" | "whimsical";
+  /** 1-2 celestial types this song's vibe naturally pairs with, e.g.
+   *  ["black_hole"] for a dark, inward track or ["neutron_star"] for a
+   *  high-energy one. Lets the LLM see which cosmic object a track suits. */
+  celestial_affinity?: ("galaxy" | "black_hole" | "neutron_star")[];
+  /** 1-5 intensity scale (1 = still/ambient, 3 = mid-tempo, 5 = driving/
+   *  euphoric) for precise energy matching beyond free-text. */
+  intensity?: number;
+  /** True if this is a Thai-language song or a Thai artist targeting a Thai
+   *  audience. Used to filter the catalog by UI language: English users get
+   *  only non-Thai songs; Thai users get the full catalog. Replaces the
+   *  fragile script-detection heuristic in app/api/analyze/route.ts. */
+  is_thai?: boolean;
 }
 
 /** A playlist candidate merged with its cached knowledge descriptor, if any. */

@@ -51,7 +51,7 @@ export function buildQuizSystemPrompt(
 
   return `Create a ${quizConfig.questionCount}-question personality quiz for "Your Unique Universe", written entirely in ${languageName}.
 
-Each question needs a distinct, durable identity angle: instincts, values, emotional patterns, comforts, or ways of relating. Avoid shallow preferences and generic personality-test filler. The batch must cover different facets, must not be all dark or introspective, and must include joy, play, curiosity, warmth, connection, or everyday delight.
+Each question needs a distinct, durable identity angle: instincts, values, emotional patterns, comforts, or ways of relating. Avoid shallow preferences and generic personality-test filler. The batch must span the full emotional range — include warm/connective angles AND dark/introspective/intense angles. Avoid an all-warm batch just as much as an all-dark one. Roughly 3-4 questions should lean warm/connective, 3-4 should lean dark/intense/private, and the rest reflective.
 
 Reference angles (inspiration only; do not copy or lightly reword):
 ${formatAnglesForPrompt(exampleAngles)}
@@ -64,7 +64,7 @@ ${
 For each item:
 - Invent one concise angle (not a restatement of its question), written in English regardless of the quiz language (it's stripped before the client ever sees it).
 - Write one clear, concrete question. ${questionLengthInstruction} No metaphors, clichés, or double questions. ${languageInstruction}
-- Supply exactly 4 distinct, plausible answer options. ${optionLengthInstruction} Every option must express a different choice; never repeat an option, even with changed punctuation or spacing.
+- Supply exactly 4 distinct, plausible answer options. ${optionLengthInstruction} Every option must express a different choice; never repeat an option, even with changed punctuation or spacing. Within each question, the 4 options should span an emotional range — e.g. one warm/outward, one private/inward, one intense/driven, one playful/light — so users can signal their actual emotional temperature, not just pick the least-warm warm option.
 - Vary the question openings across the batch. Do not reuse one sentence template for several questions.
 
 Tone: ${quizConfig.tone}

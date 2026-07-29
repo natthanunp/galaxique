@@ -82,7 +82,7 @@ function asStringList(value: unknown, limit: number): string[] {
 function migratePersistedQuizState(state: unknown): PersistedQuizState {
   const persisted = (state ?? {}) as Partial<PersistedQuizState>;
   return {
-    language: isLanguage(persisted.language) ? persisted.language : "en",
+    language: isLanguage(persisted.language) ? persisted.language : "th",
     questions: [],
     answers: [],
     reveal: null,
@@ -94,7 +94,7 @@ function migratePersistedQuizState(state: unknown): PersistedQuizState {
 export const useQuizStore = create<QuizState>()(
   persist(
     (set) => ({
-      language: "en",
+      language: "th",
       questions: [],
       answers: [],
       reveal: null,

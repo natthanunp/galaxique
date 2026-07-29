@@ -39,7 +39,7 @@ interface AnalyzeBody {
  * fallback inference is needed.
  */
 function resolveLanguage(value: unknown): Language {
-  return value === "en" || value === "th" ? value : "en";
+  return value === "en" || value === "th" ? value : "th";
 }
 
 interface ScoredSongCandidate {
@@ -80,6 +80,14 @@ function benchMs(since: bigint): number {
 const CATALOG_SAMPLE_SIZE = 36;
 
 function isThaiTrack(track: EnrichedPlaylistCandidate): boolean {
+  // Prefer the explicit is_thai flag from the curated knowledge cache — it
+  // correctly catches Thai artists with English track names (e.g. YOUNGOHM's
+  // "Sunset In Pattaya") that the script-detection heuristic below would miss.
+  if (typeof track.knowledge?.is_thai === "boolean") {
+    return track.knowledge.is_thai;
+  }
+  // Fallback for tracks without a knowledge entry (known:false or missing):
+  // detect Thai script in name/artist, or the word "thai" in the summary.
   const thaiScript = /\p{Script=Thai}/u;
   return (
     thaiScript.test(track.name) ||

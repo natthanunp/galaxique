@@ -139,7 +139,11 @@ Otherwise, respond with ONLY this JSON object (no markdown, no commentary):
   "mood": "one short phrase",
   "energy": "one short phrase, e.g. still and intimate, driving, euphoric, restrained",
   "setting": "one short phrase, e.g. late-night alone, sunlit and social",
-  "summary": "one sentence describing the lyrical or musical premise and sonic character, in your own words, no lyric quotes"
+  "summary": "one sentence describing the lyrical or musical premise and sonic character, in your own words, no lyric quotes",
+  "vibe": "one of: cute, cozy, mysterious, intense, whimsical. Most songs in a dreamy/indie playlist are cozy or mysterious — reserve intense for tracks that are genuinely dark, anguished, confrontational, or high-stakes emotional turmoil. cozy = warm, comforting, tender, nostalgic warmth (most gentle indie/dream-pop love songs are cozy); cute = light, affectionate, openly warm, optimistic; mysterious = eerie, private, ambiguous, dreamlike, enigmatic; intense = genuinely dark, tense, brooding, anguished, confrontational; whimsical = surreal, playful, imaginative, delightfully odd. A driving beat does NOT make a song intense — a driving love song is cozy or whimsical. A melancholic but gentle song is cozy or mysterious, NOT intense.",
+  "celestial_affinity": ["1-2 of: galaxy, black_hole, neutron_star — based on the song's EMOTIONAL DIRECTION, NOT its mood or energy level. Mood (sad/melancholic) is NOT the same as direction (inward vs outward). galaxy = outward, expansive, connective, self-expressive — songs about love, longing for connection, romantic yearning, belonging, celebration, self-empowerment, self-love, uplift, freedom, or play are GALAXY even if they sound melancholic (yearning for someone = reaching outward). black_hole = inward, withdrawn, solitary, drawn to darkness — only songs about solitude as a state (not longing for someone), emotional withdrawal, genuine darkness, paranoia, or deep introspection with no outward pull. neutron_star = concentrated, disciplined, ambitious, driven, high-pressure — ONLY songs about determination, ambition, fierce drive, or resilience UNDER PRESSURE (not just any upbeat/empowering song). Self-love/self-empowerment songs are GALAXY (outward self-expression), NOT neutron_star. A melancholic love song is GALAXY (it yearns outward), NOT black_hole."],
+  "intensity": "integer 1-5 (1=still/ambient, 2=restrained/gentle, 3=mid-tempo, 4=driving, 5=euphoric/anthemic)",
+  "is_thai": "true if this is a Thai-language song or a Thai artist targeting a Thai audience (e.g. lyrics in Thai, or a Thai indie/pop artist like FREEHAND, Safeplanet, Dept, loserpop, YOUNGOHM, Television off, Hugo, fellow fellow, FOLK9, Sqweez Animal, AYLA's, Temper City, guncharlie, Musketeers, PURPEECH, LANDOKMAI, Violette Wautier); false for English/international songs. A Thai artist singing in English to an international audience is still is_thai:true if they are primarily known in the Thai music scene."
 }
 
 Do not infer meaning from the title, artist reputation, genre stereotype, or
@@ -231,7 +235,11 @@ Otherwise, respond with ONLY this JSON object (no markdown, no commentary):
   "mood": "one short phrase",
   "energy": "one short phrase, e.g. still and intimate, driving, euphoric, restrained",
   "setting": "one short phrase, e.g. late-night alone, sunlit and social",
-  "summary": "one sentence describing the lyrical premise and sonic character, in your own words, no lyric quotes, based only on the provided excerpts"
+  "summary": "one sentence describing the lyrical premise and sonic character, in your own words, no lyric quotes, based only on the provided excerpts",
+  "vibe": "one of: cute, cozy, mysterious, intense, whimsical. Most songs in a dreamy/indie playlist are cozy or mysterious — reserve intense for tracks that are genuinely dark, anguished, confrontational, or high-stakes emotional turmoil. cozy = warm, comforting, tender, nostalgic warmth (most gentle indie/dream-pop love songs are cozy); cute = light, affectionate, openly warm, optimistic; mysterious = eerie, private, ambiguous, dreamlike, enigmatic; intense = genuinely dark, tense, brooding, anguished, confrontational; whimsical = surreal, playful, imaginative, delightfully odd. A driving beat does NOT make a song intense — a driving love song is cozy or whimsical. A melancholic but gentle song is cozy or mysterious, NOT intense.",
+  "celestial_affinity": ["1-2 of: galaxy, black_hole, neutron_star — based on the song's EMOTIONAL DIRECTION, NOT its mood or energy level. Mood (sad/melancholic) is NOT the same as direction (inward vs outward). galaxy = outward, expansive, connective, self-expressive — songs about love, longing for connection, romantic yearning, belonging, celebration, self-empowerment, self-love, uplift, freedom, or play are GALAXY even if they sound melancholic (yearning for someone = reaching outward). black_hole = inward, withdrawn, solitary, drawn to darkness — only songs about solitude as a state (not longing for someone), emotional withdrawal, genuine darkness, paranoia, or deep introspection with no outward pull. neutron_star = concentrated, disciplined, ambitious, driven, high-pressure — ONLY songs about determination, ambition, fierce drive, or resilience UNDER PRESSURE (not just any upbeat/empowering song). Self-love/self-empowerment songs are GALAXY (outward self-expression), NOT neutron_star. A melancholic love song is GALAXY (it yearns outward), NOT black_hole."],
+  "intensity": "integer 1-5 (1=still/ambient, 2=restrained/gentle, 3=mid-tempo, 4=driving, 5=euphoric/anthemic)",
+  "is_thai": "true if this is a Thai-language song or a Thai artist targeting a Thai audience (e.g. lyrics in Thai, or a Thai indie/pop artist); false for English/international songs. A Thai artist singing in English to an international audience is still is_thai:true if they are primarily known in the Thai music scene."
 }`;
 }
 
@@ -272,6 +280,31 @@ async function callOpenRouter(userPrompt) {
   return JSON.parse(fenced?.[1]?.trim() ?? content.trim());
 }
 
+const VALID_VIBES = new Set(["cute", "cozy", "mysterious", "intense", "whimsical"]);
+const VALID_CELESTIAL = new Set(["galaxy", "black_hole", "neutron_star"]);
+
+/** Coerce the LLM's new-field output into the schema shape, dropping
+ *  anything invalid so a bad value never poisons the cache. */
+function normalizeNewFields(parsed) {
+  const vibe = typeof parsed.vibe === "string" && VALID_VIBES.has(parsed.vibe)
+    ? parsed.vibe
+    : undefined;
+  const celestial_affinity = Array.isArray(parsed.celestial_affinity)
+    ? parsed.celestial_affinity.filter((c) => VALID_CELESTIAL.has(c)).slice(0, 2)
+    : undefined;
+  const intensityRaw = Number(parsed.intensity);
+  const intensity = Number.isFinite(intensityRaw) && intensityRaw >= 1 && intensityRaw <= 5
+    ? Math.round(intensityRaw)
+    : undefined;
+  const is_thai = typeof parsed.is_thai === "boolean" ? parsed.is_thai : undefined;
+  const extra = {};
+  if (vibe) extra.vibe = vibe;
+  if (celestial_affinity && celestial_affinity.length > 0) extra.celestial_affinity = celestial_affinity;
+  if (intensity !== undefined) extra.intensity = intensity;
+  if (is_thai !== undefined) extra.is_thai = is_thai;
+  return extra;
+}
+
 async function describeTrack(track, index, total) {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
@@ -288,6 +321,7 @@ async function describeTrack(track, index, total) {
           energy: String(parsed.energy ?? ""),
           setting: String(parsed.setting ?? ""),
           summary: String(parsed.summary ?? ""),
+          ...normalizeNewFields(parsed),
         };
       }
       // Not confident from memory — fall back to a web-search-grounded pass
@@ -328,6 +362,7 @@ async function describeTrack(track, index, total) {
         energy: String(grounded.energy ?? ""),
         setting: String(grounded.setting ?? ""),
         summary: String(grounded.summary ?? ""),
+        ...normalizeNewFields(grounded),
       };
     } catch (err) {
       if (attempt === 2) {

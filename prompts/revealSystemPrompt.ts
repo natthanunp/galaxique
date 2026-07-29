@@ -17,7 +17,13 @@ function renderCatalogLine(
   const k = track.knowledge;
   // Keep the catalog compact: curated factual tags are enough to compare
   // candidates; sending every full summary inflates the prompt substantially.
-  return `${header} | themes: ${k.themes.join(", ")} | stance: ${k.relationship_stance} | mood: ${k.mood} | energy: ${k.energy} | setting: ${k.setting}`;
+  const vibeTag = k.vibe ? ` | vibe: ${k.vibe}` : "";
+  const celestialTag =
+    k.celestial_affinity && k.celestial_affinity.length > 0
+      ? ` | celestial: ${k.celestial_affinity.join("/")}`
+      : "";
+  const intensityTag = typeof k.intensity === "number" ? ` | intensity: ${k.intensity}/5` : "";
+  return `${header}${vibeTag}${celestialTag}${intensityTag} | themes: ${k.themes.join(", ")} | stance: ${k.relationship_stance} | mood: ${k.mood} | energy: ${k.energy} | setting: ${k.setting}`;
 }
 
 /** The "=== SONG SCORING ===" section, included only when a pre-sampled

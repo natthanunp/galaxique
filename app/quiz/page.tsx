@@ -6,8 +6,10 @@ import { ArrowLeftIcon } from "lucide-react";
 import { QuizStepper } from "@/components/quiz/QuizStepper";
 import { StarfieldBackground } from "@/components/shared/StarfieldBackground";
 import { Button } from "@/components/ui/button";
+import { useQuizStore } from "@/store/quizStore";
 
 export default function QuizPage() {
+  const language = useQuizStore((s) => s.language);
   return (
     <>
       <StarfieldBackground />
@@ -16,7 +18,7 @@ export default function QuizPage() {
           <Button asChild variant="ghost" size="sm" className="gap-1">
             <Link href="/">
               <ArrowLeftIcon className="size-4" />
-              Home
+              {language === "th" ? "หน้าแรก" : "Home"}
             </Link>
           </Button>
         </header>

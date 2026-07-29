@@ -136,7 +136,7 @@ const DEFAULT_BUDGET_MS = 6500;
 export function LoadingCosmos({
   label,
   stage,
-  language = "en",
+  language = "th",
   msElapsed,
   totalBudgetMs = DEFAULT_BUDGET_MS,
 }: LoadingCosmosProps) {

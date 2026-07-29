@@ -36,8 +36,8 @@ export function LanguageToggle({ className }: { className?: string }) {
       )}
     >
       <LanguagesIcon className="ml-1 size-3.5 text-muted-foreground" />
-      {option("en", "EN")}
       {option("th", "TH")}
+      {option("en", "EN")}
     </div>
   );
 }
