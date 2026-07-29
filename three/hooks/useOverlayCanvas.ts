@@ -217,7 +217,7 @@ function drawFrame(
 
   const readingFontSize = Math.max(16, Math.round(barH * 0.052));
   const readingLineHeight = Math.round(readingFontSize * 1.35);
-  const readingTop = barY + barH * 0.46;
+  const readingTop = barY + barH * 0.5;
   const readingLines = wrapText(ctx, info.reading, W - pad * 2, readingFontSize);
   ctx.fillStyle = "rgba(255,255,255,0.9)";
   ctx.font = `${readingFontSize}px system-ui, -apple-system, sans-serif`;
