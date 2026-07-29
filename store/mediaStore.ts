@@ -20,20 +20,28 @@ interface MediaState {
    *  BackgroundAudio owns lets it autoplay reliably, even on Safari, where a
    *  brand-new <audio> element would require its own fresh user gesture. */
   spotifyUrl: string | null;
+  isPlaying: boolean;
+  isSuspended: boolean;
   /** Resolved track metadata, set by SpotifyPlayer once it has a match.
    *  Read by ShareButton to composite album art + song name onto the
    *  exported share video (and to mux the preview audio into it). */
   track: { name: string; artist: string; albumArtUrl: string | null } | null;
   setMode: (mode: MediaState["mode"]) => void;
   setSpotifyUrl: (url: string | null) => void;
+  setPlaying: (isPlaying: boolean) => void;
+  setSuspended: (isSuspended: boolean) => void;
   setTrack: (track: MediaState["track"]) => void;
 }
 
 export const useMediaStore = create<MediaState>((set) => ({
   mode: "ambient",
   spotifyUrl: null,
+  isPlaying: false,
+  isSuspended: false,
   track: null,
   setMode: (mode) => set({ mode }),
   setSpotifyUrl: (spotifyUrl) => set({ spotifyUrl }),
+  setPlaying: (isPlaying) => set({ isPlaying }),
+  setSuspended: (isSuspended) => set({ isSuspended }),
   setTrack: (track) => set({ track }),
 }));

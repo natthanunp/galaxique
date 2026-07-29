@@ -39,6 +39,11 @@ export function BackgroundAudio({
   const [ready, setReady] = useState(false);
   const mediaMode = useMediaStore((s) => s.mode);
   const spotifyUrl = useMediaStore((s) => s.spotifyUrl);
+  const isPlaying = useMediaStore((s) => s.isPlaying);
+  const isSuspended = useMediaStore((s) => s.isSuspended);
+  const setPlaying = useMediaStore((s) => s.setPlaying);
+  const playRequestRef = useRef<Promise<void> | null>(null);
+  const wasPlayingBeforeUnfocus = useRef(false);
 
   // React to cross-route media handoff. This is the ONLY <audio> element on
   // the site, and it's already been unlocked by the first user gesture (see
@@ -49,17 +54,33 @@ export function BackgroundAudio({
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !ready) return;
-    if (mediaMode === "spotify" && spotifyUrl) {
+    if (isSuspended) {
+      audio.pause();
+      playRequestRef.current = null;
+    } else if (mediaMode === "spotify" && spotifyUrl) {
       audio.loop = true;
       audio.muted = false;
       if (audio.src !== spotifyUrl) {
         audio.src = spotifyUrl;
         audio.currentTime = 0;
       }
-      audio.play().catch(() => {
-        // If the browser still blocks it, SpotifyPlayer's "Open in Spotify"
-        // link remains as a fallback.
-      });
+      if (isPlaying && audio.paused && !playRequestRef.current) {
+        const playRequest = audio.play();
+        playRequestRef.current = playRequest;
+        playRequest.then(() => {
+          if (playRequestRef.current === playRequest) setPlaying(true);
+        }).catch(() => {
+          // If the browser still blocks it, SpotifyPlayer's "Open in Spotify"
+          // link remains as a fallback.
+          if (playRequestRef.current === playRequest) setPlaying(false);
+        }).finally(() => {
+          if (playRequestRef.current === playRequest) {
+            playRequestRef.current = null;
+          }
+        });
+      } else if (!isPlaying) {
+        audio.pause();
+      }
     } else if (mediaMode === "ambient") {
       audio.loop = true;
       const absoluteAmbientSrc = new URL(src, window.location.href).href;
@@ -73,9 +94,10 @@ export function BackgroundAudio({
         });
       } else {
         audio.pause();
+        setPlaying(false);
       }
     }
-  }, [mediaMode, spotifyUrl, enabled, unlocked, ready, src]);
+  }, [mediaMode, spotifyUrl, isPlaying, isSuspended, setPlaying, enabled, unlocked, ready, src]);
 
   // Try muted autoplay on mount. This always succeeds.
   useEffect(() => {
@@ -111,6 +133,46 @@ export function BackgroundAudio({
       window.removeEventListener("keydown", unlock);
     };
   }, []);
+
+  // Pause explicitly when the app loses focus, then resume interrupted audio
+  // once the document is visible again.
+  useEffect(() => {
+    const pauseWhenUnfocused = () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+      wasPlayingBeforeUnfocus.current =
+        wasPlayingBeforeUnfocus.current || !audio.paused;
+      audio.pause();
+      playRequestRef.current = null;
+      setPlaying(false);
+    };
+    const resumeWhenFocused = () => {
+      if (
+        document.visibilityState !== "visible" ||
+        !wasPlayingBeforeUnfocus.current ||
+        useMediaStore.getState().isSuspended
+      ) {
+        return;
+      }
+      wasPlayingBeforeUnfocus.current = false;
+      setPlaying(true);
+    };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") pauseWhenUnfocused();
+      else resumeWhenFocused();
+    };
+
+    window.addEventListener("blur", pauseWhenUnfocused);
+    window.addEventListener("focus", resumeWhenFocused);
+    window.addEventListener("pageshow", resumeWhenFocused);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      window.removeEventListener("blur", pauseWhenUnfocused);
+      window.removeEventListener("focus", resumeWhenFocused);
+      window.removeEventListener("pageshow", resumeWhenFocused);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [setPlaying]);
 
   const toggle = () => {
     if (!unlocked) {

@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MusicIcon, AlertCircleIcon, ExternalLinkIcon, Volume2Icon } from "lucide-react";
+import {
+  MusicIcon,
+  AlertCircleIcon,
+  ExternalLinkIcon,
+  PauseIcon,
+  PlayIcon,
+  Volume2Icon,
+} from "lucide-react";
 
 import { useMediaStore } from "@/store/mediaStore";
 import { cn } from "@/lib/utils";
@@ -37,14 +44,20 @@ export function SpotifyPlayer({ query, trackId, language, className }: SpotifyPl
   const setMediaMode = useMediaStore((s) => s.setMode);
   const setSpotifyUrl = useMediaStore((s) => s.setSpotifyUrl);
   const setStoreTrack = useMediaStore((s) => s.setTrack);
+  const isPlaying = useMediaStore((s) => s.isPlaying);
+  const setPlaying = useMediaStore((s) => s.setPlaying);
 
   useEffect(() => {
     let cancelled = false;
-    setStatus("loading");
-    setTrack(null);
+    queueMicrotask(() => {
+      if (cancelled) return;
+      setStatus("loading");
+      setTrack(null);
+    });
     setMediaMode("ambient");
     setSpotifyUrl(null);
     setStoreTrack(null);
+    setPlaying(false);
 
     const params = trackId
       ? `id=${encodeURIComponent(trackId)}`
@@ -71,6 +84,7 @@ export function SpotifyPlayer({ query, trackId, language, className }: SpotifyPl
         if (previewUrl) {
           // Autoplay immediately — no button, no extra click required.
           setSpotifyUrl(previewUrl);
+          setPlaying(true);
           setMediaMode("spotify");
         }
       })
@@ -85,8 +99,9 @@ export function SpotifyPlayer({ query, trackId, language, className }: SpotifyPl
       setMediaMode("ambient");
       setSpotifyUrl(null);
       setStoreTrack(null);
+      setPlaying(false);
     };
-  }, [query, trackId, setMediaMode, setSpotifyUrl, setStoreTrack]);
+  }, [query, trackId, setMediaMode, setSpotifyUrl, setStoreTrack, setPlaying]);
 
   return (
     <div
@@ -114,22 +129,36 @@ export function SpotifyPlayer({ query, trackId, language, className }: SpotifyPl
       {status === "ok" && track && (
         <>
           {track.preview_url ? (
-            <div className="flex h-38 flex-col items-center justify-center gap-2 bg-linear-to-br from-[#1DB954]/15 to-secondary/40 px-4 text-center">
+            <div className="flex min-h-44 flex-col items-center justify-center gap-2 bg-linear-to-br from-[#1DB954]/15 to-secondary/40 px-4 py-4 text-center">
               {track.album_art_url ? (
                 // eslint-disable-next-line @next/next/no-img-element -- this is a small same-origin proxy URL, so next/image adds no value here
                 <img
                   src={mediaProxyUrl(track.album_art_url) ?? undefined}
                   alt=""
-                  className="size-14 rounded-lg object-cover shadow-lg ring-1 ring-white/10"
+                  className="size-24 rounded-lg object-cover shadow-lg ring-1 ring-white/10"
                 />
               ) : (
                 <span className="flex size-12 items-center justify-center rounded-full bg-[#1DB954] text-black shadow-lg">
                   <Volume2Icon className="size-5 animate-pulse" />
                 </span>
               )}
-              <span className="text-sm font-medium text-foreground">
-                {language === "th" ? "กำลังเล่น" : "Now playing"}
-              </span>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-foreground">{track.name}</p>
+                <p className="truncate text-xs text-muted-foreground">{track.artist}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPlaying(!isPlaying)}
+                aria-label={isPlaying ? "Pause song" : "Play song"}
+                title={isPlaying ? "Pause song" : "Play song"}
+                className="flex size-9 items-center justify-center rounded-full bg-[#1DB954] text-black transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1DB954] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                {isPlaying ? (
+                  <PauseIcon className="size-4 fill-current" />
+                ) : (
+                  <PlayIcon className="ml-0.5 size-4 fill-current" />
+                )}
+              </button>
               <span className="text-xs text-muted-foreground">
                 {language === "th" ? "ตัวอย่าง 30 วินาที" : "30-second preview"}
               </span>

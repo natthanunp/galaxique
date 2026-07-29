@@ -38,6 +38,7 @@ interface ShareButtonProps {
   /** While false, the trigger is disabled (canvas still mounting). */
   disabled?: boolean;
   language: Language;
+  reading: string;
 }
 
 type Phase =
@@ -63,6 +64,7 @@ export function ShareButton({
   getStarfield,
   disabled = false,
   language,
+  reading,
 }: ShareButtonProps) {
   const [open, setOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
@@ -99,6 +101,7 @@ export function ShareButton({
   });
   const overlay = useOverlayCanvas();
   const track = useMediaStore((s) => s.track);
+  const setMediaSuspended = useMediaStore((s) => s.setSuspended);
 
   const shareFile = async (file: File) => {
     if (!navigator.share || !navigator.canShare) return false;
@@ -187,6 +190,7 @@ export function ShareButton({
           albumArtUrl: track?.albumArtUrl ?? null,
           trackName: track?.name ?? (language === "th" ? "จักรวาลของคุณ" : "Your universe"),
           artist: track?.artist ?? "Galaxique",
+          reading,
         },
       });
       if (cancelledRef.current) return;
@@ -247,6 +251,7 @@ export function ShareButton({
               albumArtUrl: track.albumArtUrl,
               trackName: track.name,
               artist: track.artist,
+              reading,
             },
           })
         : sourceCanvas;
@@ -302,6 +307,7 @@ export function ShareButton({
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
+    setMediaSuspended(next);
     if (!next) {
       // Closing mid-process cancels everything.
       cancelledRef.current = true;
@@ -421,6 +427,8 @@ export function ShareButton({
               )}
 
               {phase === "done" && downloadUrl && downloadKind === "image" && (
+                // Generated PNGs use a transient blob URL that next/image cannot optimize.
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={downloadUrl}
                   alt="Your generated universe"

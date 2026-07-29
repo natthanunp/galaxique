@@ -6,6 +6,7 @@ interface OverlayInfo {
   albumArtUrl: string | null;
   trackName: string;
   artist: string;
+  reading: string;
 }
 
 interface StartOverlayOptions {
@@ -131,8 +132,8 @@ export function useOverlayCanvas(): UseOverlayCanvasResult {
 // region of pixels no matter the user's viewport or device.
 const IG_STORY_W = 1080;
 const IG_STORY_H = 1920;
-// Height fraction of the bottom "now playing" bar (album art + track/artist).
-const BAR_FRAC = 0.11;
+// Reserve space for the track metadata and the personality reading.
+const BAR_FRAC = 0.29;
 
 function drawFrame(
   ctx: CanvasRenderingContext2D,
@@ -172,8 +173,8 @@ function drawFrame(
   ctx.fillStyle = gradient;
   ctx.fillRect(0, barY - barH * 0.6, W, barH * 1.6);
 
-  const pad = Math.round(barH * 0.18);
-  const artSize = barH - pad * 2;
+  const pad = Math.round(barH * 0.08);
+  const artSize = Math.round(barH * 0.34);
   const artReady = Boolean(art?.complete && art.naturalWidth > 0);
   const textX = pad * 2 + (artReady ? artSize : 0);
 
@@ -195,8 +196,8 @@ function drawFrame(
   }
 
   const maxTextWidth = W - textX - pad;
-  const nameSize = Math.max(20, Math.round(barH * 0.34));
-  const artistSize = Math.max(16, Math.round(barH * 0.26));
+  const nameSize = Math.max(20, Math.round(barH * 0.14));
+  const artistSize = Math.max(16, Math.round(barH * 0.1));
 
   ctx.textBaseline = "alphabetic";
   ctx.fillStyle = "#ffffff";
@@ -204,15 +205,48 @@ function drawFrame(
   ctx.fillText(
     truncateToWidth(ctx, info.trackName, maxTextWidth),
     textX,
-    barY + barH * 0.48,
+    barY + barH * 0.22,
   );
   ctx.fillStyle = "rgba(255,255,255,0.78)";
   ctx.font = `${artistSize}px system-ui, -apple-system, sans-serif`;
   ctx.fillText(
     truncateToWidth(ctx, info.artist, maxTextWidth),
     textX,
-    barY + barH * 0.78,
+    barY + barH * 0.32,
   );
+
+  const readingFontSize = Math.max(16, Math.round(barH * 0.052));
+  const readingLineHeight = Math.round(readingFontSize * 1.35);
+  const readingTop = barY + barH * 0.46;
+  const readingLines = wrapText(ctx, info.reading, W - pad * 2, readingFontSize);
+  ctx.fillStyle = "rgba(255,255,255,0.9)";
+  ctx.font = `${readingFontSize}px system-ui, -apple-system, sans-serif`;
+  readingLines.slice(0, 7).forEach((line, index) => {
+    ctx.fillText(line, pad, readingTop + index * readingLineHeight);
+  });
+}
+
+/** Wrap by measured width instead of whitespace so Thai text can break. */
+function wrapText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+  fontSize: number,
+): string[] {
+  ctx.font = `${fontSize}px system-ui, -apple-system, sans-serif`;
+  const lines: string[] = [];
+  let line = "";
+  for (const character of text) {
+    const candidate = line + character;
+    if (line && ctx.measureText(candidate).width > maxWidth) {
+      lines.push(line.trim());
+      line = character;
+    } else {
+      line = candidate;
+    }
+  }
+  if (line.trim()) lines.push(line.trim());
+  return lines;
 }
 
 /** Draws `img` into the (x, y, w, h) rectangle using "cover" fit: scales

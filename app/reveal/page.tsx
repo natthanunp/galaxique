@@ -293,6 +293,7 @@ export default function RevealPage() {
                 getStarfield={() => starfieldRef.current}
                 disabled={!canvasReady}
                 language={language}
+                reading={reveal.personality_reading}
               />
               <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
                 <span className="rounded-full border border-border/70 bg-card/60 px-3 py-1 backdrop-blur-md">
