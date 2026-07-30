@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Galaxique Public Beta 1 — Your Unique Universe",
+  title: "Galaxique Public Beta 2 — Your Unique Universe",
   description:
     "A space-themed personality visualizer where the stars keep small secrets. Answer a short quiz and your inner universe unfolds in 3D, with a song that matches your vibe.",
   icons: {
