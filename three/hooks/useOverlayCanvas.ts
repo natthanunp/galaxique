@@ -128,10 +128,16 @@ export function useOverlayCanvas(): UseOverlayCanvasResult {
   return { start, drawOnce, stop };
 }
 
-// Instagram Story spec: 1080x1920, 9:16 portrait. The export is a square
-// region of pixels no matter the user's viewport or device.
-const IG_STORY_W = 1080;
-const IG_STORY_H = 1920;
+// Instagram Story spec: 1080x1920, 9:16 portrait. The export on a 1x
+// display uses native 1080p; on Retina/2x+ displays we render at 2x the
+// linear resolution so the composited frame retains crispness from the
+// higher-dpr R3F canvas. Capped at 2x (2160x3840) to keep the overlay
+// rAF loop and MediaRecorder manageable on mobile.
+const IG_RENDER_DPR = typeof window !== "undefined"
+  ? Math.min(window.devicePixelRatio || 1, 2)
+  : 1;
+const IG_STORY_W = Math.round(1080 * IG_RENDER_DPR);
+const IG_STORY_H = Math.round(1920 * IG_RENDER_DPR);
 // Reserve space for the track metadata and the personality reading.
 const BAR_FRAC = 0.29;
 

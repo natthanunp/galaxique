@@ -105,7 +105,7 @@ export function useCanvasRecorder({
 
           const recorder = new MediaRecorder(combinedStream, {
             mimeType: pickMime(),
-            videoBitsPerSecond: 8_000_000,
+            videoBitsPerSecond: 15_000_000,
           });
           recorderRef.current = recorder;
 
