@@ -38,7 +38,7 @@ export function buildQuizSystemPrompt(
   const languageName = language === "th" ? "Thai" : "English";
   const languageInstruction =
     language === "th"
-      ? "Write every question and option directly in natural, modern conversational Thai: no English, pinyin, Chinese, or Japanese characters. Do not compose an English sentence and translate it word-for-word. Do a final native-speaker edit before output: use common Thai verbs and question forms, not English grammar in Thai words. Prefer \"ออกกำลังกาย\", not \"ทำการออกกำลังกาย\"; \"นั่งรับลมตอนเช้า\", not \"นั่งในอากาศสว่าง\"; \"มีความสุข\", not \"รู้สึกสุข\"; \"รู้สึกใกล้ชิด\", not \"รู้สึกสัมพันธ์\"; and \"ที่ไหน\", not \"ที่ใดที่หนึ่ง\". Avoid stiff bureaucratic wording, unnatural noun phrases, invented literary words, and repetitive translated templates such as \"วิธีที่คุณชอบมากที่สุดในการ...\"."
+      ? "Write every question and option directly in natural, modern conversational Thai: no English, pinyin, Chinese, or Japanese characters. Do not compose an English sentence and translate it word-for-word. Do a final native-speaker edit before output: use common Thai verbs and question forms, not English grammar in Thai words. Prefer \"ออกกำลังกาย\", not \"ทำการออกกำลังกาย\"; \"นั่งรับลมตอนเช้า\", not \"นั่งในอากาศสว่าง\"; \"มีความสุข\", not \"รู้สึกสุข\"; \"รู้สึกใกล้ชิด\", not \"รู้สึกสัมพันธ์\"; and \"ที่ไหน\", not \"ที่ใดที่หนึ่ง\". Avoid stiff bureaucratic wording, unnatural noun phrases, invented literary words, and repetitive translated templates such as \"วิธีที่คุณชอบมากที่สุดในการ...\". Also avoid making Thai batches feel heavy, lonely, or overly philosophical; Thai users have reported previous batches were too dark and always mapped to \"black hole\". Use everyday warmth, humor, connection, and small joys as the backbone."
       : "Write every question and option in natural, concrete English.";
   const questionLengthInstruction =
     language === "th"
@@ -51,7 +51,9 @@ export function buildQuizSystemPrompt(
 
   return `Create a ${quizConfig.questionCount}-question personality quiz for "Your Unique Universe", written entirely in ${languageName}.
 
-Each question needs a distinct, durable identity angle: instincts, values, emotional patterns, comforts, or ways of relating. Avoid shallow preferences and generic personality-test filler. The batch must span the full emotional range — include warm/connective angles AND dark/introspective/intense angles. Avoid an all-warm batch just as much as an all-dark one. Roughly 3-4 questions should lean warm/connective, 3-4 should lean dark/intense/private, and the rest reflective.
+Each question needs a distinct, durable identity angle: instincts, values, emotional patterns, comforts, or ways of relating. Avoid shallow preferences and generic personality-test filler. The batch must span the full emotional range, but the MAJORITY must lean warm, connective, playful, or positive. Introspective or private angles are allowed as minority seasoning, not the main flavor. At least 6 of the ${quizConfig.questionCount} questions should lean warm/connective/positive; at most 2 should lean introspective/private; the rest reflective/neutral. If your draft batch has more dark/introspective questions than warm ones, revise it before outputting.
+
+CRITICAL — avoid black-hole bait: do not write questions where every answer option points toward solitude, mystery, melancholy, or inwardness. Every question must include at least one option that is warm, playful, outward, or hopeful, and at least one option that is neutral or light. The quiz should reveal a whole person, not a moody silhouette.
 
 Reference angles (inspiration only; do not copy or lightly reword):
 ${formatAnglesForPrompt(exampleAngles)}
@@ -64,11 +66,13 @@ ${
 For each item:
 - Invent one concise angle (not a restatement of its question), written in English regardless of the quiz language (it's stripped before the client ever sees it).
 - Write one clear, concrete question. ${questionLengthInstruction} No metaphors, clichés, or double questions. ${languageInstruction}
-- Supply exactly 4 distinct, plausible answer options. ${optionLengthInstruction} Every option must express a different choice; never repeat an option, even with changed punctuation or spacing. Within each question, the 4 options should span an emotional range — e.g. one warm/outward, one private/inward, one intense/driven, one playful/light — so users can signal their actual emotional temperature, not just pick the least-warm warm option.
+- Supply exactly 4 distinct, plausible answer options. ${optionLengthInstruction} Every option must express a different choice; never repeat an option, even with changed punctuation or spacing. Within each question, the 4 options should span an emotional range drawn from these 5 dimensions: warm/outward, private/inward, intense/driven, playful/light, skeptical/ironic. Pick 4 of these 5 per question so users can signal their actual emotional temperature — including cynical or world-weary perspectives — not just pick the least-warm warm option.
 - Vary the question openings across the batch. Do not reuse one sentence template for several questions.
 
 Tone: ${quizConfig.tone}
 Theme: ${quizConfig.theme}; use only as background flavor.
+
+Before returning, audit your batch: count how many questions lean warm/connective/positive versus introspective/private. Warm/connective/positive must be the clear majority. If not, rewrite the darkest questions until the balance is right.
 
 Return valid JSON only:
 {"questions":[{"id":1,"angle":"...","text":"...","options":[{"text":"..."},{"text":"..."},{"text":"..."},{"text":"..."}]}]}

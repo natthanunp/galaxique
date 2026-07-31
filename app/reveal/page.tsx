@@ -152,6 +152,38 @@ export default function RevealPage() {
     return () => clearTimeout(handle);
   }, [hydrated, router]);
 
+  // Increment vibe stats counter when reveal is shown (fire-and-forget)
+  const statsIncrementedRef = useRef(false);
+  useEffect(() => {
+    if (statsIncrementedRef.current) return;
+    if (!hydrated || !reveal) return;
+    if (typeof window === "undefined") return;
+
+    const dedupeKey = `stats:${reveal.vibe}:${reveal.spotify_track_id || reveal.personality_reading.length}`;
+    const sentKey = "galaxseea:stats-incremented";
+    try {
+      if (window.sessionStorage.getItem(sentKey) === dedupeKey) return;
+    } catch {
+      // sessionStorage may be disabled — fall through
+    }
+
+    statsIncrementedRef.current = true;
+    try {
+      window.sessionStorage.setItem(sentKey, dedupeKey);
+    } catch {
+      // ignore — best-effort dedupe
+    }
+
+    void fetch("/api/stats/increment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ vibe: reveal.vibe }),
+      keepalive: true,
+    }).catch((err) =>
+      console.error("[reveal] Stats increment failed", err),
+    );
+  }, [hydrated, reveal]);
+
   // Notify the owner via Telegram once the reveal has actually been shown
   // to the user. Keyed off the resolved Spotify track id (or the reading
   // hash) so a page refresh / direct navigation back to /reveal doesn't

@@ -20,14 +20,14 @@ import { Redis } from "@upstash/redis";
  */
 const LIST_KEY = "galaxseea:song-selections";
 /** Matches the "frequency log" used by sampleCatalogForRequest +
- *  pickWeightedSongSelection in app/api/analyze/route.ts. Trimmed from 50 →
- *  30 so older selections fall off faster: with a 162-track catalog,
- *  keeping 50 entries meant a song could keep ~31% of log presence for a
- *  long stretch, slowing rotation through the long tail. 30 entries gives
- *  each track a fair-share target of ~3.3% and means under-served tracks
- *  resurface sooner once they've dropped out of the log. Still wide
- *  enough that the recency penalty's 12-slot window stays meaningful. */
-const MAX_LOG_LENGTH = 30;
+ *  pickWeightedSongSelection in app/api/analyze/route.ts. Raised to 50
+ *  because the catalog is now ~200 tracks: with only 30 entries the
+ *  frequency-share fair target (1/200 = 0.5%) is barely represented in
+ *  the log, so the frequency penalty has almost no effect. 50 entries
+ *  gives each track a fair-share target of ~2% and keeps enough history
+ *  for the penalty to matter, while still letting older selections drop
+ *  out and resurface through the long tail. */
+const MAX_LOG_LENGTH = 50;
 
 export type SongSelectionSource = "upstash" | "memory";
 

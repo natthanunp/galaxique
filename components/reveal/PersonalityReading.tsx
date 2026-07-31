@@ -22,6 +22,7 @@ const VIBE_TH: Record<string, string> = {
   mysterious: "ลึกลับ",
   intense: "เข้มข้น",
   whimsical: "เพ้อฝัน",
+  cynical: "เย็นชา",
 };
 
 /** Displays the song-aware three-sentence poetic reading with a gentle fade-in. */

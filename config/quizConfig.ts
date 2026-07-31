@@ -44,7 +44,7 @@ export const quizConfig = {
  *
  *  Keep the list at ~20+ so each call samples a fresh subset of examples. */
 export const QUESTION_ANGLES = [
-  // Warmth, play, connection, and outward energy
+  // Warmth, play, connection, and outward energy (majority tone)
   "Something that instantly lifts the user's mood — a tiny, specific moment of everyday joy",
   "How the user likes to celebrate a small win or good day",
   "A social setting where the user feels most alive — who is there, what is happening",
@@ -60,7 +60,14 @@ export const QUESTION_ANGLES = [
   "The kind of weather or time of day the user feels most hopeful in",
   "How the user makes new people feel welcome or at ease",
   "A song, album, or sound the user keeps returning to lately, and what it gives them",
-  // Reflection, depth, and inner life
+  "What makes the user laugh easily — a person, a style of humor, or a running joke",
+  "A small tradition or ritual the user shares with someone they care about",
+  "How the user turns an ordinary day into something a little special",
+  "A compliment or kind words the user still remembers receiving",
+  "What the user gets excited to introduce to a friend",
+  "The last thing that made the user feel genuinely lucky",
+  "How the user likes to show up for people without being asked",
+  // Reflection, depth, and inner life (balanced, not dark)
   "A small daily ritual or habit the user loves and would miss if it disappeared",
   "What makes the user lose track of time — a craft, a sound, a person, a place",
   "How the user handles a tough day — what they reach for, who they call, what they do",
@@ -74,19 +81,12 @@ export const QUESTION_ANGLES = [
   "A piece of media (book, show, film, game) that changed how the user sees something",
   "How the user likes to be comforted when they're down — words, silence, presence, distraction, or something else",
   "The first thing the user notices about someone new — MUST bake 2-3 concrete example anchors into the question wording (e.g. 'What's the first thing you notice about someone new — their energy, how they talk, or something else?')",
-  // Dark, intense, private, and inward
-  "What the user does when they need to be completely alone — not to recharge, but to disappear for a while",
-  "A thought or feeling the user keeps private, even from people close to them",
+  // Dark, intense, private, and inward (use sparingly — minority seasoning)
   "What intensity looks like for the user — a drive, a fixation, or something they feel very strongly",
   "Something the user is quietly driven or ambitious about, even if they don't say it out loud",
-  "A darkness or melancholy the user sits with comfortably — not a problem to fix, just a part of them",
-  "What the user avoids or fears most, and how that shapes their choices",
   "How the user handles conflict or confrontation — do they meet it, deflect it, or walk away?",
   "A time the user had to be resilient under pressure — what carried them through",
-  "What mystery, the unknown, or the vast means to the user — do they seek it or let it be?",
-  "How the user relates to solitude versus being alone — is it a refuge, a weight, or both?",
   "An emotion the user feels more deeply than most people seem to",
-  "What the user does when they feel restless or unsettled and can't explain why",
 ] as const;
 
 /** Song era/origin pools used to mechanically force variety in the

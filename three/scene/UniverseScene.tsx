@@ -106,6 +106,7 @@ export function UniverseScene({ reveal }: UniverseSceneProps) {
       <CosmicBackground
         primaryColor={reveal.primary_color}
         secondaryColor={reveal.secondary_color}
+        vibe={reveal.vibe}
       />
       <ParticleField
         primaryColor={reveal.primary_color}

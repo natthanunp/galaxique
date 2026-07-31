@@ -126,7 +126,7 @@ export const celestialVisualConfigSchema = z.discriminatedUnion("celestial_type"
 ]);
 
 export const universeRevealSchema = z.object({
-  vibe: z.enum(["cute", "cozy", "mysterious", "intense", "whimsical"]),
+  vibe: z.enum(["cute", "cozy", "mysterious", "intense", "whimsical", "cynical"]),
   celestial_type: z.enum([
     "galaxy",
     "black_hole",

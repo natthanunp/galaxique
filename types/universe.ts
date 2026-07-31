@@ -30,7 +30,7 @@ export interface QuizAnswer {
 }
 
 /** The dominant emotional texture Gemini assigns to the user. */
-export type Vibe = "cute" | "cozy" | "mysterious" | "intense" | "whimsical";
+export type Vibe = "cute" | "cozy" | "mysterious" | "intense" | "whimsical" | "cynical";
 
 /** Which 3D object renders at the center of the universe. */
 export type CelestialType =
@@ -182,7 +182,7 @@ export interface SongKnowledgeEntry {
    *  mapping to the app's vibe enum. Lets the reveal LLM score song
    *  candidates deterministically instead of inferring from free-text
    *  mood/energy fields. Required when known:true. */
-  vibe?: "cute" | "cozy" | "mysterious" | "intense" | "whimsical";
+  vibe?: "cute" | "cozy" | "mysterious" | "intense" | "whimsical" | "cynical";
   /** 1-2 celestial types this song's vibe naturally pairs with, e.g.
    *  ["black_hole"] for a dark, inward track or ["neutron_star"] for a
    *  high-energy one. Lets the LLM see which cosmic object a track suits. */

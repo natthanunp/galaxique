@@ -53,10 +53,12 @@ export function useCanvasRecorder({
   const pickMime = useCallback((): string => {
     const candidates = [
       mimeType,
-      // Preferred: webm with an audio codec baked into the codecs string so
-      // Chrome/Firefox reliably encode the mixed-in Spotify audio track too.
-      "video/webm;codecs=vp9,opus",
-      "video/webm;codecs=vp8,opus",
+      // Video-only codecs — the app deliberately records without audio
+      // (see ShareButton: "The final MP4 deliberately has no audio").
+      // Including ",opus" in the codec string while the MediaStream has
+      // no audio track causes Firefox's MediaRecorder to produce a
+      // malformed WebM container that ffmpeg.wasm cannot demux. Chrome
+      // tolerates the mismatch, but Firefox does not.
       "video/webm;codecs=vp9",
       "video/webm;codecs=vp8",
       "video/webm",
@@ -64,7 +66,7 @@ export function useCanvasRecorder({
       // only records H.264/AAC mp4. Without this fallback, `new
       // MediaRecorder(...)` throws synchronously on iOS/macOS Safari and the
       // whole export silently "doesn't work".
-      "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+      "video/mp4;codecs=avc1.42E01E",
       "video/mp4",
     ].filter(Boolean) as string[];
     for (const c of candidates) {

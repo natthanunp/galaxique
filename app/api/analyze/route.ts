@@ -69,15 +69,15 @@ function benchMs(since: bigint): number {
 /** Tracks sampled as scoring candidates per request, out of the full
  *  catalog. This is the FIRST variety layer: any single track is only even
  *  a *candidate* in roughly `CATALOG_SAMPLE_SIZE / catalogSize` of requests,
- *  independent of how the model scores it when present. Bumped to 36 now
+ *  independent of how the model scores it when present. Bumped to 48 now
  *  that the sampler is biased toward under-served tracks (see
  *  sampleCatalogForRequest); an earlier uniform 18-sample let the same ~18
- *  tracks cycle while ~144 sat untouched. 36 of 162 (~22%) keeps the LLM
- *  catalog section bounded (~2.2k extra input tokens vs. 28) while giving
+ *  tracks cycle while ~144 sat untouched. 48 of 162 (~30%) keeps the LLM
+ *  catalog section bounded (~3k extra input tokens vs. 28) while giving
  *  the weighted picker substantially more fresh material each call — and
  *  combined with the under-served sampler below, the picker sees a near-
  *  completely unique candidate pool every request in steady state. */
-const CATALOG_SAMPLE_SIZE = 36;
+const CATALOG_SAMPLE_SIZE = 48;
 
 function isThaiTrack(track: EnrichedPlaylistCandidate): boolean {
   // Prefer the explicit is_thai flag from the curated knowledge cache — it
@@ -101,25 +101,27 @@ function isThaiTrack(track: EnrichedPlaylistCandidate): boolean {
  *  softened (0.8 / position, was 1.5 / position) because the biased
  *  sampler below already steers fresh tracks into the candidate pool —
  *  stacking a heavy recency penalty on top just suppresses already-served
- *  tracks harder without helping the long tail. */
-const RECENCY_WINDOW = 12;
+ *  tracks harder without helping the long tail. Kept equal to MAX_LOG_LENGTH
+ *  (50) so the recency penalty covers the full shared rolling log for a
+ *  ~200-track catalog. */
+const RECENCY_WINDOW = 50;
 
 /** Weight assigned to a track per occurrence in the recent-selection log.
  *  Used by sampleCatalogForRequest to bias the candidate pool toward
  *  under-served tracks. Tracks with ZERO appearances get the full
  *  boost; tracks with N appearances get this weight per occurrence,
- *  subtracted from the base — so a track picked 5 times in the log
+ *  subtracted from the base — so a track picked 7 times in the log
  *  gets a much smaller (or zero) sampling weight than one never picked. */
-const UNDER_SERVED_BASE_WEIGHT = 5;
+const UNDER_SERVED_BASE_WEIGHT = 7;
 
 /** Softmax temperature for the final weighted pick. Lower = more strongly
  *  favors the top-scoring candidate; higher = flatter/more random. */
-const SOFTMAX_TEMPERATURE = 6;
+const SOFTMAX_TEMPERATURE = 8;
 
 /** Biased sampler: returns up to `n` tracks from the full catalog, with
  *  sampling weight proportional to how *under-served* each track is in the
- *  recent-selection log. A track never picked before gets weight 5; a
- *  track picked once gets weight 5 - 1 = 4; picked 5 times gets weight 0
+ *  recent-selection log. A track never picked before gets weight 7; a
+ *  track picked once gets weight 7 - 1 = 6; picked 7 times gets weight 0
  *  (excluded). This is the structural fix for "the same ~18 songs every
  *  time": even with the weighted picker perfectly fair, it can only pick
  *  from the sampled pool, so the pool itself must keep rotating. The bias
@@ -561,6 +563,9 @@ async function runAnalyze(
   }
 
   let result: UniverseRevealParsed = validation.data;
+  console.log(
+    `[analyze] reveal mapped: language=${language} celestial_type=${result.celestial_type} vibe=${result.vibe} attempt=${llmAttempts}`,
+  );
 
   if (sampledTracks.length > 0) {
     let selectedTrack: EnrichedPlaylistCandidate | undefined;

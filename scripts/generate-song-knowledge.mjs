@@ -72,7 +72,9 @@ async function requestSpotifyToken(body) {
     body,
   });
   if (!res.ok) {
-    throw new Error(`Spotify token request failed (${res.status}): ${await res.text()}`);
+    throw new Error(
+      `Spotify token request failed (${res.status}): ${await res.text()}`,
+    );
   }
   return res.json();
 }
@@ -85,7 +87,10 @@ async function getUserAccessToken() {
     );
   }
   const data = await requestSpotifyToken(
-    new URLSearchParams({ grant_type: "refresh_token", refresh_token: refreshToken }),
+    new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+    }),
   );
   return data.access_token;
 }
@@ -98,9 +103,13 @@ async function fetchPlaylistTracks(token, playlistId) {
     const url = `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlistId)}/items?${new URLSearchParams(
       { limit: String(limit), offset: String(offset) },
     )}`;
-    const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     if (!res.ok) {
-      throw new Error(`Spotify playlist request failed (${res.status}): ${await res.text()}`);
+      throw new Error(
+        `Spotify playlist request failed (${res.status}): ${await res.text()}`,
+      );
     }
     const data = await res.json();
     const page = (data.items ?? [])
@@ -140,7 +149,7 @@ Otherwise, respond with ONLY this JSON object (no markdown, no commentary):
   "energy": "one short phrase, e.g. still and intimate, driving, euphoric, restrained",
   "setting": "one short phrase, e.g. late-night alone, sunlit and social",
   "summary": "one sentence describing the lyrical or musical premise and sonic character, in your own words, no lyric quotes",
-  "vibe": "one of: cute, cozy, mysterious, intense, whimsical. Most songs in a dreamy/indie playlist are cozy or mysterious — reserve intense for tracks that are genuinely dark, anguished, confrontational, or high-stakes emotional turmoil. cozy = warm, comforting, tender, nostalgic warmth (most gentle indie/dream-pop love songs are cozy); cute = light, affectionate, openly warm, optimistic; mysterious = eerie, private, ambiguous, dreamlike, enigmatic; intense = genuinely dark, tense, brooding, anguished, confrontational; whimsical = surreal, playful, imaginative, delightfully odd. A driving beat does NOT make a song intense — a driving love song is cozy or whimsical. A melancholic but gentle song is cozy or mysterious, NOT intense.",
+  "vibe": "one of: cute, cozy, mysterious, intense, whimsical, cynical. Most songs in a dreamy/indie playlist are cozy or mysterious — reserve intense for tracks that are genuinely dark, anguished, confrontational, or high-stakes emotional turmoil. cozy = warm, comforting, tender, nostalgic warmth (most gentle indie/dream-pop love songs are cozy); cute = light, affectionate, openly warm, optimistic; mysterious = eerie, private, ambiguous, dreamlike, enigmatic; intense = genuinely dark, tense, brooding, anguished, confrontational; whimsical = surreal, playful, imaginative, delightfully odd; cynical = skeptical, world-weary, ironic detachment, distrust of sentimentality, dry humor. A driving beat does NOT make a song intense — a driving love song is cozy or whimsical. A melancholic but gentle song is cozy or mysterious, NOT intense.",
   "celestial_affinity": ["1-2 of: galaxy, black_hole, neutron_star — based on the song's EMOTIONAL DIRECTION, NOT its mood or energy level. Mood (sad/melancholic) is NOT the same as direction (inward vs outward). galaxy = outward, expansive, connective, self-expressive — songs about love, longing for connection, romantic yearning, belonging, celebration, self-empowerment, self-love, uplift, freedom, or play are GALAXY even if they sound melancholic (yearning for someone = reaching outward). black_hole = inward, withdrawn, solitary, drawn to darkness — only songs about solitude as a state (not longing for someone), emotional withdrawal, genuine darkness, paranoia, or deep introspection with no outward pull. neutron_star = concentrated, disciplined, ambitious, driven, high-pressure — ONLY songs about determination, ambition, fierce drive, or resilience UNDER PRESSURE (not just any upbeat/empowering song). Self-love/self-empowerment songs are GALAXY (outward self-expression), NOT neutron_star. A melancholic love song is GALAXY (it yearns outward), NOT black_hole."],
   "intensity": "integer 1-5 (1=still/ambient, 2=restrained/gentle, 3=mid-tempo, 4=driving, 5=euphoric/anthemic)",
   "is_thai": "true if this is a Thai-language song or a Thai artist targeting a Thai audience (e.g. lyrics in Thai, or a Thai indie/pop artist like FREEHAND, Safeplanet, Dept, loserpop, YOUNGOHM, Television off, Hugo, fellow fellow, FOLK9, Sqweez Animal, AYLA's, Temper City, guncharlie, Musketeers, PURPEECH, LANDOKMAI, Violette Wautier); false for English/international songs. A Thai artist singing in English to an international audience is still is_thai:true if they are primarily known in the Thai music scene."
@@ -168,11 +177,16 @@ let searchQueue = Promise.resolve();
 
 async function searchWebOnce(query) {
   const apiKey = process.env.BRAVE_SEARCH_API_KEY;
-  if (!apiKey) throw new Error("BRAVE_SEARCH_API_KEY is required for web-search grounding.");
-  const url = `https://api.search.brave.com/res/v1/web/search?${new URLSearchParams({
-    q: query,
-    count: "8",
-  })}`;
+  if (!apiKey)
+    throw new Error(
+      "BRAVE_SEARCH_API_KEY is required for web-search grounding.",
+    );
+  const url = `https://api.search.brave.com/res/v1/web/search?${new URLSearchParams(
+    {
+      q: query,
+      count: "8",
+    },
+  )}`;
   const res = await fetch(url, {
     headers: {
       Accept: "application/json",
@@ -181,11 +195,15 @@ async function searchWebOnce(query) {
   });
   if (res.status === 429) return null;
   if (!res.ok) {
-    throw new Error(`Brave Search request failed (${res.status}): ${await res.text()}`);
+    throw new Error(
+      `Brave Search request failed (${res.status}): ${await res.text()}`,
+    );
   }
   const data = await res.json();
   const results = data.web?.results ?? [];
-  return results.slice(0, 8).map((r) => ({ title: r.title ?? "", snippet: r.description ?? "" }));
+  return results
+    .slice(0, 8)
+    .map((r) => ({ title: r.title ?? "", snippet: r.description ?? "" }));
 }
 
 async function searchWeb(query) {
@@ -196,12 +214,16 @@ async function searchWeb(query) {
       const results = await searchWebOnce(query).catch(() => null);
       if (results !== null) return results;
       const backoffMs = 4000 * (attempt + 1);
-      console.warn(`  ! Brave Search rate-limited for "${query}" — backing off ${backoffMs}ms`);
+      console.warn(
+        `  ! Brave Search rate-limited for "${query}" — backing off ${backoffMs}ms`,
+      );
       await new Promise((r) => setTimeout(r, backoffMs));
     }
     return [];
   });
-  searchQueue = run.catch(() => {}).then(() => new Promise((r) => setTimeout(r, SEARCH_MIN_GAP_MS)));
+  searchQueue = run
+    .catch(() => {})
+    .then(() => new Promise((r) => setTimeout(r, SEARCH_MIN_GAP_MS)));
   return run;
 }
 
@@ -236,7 +258,7 @@ Otherwise, respond with ONLY this JSON object (no markdown, no commentary):
   "energy": "one short phrase, e.g. still and intimate, driving, euphoric, restrained",
   "setting": "one short phrase, e.g. late-night alone, sunlit and social",
   "summary": "one sentence describing the lyrical premise and sonic character, in your own words, no lyric quotes, based only on the provided excerpts",
-  "vibe": "one of: cute, cozy, mysterious, intense, whimsical. Most songs in a dreamy/indie playlist are cozy or mysterious — reserve intense for tracks that are genuinely dark, anguished, confrontational, or high-stakes emotional turmoil. cozy = warm, comforting, tender, nostalgic warmth (most gentle indie/dream-pop love songs are cozy); cute = light, affectionate, openly warm, optimistic; mysterious = eerie, private, ambiguous, dreamlike, enigmatic; intense = genuinely dark, tense, brooding, anguished, confrontational; whimsical = surreal, playful, imaginative, delightfully odd. A driving beat does NOT make a song intense — a driving love song is cozy or whimsical. A melancholic but gentle song is cozy or mysterious, NOT intense.",
+  "vibe": "one of: cute, cozy, mysterious, intense, whimsical. Most songs in a dreamy/indie playlist are cozy or mysterious — reserve intense for tracks that are genuinely dark, anguished, confrontational, or high-stakes emotional turmoil. cozy = warm, comforting, tender, nostalgic warmth (most gentle indie/dream-pop love songs are cozy); cute = light, affectionate, openly warm, optimistic; mysterious = eerie, private, ambiguous, dreamlike, enigmatic; intense = genuinely dark, tense, brooding, anguished, confrontational; whimsical = surreal, playful, imaginative, delightfully odd. A driving beat does NOT make a song intense — a driving love song is cozy or whimsical. A melancholic but gentle song is cozy or mysterious, NOT intense.; ce",
   "celestial_affinity": ["1-2 of: galaxy, black_hole, neutron_star — based on the song's EMOTIONAL DIRECTION, NOT its mood or energy level. Mood (sad/melancholic) is NOT the same as direction (inward vs outward). galaxy = outward, expansive, connective, self-expressive — songs about love, longing for connection, romantic yearning, belonging, celebration, self-empowerment, self-love, uplift, freedom, or play are GALAXY even if they sound melancholic (yearning for someone = reaching outward). black_hole = inward, withdrawn, solitary, drawn to darkness — only songs about solitude as a state (not longing for someone), emotional withdrawal, genuine darkness, paranoia, or deep introspection with no outward pull. neutron_star = concentrated, disciplined, ambitious, driven, high-pressure — ONLY songs about determination, ambition, fierce drive, or resilience UNDER PRESSURE (not just any upbeat/empowering song). Self-love/self-empowerment songs are GALAXY (outward self-expression), NOT neutron_star. A melancholic love song is GALAXY (it yearns outward), NOT black_hole."],
   "intensity": "integer 1-5 (1=still/ambient, 2=restrained/gentle, 3=mid-tempo, 4=driving, 5=euphoric/anthemic)",
   "is_thai": "true if this is a Thai-language song or a Thai artist targeting a Thai audience (e.g. lyrics in Thai, or a Thai indie/pop artist); false for English/international songs. A Thai artist singing in English to an international audience is still is_thai:true if they are primarily known in the Thai music scene."
@@ -271,7 +293,9 @@ async function callOpenRouter(userPrompt) {
     }),
   });
   if (!res.ok) {
-    throw new Error(`OpenRouter request failed (${res.status}): ${await res.text()}`);
+    throw new Error(
+      `OpenRouter request failed (${res.status}): ${await res.text()}`,
+    );
   }
   const data = await res.json();
   const content = data.choices?.[0]?.message?.content;
@@ -280,26 +304,39 @@ async function callOpenRouter(userPrompt) {
   return JSON.parse(fenced?.[1]?.trim() ?? content.trim());
 }
 
-const VALID_VIBES = new Set(["cute", "cozy", "mysterious", "intense", "whimsical"]);
+const VALID_VIBES = new Set([
+  "cute",
+  "cozy",
+  "mysterious",
+  "intense",
+  "whimsical",
+  "cynical",
+]);
 const VALID_CELESTIAL = new Set(["galaxy", "black_hole", "neutron_star"]);
 
 /** Coerce the LLM's new-field output into the schema shape, dropping
  *  anything invalid so a bad value never poisons the cache. */
 function normalizeNewFields(parsed) {
-  const vibe = typeof parsed.vibe === "string" && VALID_VIBES.has(parsed.vibe)
-    ? parsed.vibe
-    : undefined;
+  const vibe =
+    typeof parsed.vibe === "string" && VALID_VIBES.has(parsed.vibe)
+      ? parsed.vibe
+      : undefined;
   const celestial_affinity = Array.isArray(parsed.celestial_affinity)
-    ? parsed.celestial_affinity.filter((c) => VALID_CELESTIAL.has(c)).slice(0, 2)
+    ? parsed.celestial_affinity
+        .filter((c) => VALID_CELESTIAL.has(c))
+        .slice(0, 2)
     : undefined;
   const intensityRaw = Number(parsed.intensity);
-  const intensity = Number.isFinite(intensityRaw) && intensityRaw >= 1 && intensityRaw <= 5
-    ? Math.round(intensityRaw)
-    : undefined;
-  const is_thai = typeof parsed.is_thai === "boolean" ? parsed.is_thai : undefined;
+  const intensity =
+    Number.isFinite(intensityRaw) && intensityRaw >= 1 && intensityRaw <= 5
+      ? Math.round(intensityRaw)
+      : undefined;
+  const is_thai =
+    typeof parsed.is_thai === "boolean" ? parsed.is_thai : undefined;
   const extra = {};
   if (vibe) extra.vibe = vibe;
-  if (celestial_affinity && celestial_affinity.length > 0) extra.celestial_affinity = celestial_affinity;
+  if (celestial_affinity && celestial_affinity.length > 0)
+    extra.celestial_affinity = celestial_affinity;
   if (intensity !== undefined) extra.intensity = intensity;
   if (is_thai !== undefined) extra.is_thai = is_thai;
   return extra;
@@ -310,7 +347,9 @@ async function describeTrack(track, index, total) {
     try {
       const parsed = await callOpenRouter(buildDescriptorPrompt(track));
       if (parsed.known) {
-        process.stdout.write(`[${index + 1}/${total}] ${track.name} — ${track.artist}: known\n`);
+        process.stdout.write(
+          `[${index + 1}/${total}] ${track.name} — ${track.artist}: known\n`,
+        );
         return {
           name: track.name,
           artist: track.artist,
@@ -332,7 +371,9 @@ async function describeTrack(track, index, total) {
         ? `${track.name} ${track.artist} เนื้อเพลง ความหมาย`
         : `${track.name} ${track.artist} lyrics meaning explained`;
       const results = await searchWeb(query).catch(() => []);
-      const grounded = await callOpenRouter(buildGroundedPrompt(track, results));
+      const grounded = await callOpenRouter(
+        buildGroundedPrompt(track, results),
+      );
       process.stdout.write(
         `[${index + 1}/${total}] ${track.name} — ${track.artist}: ${
           grounded.known ? "known (grounded via web search)" : "unknown"
@@ -356,7 +397,9 @@ async function describeTrack(track, index, total) {
         artist: track.artist,
         known: true,
         grounded: true,
-        themes: Array.isArray(grounded.themes) ? grounded.themes.slice(0, 4) : [],
+        themes: Array.isArray(grounded.themes)
+          ? grounded.themes.slice(0, 4)
+          : [],
         relationship_stance: String(grounded.relationship_stance ?? ""),
         mood: String(grounded.mood ?? ""),
         energy: String(grounded.energy ?? ""),
@@ -366,7 +409,10 @@ async function describeTrack(track, index, total) {
       };
     } catch (err) {
       if (attempt === 2) {
-        console.warn(`  ! failed after 3 attempts: ${track.name} — ${track.artist}`, err.message);
+        console.warn(
+          `  ! failed after 3 attempts: ${track.name} — ${track.artist}`,
+          err.message,
+        );
         return {
           name: track.name,
           artist: track.artist,
@@ -392,18 +438,24 @@ async function mapWithConcurrency(items, limit, fn) {
       results[i] = await fn(items[i], i, items.length);
     }
   }
-  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, worker),
+  );
   return results;
 }
 
 async function main() {
   loadEnvLocal();
-  const playlistId = (process.env.SPOTIFY_PLAYLIST_ID || "1LGPBmHJCUZWlrxz17lWhP").trim();
+  const playlistId = (
+    process.env.SPOTIFY_PLAYLIST_ID || "1LGPBmHJCUZWlrxz17lWhP"
+  ).trim();
 
   console.log(`Fetching playlist ${playlistId}...`);
   const token = await getUserAccessToken();
   const tracks = await fetchPlaylistTracks(token, playlistId);
-  console.log(`Fetched ${tracks.length} tracks. Generating descriptors (concurrency=${CONCURRENCY})...`);
+  console.log(
+    `Fetched ${tracks.length} tracks. Generating descriptors (concurrency=${CONCURRENCY})...`,
+  );
 
   // Preserve any existing curated entries — only (re)generate what's missing,
   // unless --force (regenerate everything) or --reground-unknown (retry just
@@ -421,11 +473,20 @@ async function main() {
   }
 
   const toGenerate = tracks.filter(
-    (t) => force || !existing[t.track_id] || (regroundUnknown && existing[t.track_id]?.known === false),
+    (t) =>
+      force ||
+      !existing[t.track_id] ||
+      (regroundUnknown && existing[t.track_id]?.known === false),
   );
-  console.log(`${toGenerate.length} track(s) need generation (${tracks.length - toGenerate.length} already cached).`);
+  console.log(
+    `${toGenerate.length} track(s) need generation (${tracks.length - toGenerate.length} already cached).`,
+  );
 
-  const generated = await mapWithConcurrency(toGenerate, CONCURRENCY, describeTrack);
+  const generated = await mapWithConcurrency(
+    toGenerate,
+    CONCURRENCY,
+    describeTrack,
+  );
 
   const result = { ...existing };
   toGenerate.forEach((t, i) => {
@@ -434,7 +495,9 @@ async function main() {
 
   await mkdir(path.dirname(OUT_PATH), { recursive: true });
   await writeFile(OUT_PATH, JSON.stringify(result, null, 2) + "\n", "utf-8");
-  console.log(`Wrote ${Object.keys(result).length} entries to ${path.relative(ROOT, OUT_PATH)}`);
+  console.log(
+    `Wrote ${Object.keys(result).length} entries to ${path.relative(ROOT, OUT_PATH)}`,
+  );
 }
 
 main().catch((err) => {

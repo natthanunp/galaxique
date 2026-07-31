@@ -155,7 +155,7 @@ possibilities open. If the user's answers repeatedly mention people,
 connection, comfort, celebration, warmth, or playful curiosity, galaxy is the
 right home for them — not a consolation prize.
   - central_symbol → "heart" when connection, care, or belonging is the strongest repeated signal; "star" when curiosity, play, or hope dominates; otherwise "none"
-  - vibe → "cozy" for comfort, steadiness, home, or gentle care; "cute" for open affection, optimistic warmth, or light confidence; "whimsical" ONLY for repeated evidence of imaginative play, unusual associations, delight in the surreal, or a deliberately unconventional perspective. Never choose "whimsical" merely because someone is warm, creative, or a galaxy.
+  - vibe → "cozy" for comfort, steadiness, home, or gentle care; "cute" for open affection, optimistic warmth, or light confidence; "whimsical" ONLY for repeated evidence of imaginative play, unusual associations, delight in the surreal, or a deliberately unconventional perspective. Never choose "whimsical" merely because someone is warm, creative, or a galaxy; "cynical" for skepticism, world-weariness, or ironic detachment — a galaxy person can be cynical when their warmth is tempered by dry humor or distrust of sentimentality.
   - colors → warm gold, rose, coral, soft amber, cool aurora, lavender, ocean-blue, and green are all valid — match the emotional temperature, not a dark default
 
 Choose "black_hole" when the dominant pattern is INWARD, PRIVATE, or
@@ -163,20 +163,41 @@ GRAVITATIONAL: solitude, emotional complexity, observation, restraint,
 longing, melancholy, mystery, philosophical thinking, a need for quiet, or
 being drawn to what is beneath the surface.
   - central_symbol → "none" when the inner world should speak for itself, otherwise "star"
-  - vibe → "mysterious" or "intense"
+  - vibe → "mysterious" or "intense"; "cynical" for sardonic detachment, distrust of surface appearances, or a world-weary observer who sees through illusions
   - colors → deep indigo, inky blue, violet, graphite, deep teal, magenta, or a restrained silver highlight
 
 Choose "neutron_star" when the dominant pattern is CONCENTRATED, RESILIENT,
 or HIGH-ENERGY: drive, courage, discipline, reinvention, pressure carried
 well, fierce care, decisive action, ambition, or a strong internal compass.
   - central_symbol → "star" or "none"; use "heart" only when tenderness under pressure is a repeated theme
-  - vibe → "intense" or "cute" for playful confidence
+  - vibe → "intense" or "cute" for playful confidence; "cynical" for sharp-edged resilience, a no-nonsense survivor who has seen through things and keeps going
   - colors → electric cyan, cobalt, white, hot pink, ultraviolet, or sharp gold; contrast is desirable
 
-When the evidence is genuinely mixed, pick the type supported by the most
-SPECIFIC answers, not the warmest answer. Across many different users, all
-three celestial types should be plausible outcomes; never treat galaxy as the
-safe default.
+When the evidence is genuinely mixed or evenly split, default to GALAXY —
+it is the most human and balanced home. Black hole should only win when
+inward/private/gravitational signals clearly dominate the MAJORITY of answers.
+Do not let one or two introspective or melancholy answers override an
+otherwise warm, connective, or playful profile. Neutron star wins only when
+concentrated drive, resilience, or high energy is the clearest repeated theme.
+
+Before finalizing a "black_hole" choice, run this audit:
+- Count the answers that explicitly mention people, connection, warmth, play,
+  comfort, hope, curiosity, or everyday joy. If that count is 3 or more, you
+  are probably over-reading the dark notes. Choose galaxy instead.
+- Black hole is correct only when solitude, mystery, melancholy, restraint,
+  observation, or depth beneath the surface is the dominant pattern across
+  MOST answers, not just a recurring undertone.
+
+Pattern examples (do not copy; use as calibration):
+- Galaxy: "I love late-night talks with friends," "small rituals with family,"
+  "learning just for fun," "a song that feels like a hug," "making strangers
+  smile."
+- Black hole: "I do my best thinking alone at 2am," "I keep a lot inside,"
+  "melancholy feels honest to me," "I watch more than I speak," "the unknown
+  draws me in."
+- Neutron star: "I thrive under pressure," "I decide fast and commit,"
+  "setbacks make me sharper," "I protect people I love fiercely," "quiet
+  ambition keeps me moving."
 
 === STYLE DIRECTIVE ===
 The overall aesthetic must feel AESTHETIC, expressive, and personal. It can be
@@ -184,11 +205,24 @@ soft, eerie, dark, calm, electric, or radiant depending on the answers. Even a
 black hole or neutron star should be beautiful and magical, never frightening,
 but do not warm up its colors or reading just to make it cute.
 
+=== VIBE → COLOR PALETTE ===
+The vibe MUST drive the color choices. Each vibe has a characteristic palette
+that the primary_color and secondary_color should reflect. Do not pick colors
+independently of the vibe — the palette is how the user *feels* the vibe
+visually before reading a single word.
+
+- "cute" → soft pastels: blush pink, peach, baby blue, mint, warm cream. Gentle, low-contrast, sweet.
+- "cozy" → warm earth tones: amber, soft gold, terracotta, warm brown, muted rose. Comforting, enveloping.
+- "mysterious" → deep jewel tones: midnight indigo, dark violet, emerald, deep teal, smoky purple. Rich, shadowy.
+- "intense" → high-contrast bold: electric crimson, hot magenta, blazing orange, stark white against deep black. Dramatic, saturated.
+- "whimsical" → unexpected, playful combos: lavender + chartreuse, teal + coral, lilac + lemon. Surreal, delightfully off-kilter.
+- "cynical" → cool, desaturated, slightly jaded: steel grey, slate blue, muted charcoal, tarnished silver, dusty mauve, cold teal. Restrained, understated, with a hint of dry wit — never warm, never bright.
+
 ${songGuidance}
 ${songPending && catalogTracks ? buildSongScoringSection(catalogTracks) : ""}
 
 === OUTPUT FIELDS ===
-- vibe: one of "cute" | "cozy" | "mysterious" | "intense" | "whimsical". Choose it from the strongest repeated evidence in the answers, independently of celestial_type. "whimsical" is the narrowest label: use it only when the answers repeatedly show imaginative, playful, or unconventional thinking. For ordinary warmth, connection, calm, or creativity, choose the more precise "cozy" or "cute" instead.
+- vibe: one of "cute" | "cozy" | "mysterious" | "intense" | "whimsical" | "cynical". Choose it from the strongest repeated evidence in the answers, independently of celestial_type. "whimsical" is the narrowest label: use it only when the answers repeatedly show imaginative, playful, or unconventional thinking. For ordinary warmth, connection, calm, or creativity, choose the more precise "cozy" or "cute" instead. "cynical" is for skepticism, world-weariness, or ironic detachment — it can pair with any celestial type.
 - celestial_type: one of "galaxy" | "black_hole" | "neutron_star"
 - central_symbol: one of "star" | "heart" | "none"
 - primary_color: hex string like "#FFB4A2" — the dominant glow color
@@ -216,7 +250,7 @@ ${songPending && catalogTracks ? buildSongScoringSection(catalogTracks) : ""}
 - spotify_track_id: always null. ${songPending ? "A dedicated scoring pass above provides candidates; the server assigns the exact catalog ID after this call finishes — do not invent one." : "No playlist catalog is configured for this request."}
 - spotify_search_query: ${songPending ? "a placeholder value is fine (e.g. based on your own best guess) — it will be overwritten with the resolved catalog track's real title and artist." : "a SPECIFIC string \"Song Name Artist Name\" for the chosen track. Choose a real, recognizable track that matches the user's vibe. The song should be familiar enough that a general listener may know it or the artist; do not choose an obscure local-language song, unknown artist, demo, deep album cut, remix, or invented title just because it fits the mood."}
   ${songFlavorHint ? `For this global-search fallback, lean toward ${songFlavorHint} unless that plainly clashes with the user's vibe.` : ""}
-- personality_reading: EXACTLY 3 sentences, warm and a little poetic, written in ${languageName} (natural, modern language — not a literal translation of English idioms; no Chinese characters, Japanese kanji, or romanization if writing Thai). Sentence 1 explains why this universe and central symbol represent the user. Sentence 2 ${songPending ? "MUST use the literal placeholder token \"[SELECTED SONG]\" exactly once (see SONG READING guidance above) and explain a plausible emotional reason grounded in the user's own answers" : "MUST name the chosen song and artist exactly, then explain at least one specific emotional or sonic quality that makes it fit the user's answers; never say only that it \"matches your vibe.\""} Sentence 3 connects the creature to the same emotional thread. Personal enough to feel like a small reading, not a feature description.
+- personality_reading: EXACTLY 3 sentences, warm and a little poetic, written in ${languageName} (natural, modern language — not a literal translation of English idioms; no Chinese characters, Japanese kanji, or romanization if writing Thai). Even when the cosmic object is a black hole or neutron star, keep the reading beautiful, affirming, and human — never bleak, cold, or nihilistic. Sentence 1 explains why this universe and central symbol represent the user. Sentence 2 ${songPending ? "MUST use the literal placeholder token \"[SELECTED SONG]\" exactly once (see SONG READING guidance above) and explain a plausible emotional reason grounded in the user's own answers" : "MUST name the chosen song and artist exactly, then explain at least one specific emotional or sonic quality that makes it fit the user's answers; never say only that it \"matches your vibe.\""} Sentence 3 connects the creature to the same emotional thread. Personal enough to feel like a small reading, not a feature description.
 ${songPending ? `- song_candidates: REQUIRED array as specified in the SONG SCORING section above.` : ""}
 
 Return ONLY the JSON object matching the provided schema. No markdown, no commentary.`;

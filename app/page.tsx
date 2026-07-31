@@ -15,6 +15,7 @@ import {
 
 import { StarfieldBackground } from "@/components/shared/StarfieldBackground";
 import { LanguageToggle } from "@/components/quiz/LanguageToggle";
+import { VibeCounter } from "@/components/shared/VibeCounter";
 import { Button } from "@/components/ui/button";
 import { prefetchQuiz } from "@/lib/quizPrefetch";
 import { useQuizStore } from "@/store/quizStore";
@@ -235,7 +236,7 @@ export default function LandingPage() {
             <SparklesIcon className="size-4 text-accent" />
             {t.eyebrow}
             <span className="rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-accent">
-              Public Beta 2
+              Version 1.0
             </span>
           </div>
 
@@ -276,6 +277,10 @@ export default function LandingPage() {
                 {installPromptMode === "native" ? t.installCta : t.installHowTo}
               </Button>
             ) : null}
+          </div>
+
+          <div className="mt-8 w-full max-w-2xl">
+            <VibeCounter language={language} />
           </div>
 
           {/* Subtle tribute — no name used, just a soft line of credit. */}
