@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -54,6 +55,26 @@ export function QuestionCard({
       ? "ถัดไป"
       : "Next";
   const backLabel = language === "th" ? "กลับ" : "Back";
+  // Pressing Enter acts like clicking Next (when an option is selected).
+  const cardRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && !e.shiftKey && canProceed) {
+        e.preventDefault();
+        onNext();
+      }
+    };
+    el.addEventListener("keydown", handler);
+    return () => el.removeEventListener("keydown", handler);
+  }, [canProceed, onNext]);
+
+  // Auto-focus the card when the question changes so Enter key works immediately.
+  useEffect(() => {
+    cardRef.current?.focus();
+  }, [question.id]);
+
   const otherLabel = language === "th" ? "อื่นๆ" : "Other";
   const otherPlaceholder = language === "th"
     ? "พิมพ์คำตอบของคุณ"
@@ -61,6 +82,8 @@ export function QuestionCard({
 
   return (
     <motion.div
+      ref={cardRef}
+      tabIndex={-1}
       initial={{ opacity: 0, x: 60, rotateY: 12 }}
       animate={{ opacity: 1, x: 0, rotateY: 0 }}
       exit={{ opacity: 0, x: -60, rotateY: -12 }}
