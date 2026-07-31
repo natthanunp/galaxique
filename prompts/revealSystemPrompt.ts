@@ -122,12 +122,16 @@ A dedicated scoring pass below picks catalog candidates, and the SERVER makes
 the final pick after this call finishes — you do not know which song it will
 be yet. Write sentence 2 as if the song were already known: use the literal
 placeholder token "[SELECTED SONG]" exactly once, positioned where the song
-title/artist would naturally sit, then explain a plausible, emotionally
-specific reason grounded in the user's OWN answers (not a real song's facts,
-since you don't have them) that a fitting song for this exact reading would
-resonate. Never invent a real song title, artist, or genre — only the
-placeholder token stands in for the song identity; the real title/artist and
-a verified mood detail are substituted in automatically afterward.`
+title/artist would naturally sit. THEN write a rich, emotionally specific
+explanation of WHY that kind of song fits the user — grounded in the user's
+OWN answers, not a real song's facts (since you don't have them). Describe
+the emotional quality, the specific resonance, the way this song would feel
+to this person at this moment in life. Make it personal and vivid: name the
+feeling the song would give them, the memory it would brush, the part of
+them it would mirror. The "why" should be 1-2 sentences, woven naturally
+into the reading — not a tacked-on clause. Never invent a real song title,
+artist, or genre; only the placeholder stands in for the song identity. The
+real title/artist and a short mood note are substituted in afterward.`
     : `=== SONG MATCHING ===
 Choose one real, recognizable song from the answer-backed emotional brief.
 Match relationship stance, mood, energy, and setting rather than a generic
@@ -250,7 +254,7 @@ ${songPending && catalogTracks ? buildSongScoringSection(catalogTracks) : ""}
 - spotify_track_id: always null. ${songPending ? "A dedicated scoring pass above provides candidates; the server assigns the exact catalog ID after this call finishes — do not invent one." : "No playlist catalog is configured for this request."}
 - spotify_search_query: ${songPending ? "a placeholder value is fine (e.g. based on your own best guess) — it will be overwritten with the resolved catalog track's real title and artist." : "a SPECIFIC string \"Song Name Artist Name\" for the chosen track. Choose a real, recognizable track that matches the user's vibe. The song should be familiar enough that a general listener may know it or the artist; do not choose an obscure local-language song, unknown artist, demo, deep album cut, remix, or invented title just because it fits the mood."}
   ${songFlavorHint ? `For this global-search fallback, lean toward ${songFlavorHint} unless that plainly clashes with the user's vibe.` : ""}
-- personality_reading: EXACTLY 3 sentences, warm and a little poetic, written in ${languageName} (natural, modern language — not a literal translation of English idioms; no Chinese characters, Japanese kanji, or romanization if writing Thai). Even when the cosmic object is a black hole or neutron star, keep the reading beautiful, affirming, and human — never bleak, cold, or nihilistic. Sentence 1 explains why this universe and central symbol represent the user. Sentence 2 ${songPending ? "MUST use the literal placeholder token \"[SELECTED SONG]\" exactly once (see SONG READING guidance above) and explain a plausible emotional reason grounded in the user's own answers" : "MUST name the chosen song and artist exactly, then explain at least one specific emotional or sonic quality that makes it fit the user's answers; never say only that it \"matches your vibe.\""} Sentence 3 connects the creature to the same emotional thread. Personal enough to feel like a small reading, not a feature description.
+- personality_reading: EXACTLY 3 sentences, warm and a little poetic, written in ${languageName} (natural, modern language — not a literal translation of English idioms; no Chinese characters, Japanese kanji, or romanization if writing Thai). Even when the cosmic object is a black hole or neutron star, keep the reading beautiful, affirming, and human — never bleak, cold, or nihilistic. Sentence 1 explains why this universe and central symbol represent the user. Sentence 2 ${songPending ? "begins with the literal placeholder token \"[SELECTED SONG]\" positioned where the song name would naturally appear, then continues with a RICH 1-2 sentence explanation of why a song with this vibe fits the user — grounded in the user's own answers, describing the emotional resonance, the feeling it would give them, or the part of them it mirrors. Never invent a real song title, artist, or genre." : "MUST name the chosen song and artist exactly, then explain at least one specific emotional or sonic quality that makes it fit the user's answers; never say only that it \"matches your vibe.\""} Sentence 3 connects the creature to the same emotional thread. Personal enough to feel like a small reading, not a feature description.
 ${songPending ? `- song_candidates: REQUIRED array as specified in the SONG SCORING section above.` : ""}
 
 Return ONLY the JSON object matching the provided schema. No markdown, no commentary.`;
