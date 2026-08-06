@@ -28,6 +28,12 @@ type BeforeInstallPromptEvent = Event & {
 type InstallPromptMode = "none" | "native" | "ios" | "browser";
 
 const INSTALL_PROMPT_DISMISSED_KEY = "galaxique-install-prompt-dismissed-v1";
+// Bump on every user-visible release. Surfaced in the top-left eyebrow badge
+// so users (and you, in screenshots) can see which build is live. The major
+// number is the user-facing release; minor is the "this is the new model
+// + new prompt" cut. Keep it short — it sits next to the brand name in a
+// small pill.
+const APP_VERSION = "v1.5";
 
 export default function LandingPage() {
   const language = useQuizStore((s) => s.language);
@@ -141,6 +147,7 @@ export default function LandingPage() {
 
   const t = {
     eyebrow: language === "th" ? "กาแล็กซิก" : "Galaxique",
+    versionLabel: APP_VERSION,
     title:
       language === "th"
         ? "ค้นหาดวงดาวที่เป็นตัวคุณ"
@@ -226,7 +233,10 @@ export default function LandingPage() {
         >
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-5 py-2 text-sm text-muted-foreground">
             <SparklesIcon className="size-4 text-accent" />
-            {t.eyebrow}
+            <span>{t.eyebrow}</span>
+            <span className="text-[10px] text-muted-foreground/60" aria-label={t.versionLabel}>
+              {t.versionLabel}
+            </span>
           </div>
           <LanguageToggle />
         </motion.div>
