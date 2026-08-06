@@ -12,7 +12,6 @@ interface CentralSymbolObjectProps {
   symbol: CentralSymbol;
   primaryColor: string;
   secondaryColor: string;
-  rotationSpeed: number;
   /** Overall scale of the central shape. */
   scale?: number;
 }
@@ -33,12 +32,12 @@ export function CentralSymbolObject({
   symbol,
   primaryColor,
   secondaryColor,
-  rotationSpeed,
   scale = 2.4,
 }: CentralSymbolObjectProps) {
   const points = useMemo(() => getConstellationPoints(symbol), [symbol]);
   const groupRef = useRef<THREE.Group>(null);
-  const { gl } = useThree();
+  const { gl, size } = useThree();
+  const isNarrow = size.width < 640;
 
   // Build geometry attributes from the outline points.
   const geometry = useMemo(() => {
@@ -49,35 +48,36 @@ export function CentralSymbolObject({
     const sizes = new Float32Array(count);
     const seeds = new Float32Array(count);
     for (let i = 0; i < count; i++) {
-      sizes[i] = 2 + Math.random() * 3; // fine constellation points
+      sizes[i] = isNarrow
+        ? 2 + Math.random() * 3
+        : 2.4 + Math.random() * 2.6;
       seeds[i] = Math.random();
     }
     geo.setAttribute("position", new THREE.BufferAttribute(points, 3));
     geo.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
     geo.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 1));
     return geo;
-  }, [points]);
+  }, [isNarrow, points]);
 
   // Create the glow material once (colors update via uniform mutation below).
-  const material = useMemo(
-    () =>
-      createGlowPointMaterial({
+  const material = useMemo(() => {
+    const nextMaterial = createGlowPointMaterial({
         colorA: primaryColor,
         colorB: secondaryColor,
         size: 8,
         twinkle: 0.18,
         pixelRatio: Math.min(gl.getPixelRatio(), 2),
-      }),
+      });
+    nextMaterial.depthTest = false;
+    return nextMaterial;
     // Recreate only when colors change; uniforms are stable refs.
-    [primaryColor, secondaryColor, gl],
-  );
+  }, [primaryColor, secondaryColor, gl]);
 
   // Keep a ref to the material for per-frame uniform updates.
   const matRef = useRef<THREE.ShaderMaterial>(material);
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     if (groupRef.current) {
-      groupRef.current.rotation.z += delta * rotationSpeed * 0.3;
       // Gentle bob.
       groupRef.current.position.y =
         Math.sin(state.clock.elapsedTime * 0.5) * 0.05;
@@ -89,7 +89,7 @@ export function CentralSymbolObject({
 
   return (
     <group ref={groupRef} scale={scale}>
-      <points geometry={geometry} material={material} />
+      <points geometry={geometry} material={material} renderOrder={2} />
     </group>
   );
 }

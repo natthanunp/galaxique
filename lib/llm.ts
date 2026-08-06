@@ -2,6 +2,18 @@ import { OpenRouter } from "@openrouter/sdk";
 
 import { quizConfig } from "@/config/quizConfig";
 
+type LlmResponseFormat =
+  | { type: "json_object" }
+  | {
+      type: "json_schema";
+      jsonSchema: {
+        name: string;
+        description?: string;
+        schema: Record<string, unknown>;
+        strict?: boolean | null;
+      };
+    };
+
 /**
  * OpenRouter LLM client via the official `@openrouter/sdk` package.
  *
@@ -34,6 +46,8 @@ export interface LlmCallOptions {
   /** Optional provider order for a model override. Provider slugs must use
    *  the lowercase REST API form, e.g. "alibaba". */
   providerOrder?: string[];
+  /** Response structure required from the model. Defaults to a JSON object. */
+  responseFormat?: LlmResponseFormat;
   /** Max output tokens. */
   maxTokens?: number;
   /** Temperature (0–2). Lower = more deterministic. */
@@ -80,18 +94,17 @@ export interface LlmCallOptions {
  *  which is the WORST-throughput of the 3 providers that actually serve this
  *  model, explaining why latency didn't improve after the model swap.
  *
- *  Current values for `mistralai/mistral-small-3.2-24b-instruct` (live
- *  30-min stats via the endpoints API): `mistral` (official) p50 308ms /
- *  88 tok/s / 99.91% uptime — fastest and highest throughput by far;
- *  `deepinfra` p50 410ms / 39 tok/s / 99.01%; `venice` p50 632ms / 29 tok/s
- *  / 97.07% (worst of the three). Re-verify with the endpoints API any time
- *  `OPENROUTER_MODEL` changes — do not assume a prior order still applies.
+ *  The configured `deepseek/deepseek-v4-flash-0731` model is served by
+ *  DeepSeek, Baidu, DeepInfra, Novita, and other providers. Prefer the
+ *  first-party route, then Baidu, before the slower fallback providers.
+ *  Re-verify with the endpoints API any time `OPENROUTER_MODEL` changes —
+ *  do not assume a prior order still applies.
  *
  *  Override with OPENROUTER_PROVIDER_ORDER (comma-separated lowercase slugs)
  *  — see https://openrouter.ai/settings/preferences for enabling providers. */
-const DEFAULT_PROVIDER_ORDER = ["mistral", "deepinfra", "venice"];
+const DEFAULT_PROVIDER_ORDER = ["deepseek", "baidu", "deepinfra", "novita"];
 
-function resolveProviderOrder(): string[] {
+export function resolveProviderOrder(): string[] {
   const raw = process.env.OPENROUTER_PROVIDER_ORDER;
   if (!raw) return DEFAULT_PROVIDER_ORDER;
   const parsed = raw
@@ -144,7 +157,7 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
             { role: "system", content: opts.systemPrompt },
             { role: "user", content: opts.userPrompt },
           ],
-          responseFormat: { type: "json_object" },
+          responseFormat: opts.responseFormat ?? { type: "json_object" },
           temperature: opts.temperature ?? 0.9,
           maxTokens: opts.maxTokens ?? 2048,
           // Some models (e.g. deepseek/deepseek-v4-flash) default to an

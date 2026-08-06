@@ -130,7 +130,10 @@ export function CosmicBackground({
           float n = fbm(dir * uNebulaScale + vec3(0.0, 0.0, uTime * 0.012));
           float smoothRange = uNebulaSmoothness;
           n = smoothstep(0.5 - smoothRange, 0.5 + smoothRange, n);
-          vec3 nebula = mix(uColorA, uColorB, fract(n * 1.6)) * n * uNebulaIntensity;
+          // Keep the procedural nebula subordinate to the central
+          // celestial object. A stronger wash turns the whole screen into
+          // flat color fields and makes the galaxy itself disappear.
+          vec3 nebula = mix(uColorA, uColorB, fract(n * 1.6)) * n * uNebulaIntensity * 0.24;
 
           // --- Stars: hash-grid "baked" points on the direction sphere,
           // smooth thresholded flecks with a gentle per-star twinkle so
@@ -141,12 +144,12 @@ export function CosmicBackground({
           vec3 grid = dir * 320.0;
           vec3 gi = floor(grid);
           float h = hash(gi);
-          float thresh = 1.0 - 0.018 * uStarDensity;
+          float thresh = 1.0 - 0.005 * uStarDensity;
           // Anti-aliased star edges via smoothstep: stars ramp in/out
           // over a small band instead of an instantaneous hard step.
           float starMask = smoothstep(thresh - 0.003, thresh + 0.003, h);
           float twinkle = 0.55 + 0.45 * sin(uTime * 1.6 + h * 6.2831);
-          vec3 starColor = vec3(1.0, 0.96 - h * 0.15, 1.0 - h * 0.35) * starMask * twinkle * 0.55;
+          vec3 starColor = vec3(1.0, 0.96 - h * 0.15, 1.0 - h * 0.35) * starMask * twinkle * 0.4;
 
           gl_FragColor = vec4(nebula + starColor, 1.0);
         }

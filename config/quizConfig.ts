@@ -10,8 +10,16 @@
  * LLM calls go through OpenRouter exclusively (see lib/llm.ts).
  */
 export const quizConfig = {
-  /** Number of questions the LLM generates per quiz (5–10 recommended). */
-  questionCount: 10,
+  /** Number of questions the LLM generates per quiz (5–10 recommended).
+   *  Currently 8: a 10-question Thai payload is too large to fit the
+   *  token budget on the slow qwen3-32b routes we use to avoid Groq —
+   *  10 single-language Thai questions run ~800-900 tokens, which
+   *  DeepInfra (24 tok/s) can't complete in our 18s primary timeout.
+   *  8 questions fits in ~650-720 tokens (~11s on SiliconFlow, ~9s on
+   *  BaseTen fallback, ~29s on DeepInfra — borderline so we still
+   *  prefer SiliconFlow/BaseTen for the first attempt). 5 is the
+   *  absolute floor if any provider hiccup causes repeated timeouts. */
+  questionCount: 8,
   /** Thematic lens the questions are written through. */
   theme: "the cosmos, nature, connection, and inner worlds",
   /** Emotional tone of the questions. */

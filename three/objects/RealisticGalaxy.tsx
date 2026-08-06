@@ -188,7 +188,7 @@ export function RealisticGalaxy({
           float distanceToCenter = length(point);
           if (distanceToCenter > 0.5) discard;
           float softness = smoothstep(0.5, 0.08, distanceToCenter);
-          gl_FragColor = vec4(vColor * (0.65 + softness * 0.65), softness * vAlpha);
+          gl_FragColor = vec4(vColor * (1.0 + softness * 1.1), softness * vAlpha);
         }
       `,
       transparent: true,
@@ -199,11 +199,11 @@ export function RealisticGalaxy({
     return {
       geometry: nextGeometry,
       material: nextMaterial,
-      coreMaterial: new THREE.MeshBasicMaterial({ color: core, transparent: true, opacity: 0.28 }),
+      coreMaterial: new THREE.MeshBasicMaterial({ color: core, transparent: true, opacity: 0.55 }),
       discMaterial: new THREE.MeshBasicMaterial({
-        color: arm.clone().multiplyScalar(0.42),
+        color: arm.clone().multiplyScalar(0.55),
         transparent: true,
-        opacity: 0.025 + config.dust_prominence * 0.035,
+        opacity: 0.05 + config.dust_prominence * 0.06,
         depthWrite: false,
         blending: THREE.NormalBlending,
       }),

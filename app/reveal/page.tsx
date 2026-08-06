@@ -255,9 +255,11 @@ export default function RevealPage() {
       <header className="safe-area-top-4 pointer-events-none absolute inset-x-4 z-20 flex items-center justify-between gap-2 sm:inset-x-6">
         <div className="pointer-events-auto">
           <Button asChild variant="ghost" size="sm" className="gap-1">
-            <Link href="/">
+            <Link href="/" aria-label={language === "th" ? "หน้าแรก" : "Home"}>
               <ArrowLeftIcon className="size-4" />
-              {language === "th" ? "หน้าแรก" : "Home"}
+              <span className="hidden sm:inline">
+                {language === "th" ? "หน้าแรก" : "Home"}
+              </span>
             </Link>
           </Button>
         </div>
@@ -267,6 +269,7 @@ export default function RevealPage() {
             disabled={!canvasReady}
             language={language}
             reading={reveal.personality_reading}
+            vibe={reveal.vibe}
           />
           <Button
             asChild
@@ -274,41 +277,53 @@ export default function RevealPage() {
             size="sm"
             className="gap-1"
           >
-            <Link href="/quiz">
+            <Link href="/quiz" aria-label={language === "th" ? "ทำใหม่" : "Retake"}>
               <SparklesIcon className="size-4" />
-              {language === "th" ? "ทำใหม่" : "Retake"}
+              <span className="hidden sm:inline">
+                {language === "th" ? "ทำใหม่" : "Retake"}
+              </span>
             </Link>
           </Button>
         </div>
       </header>
 
-      {/* Immersive content overlay — vinyl disc + reading + badges float
-          on top of the R3F scene. Centered on small screens, distributed
-          across the viewport on lg+ so the disc anchors the left and the
-          reading + badges the right. The overlay container is
-          `pointer-events-none` so the canvas behind still receives
-          orbit-drag input; only the children opt back in via
+      {/* Immersive content overlay — the vinyl disc is the hero and sits
+          in the visual center of the viewport. The reading + meta strip
+          dock to the bottom on mobile and to the right edge on desktop,
+          leaving the disc clearly visible as the focal point. The
+          container is `pointer-events-none` so the canvas still receives
+          orbit-drag; only the children opt back in via
           `pointer-events-auto`. */}
-      <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-6xl flex-col items-center justify-center gap-8 px-4 pb-12 pt-24 sm:px-6 lg:flex-row lg:items-center lg:gap-12">
+      <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-7xl flex-col items-stretch gap-0 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(5rem,calc(env(safe-area-inset-top)+4rem))] sm:px-6 sm:pt-[max(5.5rem,calc(env(safe-area-inset-top)+4.5rem))] lg:max-w-none lg:px-8 lg:flex-row lg:items-stretch lg:justify-end lg:gap-8 xl:gap-12">
+        {/* Vinyl hero — centered over the galaxy on every breakpoint.
+            On mobile it occupies a dedicated upper scene region, leaving
+            the reading to begin below the track controls instead of
+            competing with the focal point. */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
+          initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9 }}
-          className="pointer-events-auto flex shrink-0 flex-col items-center"
+          className="pointer-events-auto absolute left-1/2 top-[50svh] z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:top-[50svh] lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2"
         >
           <VinylDisc
             query={reveal.spotify_search_query}
             trackId={reveal.spotify_track_id}
             language={language}
             primaryColor={reveal.primary_color}
+            size="hero"
           />
         </motion.div>
 
+        {/* Reading + meta strip — right column on desktop, full-width at
+            the bottom on mobile. On mobile the text is much smaller and
+            the dock has tighter padding so the whole reading fits in
+            the lower third of the viewport without pushing the disc
+            off-center. Capped max-height + scroll on tiny screens. */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15 }}
-          className="pointer-events-auto flex w-full max-w-md flex-col gap-4 lg:max-w-none lg:flex-1"
+            className="pointer-events-auto relative z-20 mt-[calc(82svh-5rem)] flex w-full flex-col gap-3 self-end sm:mt-[calc(80svh-5.5rem)] sm:max-w-xl sm:gap-4 lg:absolute lg:right-8 lg:bottom-10 lg:mt-0 lg:w-[38%] lg:max-w-xl xl:w-[36%]"
         >
           <PersonalityReading
             reading={reveal.personality_reading}
@@ -316,35 +331,79 @@ export default function RevealPage() {
             language={language}
             borderless
           />
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground/80">
-            <span>{humanizeCelestialType(reveal.celestial_type, language)}</span>
-            {reveal.central_symbol !== "none" && (
-              <>
-                <span aria-hidden>·</span>
-                <span>{humanizeSymbol(reveal.central_symbol, language)}</span>
-              </>
-            )}
-            {reveal.creature && (
-              <>
-                <span aria-hidden>·</span>
-                <span
-                  title={`A ${reveal.creature.accent !== "none" ? reveal.creature.accent + " " : ""}${reveal.creature.kind} that ${reveal.creature.motion}s beside you`}
-                >
-                  {language === "th" ? "เพื่อนคู่ใจ" : "companion"}
-                  {" · "}
-                  <span className="text-foreground/80">
-                    {reveal.creature.name ?? reveal.creature.kind}
-                  </span>
-                </span>
-              </>
-            )}
-            <span aria-hidden>·</span>
-            <span style={{ color: reveal.primary_color }}>
-              {reveal.primary_color}
-            </span>
+          <div className="w-full text-xs sm:text-sm lg:text-base">
+            <RevealMeta
+              reveal={reveal}
+              language={language}
+            />
           </div>
         </motion.div>
       </div>
     </main>
+  );
+}
+
+/** Color swatch + readable hex label. Renders a small filled square
+ *  using the given color, then the hex in a neutral foreground tone.
+ *  The previous v1.5 design colored the hex text with the same color,
+ *  which became unreadable whenever the color was dark or low-contrast
+ *  against the page background. */
+function ColorChip({ color }: { color: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <span
+        aria-hidden
+        className="inline-block size-3 rounded-sm border border-white/20 shadow-[0_0_4px_rgba(0,0,0,0.4)]"
+        style={{ backgroundColor: color }}
+      />
+      <code className="font-mono text-[0.7rem] tracking-wider text-foreground/70">
+        {color.toUpperCase()}
+      </code>
+    </span>
+  );
+}
+
+/** The bottom meta strip — celestial type, central symbol, companion,
+ *  primary + secondary color chips. Kept as a single row on sm+, wraps
+ *  on small screens. */
+function RevealMeta({
+  reveal,
+  language,
+}: {
+  reveal: UniverseReveal;
+  language: "en" | "th";
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 px-1 text-xs text-muted-foreground/80 lg:text-sm">
+      <span>{humanizeCelestialType(reveal.celestial_type, language)}</span>
+      {reveal.central_symbol !== "none" && (
+        <>
+          <span aria-hidden>·</span>
+          <span>{humanizeSymbol(reveal.central_symbol, language)}</span>
+        </>
+      )}
+      {reveal.creature && (
+        <>
+          <span aria-hidden>·</span>
+          <span
+            title={`A ${reveal.creature.accent !== "none" ? reveal.creature.accent + " " : ""}${reveal.creature.kind} that ${reveal.creature.motion}s beside you`}
+          >
+            {language === "th" ? "เพื่อนคู่ใจ" : "companion"}
+            {" · "}
+            <span className="text-foreground/80">
+              {reveal.creature.name ?? reveal.creature.kind}
+            </span>
+          </span>
+        </>
+      )}
+      <span aria-hidden>·</span>
+      <ColorChip color={reveal.primary_color} />
+      {reveal.secondary_color && reveal.secondary_color !== reveal.primary_color && (
+        <>
+          <span aria-hidden>·</span>
+          <ColorChip color={reveal.secondary_color} />
+        </>
+      )}
+    </div>
   );
 }

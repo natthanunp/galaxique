@@ -1,10 +1,9 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, PerformanceMonitor } from "@react-three/drei";
-import { EffectComposer, Bloom, ToneMapping } from "@react-three/postprocessing";
-import { BlendFunction, ToneMappingMode } from "postprocessing";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
 import { UniverseScene } from "@/three/scene/UniverseScene";
@@ -22,7 +21,10 @@ interface UniverseCanvasProps {
 
 /** Vibe-driven postprocessing parameters. Controls bloom intensity/threshold
  *  and a subtle color tint overlay that makes each vibe feel distinct at a
- *  glance, even when the LLM picks similar primary/secondary colors. */
+ *  glance, even when the LLM picks similar primary/secondary colors. Bloom
+ *  is intentionally moderate — the 3D scene is a backdrop that frames the
+ *  centered vinyl disc hero, so it should glow softly rather than wash out
+ *  the disc with a flat sheet of light. */
 interface VibePostFX {
   bloomIntensity: number;
   bloomThreshold: number;
@@ -33,40 +35,40 @@ interface VibePostFX {
 
 const VIBE_POSTFX: Record<Vibe, VibePostFX> = {
   cute: {
-    bloomIntensity: 0.45,
-    bloomThreshold: 0.9,
+    bloomIntensity: 0.55,
+    bloomThreshold: 0.85,
     tint: "#ff9ec4",
     tintOpacity: 0.04,
   },
   cozy: {
-    bloomIntensity: 0.38,
-    bloomThreshold: 1.0,
+    bloomIntensity: 0.5,
+    bloomThreshold: 0.9,
     tint: "#ffb870",
     tintOpacity: 0.035,
   },
   mysterious: {
-    bloomIntensity: 0.35,
-    bloomThreshold: 1.1,
+    bloomIntensity: 0.6,
+    bloomThreshold: 0.9,
     tint: "#6a3d9d",
     tintOpacity: 0.05,
   },
   intense: {
-    bloomIntensity: 0.55,
+    bloomIntensity: 0.7,
     bloomThreshold: 0.8,
     tint: "#ff4444",
     tintOpacity: 0.03,
   },
   whimsical: {
-    bloomIntensity: 0.42,
-    bloomThreshold: 0.95,
+    bloomIntensity: 0.55,
+    bloomThreshold: 0.85,
     tint: "#a8e6cf",
     tintOpacity: 0.04,
   },
   cynical: {
-    bloomIntensity: 0.2,
-    bloomThreshold: 1.4,
+    bloomIntensity: 0.4,
+    bloomThreshold: 1.0,
     tint: "#708090",
-    tintOpacity: 0.06,
+    tintOpacity: 0.05,
   },
 };
 
@@ -103,9 +105,59 @@ export default function UniverseCanvas({
   // Vibe-driven postprocessing
   const postfx = VIBE_POSTFX[reveal.vibe];
 
+  // Mobile viewports are narrow + tall, so the fixed 55° fov + 4-unit
+  // minDistance can put the camera so close to the central object (esp.
+  // black-hole event horizon) that the image looks like a giant distorted
+  // blob filling the screen. Pull the camera back on narrow viewports
+  // and tighten the zoom-in limit so pinch-zoom can never recreate the
+  // same problem.
+  const [viewport, setViewport] = useState(() => ({
+    width: typeof window !== "undefined" ? window.innerWidth : 1280,
+    height: typeof window !== "undefined" ? window.innerHeight : 720,
+  }));
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onResize = () =>
+      setViewport({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  const isNarrow = viewport.width < 640;
+  const isShort = viewport.height < 500;
+  const isWide = viewport.width >= 1024;
+  const isUltraWide = viewport.width >= 1600;
+  // The vinyl disc is a DOM element pinned to the viewport center. The
+  // 3D galaxy needs to render AROUND it, not behind it — so the camera
+  // sits well back from the origin and the central object's silhouette
+  // extends well past the disc's screen footprint. We pull back further
+  // on every breakpoint than the previous tuning, especially on
+  // short-tall phones (where the disc's vmin size eats a huge chunk of
+  // the visible canvas).
+  const extraBack = isNarrow
+    ? isShort
+      ? 9
+      : 7
+    : isUltraWide
+      ? 7
+      : isWide
+        ? 5
+        : 3;
+  // Narrower FOV on wider screens reduces perspective stretching and
+  // keeps the galaxy/black hole circular. Phones keep a slightly wider
+  // FOV so the scene doesn't feel too far away.
+  const fov = isNarrow ? 55 : isUltraWide ? 45 : isWide ? 48 : 52;
+  // Camera pulled back so the full 3D galaxy is visible *around* the
+  // centered vinyl disc. The disc is a smaller DOM element pinned to
+  // the viewport center (see components/reveal/VinylDisc.tsx); a
+  // wider camera distance keeps the galaxy arms sweeping in from
+  // beyond the disc's edge rather than getting hidden behind it.
+  const cameraPos: [number, number, number] = [0, 0, 9 + extraBack];
+  const minDist = isNarrow ? 6 : isWide ? 7 : 5;
+  const maxDist = isNarrow ? 24 : isWide ? 28 : 22;
+
   return (
     <Canvas
-      camera={{ position: [0, 0, 8], fov: 55 }}
+      camera={{ position: cameraPos, fov }}
       gl={{
         antialias: true,
         alpha: true,
@@ -128,18 +180,18 @@ export default function UniverseCanvas({
       <PerformanceMonitor onIncline={upgrade} onDecline={downgrade} />
       <RenderPerformanceMetrics />
 
-      <ambientLight intensity={0.55} />
-      <pointLight position={[8, 6, 8]} intensity={1.2} />
-      <pointLight position={[-8, -4, -6]} intensity={0.6} color={reveal.secondary_color} />
+      <ambientLight intensity={0.85} />
+      <pointLight position={[8, 6, 8]} intensity={2.2} />
+      <pointLight position={[-8, -4, -6]} intensity={1.4} color={reveal.secondary_color} />
 
       <UniverseScene reveal={reveal} />
       {postfx.tintOpacity > 0 ? <TintOverlay color={postfx.tint} opacity={postfx.tintOpacity} /> : null}
 
       <OrbitControls
         enablePan={false}
-        enableZoom={true}
-        minDistance={4}
-        maxDistance={16}
+        enableZoom={!isNarrow}
+        minDistance={minDist}
+        maxDistance={maxDist}
         autoRotate
         autoRotateSpeed={0.6}
         enableDamping

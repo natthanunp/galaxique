@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { callLlm } from "@/lib/llm";
+import { callLlm, resolveProviderOrder } from "@/lib/llm";
 import { quizPayloadSchema } from "@/lib/schemas";
 import { buildQuizSystemPrompt } from "@/prompts/quizSystemPrompt";
 import { quizConfig, QUESTION_ANGLES } from "@/config/quizConfig";
@@ -18,14 +18,105 @@ const MAX_AVOID_ANGLES_IN_PROMPT = 12;
 const LETTER = /\p{L}/u;
 const LATIN_LETTER = /\p{Script=Latin}/u;
 const THAI_LETTER = /\p{Script=Thai}/u;
+// Thai quiz defaults to qwen3-32b. Live OpenRouter stats (re-verified
+// Aug 2026) show that for this model the ONLY viable provider under the
+// 30s attempt budget is Groq at 321 tok/s p50 / 286ms p50 latency / 100%
+// uptime — every other route is either dead (Alibaba 0% uptime) or too
+// slow (DeepInfra 25 tok/s = ~60s for 1500 output tokens, SiliconFlow
+// 19 tok/s, Nebius 24 tok/s). 1500 Thai tokens on Groq complete in
+// ~5s of generation + ~300ms latency, well inside the 30s budget.
+// Cost: ~$0.0009/quiz at the published rates — negligible. Override
+// with OPENROUTER_THAI_QUIZ_MODEL to fall back to the previous model
+// if quality regresses.
 const THAI_QUIZ_MODEL =
-  process.env.OPENROUTER_THAI_QUIZ_MODEL || "deepseek/deepseek-v4-flash-0731";
+  process.env.OPENROUTER_THAI_QUIZ_MODEL || "qwen/qwen3-32b";
+// Optional secondary model used ONLY if the first attempt times out. Picking
+// a DIFFERENT model (not just rotating providers on the same model) is the
+// actual timeout fix: when the primary route is congested, retrying the
+// same model on another provider usually re-hits the same backend. Default
+// is the previous Thai model so behavior degrades gracefully.
+const THAI_QUIZ_FALLBACK_MODEL =
+  process.env.OPENROUTER_THAI_QUIZ_FALLBACK_MODEL
+  || "deepseek/deepseek-v4-flash-0731";
+// Live OpenRouter stats (re-verified Aug 2026): for `qwen/qwen3-32b` the
+// only provider that finishes 1500 tokens inside the 30s attempt budget
+// is Groq (321 tok/s p50 / 100% uptime). DeepInfra (25 tok/s) and
+// SiliconFlow (19 tok/s) are too slow to serve as primary; Alibaba is
+// at 0% uptime. BaseTen doesn't serve this model. The primary list is
+// just Groq — there is no faster fallback at this model. Override via
+// OPENROUTER_THAI_QUIZ_PROVIDER_ORDER to experiment.
 const THAI_QUIZ_PROVIDER_ORDER = (
-  process.env.OPENROUTER_THAI_QUIZ_PROVIDER_ORDER || "alibaba,deepinfra"
+  process.env.OPENROUTER_THAI_QUIZ_PROVIDER_ORDER
+  || "groq"
 )
   .split(",")
   .map((provider) => provider.trim().toLowerCase())
   .filter(Boolean);
+// Live OpenRouter endpoint stats for `deepseek/deepseek-v4-flash-0731`
+// (re-verified Aug 2026): BaseTen is the fastest reliable route at
+// 402ms p50 / 76 tok/s / 99.9% uptime — beats first-party DeepSeek
+// (1106ms / 64 tok/s) and Cloudflare (720ms / 42 tok/s). Baidu is also
+// strong (682ms p50 / 95 tok/s / 100% uptime / cheapest at $0.088/M)
+// and was previously assumed dead at 0% uptime — it isn't anymore.
+// Order: Baidu (fastest + cheapest) → BaseTen → Parasail (81 tok/s,
+// 758ms p50) → Cloudflare → SiliconFlow (100% uptime, 64 tok/s) →
+// DeepSeek official → DeepInfra (cheap but 33 tok/s) → Novita.
+// DeepInfra stays in the list as a budget fallback since it's
+// $0.09/M (cheapest per-token) — only used when the fast routes all
+// fail. The prior "baseten first" order pre-dated Baidu's recovery
+// and left the fast route on the bench. Override via
+// OPENROUTER_THAI_QUIZ_FALLBACK_PROVIDER_ORDER.
+const THAI_QUIZ_FALLBACK_PROVIDER_ORDER = (
+  process.env.OPENROUTER_THAI_QUIZ_FALLBACK_PROVIDER_ORDER
+  || "baidu,baseten,parasail,cloudflare,siliconflow,deepseek,deepinfra,novita"
+)
+  .split(",")
+  .map((provider) => provider.trim().toLowerCase())
+  .filter(Boolean);
+
+/** JSON-object mode only asks the provider for syntactically-valid JSON, and
+ * some routes have returned a body cut off mid-question. Strict schema mode
+ * makes OpenRouter constrain the complete nested payload before returning it. */
+const QUIZ_RESPONSE_FORMAT = {
+  type: "json_schema" as const,
+  jsonSchema: {
+    name: "personality_quiz",
+    strict: true,
+    schema: {
+      type: "object",
+      additionalProperties: false,
+      required: ["questions"],
+      properties: {
+        questions: {
+          type: "array",
+          minItems: quizConfig.questionCount,
+          maxItems: quizConfig.questionCount,
+          items: {
+            type: "object",
+            additionalProperties: false,
+            required: ["id", "angle", "text", "options"],
+            properties: {
+              id: { type: "integer", minimum: 1 },
+              angle: { type: "string", minLength: 1 },
+              text: { type: "string", minLength: 1 },
+              options: {
+                type: "array",
+                minItems: 4,
+                maxItems: 4,
+                items: {
+                  type: "object",
+                  additionalProperties: false,
+                  required: ["text"],
+                  properties: { text: { type: "string", minLength: 1 } },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
 /**
  * Requests come from a browser bundle whose local storage can outlive several
@@ -200,33 +291,68 @@ export async function POST(request: Request) {
       : "throughput";
     const needsThaiCopy = language === "th";
     const temperature = needsThaiCopy ? 0.7 : 0.9;
+    const providerOrder = needsThaiCopy
+      ? THAI_QUIZ_PROVIDER_ORDER
+      : resolveProviderOrder();
 
     let validation: ReturnType<typeof quizPayloadSchema.safeParse> | null = null;
+    // Track whether either attempt failed with a timeout specifically (vs a
+    // schema/script failure). Surfaced as a clean 504 below so the client
+    // prefetch UI can show a recognizable "model is slow, try again" message
+    // instead of a generic "validation failed" 502.
+    let lastErrorWasTimeout = false;
     // 2 attempts: single-language output is faster to generate, and a third
     // slow retry costs more latency than it's worth.
     for (let attempt = 0; attempt < 2; attempt++) {
       let parsedLlm: unknown;
+      // On retry, switch to a DIFFERENT model entirely (when one is
+      // configured) and rotate the explicit provider order. Rotating
+      // providers within the same model often re-hits the same backend
+      // during a congestion event — using a different model is the
+      // real timeout fix. See THAI_QUIZ_FALLBACK_MODEL above.
+      const isFallbackAttempt = attempt === 1 && needsThaiCopy;
+      const attemptProviderOrder = isFallbackAttempt
+        ? THAI_QUIZ_FALLBACK_PROVIDER_ORDER
+        : (attempt === 0
+          ? providerOrder
+          : [...providerOrder.slice(1), providerOrder[0]]);
+      const attemptModel = isFallbackAttempt
+        ? THAI_QUIZ_FALLBACK_MODEL
+        : (needsThaiCopy ? THAI_QUIZ_MODEL : undefined);
       try {
         parsedLlm = await callLlm({
           systemPrompt,
           userPrompt,
-          ...(needsThaiCopy
-            ? {
-                model: THAI_QUIZ_MODEL,
-                providerOrder: THAI_QUIZ_PROVIDER_ORDER,
-              }
-            : {}),
+          ...(attemptModel ? { model: attemptModel } : {}),
+          providerOrder: attemptProviderOrder,
+          responseFormat: QUIZ_RESPONSE_FORMAT,
           temperature,
-          maxTokens: 3200,
-          timeoutMs: 25_000,
+          // 8-question Thai quiz on Groq: 1500 tokens at 321 tok/s = ~5s of
+          // generation + ~300ms latency. The 30s budget is wide-margin safety
+          // against Groq hiccups; the previous tighter value (1500) caused
+          // the 28s-timeout retry that surfaced in prod. The fallback
+          // (deepseek-v4-flash at 76 tok/s on BaseTen) needs ~20s, so its
+          // budget stays at 28s with the same headroom.
+          maxTokens: needsThaiCopy ? 1500 : 2000,
+          // Groq p99 latency on qwen3-32b is ~1.9s; 18s is a 10x safety
+          // margin and turns a 2-3s typical generation into a tight-but-
+          // reliable budget. The 30s/28s numbers in the prior config were
+          // inherited from the slow DeepInfra era; they're no longer
+          // warranted and just delay the user-visible error on a true hang.
+          timeoutMs: isFallbackAttempt ? 28_000 : 18_000,
           nonce: `${requestNonce}:${attempt}`,
           purpose: "generate-quiz",
           providerSort:
             attempt === 0 ? preferredProviderSort : fallbackProviderSort,
         });
       } catch (err) {
+        const isAbort = err instanceof Error
+          && (err.name === "TimeoutError" || /aborted due to timeout/i.test(err.message));
+        if (isAbort) lastErrorWasTimeout = true;
         console.warn(
-          `[generate-quiz] attempt ${attempt + 1} failed; retrying with ${fallbackProviderSort} routing`,
+          attempt === 0
+            ? `[generate-quiz] attempt 1 failed via model=${attemptModel ?? "default"} providers=${attemptProviderOrder.join(", ")}; retrying via model=${THAI_QUIZ_FALLBACK_MODEL} providers=${THAI_QUIZ_FALLBACK_PROVIDER_ORDER.join(", ")}`
+            : `[generate-quiz] attempt 2 failed via model=${attemptModel ?? "default"} providers=${attemptProviderOrder.join(", ")}`,
           err,
         );
         continue;
@@ -251,6 +377,20 @@ export async function POST(request: Request) {
     }
 
     if (!validation || !validation.success) {
+      // If both attempts failed with a timeout (vs a schema/script error),
+      // surface a 504 so the client prefetch UI can show a recognizable
+      // "model is slow" message instead of a generic "validation failed"
+      // 502. Falling through to 502 here would also be misleading because
+      // the model DID respond, just past the timeout.
+      if (lastErrorWasTimeout) {
+        return NextResponse.json(
+          {
+            error: "LLM request timed out after 2 attempts.",
+            code: "timeout",
+          },
+          { status: 504 },
+        );
+      }
       return NextResponse.json(
         {
           error: "LLM output failed schema validation.",

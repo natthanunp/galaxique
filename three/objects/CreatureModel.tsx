@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
@@ -52,6 +52,9 @@ const CREATURE_MODELS = {
   },
 } as const;
 
+const COMPANION_SCALE = 5.1;
+const COMPANION_OPACITY = 0.66;
+
 interface SwimShader {
   uniforms: Record<string, THREE.IUniform>;
 }
@@ -76,6 +79,9 @@ export function CreatureModel({
   const model = hasCreatureModel(spec.kind) ? CREATURE_MODELS[spec.kind] : CREATURE_MODELS.fox;
   const groupRef = useRef<THREE.Group>(null);
   const targetRef = useRef(new THREE.Vector3());
+  const cameraRightRef = useRef(new THREE.Vector3());
+  const cameraUpRef = useRef(new THREE.Vector3());
+  const { camera, size } = useThree();
   const { scene, animations } = useGLTF(model.url);
   const { actions } = useAnimations(animations, groupRef);
   const modelScene = useMemo(() => {
@@ -85,7 +91,7 @@ export function CreatureModel({
     // renders from and the model appears completely static.
     const clone = cloneSkinned(scene) as THREE.Group;
     const glowColor = new THREE.Color(primaryColor);
-    clone.scale.setScalar(model.scale);
+    clone.scale.setScalar(model.scale * COMPANION_SCALE);
 
     clone.traverse((node) => {
       if (!(node instanceof THREE.Mesh)) return;
@@ -104,6 +110,13 @@ export function CreatureModel({
 
       const configureMaterial = (material: THREE.Material) => {
         const litMaterial = material.clone();
+        // A large companion should feel embedded in the galaxy, not like an
+        // opaque sticker over it. Keep its original texture while letting
+        // stars and the spiral subtly read through its silhouette.
+        litMaterial.transparent = true;
+        litMaterial.opacity = COMPANION_OPACITY;
+        litMaterial.depthWrite = false;
+        litMaterial.blending = THREE.NormalBlending;
         if ("emissive" in litMaterial) {
           const emissiveMaterial = litMaterial as THREE.MeshStandardMaterial;
           emissiveMaterial.emissive.copy(glowColor);
@@ -148,53 +161,65 @@ export function CreatureModel({
     const time = state.clock.elapsedTime;
     const speed = 0.38 + rotationSpeed * 0.22;
     const angle = time * speed;
-    // Perches near the (DOM) vinyl disc at a fixed scene-origin-relative
-    // radius, so the creature reads as a companion to the song rather
-    // than a sentinel glued to the camera. The exact world-space vinyl
-    // position is unimportant — the disc is a DOM element projected over
-    // the galaxy, so any companion at ~2.5 units from the origin sits
-    // visibly near it. Different motions map to different scene-relative
-    // positions/orbits:
-    //   - fly/orbit: orbits the origin at radius 2.5–3.0 (wing-flapping
-    //     for bird/dragon; survey-look for fox/cat)
-    //   - bob: floats gently at a fixed perch offset (jelly/spirit)
-    //   - swim: drifts in a slow sinusoidal path near the disc (fish)
-    const perchRadius = 2.6;
+    // The record is DOM, while the companion is 3D. Put the companion in a
+    // camera-relative perch so it remains a clear focal detail beside the
+    // record even while OrbitControls rotate the scene. The offset is kept
+    // in the same depth plane as the origin, so it still reads as part of
+    // the galaxy rather than as an interface sticker.
+    camera.updateWorldMatrix(true, false);
+    const cameraRight = cameraRightRef.current
+      .setFromMatrixColumn(camera.matrixWorld, 0)
+      .normalize();
+    const cameraUp = cameraUpRef.current
+      .setFromMatrixColumn(camera.matrixWorld, 1)
+      .normalize();
+    const narrowViewport = size.width < 640;
+    const perchX = narrowViewport ? 1.7 : 3.55;
+    const perchY = narrowViewport ? 1.35 : 1.5;
+    const orbitRadius = narrowViewport ? 0.62 : 1.2;
     const target = targetRef.current;
 
     switch (spec.motion) {
       case "fly":
         target.set(
-          Math.cos(angle) * perchRadius + Math.sin(angle * 0.6) * 0.4,
-          0.6 + Math.sin(angle * 1.6) * 0.45,
-          Math.sin(angle) * perchRadius * 0.7,
+          0,
+          0,
+          0,
         );
+        target.addScaledVector(cameraRight, perchX + Math.cos(angle) * orbitRadius);
+        target.addScaledVector(cameraUp, perchY + Math.sin(angle * 1.35) * orbitRadius * 0.62);
         break;
       case "swim":
         target.set(
-          Math.sin(angle * 0.9) * 1.4,
-          Math.sin(angle * 1.7) * 0.4,
-          1.8 + Math.cos(angle * 0.7) * 0.6,
+          0,
+          0,
+          0,
         );
+        target.addScaledVector(cameraRight, perchX + Math.sin(angle * 0.9) * orbitRadius * 0.9);
+        target.addScaledVector(cameraUp, perchY + Math.sin(angle * 1.7) * orbitRadius * 0.55);
         break;
       case "bob":
         target.set(
-          1.5 + Math.sin(angle * 0.7) * 0.25,
-          0.4 + Math.sin(angle * 2) * 0.35,
-          1.8,
+          0,
+          0,
+          0,
         );
+        target.addScaledVector(cameraRight, perchX + Math.sin(angle * 0.7) * orbitRadius * 0.42);
+        target.addScaledVector(cameraUp, perchY + Math.sin(angle * 2) * orbitRadius * 0.62);
         break;
       case "orbit":
       default:
         target.set(
-          Math.cos(angle) * perchRadius,
-          0.4 + Math.sin(angle) * 0.5,
-          Math.sin(angle) * perchRadius * 0.7,
+          0,
+          0,
+          0,
         );
+        target.addScaledVector(cameraRight, perchX + Math.cos(angle) * orbitRadius);
+        target.addScaledVector(cameraUp, perchY + Math.sin(angle * 1.25) * orbitRadius * 0.54);
         break;
     }
 
-    group.position.lerp(target, 0.12);
+    group.position.lerp(target, 0.16);
     // Face the galaxy center (origin), then apply the per-model
     // `rotationY` offset so each creature's forward orientation is
     // preserved (e.g. bird needs Math.PI to face forward).
@@ -207,7 +232,7 @@ export function CreatureModel({
     if (spec.kind === "fish") {
       group.rotateZ(Math.sin(time * (1.2 + rotationSpeed)) * 0.05);
     }
-    modelScene.scale.setScalar(model.scale);
+    modelScene.scale.setScalar(model.scale * COMPANION_SCALE);
     modelScene.traverse((node) => {
       if (!(node instanceof THREE.Mesh)) return;
       const materials = Array.isArray(node.material) ? node.material : [node.material];
@@ -220,7 +245,12 @@ export function CreatureModel({
 
   return (
     <group ref={groupRef}>
-      <pointLight color={secondaryColor} intensity={1.2} distance={8} />
+      <pointLight
+        color={secondaryColor}
+        intensity={2.1}
+        distance={6}
+        position={[0.8, 1.1, 1.4]}
+      />
       <primitive object={modelScene} />
       {spec.accent === "halo" && (
         <mesh position={[0, 1.55, 0]} rotation={[Math.PI / 2, 0, 0]}>

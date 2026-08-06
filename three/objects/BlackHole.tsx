@@ -14,13 +14,28 @@ interface BlackHoleProps {
   children?: ReactNode;
 }
 
+function seededRandom(seed: number): () => number {
+  let state = seed >>> 0;
+  return () => {
+    state += 0x6d2b79f5;
+    let value = state;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4_294_967_296;
+  };
+}
+
 /**
- * A stylized black hole with a strong visible silhouette.
+ * A black hole built from radially-symmetric geometry so it can never look
+ * stretched or edge-on, no matter the viewport shape or camera FOV.
  *
- * A dark event-horizon sphere sits inside a bright photon ring, a swirling
- * accretion disk, and a soft gravitational-lensing backdrop. The contrast
- * between the black center and the glowing ring/disk makes it clearly
- * readable even against the dark cosmic background.
+ *  - A dark event-horizon sphere at the center.
+ *  - A bright photon ring (additive torus) around it.
+ *  - A volumetric accretion shell made of thousands of orbiting particles
+ *    on spherical coordinates. Because the shell is 3D, rotating it looks
+ *    like a swirling disc from every angle and never collapses to a flat
+ *    oval like the previous ringGeometry approach.
+ *  - A soft radial lensing glow for silhouette.
  */
 export function BlackHole({
   primaryColor,
@@ -29,97 +44,148 @@ export function BlackHole({
   config,
   children,
 }: BlackHoleProps) {
-  const diskRef = useRef<THREE.Mesh>(null);
-  const lensRef = useRef<THREE.Mesh>(null);
+  const seed = config?.seed ?? 928_137_461;
+  const random = useMemo(() => seededRandom(seed), [seed]);
+  const shellRef = useRef<THREE.Points>(null);
+  const photonRef = useRef<THREE.Mesh>(null);
 
-  const diskMaterial = useMemo(() => {
-    return new THREE.ShaderMaterial({
+  const count = 2_800;
+  const { shellGeometry, shellMaterial, photonMaterial } = useMemo(() => {
+    const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+    const sizes = new Float32Array(count);
+    const phases = new Float32Array(count);
+
+    const colorA = new THREE.Color(primaryColor);
+    const colorB = new THREE.Color(secondaryColor);
+    const inner = 0.65;
+    const outer = 1.35;
+
+    for (let i = 0; i < count; i++) {
+      // Distribute particles in a thin equatorial shell so it reads as a
+      // disc, but we use 3D spherical coordinates so the shape is
+      // inherently round from every viewing angle.
+      const r = inner + Math.pow(random(), 0.75) * (outer - inner);
+      const theta = random() * Math.PI * 2;
+      const phi = Math.PI / 2 + (random() - 0.5) * 0.25; // thin disc band
+
+      positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      positions[i * 3 + 2] = r * Math.cos(phi) * 0.35; // slightly flattened
+
+      const mixFactor = random();
+      const c = colorB.clone().lerp(colorA, mixFactor);
+      // Hot streaks.
+      if (random() > 0.92) c.lerp(new THREE.Color("#fff5d6"), 0.55);
+      colors[i * 3] = c.r;
+      colors[i * 3 + 1] = c.g;
+      colors[i * 3 + 2] = c.b;
+
+      sizes[i] = 0.06 + random() * 0.09;
+      phases[i] = random() * Math.PI * 2;
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("aColor", new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
+    geometry.setAttribute("aPhase", new THREE.BufferAttribute(phases, 1));
+
+    const material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
-        uColorA: { value: new THREE.Color(primaryColor) },
-        uColorB: { value: new THREE.Color(secondaryColor) },
-        uActivity: { value: config?.accretion_activity ?? 0.7 },
+        uPixelRatio: { value: 1 },
       },
       vertexShader: /* glsl */ `
-        varying vec2 vUv;
+        attribute vec3 aColor;
+        attribute float aSize;
+        attribute float aPhase;
+        uniform float uTime;
+        uniform float uPixelRatio;
+        varying vec3 vColor;
+        varying float vAlpha;
         void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          vColor = aColor;
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          float pulse = 0.85 + 0.15 * sin(uTime * 2.0 + aPhase * 3.0);
+          gl_PointSize = max(1.0, aSize * uPixelRatio * 180.0 / -mv.z) * pulse;
+          vAlpha = 0.35 + 0.4 * pulse;
+          gl_Position = projectionMatrix * mv;
         }
       `,
       fragmentShader: /* glsl */ `
-        varying vec2 vUv;
-        uniform float uTime;
-        uniform vec3 uColorA;
-        uniform vec3 uColorB;
-        uniform float uActivity;
-
-        float hash(vec2 p) {
-          return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
-        }
-
-        float valueNoise(vec2 p) {
-          vec2 i = floor(p);
-          vec2 f = fract(p);
-          f = f * f * (3.0 - 2.0 * f);
-          float a = hash(i);
-          float b = hash(i + vec2(1.0, 0.0));
-          float c = hash(i + vec2(0.0, 1.0));
-          float d = hash(i + vec2(1.0, 1.0));
-          return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
-        }
-
-        float fbm(vec2 p) {
-          float value = 0.0;
-          float amp = 0.5;
-          for (int i = 0; i < 4; i++) {
-            value += amp * valueNoise(p);
-            p *= 2.05;
-            amp *= 0.5;
-          }
-          return value;
-        }
-
+        varying vec3 vColor;
+        varying float vAlpha;
         void main() {
-          vec2 p = vUv - vec2(0.5);
-          float r = length(p) * 2.0;
-          float ang = atan(p.y, p.x);
-
-          float inner = 0.32;
-          float outer = 1.0;
-          if (r < inner || r > outer) discard;
-
-          // Turbulent noise streaked along the swirl direction for a richer,
-          // less-uniform accretion disk than pure sine bands.
-          vec2 noiseCoord = vec2(ang * 2.4, r * 5.0 - uTime * 1.1);
-          float turbulence = fbm(noiseCoord);
-
-          float swirl = sin(ang * 3.0 + r * 10.0 - uTime * 2.0 + turbulence * 3.2);
-          float bands = 0.5 + 0.5 * swirl;
-          bands = mix(bands, turbulence, 0.45);
-
-          float radial = smoothstep(outer, inner, r);
-          float intensity = radial * (0.3 + bands * (0.55 + uActivity));
-
-          vec3 col = mix(uColorB, uColorA, radial);
-          // Bright hot streaks where turbulence peaks.
-          col += vec3(1.0, 0.9, 0.75) * smoothstep(0.72, 0.95, turbulence) * radial * 0.8;
-          col *= intensity * (1.25 + uActivity * 1.35);
-
-          float edge = smoothstep(outer, outer - 0.18, r) *
-                       smoothstep(inner, inner + 0.1, r);
-          gl_FragColor = vec4(col, edge * 0.98);
+          vec2 p = gl_PointCoord - vec2(0.5);
+          float d = length(p);
+          if (d > 0.5) discard;
+          float a = smoothstep(0.5, 0.08, d);
+          gl_FragColor = vec4(vColor, a * vAlpha);
         }
       `,
       transparent: true,
       depthWrite: false,
-      side: THREE.DoubleSide,
       blending: THREE.AdditiveBlending,
     });
-  }, [config?.accretion_activity, primaryColor, secondaryColor]);
 
-  // Soft gravitational-lensing backdrop so the black sphere silhouettes.
-  const lensMaterial = useMemo(
+    const photon = new THREE.MeshBasicMaterial({
+      color: colorA,
+      transparent: true,
+      opacity: config?.photon_ring_strength ?? 0.85,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    });
+
+    return { shellGeometry: geometry, shellMaterial: material, photonMaterial: photon };
+  }, [config?.photon_ring_strength, primaryColor, secondaryColor, random]);
+
+  useFrame((state, delta) => {
+    if (shellRef.current) {
+      shellRef.current.rotation.z += delta * rotationSpeed * 0.35;
+    }
+    if (photonRef.current) {
+      photonRef.current.rotation.z -= delta * rotationSpeed * 0.08;
+    }
+    shellMaterial.uniforms.uTime.value = state.clock.elapsedTime;
+  });
+
+  return (
+    <group>
+      {/* Soft radial lensing backdrop — a sphere with a transparent
+          additive radial gradient shader so the silhouette is visible. */}
+      <LensingGlow primaryColor={primaryColor} secondaryColor={secondaryColor} />
+
+      {/* Volumetric accretion shell — thousands of particles in a thin
+          3D disc. Always round from any angle. */}
+      <points ref={shellRef} geometry={shellGeometry} material={shellMaterial} />
+
+      {/* Photon ring — a thin additive torus, also radially symmetric. */}
+      <mesh ref={photonRef} material={photonMaterial} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.58, 0.035, 16, 120]} />
+      </mesh>
+
+      {/* Event horizon — dark sphere. */}
+      <mesh>
+        <sphereGeometry args={[0.52, 32, 32]} />
+        <meshBasicMaterial color="#020205" />
+      </mesh>
+
+      {children}
+    </group>
+  );
+}
+
+/** A radial glow sphere that always looks circular. */
+function LensingGlow({
+  primaryColor,
+  secondaryColor,
+}: {
+  primaryColor: string;
+  secondaryColor: string;
+}) {
+  const material = useMemo(
     () =>
       new THREE.ShaderMaterial({
         uniforms: {
@@ -127,81 +193,35 @@ export function BlackHole({
           uColorB: { value: new THREE.Color(secondaryColor) },
         },
         vertexShader: /* glsl */ `
-          varying vec2 vUv;
+          varying vec3 vNormal;
           void main() {
-            vUv = uv;
+            vNormal = normalize(normalMatrix * normal);
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
           }
         `,
         fragmentShader: /* glsl */ `
-          varying vec2 vUv;
+          varying vec3 vNormal;
           uniform vec3 uColorA;
           uniform vec3 uColorB;
           void main() {
-            vec2 p = vUv - vec2(0.5);
-            float r = length(p) * 2.0;
-            if (r < 0.45 || r > 1.15) discard;
-            float a = smoothstep(1.15, 0.55, r) * smoothstep(0.45, 0.7, r);
-            vec3 col = mix(uColorB, uColorA, smoothstep(0.55, 1.05, r));
-            gl_FragColor = vec4(col * 0.8, a * 0.45);
+            float r = 1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0)));
+            if (r < 0.35 || r > 0.95) discard;
+            float a = smoothstep(0.95, 0.55, r) * smoothstep(0.35, 0.55, r);
+            vec3 col = mix(uColorB, uColorA, smoothstep(0.55, 0.9, r));
+            gl_FragColor = vec4(col, a * 0.45);
           }
         `,
         transparent: true,
         depthWrite: false,
         blending: THREE.AdditiveBlending,
-        side: THREE.DoubleSide,
+        side: THREE.BackSide,
       }),
     [primaryColor, secondaryColor],
   );
 
-  useFrame((state, delta) => {
-    if (diskRef.current) {
-      diskRef.current.rotation.z += delta * rotationSpeed * 0.45;
-    }
-    if (lensRef.current) {
-      lensRef.current.rotation.z -= delta * rotationSpeed * 0.1;
-    }
-    const material = diskRef.current?.material;
-    if (material instanceof THREE.ShaderMaterial) {
-      material.uniforms.uTime.value = state.clock.elapsedTime;
-    }
-  });
-
-  const photonRingStrength = config?.photon_ring_strength ?? 0.85;
-
   return (
-    <group rotation={[Math.PI / 2.2 + (config?.disc_tilt ?? 0.7) * 0.2, 0, 0]}>
-      {/* Gravitational-lensing backdrop — gives the hole a visible edge. */}
-      <mesh ref={lensRef} material={lensMaterial}>
-        <planeGeometry args={[3.2, 3.2]} />
-      </mesh>
-
-      {/* Accretion disk — bright and swirling. */}
-      <mesh ref={diskRef} material={diskMaterial}>
-        <ringGeometry args={[0.32, 1.05, 96, 1]} />
-      </mesh>
-
-      {/* Photon ring — bright thin ring around the horizon. */}
-      <mesh>
-        <ringGeometry args={[0.52, 0.58, 96, 1]} />
-        <meshBasicMaterial
-          color={new THREE.Color(primaryColor)}
-          transparent
-          opacity={photonRingStrength}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* Event horizon — a dark sphere. */}
-      <mesh>
-        <sphereGeometry args={[0.52, 32, 32]} />
-        <meshBasicMaterial color="#020205" />
-      </mesh>
-
-      {/* Optional central "soul" symbol overlay. */}
-      {children}
-    </group>
+    <mesh material={material}>
+      <sphereGeometry args={[1.7, 48, 48]} />
+    </mesh>
   );
 }

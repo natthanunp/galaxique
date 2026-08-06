@@ -68,17 +68,13 @@ function benchMs(since: bigint): number {
 }
 
 /** Tracks sampled as scoring candidates per request, out of the full
- *  catalog. This is the FIRST variety layer: any single track is only even
- *  a *candidate* in roughly `CATALOG_SAMPLE_SIZE / catalogSize` of requests,
- *  independent of how the model scores it when present. Bumped to 48 now
- *  that the sampler is biased toward under-served tracks (see
- *  sampleCatalogForRequest); an earlier uniform 18-sample let the same ~18
- *  tracks cycle while ~144 sat untouched. 48 of 162 (~30%) keeps the LLM
- *  catalog section bounded (~3k extra input tokens vs. 28) while giving
- *  the weighted picker substantially more fresh material each call — and
- *  combined with the under-served sampler below, the picker sees a near-
- *  completely unique candidate pool every request in steady state. */
-const CATALOG_SAMPLE_SIZE = 48;
+ * catalog. This is the FIRST variety layer: any single track is only even a
+ * candidate in roughly `CATALOG_SAMPLE_SIZE / catalogSize` of requests,
+ * independent of how the model scores it when present. Twenty-eight entries
+ * leave ample choice for a 4-6 item shortlist while removing about two
+ * thousand catalog-prompt tokens from the latency-sensitive reveal call.
+ * The under-served sampler keeps the smaller pool rotating across requests. */
+const CATALOG_SAMPLE_SIZE = 28;
 
 function isThaiTrack(track: EnrichedPlaylistCandidate): boolean {
   // Prefer the explicit is_thai flag from the curated knowledge cache — it

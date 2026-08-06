@@ -39,6 +39,9 @@ interface ShareButtonProps {
   disabled?: boolean;
   language: Language;
   reading: string;
+  /** The reveal vibe — used to render the "Your vibe · …" label on the
+   *  exported story card. */
+  vibe: string;
 }
 
 type Phase =
@@ -65,6 +68,7 @@ export function ShareButton({
   disabled = false,
   language,
   reading,
+  vibe,
 }: ShareButtonProps) {
   const [open, setOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
@@ -191,6 +195,8 @@ export function ShareButton({
           trackName: track?.name ?? (language === "th" ? "จักรวาลของคุณ" : "Your universe"),
           artist: track?.artist ?? "Galaxique",
           reading,
+          vibe,
+          language,
         },
       });
       if (cancelledRef.current) return;
@@ -242,7 +248,11 @@ export function ShareButton({
 
       // Composite album art + song name/artist onto an offscreen canvas so
       // the exported video visually shows the Spotify track, not just plays
-      // its audio.
+      // its audio. Pre-load the Thai font so the overlay doesn't render the
+      // first frames with a fallback typeface.
+      await overlay.loadFonts();
+      if (cancelledRef.current) return;
+
       const recordTarget = track
         ? overlay.start({
             source: sourceCanvas,
@@ -252,6 +262,8 @@ export function ShareButton({
               trackName: track.name,
               artist: track.artist,
               reading,
+              vibe,
+              language,
             },
           })
         : sourceCanvas;

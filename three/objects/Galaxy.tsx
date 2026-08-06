@@ -16,18 +16,15 @@ interface GalaxyProps {
   children?: ReactNode;
 }
 
-const ARM_SEGMENTS = { high: 50, medium: 38, low: 26 };
-const ARM_RINGS = 7; // radial segments around each arm
-const ARM_COUNT = 4;
+const ARM_STARS = { high: 2600, medium: 1900, low: 1200 };
+const ARM_COUNT = 3;
 
 /**
- * A sculptural low-poly spiral galaxy.
+ * A diffuse spiral galaxy.
  *
- * The arms are continuous tapered tubes (not disconnected chunks) that follow
- * a logarithmic spiral, flatten into the galactic plane, and gradient from the
- * hot primary color at the core to the secondary color at the tips. A bright
- * faceted core sits at the center and a very faint disk provides context. The
- * result is immediately readable as a spiral galaxy.
+ * Thousands of softly glowing stars follow broad, irregular spiral arms above
+ * a faint galactic disk. This keeps the core visually present behind the vinyl
+ * while avoiding the opaque, painted-ribbon look of solid tube meshes.
  */
 export function Galaxy({
   primaryColor,
@@ -38,11 +35,6 @@ export function Galaxy({
 }: GalaxyProps) {
   const mobile = isMobileDevice();
   const tier = usePerfStore((s) => s.tier);
-  const segments = Math.max(
-    10,
-    Math.floor(ARM_SEGMENTS[particleDensity] * (mobile ? 0.65 : 1) * tierParticleMultiplier(tier)),
-  );
-
   const groupRef = useRef<THREE.Group>(null);
   const visualGroupRef = useRef<THREE.Group>(null);
   const armGroupRef = useRef<THREE.Group>(null);
@@ -66,23 +58,6 @@ export function Galaxy({
     [cA, cHot],
   );
 
-  const armMaterial = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: cB,
-        emissive: cA,
-        emissiveIntensity: 0.22,
-        roughness: 0.65,
-        metalness: 0.05,
-        flatShading: true,
-        vertexColors: true,
-        transparent: true,
-        opacity: 0.95,
-        side: THREE.DoubleSide,
-      }),
-    [cA, cB],
-  );
-
   const diskMaterial = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
@@ -99,99 +74,46 @@ export function Galaxy({
     [cA, cDust],
   );
 
-  // --- Continuous tapered spiral-arm geometry. ---
+  // --- Diffuse stellar spiral arms. ---
   const armGeometry = useMemo(() => {
-    const positions: number[] = [];
-    const colors: number[] = [];
-    const indices: number[] = [];
+    const count = Math.max(
+      500,
+      Math.floor(ARM_STARS[particleDensity] * (mobile ? 0.55 : 1) * tierParticleMultiplier(tier)),
+    );
+    const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+    const sizes = new Float32Array(count);
+    const seeds = new Float32Array(count);
 
-    const ringsPerArm: THREE.Vector3[][] = [];
+    for (let index = 0; index < count; index++) {
+      const arm = index % ARM_COUNT;
+      const radiusProgress = Math.pow(Math.random(), 0.72);
+      const radius = 0.16 + radiusProgress * 3.95;
+      const armAngle = (arm / ARM_COUNT) * Math.PI * 2 + radius * 1.35;
+      const lateralSpread = 0.035 + radiusProgress * 0.22;
+      const lateral = (Math.random() + Math.random() + Math.random() - 1.5) * lateralSpread;
+      const angle = armAngle + lateral;
 
-    for (let arm = 0; arm < ARM_COUNT; arm++) {
-      const armBase = (arm / ARM_COUNT) * Math.PI * 2;
-      const ringCenters: THREE.Vector3[] = [];
-      const tangents: THREE.Vector3[] = [];
+      positions[index * 3] = Math.cos(angle) * radius;
+      positions[index * 3 + 1] = (Math.random() - 0.5) * (0.04 + radiusProgress * 0.12);
+      positions[index * 3 + 2] = Math.sin(angle) * radius;
 
-      for (let i = 0; i <= segments; i++) {
-        const t = i / segments;
-        // Ease out so the arm extends gracefully to the tip.
-        const r = 0.45 + (3.8 - 0.45) * (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-        const twist = r * 1.1;
-        const angle = armBase + twist;
-
-        const x = Math.cos(angle) * r;
-        const z = Math.sin(angle) * r;
-        // Gentle vertical arc: arms sit flat in the disk.
-        const y = Math.sin(t * Math.PI) * 0.12 * (1 - t * 0.5);
-        ringCenters.push(new THREE.Vector3(x, y, z));
-
-        // Approximate tangent for the next ring.
-        const dt = 0.02;
-        const t2 = Math.min(1, t + dt);
-        const r2 = 0.45 + (3.8 - 0.45) * (t2 < 0.5 ? 2 * t2 * t2 : 1 - Math.pow(-2 * t2 + 2, 2) / 2);
-        const a2 = armBase + r2 * 1.1;
-        const p2 = new THREE.Vector3(Math.cos(a2) * r2, y, Math.sin(a2) * r2);
-        tangents.push(p2.sub(ringCenters[i]).normalize());
-      }
-
-      // Build ring vertices for this arm.
-      const armRings: THREE.Vector3[] = [];
-      for (let i = 0; i <= segments; i++) {
-        const t = i / segments;
-        const center = ringCenters[i];
-        const tangent = tangents[i];
-        // Up is mostly Y, with a slight bank so the arm follows its spiral.
-        const up = new THREE.Vector3(0, 1, 0);
-        const right = new THREE.Vector3().crossVectors(tangent, up).normalize();
-        const normal = new THREE.Vector3().crossVectors(right, tangent).normalize();
-
-        // Taper: thick at core (0.45), thin at tip (0.04). Flatter than tall.
-        const radius = 0.45 * (1 - t * 0.88);
-        const flatY = radius * 0.35; // flatten into disk
-
-        for (let j = 0; j < ARM_RINGS; j++) {
-          const theta = (j / ARM_RINGS) * Math.PI * 2;
-          const cos = Math.cos(theta);
-          const sin = Math.sin(theta);
-          const p = center
-            .clone()
-            .add(right.clone().multiplyScalar(cos * radius))
-            .add(normal.clone().multiplyScalar(sin * flatY));
-          armRings.push(p);
-
-          // Color gradient: hot core -> secondary mid -> dark tip.
-          const color = t < 0.25
-            ? cHot.clone().lerp(cA, t / 0.25)
-            : cA.clone().lerp(cB, (t - 0.25) / 0.75);
-          colors.push(color.r, color.g, color.b);
-        }
-      }
-      ringsPerArm.push(armRings);
-
-      // Indices: connect ring i to ring i+1.
-      const baseVertex = positions.length / 3;
-      for (let i = 0; i < segments; i++) {
-        for (let j = 0; j < ARM_RINGS; j++) {
-          const a = baseVertex + i * ARM_RINGS + j;
-          const b = baseVertex + i * ARM_RINGS + ((j + 1) % ARM_RINGS);
-          const c = baseVertex + (i + 1) * ARM_RINGS + j;
-          const d = baseVertex + (i + 1) * ARM_RINGS + ((j + 1) % ARM_RINGS);
-          indices.push(a, b, d, a, d, c);
-        }
-      }
-
-      armRings.forEach((p) => {
-        positions.push(p.x, p.y, p.z);
-      });
+      const color = cHot.clone().lerp(cB, Math.min(1, radiusProgress * 1.15));
+      const brightness = 0.72 + Math.random() * 0.5;
+      colors[index * 3] = Math.min(1, color.r * brightness);
+      colors[index * 3 + 1] = Math.min(1, color.g * brightness);
+      colors[index * 3 + 2] = Math.min(1, color.b * brightness);
+      sizes[index] = 0.45 + Math.random() * 1.25;
+      seeds[index] = Math.random();
     }
 
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-    geo.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-    geo.setIndex(indices);
-    geo.computeVertexNormals();
-    return geo;
-  }, [cA, cB, cHot, segments]);
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("aColor", new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
+    geometry.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 1));
+    return geometry;
+  }, [cB, cHot, mobile, particleDensity, tier]);
 
   // --- Sparse sparkle particles on the arms. ---
   const sparkleGeometry = useMemo(() => {
@@ -254,7 +176,7 @@ export function Galaxy({
             vec4 mv = modelViewMatrix * vec4(position, 1.0);
             float tw = 1.0 + sin(uTime * 2.0 + aSeed * 6.2831) * uTwinkle;
             float safeDepth = max(4.0, -mv.z);
-            gl_PointSize = size * uPixelRatio * tw * (60.0 / safeDepth);
+            gl_PointSize = size * uPixelRatio * tw * (48.0 / safeDepth);
             gl_Position = projectionMatrix * mv;
           }
         `,
@@ -303,9 +225,9 @@ export function Galaxy({
           <ringGeometry args={[0.3, 4.0, 64]} />
         </mesh>
 
-        {/* Continuous low-poly spiral arms. */}
+        {/* Diffuse stellar arms remain legible around the smaller vinyl. */}
         <group ref={armGroupRef}>
-          <mesh geometry={armGeometry} material={armMaterial} />
+          <points geometry={armGeometry} material={sparkleMaterial} />
         </group>
 
         {/* Bright faceted core. */}

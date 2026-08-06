@@ -1,13 +1,14 @@
 "use client";
 
 import { Suspense, useMemo } from "react";
+import { useThree } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 
 import { CosmicBackground } from "./CosmicBackground";
 import { ParticleField } from "./ParticleField";
 import { CentralSymbolObject } from "@/three/objects/CentralSymbolObject";
 import { CreatureModel, hasCreatureModel } from "@/three/objects/CreatureModel";
-import { RealisticGalaxy } from "@/three/objects/RealisticGalaxy";
+import { Galaxy } from "@/three/objects/Galaxy";
 import { BlackHole } from "@/three/objects/BlackHole";
 import { NeutronStar } from "@/three/objects/NeutronStar";
 import type { UniverseReveal } from "@/types/universe";
@@ -43,6 +44,8 @@ function celestialSeed(reveal: UniverseReveal): number | undefined {
  */
 export function UniverseScene({ reveal }: UniverseSceneProps) {
   const ambientSeed = celestialSeed(reveal);
+  const canvasWidth = useThree((state) => state.size.width);
+  const symbolScale = canvasWidth < 640 ? 1.45 : 2.2;
   const usesAssetCompanion = reveal.creature && hasCreatureModel(reveal.creature.kind);
   const central = useMemo(() => {
     const symbolOverlay =
@@ -51,27 +54,24 @@ export function UniverseScene({ reveal }: UniverseSceneProps) {
           symbol={reveal.central_symbol}
           primaryColor={reveal.primary_color}
           secondaryColor={reveal.secondary_color}
-          rotationSpeed={reveal.rotation_speed}
-          scale={0.78}
+          scale={symbolScale}
         />
       ) : null;
 
     switch (reveal.celestial_type) {
       case "galaxy":
         return (
-          <RealisticGalaxy
+          // Use the sculpted spiral renderer here rather than the diffuse
+          // particle disc. The vinyl intentionally covers the exact center,
+          // so we need clear, continuous arms that remain legible around it.
+          <Galaxy
             primaryColor={reveal.primary_color}
             secondaryColor={reveal.secondary_color}
             rotationSpeed={reveal.rotation_speed}
             particleDensity={reveal.particle_density}
-            config={
-              reveal.celestial_config?.celestial_type === "galaxy"
-                ? reveal.celestial_config.galaxy
-                : undefined
-            }
           >
             {symbolOverlay}
-          </RealisticGalaxy>
+          </Galaxy>
         );
       case "black_hole":
         return (
@@ -99,7 +99,7 @@ export function UniverseScene({ reveal }: UniverseSceneProps) {
           </NeutronStar>
         );
     }
-  }, [reveal]);
+  }, [reveal, symbolScale]);
 
   return (
     <>
@@ -114,8 +114,12 @@ export function UniverseScene({ reveal }: UniverseSceneProps) {
         density={reveal.particle_density}
         seed={ambientSeed}
       />
-      <Float speed={1.2} rotationIntensity={0.3} floatIntensity={0.6}>
-        {central}
+      {/* The vinyl disc sits at the galaxy's center as a compact focal
+                   point. The central cosmic object is deliberately a
+                   little larger than the disc, leaving the spiral arms
+                   visible around it without swallowing the whole scene. */}
+      <Float speed={1.2} rotationIntensity={0} floatIntensity={0}>
+        <group scale={1.45}>{central}</group>
       </Float>
       {reveal.creature && (usesAssetCompanion ? (
         <Suspense fallback={null}>
