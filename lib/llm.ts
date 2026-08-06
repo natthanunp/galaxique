@@ -150,7 +150,7 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
           // Some models (e.g. deepseek/deepseek-v4-flash) default to an
           // extended "thinking" mode that adds several seconds of billed
           // reasoning tokens. This app only needs fast structured JSON, not
-          // deep reasoning, so disable it explicitly.
+          // deep reasoning, so disable it explicitly via `effort: "none"`.
           reasoning: { effort: "none" },
           // `order` takes precedence over `sort` (and effectively disables it
           // — the SDK/API docs confirm `sort` only applies "if order is not

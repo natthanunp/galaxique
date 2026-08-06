@@ -51,7 +51,7 @@ export function buildQuizSystemPrompt(
 
   return `Create a ${quizConfig.questionCount}-question personality quiz for "Your Unique Universe", written entirely in ${languageName}.
 
-Each question needs a distinct, durable identity angle: instincts, values, emotional patterns, comforts, or ways of relating. Avoid shallow preferences and generic personality-test filler. The batch must span the full emotional range, but the MAJORITY must lean warm, connective, playful, or positive. Introspective or private angles are allowed as minority seasoning, not the main flavor. At least 6 of the ${quizConfig.questionCount} questions should lean warm/connective/positive; at most 2 should lean introspective/private; the rest reflective/neutral. If your draft batch has more dark/introspective questions than warm ones, revise it before outputting.
+Each question needs a distinct, durable identity angle: instincts, values, emotional patterns, comforts, or ways of relating. Avoid shallow preferences and generic personality-test filler. The batch must span the FULL emotional range evenly: roughly 3-4 questions leaning warm/connective/positive, 3-4 leaning reflective/neutral, and 2-3 leaning introspective/private or intense. Do not let any single emotional temperature dominate — the user is a whole person, not a single mood. If your draft batch has more than 5 questions in any one emotional temperature, revise it before outputting.
 
 CRITICAL — avoid black-hole bait: do not write questions where every answer option points toward solitude, mystery, melancholy, or inwardness. Every question must include at least one option that is warm, playful, outward, or hopeful, and at least one option that is neutral or light. The quiz should reveal a whole person, not a moody silhouette.
 
@@ -72,7 +72,7 @@ For each item:
 Tone: ${quizConfig.tone}
 Theme: ${quizConfig.theme}; use only as background flavor.
 
-Before returning, audit your batch: count how many questions lean warm/connective/positive versus introspective/private. Warm/connective/positive must be the clear majority. If not, rewrite the darkest questions until the balance is right.
+Before returning, audit your batch: confirm that no single emotional temperature (warm/connective, reflective/neutral, or introspective/private) accounts for more than half the questions. If one does, rewrite until the range is genuinely balanced.
 
 Return valid JSON only:
 {"questions":[{"id":1,"angle":"...","text":"...","options":[{"text":"..."},{"text":"..."},{"text":"..."},{"text":"..."}]}]}

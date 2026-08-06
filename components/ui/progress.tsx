@@ -22,7 +22,6 @@ function Progress({
         className="h-full rounded-full bg-linear-to-r from-primary to-accent transition-all duration-500 ease-out"
         style={{
           width: `${pct}%`,
-          boxShadow: "0 0 12px -2px hsl(var(--primary) / 0.7)",
         }}
       />
     </div>

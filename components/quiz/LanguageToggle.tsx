@@ -31,7 +31,7 @@ export function LanguageToggle({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1 rounded-lg border border-border/70 bg-card/60 p-1 backdrop-blur-md",
+        "inline-flex items-center gap-1 rounded-lg border border-border/70 bg-card/80 p-1",
         className,
       )}
     >

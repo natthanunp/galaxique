@@ -16,12 +16,14 @@ interface CosmicBackgroundProps {
 
 /** Vibe-driven nebula character parameters. Controls noise frequency,
  *  intensity, and smoothness to make each vibe feel distinct in the
- *  background itself. */
+ *  background itself. The minimum smoothness is floor-clamped at 0.4
+ *  for the intense vibe so its noise has a softer band transition
+ *  (previously the harsh 0.2 step produced visible banding). */
 const VIBE_NEBULA_PARAMS: Record<Vibe, { scale: number; intensity: number; smoothness: number }> = {
   cute: { scale: 1.8, intensity: 0.45, smoothness: 0.6 },
   cozy: { scale: 2.2, intensity: 0.4, smoothness: 0.5 },
   mysterious: { scale: 3.2, intensity: 0.5, smoothness: 0.3 },
-  intense: { scale: 3.8, intensity: 0.6, smoothness: 0.2 },
+  intense: { scale: 3.8, intensity: 0.6, smoothness: 0.4 },
   whimsical: { scale: 2.8, intensity: 0.5, smoothness: 0.4 },
   cynical: { scale: 1.6, intensity: 0.25, smoothness: 0.7 },
 };
@@ -131,15 +133,18 @@ export function CosmicBackground({
           vec3 nebula = mix(uColorA, uColorB, fract(n * 1.6)) * n * uNebulaIntensity;
 
           // --- Stars: hash-grid "baked" points on the direction sphere,
-          // sharp thresholded flecks with a gentle per-star twinkle. Capped
-          // below the postprocessing Bloom threshold (see UniverseCanvas)
-          // so the skybox itself doesn't wash the whole frame out — bloom
-          // is reserved for the central object's emissive materials.
-          vec3 grid = dir * 240.0;
+          // smooth thresholded flecks with a gentle per-star twinkle so
+          // stars fade in/out instead of popping. Capped below the
+          // postprocessing Bloom threshold (see UniverseCanvas) so the
+          // skybox itself doesn't wash the whole frame out — bloom is
+          // reserved for the central object's emissive materials. ---
+          vec3 grid = dir * 320.0;
           vec3 gi = floor(grid);
           float h = hash(gi);
           float thresh = 1.0 - 0.018 * uStarDensity;
-          float starMask = step(thresh, h);
+          // Anti-aliased star edges via smoothstep: stars ramp in/out
+          // over a small band instead of an instantaneous hard step.
+          float starMask = smoothstep(thresh - 0.003, thresh + 0.003, h);
           float twinkle = 0.55 + 0.45 * sin(uTime * 1.6 + h * 6.2831);
           vec3 starColor = vec3(1.0, 0.96 - h * 0.15, 1.0 - h * 0.35) * starMask * twinkle * 0.55;
 
@@ -159,7 +164,7 @@ export function CosmicBackground({
     material.uniforms.uNebulaIntensity.value = nebulaParams.intensity;
     material.uniforms.uNebulaSmoothness.value = nebulaParams.smoothness;
     if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.006;
+      groupRef.current.rotation.y += delta * 0.003;
     }
   });
 

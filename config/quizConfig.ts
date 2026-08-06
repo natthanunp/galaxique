@@ -44,7 +44,7 @@ export const quizConfig = {
  *
  *  Keep the list at ~20+ so each call samples a fresh subset of examples. */
 export const QUESTION_ANGLES = [
-  // Warmth, play, connection, and outward energy (majority tone)
+  // Warmth, play, connection, and outward energy (~14 of these)
   "Something that instantly lifts the user's mood — a tiny, specific moment of everyday joy",
   "How the user likes to celebrate a small win or good day",
   "A social setting where the user feels most alive — who is there, what is happening",
@@ -54,20 +54,12 @@ export const QUESTION_ANGLES = [
   "What warmth feels like to the user — a sound, a room, a person, a ritual",
   "The kind of conversation that makes the user feel most connected",
   "How the user recharges when they need to feel like themselves again",
-  "A real or imagined place where the user feels free and open",
-  "What the user would spend a free afternoon doing if no one would ever judge them for it",
-  "A smell, taste, or texture that instantly takes them back to a good feeling",
-  "The kind of weather or time of day the user feels most hopeful in",
   "How the user makes new people feel welcome or at ease",
   "A song, album, or sound the user keeps returning to lately, and what it gives them",
   "What makes the user laugh easily — a person, a style of humor, or a running joke",
   "A small tradition or ritual the user shares with someone they care about",
-  "How the user turns an ordinary day into something a little special",
-  "A compliment or kind words the user still remembers receiving",
-  "What the user gets excited to introduce to a friend",
   "The last thing that made the user feel genuinely lucky",
-  "How the user likes to show up for people without being asked",
-  // Reflection, depth, and inner life (balanced, not dark)
+  // Reflection, depth, and inner life (~12 of these — balanced, not dark)
   "A small daily ritual or habit the user loves and would miss if it disappeared",
   "What makes the user lose track of time — a craft, a sound, a person, a place",
   "How the user handles a tough day — what they reach for, who they call, what they do",
@@ -80,13 +72,15 @@ export const QUESTION_ANGLES = [
   "What the user is currently learning, curious about, or trying to figure out in life",
   "A piece of media (book, show, film, game) that changed how the user sees something",
   "How the user likes to be comforted when they're down — words, silence, presence, distraction, or something else",
-  "The first thing the user notices about someone new — MUST bake 2-3 concrete example anchors into the question wording (e.g. 'What's the first thing you notice about someone new — their energy, how they talk, or something else?')",
-  // Dark, intense, private, and inward (use sparingly — minority seasoning)
+  // Dark, intense, private, and inward (~8 of these — minority but not vanishingly rare)
   "What intensity looks like for the user — a drive, a fixation, or something they feel very strongly",
   "Something the user is quietly driven or ambitious about, even if they don't say it out loud",
   "How the user handles conflict or confrontation — do they meet it, deflect it, or walk away?",
   "A time the user had to be resilient under pressure — what carried them through",
   "An emotion the user feels more deeply than most people seem to",
+  "A fear or vulnerability the user rarely shares out loud",
+  "A time the user felt most alone — what that felt like and what they did with it",
+  "What the user is quietly moving toward — the long game they don't broadcast",
 ] as const;
 
 /** Song era/origin pools used to mechanically force variety in the

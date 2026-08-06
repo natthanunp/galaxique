@@ -224,12 +224,9 @@ export default function LandingPage() {
           transition={{ duration: 0.6 }}
           className="safe-area-top-4 absolute inset-x-4 sm:inset-x-6 flex items-start justify-between gap-3"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-5 py-2 text-sm text-muted-foreground backdrop-blur-md">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-5 py-2 text-sm text-muted-foreground">
             <SparklesIcon className="size-4 text-accent" />
             {t.eyebrow}
-            <span className="rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-accent">
-              Version 1.0
-            </span>
           </div>
           <LanguageToggle />
         </motion.div>
@@ -240,7 +237,7 @@ export default function LandingPage() {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="flex flex-col items-center gap-6"
         >
-          <h1 className="max-w-4xl bg-linear-to-br from-foreground via-foreground to-accent bg-clip-text py-3 text-5xl font-bold leading-[1.25] tracking-tight text-transparent sm:text-7xl">
+          <h1 className="max-w-4xl py-3 text-5xl font-bold leading-[1.25] tracking-tight text-foreground sm:text-7xl">
             {t.title}
           </h1>
 
@@ -288,7 +285,7 @@ export default function LandingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.6 }}
-            className="mt-12 max-w-md text-[11px] italic leading-relaxed text-muted-foreground/70"
+            className="mt-12 max-w-md text-[11px] leading-relaxed text-muted-foreground/70"
           >
             {t.tribute}
           </motion.p>

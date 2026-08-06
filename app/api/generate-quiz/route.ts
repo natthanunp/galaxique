@@ -19,7 +19,7 @@ const LETTER = /\p{L}/u;
 const LATIN_LETTER = /\p{Script=Latin}/u;
 const THAI_LETTER = /\p{Script=Thai}/u;
 const THAI_QUIZ_MODEL =
-  process.env.OPENROUTER_THAI_QUIZ_MODEL || "qwen/qwen3-30b-a3b";
+  process.env.OPENROUTER_THAI_QUIZ_MODEL || "deepseek/deepseek-v4-flash-0731";
 const THAI_QUIZ_PROVIDER_ORDER = (
   process.env.OPENROUTER_THAI_QUIZ_PROVIDER_ORDER || "alibaba,deepinfra"
 )

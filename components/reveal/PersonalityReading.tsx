@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { SparklesIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { Language } from "@/types/universe";
@@ -11,6 +10,10 @@ interface PersonalityReadingProps {
   vibe: string;
   language: Language;
   className?: string;
+  /** When true, render borderless (no card chrome) — used by the immersive
+   *  reveal layout where the reading floats as a text overlay above the
+   *  galaxy background. Defaults to true (new immersive design). */
+  borderless?: boolean;
 }
 
 /** Thai translations for the LLM's `vibe` enum values, shown in the
@@ -31,6 +34,7 @@ export function PersonalityReading({
   vibe,
   language,
   className,
+  borderless = true,
 }: PersonalityReadingProps) {
   const vibeLabel = language === "th" ? (VIBE_TH[vibe] ?? vibe) : vibe;
   return (
@@ -39,12 +43,13 @@ export function PersonalityReading({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.3 }}
       className={cn(
-        "rounded-xl border border-border/70 bg-card/70 p-5 backdrop-blur-md",
+        borderless
+          ? "rounded-2xl bg-linear-to-t from-background/80 via-background/30 to-transparent p-5"
+          : "rounded-xl border border-border/70 bg-card/70 p-5 backdrop-blur-md",
         className,
       )}
     >
       <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground">
-        <SparklesIcon className="size-3.5 text-accent" />
         <span>
           {language === "th" ? "โทนของคุณ" : "Your vibe"} · {vibeLabel}
         </span>

@@ -75,7 +75,9 @@ export function QuestionCard({
     cardRef.current?.focus();
   }, [question.id]);
 
-  const otherLabel = language === "th" ? "อื่นๆ" : "Other";
+  const otherLabel = language === "th"
+    ? "ไม่มีข้อไหนใช่ — ขอพิมพ์เอง"
+    : "None of these — I'd say…";
   const otherPlaceholder = language === "th"
     ? "พิมพ์คำตอบของคุณ"
     : "Write your own answer";
@@ -84,12 +86,11 @@ export function QuestionCard({
     <motion.div
       ref={cardRef}
       tabIndex={-1}
-      initial={{ opacity: 0, x: 60, rotateY: 12 }}
-      animate={{ opacity: 1, x: 0, rotateY: 0 }}
-      exit={{ opacity: 0, x: -60, rotateY: -12 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, x: 30 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -30 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className="w-full"
-      style={{ perspective: 1000 }}
     >
       <Card className="mx-auto w-full max-w-2xl">
         <CardContent className="flex flex-col gap-6 p-6 sm:p-8">

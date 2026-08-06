@@ -1,6 +1,7 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, PerformanceMonitor } from "@react-three/drei";
 import { EffectComposer, Bloom, ToneMapping } from "@react-three/postprocessing";
 import { BlendFunction, ToneMappingMode } from "postprocessing";
@@ -113,7 +114,12 @@ export default function UniverseCanvas({
         toneMapping: THREE.ACESFilmicToneMapping,
       }}
       onCreated={({ gl }) => {
-        gl.setClearColor(new THREE.Color("#05050a"), 1);
+        // Transparent clear color lets the page background show through
+        // (we want the R3F canvas to be the immersive background, not a
+        // bordered card over a different fill). The page's deep space
+        // base color is set via the Tailwind `bg-background` on the
+        // <main> so we never see a flash of white during initial paint.
+        gl.setClearColor(new THREE.Color("#05050a"), 0);
         const canvas = gl.domElement;
         onCanvasReady?.(canvas);
       }}
@@ -127,6 +133,7 @@ export default function UniverseCanvas({
       <pointLight position={[-8, -4, -6]} intensity={0.6} color={reveal.secondary_color} />
 
       <UniverseScene reveal={reveal} />
+      {postfx.tintOpacity > 0 ? <TintOverlay color={postfx.tint} opacity={postfx.tintOpacity} /> : null}
 
       <OrbitControls
         enablePan={false}
@@ -153,6 +160,43 @@ export default function UniverseCanvas({
         )}
       </EffectComposer>
     </Canvas>
+  );
+}
+
+/** A camera-attached full-screen quad that adds a subtle vibe-tinted wash
+ *  over the entire scene. Uses additive blending at a low opacity so it
+ *  never washes out the bloom highlights — it just shifts the scene's
+ *  overall color toward the vibe's signature tint. The overlay is parented
+ *  to the camera and re-aimed every frame so the quad always faces the
+ *  camera regardless of orbit-drag angle. */
+function TintOverlay({ color, opacity }: { color: string; opacity: number }) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const { camera } = useThree();
+  const tint = useMemo(() => new THREE.Color(color), [color]);
+  useFrame(() => {
+    if (!meshRef.current) return;
+    // Keep the quad anchored to the camera so the tint fills the viewport
+    // at all orbit angles. World-space placement would leave the edges of
+    // the screen untinted whenever the camera moves off-axis.
+    meshRef.current.position.copy(camera.position);
+    meshRef.current.quaternion.copy(camera.quaternion);
+    // Sit the quad a hair in front of the near plane so the depth test
+    // never clips it.
+    meshRef.current.translateZ(-1.5);
+  });
+  return (
+    <mesh ref={meshRef} renderOrder={999}>
+      <planeGeometry args={[40, 22]} />
+      <meshBasicMaterial
+        color={tint}
+        transparent
+        opacity={opacity}
+        blending={THREE.AdditiveBlending}
+        depthWrite={false}
+        depthTest={false}
+        toneMapped={false}
+      />
+    </mesh>
   );
 }
 

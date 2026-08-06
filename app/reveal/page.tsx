@@ -7,9 +7,8 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { ArrowLeftIcon, SparklesIcon } from "lucide-react";
 
-import { StarfieldBackground } from "@/components/shared/StarfieldBackground";
 import { LoadingCosmos } from "@/components/shared/LoadingCosmos";
-import { SpotifyPlayer } from "@/components/reveal/SpotifyPlayer";
+import { VinylDisc } from "@/components/reveal/VinylDisc";
 import { PersonalityReading } from "@/components/reveal/PersonalityReading";
 import { ShareButton } from "@/components/reveal/ShareButton";
 import { Button } from "@/components/ui/button";
@@ -83,12 +82,6 @@ export default function RevealPage() {
   const reveal = useQuizStore((s) => s.reveal);
   const language = useQuizStore((s) => s.language);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  // The StarfieldBackground is a separate DOM canvas behind the R3F
-  // canvas. We need a ref to it too so the screenshot/video export can
-  // composite the starfield as the background — the R3F canvas is
-  // transparent over it, so without compositing, exports look like a
-  // flat silhouette over a white PNG.
-  const starfieldRef = useRef<HTMLCanvasElement | null>(null);
   // Track whether the R3F canvas has finished mounting. ShareButton is
   // disabled until this is true so the user can't click "Start recording"
   // before the dynamic import resolves + R3F's onCreated fires. Without
@@ -177,7 +170,10 @@ export default function RevealPage() {
     void fetch("/api/stats/increment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ vibe: reveal.vibe }),
+      body: JSON.stringify({
+        vibe: reveal.vibe,
+        celestial_type: reveal.celestial_type,
+      }),
       keepalive: true,
     }).catch((err) =>
       console.error("[reveal] Stats increment failed", err),
@@ -238,126 +234,117 @@ export default function RevealPage() {
   }
 
   return (
-    <>
-      <StarfieldBackground
-        onCanvasReady={(c) => {
-          starfieldRef.current = c;
-        }}
-      />
-      <main className="safe-area-page relative min-h-dvh px-4 sm:px-6">
-        <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-2 py-2">
+    <main className="relative min-h-dvh overflow-hidden bg-background">
+      {/* Full-bleed R3F scene — the universe IS the background, no bordered
+          card, no ring, no rounded clip. The page background is the deep
+          space color so the transparent clear color never flashes white
+          before the first frame paints. */}
+      <div className="pointer-events-none fixed inset-0 z-0">
+        <UniverseCanvas
+          reveal={reveal as UniverseReveal}
+          onCanvasReady={(c) => {
+            canvasRef.current = c;
+            setCanvasReady(true);
+          }}
+        />
+      </div>
+
+      {/* Floating top bar — Home/Retake buttons, kept above the scene.
+          Uses `pointer-events-auto` to capture clicks while the canvas
+          layer uses `pointer-events-none` so it doesn't block orbit-drag. */}
+      <header className="safe-area-top-4 pointer-events-none absolute inset-x-4 z-20 flex items-center justify-between gap-2 sm:inset-x-6">
+        <div className="pointer-events-auto">
           <Button asChild variant="ghost" size="sm" className="gap-1">
             <Link href="/">
               <ArrowLeftIcon className="size-4" />
               {language === "th" ? "หน้าแรก" : "Home"}
             </Link>
           </Button>
-          <div className="flex items-center gap-2">
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="gap-1"
-            >
-              <Link href="/quiz">
-                <SparklesIcon className="size-4" />
-                {language === "th" ? "ทำใหม่" : "Retake"}
-              </Link>
-            </Button>
-          </div>
-        </header>
-
-        <div className="mx-auto mt-2 grid w-full max-w-6xl min-w-0 gap-6 lg:grid-cols-[1.4fr_1fr]">
-          {/* 3D universe — the R3F canvas is transparent over the page-level
-              StarfieldBackground, so we deliberately don't add a border or
-              backing fill on the OUTER wrapper (any visible bezel breaks
-              the illusion that the universe bleeds into the same starry sky
-              the user sees across the rest of the reveal page). Keep the
-              corner radius matched to the sibling cards (rounded-xl on
-              PersonalityReading and SpotifyPlayer) so the three live in one
-              visual family; `overflow-hidden` clips the Bloom postprocess
-              to those corners instead of letting it spill into the grid
-              gutter.
-
-              A 1px inset ring sits *inside* the rounded clip so all four
-              corners of the card read consistently against the page
-              background — without it, the rounded edge is only visible
-              where the canvas is bright, which makes one side look round
-              and the others look flat. The ring is kept on `pointer-events:
-              none` and lives below the canvas in the stacking order, so
-              it never intercepts orbit drags and the R3F scene still
-              fills 100% of the card. */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="relative h-[55vh] min-h-90 min-w-0 overflow-hidden rounded-xl ring-1 ring-inset ring-white/10 lg:h-[78vh]"
-          >
-            <UniverseCanvas
-              reveal={reveal as UniverseReveal}
-              onCanvasReady={(c) => {
-                canvasRef.current = c;
-                setCanvasReady(true);
-              }}
-            />
-          </motion.div>
-
-          {/* Reading + song + share */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="flex min-w-0 flex-col gap-4"
-          >
-            <PersonalityReading
-              reading={reveal.personality_reading}
-              vibe={reveal.vibe}
-              language={language}
-            />
-            <SpotifyPlayer
-              query={reveal.spotify_search_query}
-              trackId={reveal.spotify_track_id}
-              language={language}
-            />
-            <div className="flex flex-wrap items-center gap-3">
-              <ShareButton
-                getCanvas={() => canvasRef.current}
-                getStarfield={() => starfieldRef.current}
-                disabled={!canvasReady}
-                language={language}
-                reading={reveal.personality_reading}
-              />
-              <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                <span className="rounded-full border border-border/70 bg-card/60 px-3 py-1 backdrop-blur-md">
-                  {humanizeCelestialType(reveal.celestial_type, language)}
-                </span>
-                {reveal.central_symbol !== "none" && (
-                  <span className="rounded-full border border-border/70 bg-card/60 px-3 py-1 backdrop-blur-md">
-                    {humanizeSymbol(reveal.central_symbol, language)}
-                  </span>
-                )}
-                {reveal.creature && (
-                  <span
-                    className="rounded-full border border-border/70 bg-card/60 px-3 py-1 backdrop-blur-md"
-                    title={`A ${reveal.creature.accent !== "none" ? reveal.creature.accent + " " : ""}${reveal.creature.kind} that ${reveal.creature.motion}s beside you`}
-                  >
-                    {language === "th" ? "เพื่อนคู่ใจ" : "companion"}{" · "}
-                    <span className="text-foreground">
-                      {reveal.creature.name ?? reveal.creature.kind}
-                    </span>
-                  </span>
-                )}
-                <span
-                  className="rounded-full border border-border/70 px-3 py-1 backdrop-blur-md"
-                  style={{ color: reveal.primary_color }}
-                >
-                  {reveal.primary_color}
-                </span>
-              </div>
-            </div>
-          </motion.div>
         </div>
-      </main>
-    </>
+        <div className="pointer-events-auto flex items-center gap-2">
+          <ShareButton
+            getCanvas={() => canvasRef.current}
+            disabled={!canvasReady}
+            language={language}
+            reading={reveal.personality_reading}
+          />
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="gap-1"
+          >
+            <Link href="/quiz">
+              <SparklesIcon className="size-4" />
+              {language === "th" ? "ทำใหม่" : "Retake"}
+            </Link>
+          </Button>
+        </div>
+      </header>
+
+      {/* Immersive content overlay — vinyl disc + reading + badges float
+          on top of the R3F scene. Centered on small screens, distributed
+          across the viewport on lg+ so the disc anchors the left and the
+          reading + badges the right. The overlay container is
+          `pointer-events-none` so the canvas behind still receives
+          orbit-drag input; only the children opt back in via
+          `pointer-events-auto`. */}
+      <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-6xl flex-col items-center justify-center gap-8 px-4 pb-12 pt-24 sm:px-6 lg:flex-row lg:items-center lg:gap-12">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.94 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.9 }}
+          className="pointer-events-auto flex shrink-0 flex-col items-center"
+        >
+          <VinylDisc
+            query={reveal.spotify_search_query}
+            trackId={reveal.spotify_track_id}
+            language={language}
+            primaryColor={reveal.primary_color}
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="pointer-events-auto flex w-full max-w-md flex-col gap-4 lg:max-w-none lg:flex-1"
+        >
+          <PersonalityReading
+            reading={reveal.personality_reading}
+            vibe={reveal.vibe}
+            language={language}
+            borderless
+          />
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground/80">
+            <span>{humanizeCelestialType(reveal.celestial_type, language)}</span>
+            {reveal.central_symbol !== "none" && (
+              <>
+                <span aria-hidden>·</span>
+                <span>{humanizeSymbol(reveal.central_symbol, language)}</span>
+              </>
+            )}
+            {reveal.creature && (
+              <>
+                <span aria-hidden>·</span>
+                <span
+                  title={`A ${reveal.creature.accent !== "none" ? reveal.creature.accent + " " : ""}${reveal.creature.kind} that ${reveal.creature.motion}s beside you`}
+                >
+                  {language === "th" ? "เพื่อนคู่ใจ" : "companion"}
+                  {" · "}
+                  <span className="text-foreground/80">
+                    {reveal.creature.name ?? reveal.creature.kind}
+                  </span>
+                </span>
+              </>
+            )}
+            <span aria-hidden>·</span>
+            <span style={{ color: reveal.primary_color }}>
+              {reveal.primary_color}
+            </span>
+          </div>
+        </motion.div>
+      </div>
+    </main>
   );
 }

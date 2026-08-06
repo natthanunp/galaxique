@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
@@ -39,14 +39,10 @@ const CREATURE_MODELS = {
     animation: "Survey",
   },
   jelly: {
-    // Drifts far behind the central object instead of up front like the
-    // other companions — camera sits ~8 units from the origin, so a distance
-    // beyond that puts the jelly past the galaxy from the camera's view.
     url: "/assets/creatures/jelly.glb",
     scale: 1.1,
     rotationY: 0,
     animation: "ArmatureAction.001",
-    distance: 9.5,
   },
   spirit: {
     url: "/assets/creatures/spirit.glb",
@@ -79,10 +75,7 @@ export function CreatureModel({
 }: CreatureModelProps) {
   const model = hasCreatureModel(spec.kind) ? CREATURE_MODELS[spec.kind] : CREATURE_MODELS.fox;
   const groupRef = useRef<THREE.Group>(null);
-  const forwardRef = useRef(new THREE.Vector3());
-  const rightRef = useRef(new THREE.Vector3());
   const targetRef = useRef(new THREE.Vector3());
-  const { camera } = useThree();
   const { scene, animations } = useGLTF(model.url);
   const { actions } = useAnimations(animations, groupRef);
   const modelScene = useMemo(() => {
@@ -155,48 +148,65 @@ export function CreatureModel({
     const time = state.clock.elapsedTime;
     const speed = 0.38 + rotationSpeed * 0.22;
     const angle = time * speed;
-    const forward = camera.getWorldDirection(forwardRef.current);
-    const right = rightRef.current.crossVectors(forward, camera.up).normalize();
+    // Perches near the (DOM) vinyl disc at a fixed scene-origin-relative
+    // radius, so the creature reads as a companion to the song rather
+    // than a sentinel glued to the camera. The exact world-space vinyl
+    // position is unimportant — the disc is a DOM element projected over
+    // the galaxy, so any companion at ~2.5 units from the origin sits
+    // visibly near it. Different motions map to different scene-relative
+    // positions/orbits:
+    //   - fly/orbit: orbits the origin at radius 2.5–3.0 (wing-flapping
+    //     for bird/dragon; survey-look for fox/cat)
+    //   - bob: floats gently at a fixed perch offset (jelly/spirit)
+    //   - swim: drifts in a slow sinusoidal path near the disc (fish)
+    const perchRadius = 2.6;
     const target = targetRef.current;
-    const companionDistance = "distance" in model ? model.distance : 5.5;
-    const verticalOffset = 0;
 
     switch (spec.motion) {
       case "fly":
-        target
-          .copy(camera.position)
-          .addScaledVector(forward, companionDistance)
-          .addScaledVector(right, Math.cos(angle) * 1.65)
-          .addScaledVector(camera.up, verticalOffset + 0.15 + Math.sin(angle * 1.6) * 0.58);
+        target.set(
+          Math.cos(angle) * perchRadius + Math.sin(angle * 0.6) * 0.4,
+          0.6 + Math.sin(angle * 1.6) * 0.45,
+          Math.sin(angle) * perchRadius * 0.7,
+        );
         break;
       case "swim":
-        target
-          .copy(camera.position)
-          .addScaledVector(forward, companionDistance)
-          .addScaledVector(right, Math.sin(angle * 0.9) * 1.5)
-          .addScaledVector(camera.up, verticalOffset + Math.sin(angle * 1.7) * 0.4);
+        target.set(
+          Math.sin(angle * 0.9) * 1.4,
+          Math.sin(angle * 1.7) * 0.4,
+          1.8 + Math.cos(angle * 0.7) * 0.6,
+        );
         break;
       case "bob":
-        target
-          .copy(camera.position)
-          .addScaledVector(forward, companionDistance)
-          .addScaledVector(right, 1.55 + Math.sin(angle * 0.7) * 0.28)
-          .addScaledVector(camera.up, verticalOffset + 0.3 + Math.sin(angle * 2) * 0.35);
+        target.set(
+          1.5 + Math.sin(angle * 0.7) * 0.25,
+          0.4 + Math.sin(angle * 2) * 0.35,
+          1.8,
+        );
         break;
       case "orbit":
       default:
-        target
-          .copy(camera.position)
-          .addScaledVector(forward, companionDistance)
-          .addScaledVector(right, Math.cos(angle) * 1.45)
-          .addScaledVector(camera.up, verticalOffset + 0.08 + Math.sin(angle) * 0.5);
+        target.set(
+          Math.cos(angle) * perchRadius,
+          0.4 + Math.sin(angle) * 0.5,
+          Math.sin(angle) * perchRadius * 0.7,
+        );
         break;
     }
 
-    group.position.lerp(target, 0.07);
-    group.quaternion.copy(camera.quaternion);
-    group.rotateY(model.rotationY + Math.sin(time * 0.8) * 0.12);
-    group.rotateZ(Math.sin(time * (1.2 + rotationSpeed)) * (spec.kind === "fish" ? 0.12 : 0.04));
+    group.position.lerp(target, 0.12);
+    // Face the galaxy center (origin), then apply the per-model
+    // `rotationY` offset so each creature's forward orientation is
+    // preserved (e.g. bird needs Math.PI to face forward).
+    group.lookAt(0, 0, 0);
+    group.rotateY(model.rotationY);
+    // Tiny wobble only for the fish (no GLB bone animation to drive
+    // organic motion). Other models let the bone animation handle
+    // their motion — the previous manual rotation wobble created a
+    // "double-animated" look on top of the GLB animation.
+    if (spec.kind === "fish") {
+      group.rotateZ(Math.sin(time * (1.2 + rotationSpeed)) * 0.05);
+    }
     modelScene.scale.setScalar(model.scale);
     modelScene.traverse((node) => {
       if (!(node instanceof THREE.Mesh)) return;
@@ -210,7 +220,7 @@ export function CreatureModel({
 
   return (
     <group ref={groupRef}>
-      <pointLight color={secondaryColor} intensity={3} distance={5} />
+      <pointLight color={secondaryColor} intensity={1.2} distance={8} />
       <primitive object={modelScene} />
       {spec.accent === "halo" && (
         <mesh position={[0, 1.55, 0]} rotation={[Math.PI / 2, 0, 0]}>

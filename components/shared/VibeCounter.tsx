@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { HeartIcon, FlameIcon, MoonIcon, ZapIcon, SparklesIcon, ShieldIcon } from "lucide-react";
 import type { VibeStats } from "@/lib/vibeStatsStore";
 
 /**
@@ -10,13 +11,22 @@ import type { VibeStats } from "@/lib/vibeStatsStore";
  * with the total count and per-vibe breakdown.
  */
 
-const VIBE_EMOJI: Record<keyof Omit<VibeStats, "total">, string> = {
-  cute: "🌸",
-  cozy: "🔥",
-  mysterious: "🌙",
-  intense: "⚡",
-  whimsical: "✨",
-  cynical: "🖤",
+const VIBE_ICON: Record<keyof Omit<VibeStats, "total">, typeof HeartIcon> = {
+  cute: HeartIcon,
+  cozy: FlameIcon,
+  mysterious: MoonIcon,
+  intense: ZapIcon,
+  whimsical: SparklesIcon,
+  cynical: ShieldIcon,
+};
+
+const VIBE_DOT: Record<keyof Omit<VibeStats, "total">, string> = {
+  cute: "bg-rose-400",
+  cozy: "bg-amber-400",
+  mysterious: "bg-indigo-400",
+  intense: "bg-red-400",
+  whimsical: "bg-emerald-400",
+  cynical: "bg-slate-400",
 };
 
 const VIBE_LABEL: Record<keyof Omit<VibeStats, "total">, { en: string; th: string }> = {
@@ -85,32 +95,37 @@ export function VibeCounter({ language = "en" }: { language?: "en" | "th" }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="rounded-2xl border border-border/50 bg-card/30 p-6 backdrop-blur-md"
+      className="rounded-2xl border border-border/50 bg-card/60 p-6"
     >
       <div className="mb-4 text-center">
         <p className="text-lg font-medium text-foreground">{message}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {vibeEntries.map(([vibe, count]) => (
-          <motion.div
-            key={vibe}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-            className="flex items-center gap-2 rounded-lg bg-background/50 px-3 py-2"
-          >
-            <span className="text-xl">{VIBE_EMOJI[vibe]}</span>
-            <div className="flex-1">
-              <div className="text-xs text-muted-foreground">
-                {VIBE_LABEL[vibe][language]}
-              </div>
-              <div className="text-sm font-semibold text-foreground">
-                {count.toLocaleString()}
+        {vibeEntries.map(([vibe, count]) => {
+          const Icon = VIBE_ICON[vibe];
+          return (
+            <div
+              key={vibe}
+              className="flex items-center gap-2 rounded-lg bg-background/50 px-3 py-2"
+            >
+              <span
+                className={`inline-flex size-5 shrink-0 items-center justify-center rounded-full ${VIBE_DOT[vibe]}`}
+                aria-hidden
+              >
+                <Icon className="size-3 text-background" strokeWidth={2.5} />
+              </span>
+              <div className="flex-1">
+                <div className="text-xs text-muted-foreground">
+                  {VIBE_LABEL[vibe][language]}
+                </div>
+                <div className="text-sm font-semibold text-foreground">
+                  {count.toLocaleString()}
+                </div>
               </div>
             </div>
-          </motion.div>
-        ))}
+          );
+        })}
       </div>
     </motion.div>
   );

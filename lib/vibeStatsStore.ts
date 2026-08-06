@@ -9,6 +9,7 @@ import { Redis } from "@upstash/redis";
  */
 
 const STATS_KEY = "galaxseea:vibe-stats";
+const CELESTIAL_STATS_KEY = "galaxseea:celestial-stats";
 
 export type VibeStats = {
   total: number;
@@ -18,6 +19,13 @@ export type VibeStats = {
   intense: number;
   whimsical: number;
   cynical: number;
+};
+
+export type CelestialStats = {
+  total: number;
+  galaxy: number;
+  black_hole: number;
+  neutron_star: number;
 };
 
 export type StatsSource = "upstash" | "memory";
@@ -49,6 +57,13 @@ let memoryStats: VibeStats = {
   intense: 0,
   whimsical: 0,
   cynical: 0,
+};
+
+let memoryCelestialStats: CelestialStats = {
+  total: 0,
+  galaxy: 0,
+  black_hole: 0,
+  neutron_star: 0,
 };
 
 export async function incrementVibeStat(vibe: keyof Omit<VibeStats, "total">): Promise<{
@@ -95,6 +110,52 @@ export async function getVibeStats(): Promise<{
   // In-memory fallback
   return {
     stats: { ...memoryStats },
+    source: "memory",
+  };
+}
+
+/** Increments a celestial-type counter. Mirrors `incrementVibeStat` so the
+ *  /api/stats/increment route can update both stats in a single call. */
+export async function incrementCelestialStat(
+  celestialType: keyof Omit<CelestialStats, "total">,
+): Promise<{ stats: CelestialStats; source: StatsSource }> {
+  const redis = getRedisClient();
+
+  if (redis) {
+    await redis.hincrby(CELESTIAL_STATS_KEY, celestialType, 1);
+    await redis.hincrby(CELESTIAL_STATS_KEY, "total", 1);
+
+    const stats = await redis.hgetall<CelestialStats>(CELESTIAL_STATS_KEY);
+    return {
+      stats: stats || memoryCelestialStats,
+      source: "upstash",
+    };
+  }
+
+  memoryCelestialStats[celestialType]++;
+  memoryCelestialStats.total++;
+  return {
+    stats: { ...memoryCelestialStats },
+    source: "memory",
+  };
+}
+
+export async function getCelestialStats(): Promise<{
+  stats: CelestialStats;
+  source: StatsSource;
+}> {
+  const redis = getRedisClient();
+
+  if (redis) {
+    const stats = await redis.hgetall<CelestialStats>(CELESTIAL_STATS_KEY);
+    return {
+      stats: stats || { total: 0, galaxy: 0, black_hole: 0, neutron_star: 0 },
+      source: "upstash",
+    };
+  }
+
+  return {
+    stats: { ...memoryCelestialStats },
     source: "memory",
   };
 }

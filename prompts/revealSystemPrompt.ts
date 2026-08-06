@@ -159,7 +159,7 @@ possibilities open. If the user's answers repeatedly mention people,
 connection, comfort, celebration, warmth, or playful curiosity, galaxy is the
 right home for them — not a consolation prize.
   - central_symbol → "heart" when connection, care, or belonging is the strongest repeated signal; "star" when curiosity, play, or hope dominates; otherwise "none"
-  - vibe → "cozy" for comfort, steadiness, home, or gentle care; "cute" for open affection, optimistic warmth, or light confidence; "whimsical" ONLY for repeated evidence of imaginative play, unusual associations, delight in the surreal, or a deliberately unconventional perspective. Never choose "whimsical" merely because someone is warm, creative, or a galaxy; "cynical" for skepticism, world-weariness, or ironic detachment — a galaxy person can be cynical when their warmth is tempered by dry humor or distrust of sentimentality.
+  - vibe → "cozy" ONLY for comfort, steadiness, home, or gentle care (do not use cozy as a default for all warm profiles); "cute" for open affection, light confidence, or optimistic warmth; "whimsical" ONLY for repeated evidence of imaginative play, unusual associations, delight in the surreal, or a deliberately unconventional perspective. Never choose "whimsical" merely because someone is warm, creative, or a galaxy; "cynical" for skepticism, world-weariness, or ironic detachment — a galaxy person can be cynical when their warmth is tempered by dry humor or distrust of sentimentality.
   - colors → warm gold, rose, coral, soft amber, cool aurora, lavender, ocean-blue, and green are all valid — match the emotional temperature, not a dark default
 
 Choose "black_hole" when the dominant pattern is INWARD, PRIVATE, or
@@ -177,20 +177,17 @@ well, fierce care, decisive action, ambition, or a strong internal compass.
   - vibe → "intense" or "cute" for playful confidence; "cynical" for sharp-edged resilience, a no-nonsense survivor who has seen through things and keeps going
   - colors → electric cyan, cobalt, white, hot pink, ultraviolet, or sharp gold; contrast is desirable
 
-When the evidence is genuinely mixed or evenly split, default to GALAXY —
-it is the most human and balanced home. Black hole should only win when
-inward/private/gravitational signals clearly dominate the MAJORITY of answers.
-Do not let one or two introspective or melancholy answers override an
-otherwise warm, connective, or playful profile. Neutron star wins only when
-concentrated drive, resilience, or high energy is the clearest repeated theme.
+When evidence is genuinely mixed, choose the celestial type supported by the
+MOST SPECIFIC and REPEATED signals — do not default to any type. If two
+types have equal support, pick the one with the most vivid, specific
+evidence (not just the warmest).
 
-Before finalizing a "black_hole" choice, run this audit:
-- Count the answers that explicitly mention people, connection, warmth, play,
-  comfort, hope, curiosity, or everyday joy. If that count is 3 or more, you
-  are probably over-reading the dark notes. Choose galaxy instead.
-- Black hole is correct only when solitude, mystery, melancholy, restraint,
-  observation, or depth beneath the surface is the dominant pattern across
-  MOST answers, not just a recurring undertone.
+Before finalizing, check that your chosen type has the strongest REPEATED
+pattern across answers, not just a plurality of warm mentions. Black hole
+is correct when inward/private/gravitational signals appear in at least 4
+answers AND are the dominant emotional texture. Galaxy is correct when
+expansive/connective signals dominate. Neutron star when concentrated
+drive/resilience dominates.
 
 Pattern examples (do not copy; use as calibration):
 - Galaxy: "I love late-night talks with friends," "small rituals with family,"
