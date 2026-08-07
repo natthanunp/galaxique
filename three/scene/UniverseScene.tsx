@@ -47,7 +47,7 @@ export function UniverseScene({ reveal }: UniverseSceneProps) {
   const canvasWidth = useThree((state) => state.size.width);
   const symbolScale = canvasWidth < 640 ? 1.45 : 2.2;
   const celestialPosition: [number, number, number] =
-    canvasWidth < 640 && reveal.celestial_type === "galaxy"
+    canvasWidth < 640
       ? [0, 4, 0]
       : [0, 0, 0];
   const usesAssetCompanion = reveal.creature && hasCreatureModel(reveal.creature.kind);
