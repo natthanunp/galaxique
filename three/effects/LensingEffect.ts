@@ -1,12 +1,12 @@
 import { Effect } from "postprocessing";
-import { Uniform } from "three";
+import { Uniform, Vector2 } from "three";
 
 const fragmentShader = /* glsl */ `
+  uniform vec2 center;
   uniform float strength;
   uniform float radius;
 
   void mainUv(inout vec2 uv) {
-    vec2 center = vec2(0.5);
     vec2 delta = uv - center;
     float dist = length(delta);
     float falloff = smoothstep(radius, 0.0, dist);
@@ -26,20 +26,27 @@ export interface LensingEffectOptions {
 
 /**
  * Screen-space radial UV warp around the projected black hole position.
- *
- * The black hole is always rendered at the scene origin and OrbitControls
- * orbits the camera around that same origin (see UniverseCanvas), so its
- * projected screen position stays effectively centered regardless of camera
- * angle — this lets the effect use a fixed screen-space center instead of
- * computing a per-frame world-to-screen projection.
  */
 export class LensingEffect extends Effect {
   constructor({ strength = 1, radius = 0.42 }: LensingEffectOptions = {}) {
     super("LensingEffect", fragmentShader, {
       uniforms: new Map<string, Uniform>([
+        ["center", new Uniform(new Vector2(0.5, 0.5))],
         ["strength", new Uniform(strength)],
         ["radius", new Uniform(radius)],
       ]),
     });
+  }
+
+  setCenter(center: Vector2) {
+    (this.uniforms.get("center")?.value as Vector2).copy(center);
+  }
+
+  setStrength(strength: number) {
+    this.uniforms.get("strength")?.value = strength;
+  }
+
+  setRadius(radius: number) {
+    this.uniforms.get("radius")?.value = radius;
   }
 }

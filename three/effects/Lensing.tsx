@@ -1,15 +1,41 @@
 "use client";
 
-import { wrapEffect } from "@react-three/postprocessing";
+import { useEffect, useMemo } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import * as THREE from "three";
 
 import { LensingEffect } from "./LensingEffect";
 
-/**
- * React-postprocessing wrapper for LensingEffect, following the same
- * `wrapEffect` pattern the library uses internally for its built-in effects
- * (see @react-three/postprocessing's Bloom.tsx). Feature-flagged behind
- * `celestial_type === "black_hole"` and the live adaptive quality tier in
- * UniverseCanvas.tsx, so it can be tuned/reverted independently of the rest
- * of the postprocessing stack.
- */
-export const Lensing = wrapEffect(LensingEffect, { strength: 1, radius: 0.42 });
+interface LensingProps {
+	strength?: number;
+	radius?: number;
+	anchorPosition?: [number, number, number];
+}
+
+/** Screen-space lensing that follows the black hole's projected core. */
+export function Lensing({
+	strength = 1,
+	radius = 0.42,
+	anchorPosition = [0, 0, 0],
+}: LensingProps) {
+	const camera = useThree((state) => state.camera);
+	const effect = useMemo(() => new LensingEffect({ strength, radius }), []);
+	const worldPosition = useMemo(() => new THREE.Vector3(), []);
+	const screenPosition = useMemo(() => new THREE.Vector2(), []);
+
+	useEffect(() => {
+		effect.setStrength(strength);
+		effect.setRadius(radius);
+	}, [effect, radius, strength]);
+
+	useFrame(() => {
+		worldPosition.set(...anchorPosition).project(camera);
+		screenPosition.set(
+			worldPosition.x * 0.5 + 0.5,
+			worldPosition.y * 0.5 + 0.5,
+		);
+		effect.setCenter(screenPosition);
+	});
+
+	return <primitive object={effect} />;
+}
