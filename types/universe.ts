@@ -39,10 +39,15 @@ export type CelestialType =
   | "neutron_star";
 
 /** A glowing particle shape shown at the core of a cosmic object
- *  (e.g. a heart, a star) — or "none" to let the object speak for itself. */
+ *  (e.g. a heart, a star) — or "none" to let the object speak for itself.
+ *  Expanded from the original {star, heart, none} so the symbol can map
+ *  more precisely to the user's dominant vibe. */
 export type CentralSymbol =
   | "star"
   | "heart"
+  | "diamond"
+  | "infinity"
+  | "flame"
   | "none";
 
 /** Creature kinds accepted from both new and pre-existing persisted reveals.

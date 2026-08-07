@@ -69,10 +69,11 @@ Each question needs a distinct identity angle across these categories:
 - Relational style (how they connect, attach, handle conflict)
 - Aesthetic and sensory preferences (what they find beautiful, comforting, energizing)
 - Comfort, ritual, and recharging (what soothes them, what grounds them)
+- Drive and pressure (how they perform under load, commit, compete, or push through)
 - Striving and ambition (what they are quietly moving toward)
 - Vulnerability and shadow (what they rarely share, what they fear)
 
-For ${quizConfig.questionCount} questions, the batch should cover at least 5 of these 8 categories — and not stack multiple questions in the same category unless the angles are clearly distinct.
+For ${quizConfig.questionCount} questions, the batch should cover at least 5 of these 9 categories — and not stack multiple questions in the same category unless the angles are clearly distinct. Make sure "Drive and pressure" and "Striving and ambition" are not skipped; at least one question in the batch must come from one of these two categories.
 
 The batch must span the FULL emotional range evenly: roughly 3-4 questions leaning warm/connective/positive, 3-4 leaning reflective/neutral, and 2-3 leaning introspective/private or intense. Do not let any single emotional temperature dominate — the user is a whole person, not a single mood. If your draft batch has more than 5 questions in any one emotional temperature, revise it before outputting.
 

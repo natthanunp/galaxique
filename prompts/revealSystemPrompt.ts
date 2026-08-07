@@ -60,10 +60,12 @@ descriptor" tracks, score low — you have nothing to match against.
    - mood: does its mood match the answers' emotional temperature?
    - energy: does its energy match the answers' energy level?
    - setting: does its setting/imagery match the answers' world?
-   Score 0-3 for a weak/generic match, 4-7 for a real overlap, 8-10 only when
-   the track's specific tag directly matches a specific signal. Use the FULL
-   range — do not cluster everything at 7-8. A track you cannot tie to a
-   named signal scores low on every axis.
+   Score 0-3 for a weak/generic match, 4-6 for a real but not perfect overlap,
+   7-8 when the track's specific tag directly matches a specific signal, and
+   9-10 only for an exceptional, almost uncanny match. Use the FULL range —
+   do not cluster everything at 6-7. A track you cannot tie to a named signal
+   scores low on every axis. The server uses these scores to pick, so a
+   genuinely best-fitting track should be clearly separated from the rest.
 3. Set "why" to the single strongest signal each track matches (max 6 words).
 
 Output this as a "song_candidates" array, each item:
@@ -144,7 +146,7 @@ YOUR MOST IMPORTANT JOB: the cosmic object and symbol you choose MUST honestly r
 === MAPPING RULES (follow these faithfully) ===
 
 Allowed celestial_type values: "galaxy" | "black_hole" | "neutron_star" — pick exactly one.
-Allowed central_symbol values: "star" | "heart" | "none" — pick exactly one.
+Allowed central_symbol values: "star" | "heart" | "diamond" | "infinity" | "flame" | "none" — pick exactly one.
 
 First, assess ALL answers for the strongest repeated signal. Choose the
 celestial type that has the most direct evidence. Do not use warmth, romance,
@@ -158,7 +160,7 @@ belonging, creative exploration, everyday joy, warmth, or a desire to keep
 possibilities open. If the user's answers repeatedly mention people,
 connection, comfort, celebration, warmth, or playful curiosity, galaxy is the
 right home for them — not a consolation prize.
-  - central_symbol → "heart" when connection, care, or belonging is the strongest repeated signal; "star" when curiosity, play, or hope dominates; otherwise "none"
+  - central_symbol → "heart" when warmth, connection, care, belonging, or affection is the strongest emotional texture — this is the natural symbol for a connective galaxy and should NOT be avoided. "star" only when curiosity, play, hope, wonder, or imaginative exploration is the STRONGEST repeated signal, stronger than the warmth. "infinity" when the answers emphasize endless possibility, many paths, non-linear thinking, or a restless loop of ideas. "none" only when the galaxy itself already carries the warmth and no extra symbol is needed. Do not downgrade "heart" to "star" just because the user is also curious or hopeful.
   - vibe → "cozy" ONLY for comfort, steadiness, home, or gentle care (do not use cozy as a default for all warm profiles); "cute" for open affection, light confidence, or optimistic warmth; "whimsical" ONLY for repeated evidence of imaginative play, unusual associations, delight in the surreal, or a deliberately unconventional perspective. Never choose "whimsical" merely because someone is warm, creative, or a galaxy; "cynical" for skepticism, world-weariness, or ironic detachment — a galaxy person can be cynical when their warmth is tempered by dry humor or distrust of sentimentality.
   - colors → warm gold, rose, coral, soft amber, cool aurora, lavender, ocean-blue, and green are all valid — match the emotional temperature, not a dark default
 
@@ -166,14 +168,17 @@ Choose "black_hole" when the dominant pattern is INWARD, PRIVATE, or
 GRAVITATIONAL: solitude, emotional complexity, observation, restraint,
 longing, melancholy, mystery, philosophical thinking, a need for quiet, or
 being drawn to what is beneath the surface.
-  - central_symbol → "none" when the inner world should speak for itself, otherwise "star"
+  - central_symbol → "none" when the inner world should speak for itself; "infinity" when the answers loop back on themselves, revisit old feelings, or see life as recursive patterns; otherwise "star". Use "heart" only if tenderness or hidden care is the dominant black-hole texture, not merely because the person is kind.
   - vibe → "mysterious" or "intense"; "cynical" for sardonic detachment, distrust of surface appearances, or a world-weary observer who sees through illusions
   - colors → deep indigo, inky blue, violet, graphite, deep teal, magenta, or a restrained silver highlight
 
 Choose "neutron_star" when the dominant pattern is CONCENTRATED, RESILIENT,
 or HIGH-ENERGY: drive, courage, discipline, reinvention, pressure carried
-well, fierce care, decisive action, ambition, or a strong internal compass.
-  - central_symbol → "star" or "none"; use "heart" only when tenderness under pressure is a repeated theme
+well, fierce care, decisive action, ambition, goal-tracking, fast commitment,
+or a strong internal compass. It does NOT require 4+ answers — a clear,
+repeated drive signal in 2-3 answers is enough if it is the most specific
+and dominant texture.
+  - central_symbol → "diamond" when pressure, resilience, or sharp brilliance is the strongest signal; "flame" when fierce drive, transformation, or burning focus dominates; "star" when the emphasis is on guidance or aspiration; "heart" only when tenderness under pressure is a repeated, explicit theme; otherwise "none". Do not choose "heart" just because the user cares about people.
   - vibe → "intense" or "cute" for playful confidence; "cynical" for sharp-edged resilience, a no-nonsense survivor who has seen through things and keeps going
   - colors → electric cyan, cobalt, white, hot pink, ultraviolet, or sharp gold; contrast is desirable
 
@@ -186,8 +191,24 @@ Before finalizing, check that your chosen type has the strongest REPEATED
 pattern across answers, not just a plurality of warm mentions. Black hole
 is correct when inward/private/gravitational signals appear in at least 4
 answers AND are the dominant emotional texture. Galaxy is correct when
-expansive/connective signals dominate. Neutron star when concentrated
-drive/resilience dominates.
+expansive/connective signals dominate. Neutron star is correct when
+concentrated drive/resilience/ambition is the most specific and repeated
+texture, even if it only clearly appears in 2-3 answers.
+
+ANTI-DEFAULT CHECK — central_symbol: avoid using "star" as a catch-all for
+any warm or imaginative galaxy. "star" is correct when curiosity, wonder,
+play, or aspiration is the SINGLE strongest repeated signal. If warmth,
+connection, care, or belonging is the strongest signal, "heart" is the right
+choice. For neutron-star results, "heart" requires tenderness-under-pressure
+to be a repeated, explicit theme, not just one soft answer.
+
+VIBE → SYMBOL OVERLAY: after choosing celestial_type, let the dominant vibe
+push the central_symbol further. These pairings are strong defaults:
+- cute / cozy → "heart" if warmth is present; "star" only if play/hope is stronger
+- whimsical → "star" or "infinity"
+- mysterious → "infinity" or "none"
+- intense → "flame" or "diamond"
+- cynical → "infinity" or "none"
 
 Pattern examples (do not copy; use as calibration):
 - Galaxy: "I love late-night talks with friends," "small rituals with family,"
@@ -225,7 +246,7 @@ ${songPending && catalogTracks ? buildSongScoringSection(catalogTracks) : ""}
 === OUTPUT FIELDS ===
 - vibe: one of "cute" | "cozy" | "mysterious" | "intense" | "whimsical" | "cynical". Choose it from the strongest repeated evidence in the answers, independently of celestial_type. "whimsical" is the narrowest label: use it only when the answers repeatedly show imaginative, playful, or unconventional thinking. For ordinary warmth, connection, calm, or creativity, choose the more precise "cozy" or "cute" instead. "cynical" is for skepticism, world-weariness, or ironic detachment — it can pair with any celestial type.
 - celestial_type: one of "galaxy" | "black_hole" | "neutron_star"
-- central_symbol: one of "star" | "heart" | "none"
+- central_symbol: one of "star" | "heart" | "diamond" | "infinity" | "flame" | "none"
 - primary_color: hex string like "#FFB4A2" — the dominant glow color
 - secondary_color: hex string — the accent / complementary color
 - rotation_speed: float 0.2–2.0 (slower = calmer vibe, faster = energetic vibe)

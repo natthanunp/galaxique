@@ -53,7 +53,7 @@ export function PersonalityReading({
             // viewport on every breakpoint. On mobile we tighten the
             // padding so the reading doesn't push the rest of the UI
             // off the fold.
-            "rounded-2xl bg-linear-to-t from-background/75 via-background/20 to-transparent p-4 backdrop-blur-[2px] sm:p-6 lg:p-8"
+            "rounded-2xl bg-linear-to-b from-transparent via-black/35 to-black/75 p-4 shadow-[0_4px_30px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:p-6 lg:p-8"
           : "rounded-xl border border-border/70 bg-card/70 p-5 backdrop-blur-md",
         className,
       )}

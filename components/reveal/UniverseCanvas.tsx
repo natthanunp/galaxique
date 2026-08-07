@@ -2,15 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls, PerformanceMonitor } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
 import { UniverseScene } from "@/three/scene/UniverseScene";
 import { RenderPerformanceMetrics } from "@/three/scene/RenderPerformanceMetrics";
 import { Lensing } from "@/three/effects/Lensing";
-import { targetDpr, tierDprCap } from "@/lib/perf";
-import { usePerfStore } from "@/store/perfStore";
+import { targetDpr } from "@/lib/perf";
 import type { UniverseReveal, Vibe } from "@/types/universe";
 
 interface UniverseCanvasProps {
@@ -75,25 +74,14 @@ const VIBE_POSTFX: Record<Vibe, VibePostFX> = {
 /**
  * The R3F canvas wrapper. Dynamically imported with ssr:false by the parent
  * (Three.js needs the DOM). Renders the full universe scene with auto-rotating
- * orbit controls, a dark background, and an adaptive postprocessing stack
- * (bloom + an optional black-hole-only gravitational-lensing warp).
- *
- * <PerformanceMonitor> measures live frame times and steps the shared
- * `usePerfStore` quality tier up/down, which in turn:
- *  - caps `dpr` further on top of the device-based `targetDpr()`
- *  - scales particle/segment counts in CosmicBackground/ParticleField/Galaxy
- *
- * Bloom and lensing are always-on (see lib/perf.ts's tierEffectsEnabled) so
- * the first paint is the best-looking frame, not the worst. The live monitor
- * only intervenes if measured FPS drops below 30 for two consecutive samples.
+ * orbit controls, a dark background, and a high-quality postprocessing stack
+ * (bloom + an optional black-hole-only lensing warp) at a consistent high
+ * visual tier for the full reveal.
  */
 export default function UniverseCanvas({
   reveal,
   onCanvasReady,
 }: UniverseCanvasProps) {
-  const tier = usePerfStore((s) => s.tier);
-  const upgrade = usePerfStore((s) => s.upgrade);
-  const downgrade = usePerfStore((s) => s.downgrade);
   // Lensing is the defining visual of a black-hole result. It is a single
   // UV warp with no additional scene pass, so it should not wait for the
   // adaptive monitor to promote a mobile viewport from medium to high.
@@ -126,6 +114,14 @@ export default function UniverseCanvas({
   const isShort = viewport.height < 500;
   const isWide = viewport.width >= 1024;
   const isUltraWide = viewport.width >= 1600;
+  // On mobile the galaxy already auto-rotates, so it stays alive without
+  // manual orbit. Disabling drag-to-orbit on narrow viewports lets a
+  // single-finger swipe scroll the PAGE (the reading sits below the fold),
+  // which is the natural mobile gesture. Without this, OrbitControls sets
+  // `touch-action: none` on the canvas and swallows every swipe, so users
+  // get stuck unable to scroll down to the reading. Desktop keeps
+  // drag-to-orbit since there's no scroll conflict there (wheel scrolls).
+  const enableOrbit = !isNarrow;
   // The vinyl disc is a DOM element pinned to the viewport center. The
   // 3D galaxy needs to render AROUND it, not behind it — so the camera
   // sits well back from the origin and the central object's silhouette
@@ -135,8 +131,8 @@ export default function UniverseCanvas({
   // the visible canvas).
   const extraBack = isNarrow
     ? isShort
-      ? 9
-      : 7
+      ? 15
+      : 14
     : isUltraWide
       ? 7
       : isWide
@@ -158,6 +154,13 @@ export default function UniverseCanvas({
   return (
     <Canvas
       camera={{ position: cameraPos, fov }}
+      // On mobile the canvas must not capture touches at all — otherwise
+      // OrbitControls' `touch-action: none` swallows every swipe and the
+      // page can't scroll to the reading. `pointer-events: none` lets
+      // touches fall through to the page (which scrolls), while the
+      // galaxy keeps auto-rotating. Desktop keeps the canvas interactive
+      // for drag-to-orbit.
+      style={isNarrow ? { pointerEvents: "none" } : undefined}
       gl={{
         antialias: true,
         alpha: true,
@@ -166,18 +169,14 @@ export default function UniverseCanvas({
         toneMapping: THREE.ACESFilmicToneMapping,
       }}
       onCreated={({ gl }) => {
-        // Transparent clear color lets the page background show through
-        // (we want the R3F canvas to be the immersive background, not a
-        // bordered card over a different fill). The page's deep space
-        // base color is set via the Tailwind `bg-background` on the
-        // <main> so we never see a flash of white during initial paint.
-        gl.setClearColor(new THREE.Color("#05050a"), 0);
+        // Keep the canvas opaque so its deep-space base remains visible
+        // behind the scrolling reading rather than exposing the page fill.
+        gl.setClearColor(new THREE.Color("#05050a"), 1);
         const canvas = gl.domElement;
         onCanvasReady?.(canvas);
       }}
-      dpr={tierDprCap(tier, targetDpr())}
+      dpr={targetDpr()}
     >
-      <PerformanceMonitor onIncline={upgrade} onDecline={downgrade} />
       <RenderPerformanceMetrics />
 
       <ambientLight intensity={0.85} />
@@ -189,6 +188,7 @@ export default function UniverseCanvas({
 
       <OrbitControls
         enablePan={false}
+        enableRotate={enableOrbit}
         enableZoom={!isNarrow}
         minDistance={minDist}
         maxDistance={maxDist}

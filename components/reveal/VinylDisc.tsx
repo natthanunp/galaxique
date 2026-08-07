@@ -129,8 +129,8 @@ export function VinylDisc({
   // the reading dock has room below it.
   const discSizeClass =
     size === "hero"
-      ? "w-[clamp(118px,22vmin,170px)] sm:w-[clamp(130px,24vmin,210px)]"
-      : "w-40 sm:w-44 md:w-48 lg:w-40 xl:w-44";
+      ? "w-[clamp(140px,28vmin,210px)] sm:w-[clamp(160px,30vmin,260px)]"
+      : "w-44 sm:w-48 md:w-52 lg:w-44 xl:w-48";
   const isHero = size === "hero";
 
   return (
@@ -205,7 +205,7 @@ export function VinylDisc({
             <div
               className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full"
               style={{
-                width: "40%",
+                width: "46%",
                 background: `url(${mediaProxyUrl(track.album_art_url) ?? ""}) center/cover, #1a1a22`,
                 boxShadow: `0 0 0 2px ${primaryColor}, 0 0 18px -2px ${primaryColor}88`,
                 animation: isPlaying ? "vinyl-spin 10s linear infinite" : "none",
@@ -215,7 +215,7 @@ export function VinylDisc({
             <div
               className="absolute left-1/2 top-1/2 flex aspect-square -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full"
               style={{
-                width: "40%",
+                width: "46%",
                 background: "#1a1a22",
                 boxShadow: `0 0 0 2px ${primaryColor}`,
               }}
@@ -238,25 +238,25 @@ export function VinylDisc({
 
       {track && (
         <div className={cn(
-          "flex flex-col items-center gap-1 rounded-lg bg-background/55 px-3 py-2 shadow-[0_2px_18px_rgba(0,0,0,0.55)]",
+          "flex flex-col items-center gap-1 rounded-xl bg-black/20 px-4 py-2.5 shadow-[0_2px_24px_rgba(0,0,0,0.55)] ring-1 ring-white/[0.07] backdrop-blur-md",
           isHero
-            ? "absolute left-1/2 top-full mt-4 w-max max-w-[min(20rem,90vw)] -translate-x-1/2"
+            ? "absolute left-1/2 top-full mt-5 w-max max-w-[min(20rem,92vw)] -translate-x-1/2"
             : "max-w-xs",
         )}>
           <p
             className={cn(
-              "truncate font-semibold text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.9)]",
+              "text-balance text-center font-semibold text-white [text-shadow:0_1px_5px_rgba(0,0,0,0.95)]",
               size === "hero"
-                ? "text-lg sm:text-xl"
-                : "text-base sm:text-lg",
+                ? "line-clamp-2 text-lg leading-snug sm:text-xl"
+                : "line-clamp-2 text-base leading-snug sm:text-lg",
             )}
           >
             {track.name}
           </p>
           <p
             className={cn(
-              "truncate text-white/80 [text-shadow:0_1px_4px_rgba(0,0,0,0.9)]",
-              size === "hero" ? "text-sm sm:text-base" : "text-sm",
+              "line-clamp-1 text-center text-white/85 [text-shadow:0_1px_4px_rgba(0,0,0,0.9)]",
+              isHero ? "text-sm sm:text-base" : "text-sm",
             )}
           >
             {track.artist}
@@ -267,7 +267,7 @@ export function VinylDisc({
       {track && (
         <div className={cn(
           "flex items-center gap-3",
-          isHero && "absolute left-1/2 top-full mt-[5.75rem] w-max -translate-x-1/2",
+          isHero && "absolute left-1/2 top-full mt-26 w-max -translate-x-1/2",
         )}>
           {track.preview_url ? (
             <button
@@ -306,7 +306,7 @@ export function VinylDisc({
             href={`https://open.spotify.com/track/${track.track_id}`}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex items-center gap-1 rounded-full bg-black/25 px-2.5 py-1 text-xs text-white/90 shadow-[0_1px_8px_rgba(0,0,0,0.45)] ring-1 ring-white/[0.07] backdrop-blur-sm transition-colors hover:bg-black/45 hover:text-white hover:ring-white/20"
           >
             <ExternalLinkIcon className="size-3" />
             {language === "th" ? "เปิดใน Spotify" : "Open in Spotify"}

@@ -135,6 +135,9 @@ export const universeRevealSchema = z.object({
   central_symbol: z.enum([
     "star",
     "heart",
+    "diamond",
+    "infinity",
+    "flame",
     "none",
   ]),
   creature: creatureSpecSchema.optional(),

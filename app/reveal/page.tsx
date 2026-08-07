@@ -63,6 +63,12 @@ function humanizeSymbol(
         return "ดาวนำทาง";
       case "heart":
         return "หัวใจเรืองแสง";
+      case "diamond":
+        return "เพชรประกาย";
+      case "infinity":
+        return "วงก้นหอยนิรันดร์";
+      case "flame":
+        return "เปลวเพลิง";
       case "none":
         return "ไม่มีสัญลักษณ์";
     }
@@ -72,6 +78,12 @@ function humanizeSymbol(
       return "guiding star";
     case "heart":
       return "glowing heart";
+    case "diamond":
+      return "compressed diamond";
+    case "infinity":
+      return "endless loop";
+    case "flame":
+      return "burning flame";
     case "none":
       return "no symbol";
   }
@@ -225,6 +237,28 @@ export default function RevealPage() {
     );
   }, [hydrated, reveal, language]);
 
+  // In Safari browser mode (not PWA), the top bar is browser chrome that
+  // the page can't paint behind — the only thing we control is its color
+  // via <meta name="theme-color">. Tint it to the reveal's vibe color so
+  // the Safari top bar blends with the universe instead of showing a flat
+  // dark bar. PWA/standalone ignores this (it draws edge-to-edge behind
+  // the status bar already), so this is a no-op there. Restore the default
+  // on unmount so navigating away doesn't leave a stale tint.
+  useEffect(() => {
+    if (!hydrated || !reveal) return;
+    if (typeof window === "undefined") return;
+
+    const meta = document.querySelector<HTMLMetaElement>(
+      'meta[name="theme-color"]',
+    );
+    if (!meta) return;
+    const previous = meta.content;
+    meta.content = reveal.primary_color;
+    return () => {
+      meta.content = previous;
+    };
+  }, [hydrated, reveal]);
+
   if (!hydrated || !reveal) {
     return (
       <main className="safe-area-page relative flex min-h-dvh items-center justify-center">
@@ -238,8 +272,14 @@ export default function RevealPage() {
       {/* Full-bleed R3F scene — the universe IS the background, no bordered
           card, no ring, no rounded clip. The page background is the deep
           space color so the transparent clear color never flashes white
-          before the first frame paints. */}
-      <div className="pointer-events-none fixed inset-0 z-0">
+          before the first frame paints.
+
+          `absolute inset-0` (not `fixed`) so the canvas stretches to the
+          FULL height of the scrollable page. With `fixed` the canvas only
+          covered the viewport, so once the reading pushed the page taller
+          than one screen, everything below the fold showed the flat
+          near-black page background — the "black bar" at the bottom. */}
+      <div className="pointer-events-none absolute inset-0 z-0">
         <UniverseCanvas
           reveal={reveal as UniverseReveal}
           onCanvasReady={(c) => {
@@ -303,7 +343,7 @@ export default function RevealPage() {
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9 }}
-          className="pointer-events-auto absolute left-1/2 top-[50svh] z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:top-[50svh] lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2"
+            className="pointer-events-auto absolute left-1/2 top-[50svh] z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:top-[46svh] lg:left-1/2 lg:top-[45%] lg:-translate-x-1/2 lg:-translate-y-1/2"
         >
           <VinylDisc
             query={reveal.spotify_search_query}
@@ -311,6 +351,7 @@ export default function RevealPage() {
             language={language}
             primaryColor={reveal.primary_color}
             size="hero"
+            className="lg:scale-110"
           />
         </motion.div>
 
@@ -323,7 +364,7 @@ export default function RevealPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15 }}
-            className="pointer-events-auto relative z-20 mt-[calc(82svh-5rem)] flex w-full flex-col gap-3 self-end sm:mt-[calc(80svh-5.5rem)] sm:max-w-xl sm:gap-4 lg:absolute lg:right-8 lg:bottom-10 lg:mt-0 lg:w-[38%] lg:max-w-xl xl:w-[36%]"
+            className="pointer-events-auto relative z-20 mt-[calc(86svh-5rem)] flex w-full flex-col gap-3 self-end sm:mt-[calc(84svh-5.5rem)] sm:max-w-xl sm:gap-4 lg:absolute lg:right-8 lg:bottom-10 lg:mt-0 lg:w-[38%] lg:max-w-xl xl:w-[36%]"
         >
           <PersonalityReading
             reading={reveal.personality_reading}

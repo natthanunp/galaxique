@@ -1,6 +1,9 @@
 import type { CentralSymbol } from "@/types/universe";
 
+import { diamondPoints } from "./diamondPoints";
+import { flamePoints } from "./flamePoints";
 import { heartPoints } from "./heartPoints";
+import { infinityPoints } from "./infinityPoints";
 import { starPoints } from "./starPoints";
 
 /**
@@ -17,8 +20,11 @@ export const constellationRegistry: Record<
   Exclude<CentralSymbol, "none">,
   Float32Array
 > = {
-  heart: heartPoints,
   star: starPoints,
+  heart: heartPoints,
+  diamond: diamondPoints,
+  infinity: infinityPoints,
+  flame: flamePoints,
 };
 
 /** Returns the constellation points for a symbol, or null for "none". */

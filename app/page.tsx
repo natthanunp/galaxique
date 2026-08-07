@@ -33,7 +33,7 @@ const INSTALL_PROMPT_DISMISSED_KEY = "galaxique-install-prompt-dismissed-v1";
 // number is the user-facing release; minor is the "this is the new model
 // + new prompt" cut. Keep it short — it sits next to the brand name in a
 // small pill.
-const APP_VERSION = "v1.5";
+const APP_VERSION = "v1.5.1";
 
 export default function LandingPage() {
   const language = useQuizStore((s) => s.language);

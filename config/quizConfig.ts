@@ -80,11 +80,17 @@ export const QUESTION_ANGLES = [
   "What the user is currently learning, curious about, or trying to figure out in life",
   "A piece of media (book, show, film, game) that changed how the user sees something",
   "How the user likes to be comforted when they're down — words, silence, presence, distraction, or something else",
-  // Dark, intense, private, and inward (~8 of these — minority but not vanishingly rare)
+  // Drive, pressure, and ambition (~7 of these — must surface in every batch)
+  "A deadline, competition, or high-stakes moment — how the user performs under real pressure",
+  "A goal the user is currently chasing, and what keeps them going when it gets hard",
+  "How the user decides and commits — fast, careful, intuitive, or something else",
+  "A time the user had to keep going when most people would have stopped",
+  "What winning or mastery feels like to the user, not in words but in a scene",
+  "The user's relationship with rules, structure, and self-discipline — when it helps and when it stifles",
+  "A habit or routine the user maintains even when no one is watching",
+  // Dark, intense, private, and inward (~6 of these — minority but not vanishingly rare)
   "What intensity looks like for the user — a drive, a fixation, or something they feel very strongly",
-  "Something the user is quietly driven or ambitious about, even if they don't say it out loud",
   "How the user handles conflict or confrontation — do they meet it, deflect it, or walk away?",
-  "A time the user had to be resilient under pressure — what carried them through",
   "An emotion the user feels more deeply than most people seem to",
   "A fear or vulnerability the user rarely shares out loud",
   "A time the user felt most alone — what that felt like and what they did with it",

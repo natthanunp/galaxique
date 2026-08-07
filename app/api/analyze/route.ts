@@ -94,26 +94,28 @@ function isThaiTrack(track: EnrichedPlaylistCandidate): boolean {
 }
 
 /** How many of the most-recently-picked tracks get a decaying recency
- *  penalty (prevents back-to-back repeats). Recency-only penalty was
- *  softened (0.8 / position, was 1.5 / position) because the biased
- *  sampler below already steers fresh tracks into the candidate pool —
- *  stacking a heavy recency penalty on top just suppresses already-served
- *  tracks harder without helping the long tail. Kept equal to MAX_LOG_LENGTH
- *  (50) so the recency penalty covers the full shared rolling log for a
- *  ~200-track catalog. */
-const RECENCY_WINDOW = 50;
+ *  penalty (prevents back-to-back repeats). Tightened from 50/0.8 to 35/1.4:
+ *  the biased sampler helps variety at the pool level, but the final picker
+ *  still needs a stronger nudge so the same ~20 "safe" tracks don't keep
+ *  resurfacing in back-to-back sessions. */
+const RECENCY_WINDOW = 35;
 
 /** Weight assigned to a track per occurrence in the recent-selection log.
  *  Used by sampleCatalogForRequest to bias the candidate pool toward
  *  under-served tracks. Tracks with ZERO appearances get the full
  *  boost; tracks with N appearances get this weight per occurrence,
- *  subtracted from the base — so a track picked 7 times in the log
- *  gets a much smaller (or zero) sampling weight than one never picked. */
-const UNDER_SERVED_BASE_WEIGHT = 7;
+ *  subtracted from the base — so a track picked 5 times in the log
+ *  gets a much smaller (or zero) sampling weight than one never picked.
+ *  Lowered from 7 to 5 so frequently-played tracks fall out of the sample
+ *  pool faster, forcing the model to consider fresh material. */
+const UNDER_SERVED_BASE_WEIGHT = 5;
 
 /** Softmax temperature for the final weighted pick. Lower = more strongly
- *  favors the top-scoring candidate; higher = flatter/more random. */
-const SOFTMAX_TEMPERATURE = 8;
+ *  favors the top-scoring candidate; higher = flatter/more random.
+ *  Lowered from 8 to 4 so the highest-quality match wins more often,
+ *  while recency/frequency penalties still rotate the top choice across
+ *  sessions. */
+const SOFTMAX_TEMPERATURE = 4;
 
 /** Vibe distribution guardrail: if the LLM's first-attempt `vibe` accounts
  *  for more than this share of recent reveals AND total reveals exceeds
@@ -122,9 +124,18 @@ const SOFTMAX_TEMPERATURE = 8;
  *  different vibe, just asks the model to re-examine the full range of
  *  signals when the chosen vibe matches an over-represented bucket. If
  *  the second attempt returns the same dominant vibe, accept it (the
- *  evidence genuinely supports it). */
-const VIBE_SKEW_THRESHOLD = 0.5;
-const MIN_STATS_FOR_GUARDRAIL = 20;
+ *  evidence genuinely supports it).
+ *
+ *  Tuned to fire LESS often (was 0.5 / 20, now 0.65 / 50) after the
+ *  Thai-reveal latency investigation: at 0.5 the guardrail was triggering
+ *  on a large fraction of Thai reveals because Thai users' answers skew
+ *  toward the most-common vibes ("cozy", "mysterious"), doubling the
+ *  per-request latency budget on a guess the LLM was going to get right
+ *  anyway. Bumping to 0.65 + requiring 50 samples means we only retry when
+ *  a vibe is genuinely over-represented (>2/3 of recent reveals) and we
+ *  have enough samples to be confident in the skew. */
+const VIBE_SKEW_THRESHOLD = 0.65;
+const MIN_STATS_FOR_GUARDRAIL = 50;
 
 /** Biased sampler: returns up to `n` tracks from the full catalog, with
  *  sampling weight proportional to how *under-served* each track is in the
@@ -245,11 +256,15 @@ async function pickWeightedSongSelection(
     const recencyPenalty =
       recencyIndex === -1 || recencyIndex >= RECENCY_WINDOW
         ? 0
-        : (RECENCY_WINDOW - recencyIndex) * 0.8;
+        : (RECENCY_WINDOW - recencyIndex) * 1.4;
 
     const countInLog = recentLog.filter((id) => id === track.track_id).length;
     const observedShare = recentLog.length > 0 ? countInLog / recentLog.length : 0;
-    const frequencyPenalty = Math.max(0, observedShare - fairShare) * 100;
+    // Frequency penalty now scales with catalog size so a track that has been
+    // picked more than ~3% of the rolling window gets a meaningful push down.
+    // For a ~200-track catalog the old fairShare threshold (~0.5%) meant a
+    // song could appear 10+ times before the penalty did much work.
+    const frequencyPenalty = Math.max(0, observedShare - fairShare) * (catalogSize * 2.5);
 
     const adjustedScore = Math.max(1, rawScore - recencyPenalty - frequencyPenalty);
     return { track, rawScore, adjustedScore };

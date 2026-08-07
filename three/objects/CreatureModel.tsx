@@ -36,7 +36,7 @@ const CREATURE_MODELS = {
     url: "/assets/creatures/fox.glb",
     scale: 0.012,
     rotationY: -Math.PI / 2,
-    animation: "Survey",
+    animation: "Run",
   },
   jelly: {
     url: "/assets/creatures/jelly.glb",
@@ -53,7 +53,7 @@ const CREATURE_MODELS = {
 } as const;
 
 const COMPANION_SCALE = 5.1;
-const COMPANION_OPACITY = 0.66;
+const COMPANION_OPACITY = 0.88;
 
 interface SwimShader {
   uniforms: Record<string, THREE.IUniform>;
@@ -68,6 +68,7 @@ interface CreatureModelProps {
   primaryColor: string;
   secondaryColor: string;
   rotationSpeed: number;
+  anchorPosition?: [number, number, number];
 }
 
 export function CreatureModel({
@@ -75,12 +76,14 @@ export function CreatureModel({
   primaryColor,
   secondaryColor,
   rotationSpeed,
+  anchorPosition = [0, 0, 0],
 }: CreatureModelProps) {
   const model = hasCreatureModel(spec.kind) ? CREATURE_MODELS[spec.kind] : CREATURE_MODELS.fox;
   const groupRef = useRef<THREE.Group>(null);
   const targetRef = useRef(new THREE.Vector3());
   const cameraRightRef = useRef(new THREE.Vector3());
   const cameraUpRef = useRef(new THREE.Vector3());
+  const cameraForwardRef = useRef(new THREE.Vector3());
   const { camera, size } = useThree();
   const { scene, animations } = useGLTF(model.url);
   const { actions } = useAnimations(animations, groupRef);
@@ -110,12 +113,13 @@ export function CreatureModel({
 
       const configureMaterial = (material: THREE.Material) => {
         const litMaterial = material.clone();
-        // A large companion should feel embedded in the galaxy, not like an
-        // opaque sticker over it. Keep its original texture while letting
-        // stars and the spiral subtly read through its silhouette.
-        litMaterial.transparent = true;
+        // Alpha-to-coverage uses the canvas's MSAA samples for a smooth,
+        // depth-writing translucent look without the noise of alpha hashing.
+        litMaterial.transparent = false;
+        litMaterial.alphaHash = false;
+        litMaterial.alphaToCoverage = true;
         litMaterial.opacity = COMPANION_OPACITY;
-        litMaterial.depthWrite = false;
+        litMaterial.depthWrite = true;
         litMaterial.blending = THREE.NormalBlending;
         if ("emissive" in litMaterial) {
           const emissiveMaterial = litMaterial as THREE.MeshStandardMaterial;
@@ -148,24 +152,27 @@ export function CreatureModel({
 
   useEffect(() => {
     const action = "animation" in model ? actions[model.animation] : undefined;
-    action?.reset().fadeIn(0.25).play();
+    action
+      ?.reset()
+      .setEffectiveTimeScale(spec.motion === "fly" ? 1.25 : 1)
+      .fadeIn(0.25)
+      .play();
     return () => {
       action?.fadeOut(0.2);
     };
-  }, [actions, model]);
+  }, [actions, model, spec.motion]);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const group = groupRef.current;
     if (!group) return;
 
     const time = state.clock.elapsedTime;
-    const speed = 0.38 + rotationSpeed * 0.22;
+    const speed = 0.22 + rotationSpeed * 0.15;
     const angle = time * speed;
-    // The record is DOM, while the companion is 3D. Put the companion in a
-    // camera-relative perch so it remains a clear focal detail beside the
-    // record even while OrbitControls rotate the scene. The offset is kept
-    // in the same depth plane as the origin, so it still reads as part of
-    // the galaxy rather than as an interface sticker.
+    const narrowViewport = size.width < 640;
+    const orbitRadius = narrowViewport ? 1.7 : 2.9;
+    const verticalRange = narrowViewport ? 1.05 : 1.45;
+    const behindCoreDepth = narrowViewport ? 0.7 : 1.2;
     camera.updateWorldMatrix(true, false);
     const cameraRight = cameraRightRef.current
       .setFromMatrixColumn(camera.matrixWorld, 0)
@@ -173,57 +180,39 @@ export function CreatureModel({
     const cameraUp = cameraUpRef.current
       .setFromMatrixColumn(camera.matrixWorld, 1)
       .normalize();
-    const narrowViewport = size.width < 640;
-    const perchX = narrowViewport ? 1.7 : 3.55;
-    const perchY = narrowViewport ? 1.35 : 1.5;
-    const orbitRadius = narrowViewport ? 0.62 : 1.2;
-    const target = targetRef.current;
+    const cameraForward = camera.getWorldDirection(cameraForwardRef.current);
+    const target = targetRef.current
+      .set(...anchorPosition)
+      .addScaledVector(cameraForward, behindCoreDepth);
+    let offsetX = 0;
+    let offsetY = 0;
 
     switch (spec.motion) {
       case "fly":
-        target.set(
-          0,
-          0,
-          0,
-        );
-        target.addScaledVector(cameraRight, perchX + Math.cos(angle) * orbitRadius);
-        target.addScaledVector(cameraUp, perchY + Math.sin(angle * 1.35) * orbitRadius * 0.62);
+        offsetX = Math.cos(angle) * orbitRadius;
+        offsetY = Math.sin(angle * 2) * verticalRange * 0.78;
         break;
       case "swim":
-        target.set(
-          0,
-          0,
-          0,
-        );
-        target.addScaledVector(cameraRight, perchX + Math.sin(angle * 0.9) * orbitRadius * 0.9);
-        target.addScaledVector(cameraUp, perchY + Math.sin(angle * 1.7) * orbitRadius * 0.55);
+        offsetX = Math.sin(angle) * orbitRadius;
+        offsetY = Math.sin(angle * 2) * verticalRange * 0.62;
         break;
       case "bob":
-        target.set(
-          0,
-          0,
-          0,
-        );
-        target.addScaledVector(cameraRight, perchX + Math.sin(angle * 0.7) * orbitRadius * 0.42);
-        target.addScaledVector(cameraUp, perchY + Math.sin(angle * 2) * orbitRadius * 0.62);
+        offsetX = Math.sin(angle) * orbitRadius * 0.58;
+        offsetY = verticalRange * 0.9 + Math.sin(angle * 3) * verticalRange * 0.48;
         break;
       case "orbit":
       default:
-        target.set(
-          0,
-          0,
-          0,
-        );
-        target.addScaledVector(cameraRight, perchX + Math.cos(angle) * orbitRadius);
-        target.addScaledVector(cameraUp, perchY + Math.sin(angle * 1.25) * orbitRadius * 0.54);
+        offsetX = Math.cos(angle) * orbitRadius;
+        offsetY = Math.sin(angle) * verticalRange * 0.65;
         break;
     }
 
-    group.position.lerp(target, 0.16);
-    // Face the galaxy center (origin), then apply the per-model
-    // `rotationY` offset so each creature's forward orientation is
-    // preserved (e.g. bird needs Math.PI to face forward).
-    group.lookAt(0, 0, 0);
+    target.addScaledVector(cameraRight, offsetX);
+    target.addScaledVector(cameraUp, offsetY);
+    group.position.lerp(target, 1 - Math.exp(-delta * 5));
+    // Face the galaxy, not the instantaneous velocity, so the companion
+    // follows a clear path without tumbling through every curve.
+    group.lookAt(...anchorPosition);
     group.rotateY(model.rotationY);
     // Tiny wobble only for the fish (no GLB bone animation to drive
     // organic motion). Other models let the bone animation handle
@@ -232,7 +221,8 @@ export function CreatureModel({
     if (spec.kind === "fish") {
       group.rotateZ(Math.sin(time * (1.2 + rotationSpeed)) * 0.05);
     }
-    modelScene.scale.setScalar(model.scale * COMPANION_SCALE);
+    const pulse = 1 + Math.sin(time * 3.2) * 0.025;
+    modelScene.scale.setScalar(model.scale * COMPANION_SCALE * pulse);
     modelScene.traverse((node) => {
       if (!(node instanceof THREE.Mesh)) return;
       const materials = Array.isArray(node.material) ? node.material : [node.material];

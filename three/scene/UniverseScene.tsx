@@ -46,6 +46,10 @@ export function UniverseScene({ reveal }: UniverseSceneProps) {
   const ambientSeed = celestialSeed(reveal);
   const canvasWidth = useThree((state) => state.size.width);
   const symbolScale = canvasWidth < 640 ? 1.45 : 2.2;
+  const celestialPosition: [number, number, number] =
+    canvasWidth < 640 && reveal.celestial_type === "galaxy"
+      ? [0, 4, 0]
+      : [0, 0, 0];
   const usesAssetCompanion = reveal.creature && hasCreatureModel(reveal.creature.kind);
   const central = useMemo(() => {
     const symbolOverlay =
@@ -119,7 +123,7 @@ export function UniverseScene({ reveal }: UniverseSceneProps) {
                    little larger than the disc, leaving the spiral arms
                    visible around it without swallowing the whole scene. */}
       <Float speed={1.2} rotationIntensity={0} floatIntensity={0}>
-        <group scale={1.45}>{central}</group>
+        <group position={celestialPosition} scale={1.45}>{central}</group>
       </Float>
       {reveal.creature && (usesAssetCompanion ? (
         <Suspense fallback={null}>
@@ -128,6 +132,7 @@ export function UniverseScene({ reveal }: UniverseSceneProps) {
             primaryColor={reveal.primary_color}
             secondaryColor={reveal.secondary_color}
             rotationSpeed={reveal.rotation_speed}
+            anchorPosition={celestialPosition}
           />
         </Suspense>
       ) : null)}

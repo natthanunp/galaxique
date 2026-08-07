@@ -16,8 +16,8 @@ interface GalaxyProps {
   children?: ReactNode;
 }
 
-const ARM_STARS = { high: 2600, medium: 1900, low: 1200 };
-const ARM_COUNT = 3;
+const ARM_STARS = { high: 4500, medium: 3200, low: 2000 };
+const ARM_COUNT = 4;
 
 /**
  * A diffuse spiral galaxy.
@@ -50,12 +50,26 @@ export function Galaxy({
       new THREE.MeshStandardMaterial({
         color: cHot,
         emissive: cA,
-        emissiveIntensity: 0.6,
-        roughness: 0.6,
-        metalness: 0.1,
-        flatShading: true,
+        emissiveIntensity: 2.5,
+        roughness: 0.3,
+        metalness: 0.2,
+        flatShading: false,
       }),
     [cA, cHot],
+  );
+
+  // Glow aura around the core — a tiny, soft halo that adds a subtle
+  // luminous feel without overwhelming the scene.
+  const coreGlowMaterial = useMemo(
+    () =>
+      new THREE.MeshBasicMaterial({
+        color: cA,
+        transparent: true,
+        opacity: 0.06,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    [cA],
   );
 
   const diskMaterial = useMemo(
@@ -103,7 +117,7 @@ export function Galaxy({
       colors[index * 3] = Math.min(1, color.r * brightness);
       colors[index * 3 + 1] = Math.min(1, color.g * brightness);
       colors[index * 3 + 2] = Math.min(1, color.b * brightness);
-      sizes[index] = 0.45 + Math.random() * 1.25;
+      sizes[index] = 0.8 + Math.random() * 2.0;
       seeds[index] = Math.random();
     }
 
@@ -118,9 +132,9 @@ export function Galaxy({
   // --- Sparse sparkle particles on the arms. ---
   const sparkleGeometry = useMemo(() => {
     const count = Math.max(
-      8,
+      15,
       Math.floor(
-        90 * (mobile ? 0.5 : 1) * (particleDensity === "low" ? 0.6 : 1) * tierParticleMultiplier(tier),
+        180 * (mobile ? 0.5 : 1) * (particleDensity === "low" ? 0.6 : 1) * tierParticleMultiplier(tier),
       ),
     );
     const positions = new Float32Array(count * 3);
@@ -142,7 +156,7 @@ export function Galaxy({
       positions[i * 3 + 1] = y;
       positions[i * 3 + 2] = z;
 
-      sizes[i] = 1.0 + Math.random() * 1.6;
+      sizes[i] = 1.5 + Math.random() * 2.5;
       seeds[i] = Math.random();
 
       const col = Math.random() > 0.6 ? cHot : cB;
@@ -176,7 +190,7 @@ export function Galaxy({
             vec4 mv = modelViewMatrix * vec4(position, 1.0);
             float tw = 1.0 + sin(uTime * 2.0 + aSeed * 6.2831) * uTwinkle;
             float safeDepth = max(4.0, -mv.z);
-            gl_PointSize = size * uPixelRatio * tw * (48.0 / safeDepth);
+            gl_PointSize = size * uPixelRatio * tw * (60.0 / safeDepth);
             gl_Position = projectionMatrix * mv;
           }
         `,
@@ -187,8 +201,8 @@ export function Galaxy({
             float d = length(uv);
             if (d > 0.5) discard;
             float a = smoothstep(0.5, 0.0, d);
-            a = pow(a, 1.6);
-            gl_FragColor = vec4(vColor * 1.4, a);
+            a = pow(a, 1.4);
+            gl_FragColor = vec4(vColor * 1.6, a);
           }
         `,
         transparent: true,
@@ -206,10 +220,9 @@ export function Galaxy({
       groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.05) * 0.04;
     }
     if (visualGroupRef.current) {
-      // The arms are modeled in the XZ plane. Match the camera's orientation
-      // so OrbitControls never turns their spiral into an edge-on stripe.
-      visualGroupRef.current.quaternion.copy(camera.quaternion);
-      visualGroupRef.current.rotateX(Math.PI / 2.6);
+      // Fixed tilt to show 3D spiral structure - not facing camera directly
+      visualGroupRef.current.rotation.x = Math.PI * 0.35;
+      visualGroupRef.current.rotation.z = Math.PI * 0.05;
     }
     sparkleMaterial.uniforms.uTime.value = state.clock.elapsedTime;
   });
@@ -230,9 +243,12 @@ export function Galaxy({
           <points geometry={armGeometry} material={sparkleMaterial} />
         </group>
 
-        {/* Bright faceted core. */}
+        {/* Bright smooth core with subtle glow aura. */}
         <mesh material={coreMaterial}>
-          <icosahedronGeometry args={[0.62, 1]} />
+          <sphereGeometry args={[0.08, 32, 32]} />
+        </mesh>
+        <mesh material={coreGlowMaterial} scale={1.2}>
+          <sphereGeometry args={[0.08, 32, 32]} />
         </mesh>
 
         {/* Sparse arm sparkles. */}

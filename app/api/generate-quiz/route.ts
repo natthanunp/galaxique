@@ -156,19 +156,38 @@ function parseRequestBody(raw: unknown): {
 
 /**
  * JSON mode guarantees structure, not that an LLM obeys a natural-language
- * script instruction. Reject visible text that contains letters from another
- * writing system, e.g. Thai mixed with Cyrillic, then let the existing retry
- * produce a clean quiz rather than showing malformed copy to the user.
+ * script instruction. Reject text with a high rate of letters from a
+ * foreign writing system — e.g. mostly-Cyrillic output when Thai was asked
+ * for — but tolerate the occasional stray Latin character that
+ * small open-source models (qwen3-32b on Groq in particular) often drop
+ * into otherwise-correct Thai output. The previous 100%-strict check
+ * discarded a lot of usable responses and triggered a full regeneration
+ * cycle, which is the bulk of the "Thai quiz takes 20s+" tail latency.
+ *
+ * Threshold rationale: at 90%, a single stray Latin char in a 10-char
+ * question still passes; ~3 stray chars in 30 chars passes; a question
+ * that's actually 50%+ foreign script (a true model-drift failure) fails.
+ * This eliminates the most common Thai-quiz retry while still catching
+ * genuine script flips. The existing retry loop remains the safety net
+ * for the rare >10% case.
  */
+const SCRIPT_MATCH_THRESHOLD = 0.9;
+
 function usesExpectedScript(text: string, language: "en" | "th"): boolean {
+  let letters = 0;
+  let matching = 0;
   for (const character of text) {
     if (!LETTER.test(character)) continue;
+    letters++;
     const isExpected = language === "th"
       ? THAI_LETTER.test(character)
       : LATIN_LETTER.test(character);
-    if (!isExpected) return false;
+    if (isExpected) matching++;
   }
-  return true;
+  // Empty / non-letter text (e.g. an option that's just a digit or
+  // punctuation) trivially passes — there's nothing to check.
+  if (letters === 0) return true;
+  return matching / letters >= SCRIPT_MATCH_THRESHOLD;
 }
 
 function hasExpectedScript(
