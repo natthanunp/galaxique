@@ -43,10 +43,12 @@ export class LensingEffect extends Effect {
   }
 
   setStrength(strength: number) {
-    this.uniforms.get("strength")?.value = strength;
+    const uniform = this.uniforms.get("strength");
+    if (uniform) uniform.value = strength;
   }
 
   setRadius(radius: number) {
-    this.uniforms.get("radius")?.value = radius;
+    const uniform = this.uniforms.get("radius");
+    if (uniform) uniform.value = radius;
   }
 }

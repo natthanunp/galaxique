@@ -206,7 +206,11 @@ export default function UniverseCanvas({
           mipmapBlur
         />
         {showLensing ? (
-          <Lensing strength={blackHoleConfig?.lens_strength ?? 1} radius={0.42} />
+          <Lensing
+            strength={blackHoleConfig?.lens_strength ?? 1}
+            radius={0.42}
+            anchorPosition={isNarrow ? [0, 4, 0] : [0, 0, 0]}
+          />
         ) : (
           <></>
         )}

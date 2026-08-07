@@ -19,7 +19,7 @@ export function Lensing({
 	anchorPosition = [0, 0, 0],
 }: LensingProps) {
 	const camera = useThree((state) => state.camera);
-	const effect = useMemo(() => new LensingEffect({ strength, radius }), []);
+	const effect = useMemo(() => new LensingEffect(), []);
 	const worldPosition = useMemo(() => new THREE.Vector3(), []);
 	const screenPosition = useMemo(() => new THREE.Vector2(), []);
 
