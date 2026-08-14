@@ -42,6 +42,8 @@ interface ShareButtonProps {
   /** The reveal vibe — used to render the "Your vibe · …" label on the
    *  exported story card. */
   vibe: string;
+  /** Called with true when export starts (boosts R3F DPR) and false when it ends. */
+  onExportModeChange?: (exporting: boolean) => void;
 }
 
 type Phase =
@@ -69,6 +71,7 @@ export function ShareButton({
   language,
   reading,
   vibe,
+  onExportModeChange,
 }: ShareButtonProps) {
   const [open, setOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
@@ -155,17 +158,13 @@ export function ShareButton({
    *  wait — finishes in <1s. Works in every browser. */
   const handleSavePhoto = async () => {
     cancelledRef.current = false;
-    // Register the share intent immediately, while we're still inside
-    // the click handler's user gesture. The actual navigator.share()
-    // call lands in finishExport after the photo finishes encoding,
-    // but the browser honours the activation that was live when the
-    // intent was registered.
     pendingShareRef.current = true;
     setErrorMsg("");
     setDownloadUrl(null);
     setDownloadKind(null);
     setDownloadFilename("galaxique-universe.png");
     setPhase("exporting-photo");
+    onExportModeChange?.(true);
 
     try {
       const sourceCanvas = getCanvas();
@@ -218,6 +217,7 @@ export function ShareButton({
     } catch (err) {
       if (cancelledRef.current) return;
       pendingShareRef.current = false;
+      onExportModeChange?.(false);
       const msg = err instanceof Error ? err.message : String(err);
       setErrorMsg(msg);
       setPhase("error");
@@ -226,16 +226,12 @@ export function ShareButton({
 
   const handleShare = async () => {
     cancelledRef.current = false;
-    // Register the share intent while we're still in the click
-    // handler's user gesture. The 12-second recording and ffmpeg
-    // encode run after this returns, and navigator.share() would
-    // otherwise arrive "not user-activated" on iOS and silently
-    // resolve to false.
     pendingShareRef.current = true;
     setErrorMsg("");
     setDownloadUrl(null);
     setDownloadKind(null);
     setPhase("recording");
+    onExportModeChange?.(true);
 
     try {
       await waitForFrames(2);
@@ -300,6 +296,7 @@ export function ShareButton({
       overlay.stop();
       if (cancelledRef.current) return;
       pendingShareRef.current = false;
+      onExportModeChange?.(false);
       const msg = err instanceof Error ? err.message : String(err);
       setErrorMsg(msg);
       setPhase("error");
@@ -308,6 +305,7 @@ export function ShareButton({
 
   const handleReset = () => {
     pendingShareRef.current = false;
+    onExportModeChange?.(false);
     if (downloadUrl) URL.revokeObjectURL(downloadUrl);
     setDownloadUrl(null);
     setDownloadKind(null);

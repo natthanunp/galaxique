@@ -237,28 +237,28 @@ function drawFrame(
   //    bottom so the exported story matches the in-app
   //    PersonalityReading card style.
   const margin = Math.round(W * 0.04);
-  const pad = Math.round(W * 0.035);
+  const pad = Math.round(W * 0.04);
   const cardR = Math.round(W * 0.03);
   const cardLeft = margin;
   const cardRight = W - margin;
   const cardW = cardRight - cardLeft;
 
-  const artSize = Math.round(H * 0.045);
-  const trackNameSize = Math.max(16, Math.round(H * 0.0215));
-  const artistSize = Math.max(13, Math.round(H * 0.0175));
-  const vibeSize = Math.max(11, Math.round(H * 0.0155));
-  const readingMaxSize = Math.max(15, Math.round(H * 0.022));
-  const readingMinSize = Math.max(13, Math.round(H * 0.016));
+  const artSize = Math.round(H * 0.05);
+  const trackNameSize = Math.max(18, Math.round(H * 0.023));
+  const artistSize = Math.max(14, Math.round(H * 0.0185));
+  const vibeSize = Math.max(12, Math.round(H * 0.016));
+  const readingMaxSize = Math.max(17, Math.round(H * 0.024));
+  const readingMinSize = Math.max(14, Math.round(H * 0.017));
 
   const artReady = Boolean(art?.complete && art.naturalWidth > 0);
   const textX = cardLeft + pad * 2 + (artReady ? artSize : 0);
-  const readingMaxWidth = cardW - pad * 2;
+  const readingMaxWidth = cardW - pad * 1.5;
 
   const cardBottom = H - Math.round(H * 0.04);
-  const maxCardHeight = Math.round(H * 0.56);
-  const topPad = Math.round(pad * 0.9);
-  const readingGap = Math.round(pad * 0.9);
-  const bottomPad = Math.round(pad * 0.8);
+  const maxCardHeight = Math.round(H * 0.62);
+  const topPad = Math.round(pad * 1.1);
+  const readingGap = Math.round(pad * 1.3);
+  const bottomPad = Math.round(pad * 1.0);
   const trackRowH = artReady ? artSize : trackNameSize + artistSize + Math.round(vibeSize * 0.4);
   const maxReadingHeight = Math.max(
     readingMinSize * 1.32,
@@ -392,13 +392,13 @@ function fitReadingText(
   language: "en" | "th",
 ): { size: number; lineHeight: number; lines: string[] } {
   for (let size = maxSize; size >= minSize; size -= 1) {
-    const lineHeight = Math.round(size * 1.32);
+    const lineHeight = Math.round(size * 1.45);
     const lines = wrapText(ctx, text, maxWidth, size, language);
     if (lines.length * lineHeight <= maxHeight) {
       return { size, lineHeight, lines };
     }
   }
-  const lineHeight = Math.round(minSize * 1.32);
+  const lineHeight = Math.round(minSize * 1.45);
   const lines = wrapText(ctx, text, maxWidth, minSize, language);
   return { size: minSize, lineHeight, lines };
 }

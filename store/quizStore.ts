@@ -131,6 +131,11 @@ export const useQuizStore = create<QuizState>()(
                 -MAX_RECENT_TRACK_IDS,
               )
             : state.recentTrackIds;
+          // When a new reveal arrives, clear the creature chat session
+          // so the old creature's history doesn't poison the new one.
+          if (reveal && typeof window !== "undefined") {
+            localStorage.removeItem("galaxique-chat-session");
+          }
           return { reveal, recentTrackIds };
         }),
       setLoading: (loading) => set({ loading }),

@@ -19,6 +19,13 @@ import { VibeCounter } from "@/components/shared/VibeCounter";
 import { Button } from "@/components/ui/button";
 import { prefetchQuiz } from "@/lib/quizPrefetch";
 import { useQuizStore } from "@/store/quizStore";
+import type { VibeStats } from "@/lib/vibeStatsStore";
+import dynamic from "next/dynamic";
+
+const CreatureChat = dynamic(
+  () => import("@/components/reveal/CreatureChat").then((m) => m.CreatureChat),
+  { ssr: false },
+);
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -33,11 +40,12 @@ const INSTALL_PROMPT_DISMISSED_KEY = "galaxique-install-prompt-dismissed-v1";
 // number is the user-facing release; minor is the "this is the new model
 // + new prompt" cut. Keep it short — it sits next to the brand name in a
 // small pill.
-const APP_VERSION = "v1.6.0";
+const APP_VERSION = "v1.7.0";
 
 export default function LandingPage() {
   const language = useQuizStore((s) => s.language);
   const reset = useQuizStore((s) => s.reset);
+  const reveal = useQuizStore((s) => s.reveal);
   const [installPromptEvent, setInstallPromptEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [installPromptMode, setInstallPromptMode] =
@@ -45,6 +53,16 @@ export default function LandingPage() {
   const [canInstall, setCanInstall] = useState(false);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const [showInstallSteps, setShowInstallSteps] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [vibeStats, setVibeStats] = useState<VibeStats | null>(null);
+
+  // Fetch vibe stats for the background color blending.
+  useEffect(() => {
+    fetch("/api/stats", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => { if (d.success) setVibeStats(d.stats); })
+      .catch(() => {});
+  }, []);
 
   function dismissInstallPromptForever() {
     try {
@@ -222,7 +240,7 @@ export default function LandingPage() {
 
   return (
     <>
-      <StarfieldBackground />
+      <StarfieldBackground vibeStats={vibeStats} />
       <main className="relative flex min-h-dvh flex-col items-center px-6 pb-16 pt-[max(5rem,calc(env(safe-area-inset-top)+4rem))] text-center sm:pt-[max(5.5rem,calc(env(safe-area-inset-top)+4.5rem))]">
         {/* Top bar: eyebrow badge on the left, language toggle on the right.
             Sits at `safe-area-top-4` so it clears the Dynamic Island / status
@@ -292,6 +310,44 @@ export default function LandingPage() {
           <div className="mt-8 w-full max-w-2xl">
             <VibeCounter language={language} />
           </div>
+
+          {/* Returning user: show their companion + quick actions */}
+          {reveal?.creature && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="mt-6 w-full max-w-md rounded-2xl border border-border/50 bg-card/60 p-5 text-left backdrop-blur-md"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div
+                  className="size-12 rounded-full border border-white/20 shadow-lg"
+                  style={{ backgroundColor: reveal.primary_color }}
+                />
+                <div>
+                  <p className="text-sm font-semibold text-foreground">
+                    {reveal.creature.name ?? (language === "th" ? "เพื่อนคู่ใจ" : "Your companion")}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {language === "th" ? `เป็น${reveal.creature.kind}ที่โคจรรอบ${reveal.celestial_type === "galaxy" ? "กาแล็กซี่" : reveal.celestial_type === "black_hole" ? "หลุมดำ" : "ดาวนิวตรอน"}ของคุณ`
+                      : `A ${reveal.creature.kind} orbiting your ${reveal.celestial_type.replace("_", " ")}`}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button asChild size="sm" variant="default" className="flex-1">
+                  <Link href="/reveal">{language === "th" ? "เยี่ยมชมจักรวาล" : "Visit your universe"}</Link>
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setChatOpen(true)}
+                >
+                  {language === "th" ? "คุย" : "Chat"}
+                </Button>
+              </div>
+            </motion.div>
+          )}
 
           {/* Subtle tribute — no name used, just a soft line of credit. */}
           <motion.p
@@ -381,6 +437,11 @@ export default function LandingPage() {
           </motion.aside>
         ) : null}
       </main>
+
+      {/* Creature chat — available on landing page for returning users */}
+      {reveal && (
+        <CreatureChat reveal={reveal} language={language} isOpen={chatOpen} onOpenChange={setChatOpen} />
+      )}
     </>
   );
 }

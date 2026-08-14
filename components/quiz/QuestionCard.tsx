@@ -90,7 +90,7 @@ export function QuestionCard({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -30 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className="w-full"
+      className="w-full outline-none"
     >
       <Card className="mx-auto w-full max-w-2xl">
         <CardContent className="flex flex-col gap-6 p-6 sm:p-8">

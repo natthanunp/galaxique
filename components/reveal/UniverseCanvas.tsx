@@ -16,6 +16,9 @@ interface UniverseCanvasProps {
   reveal: UniverseReveal;
   /** Called once R3F mounts its <canvas> — used to grab it for video recording. */
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
+  /** When true, temporarily boosts the renderer DPR to 2.0 for crisp exports.
+   *  Set this before recording and clear it after. */
+  exportMode?: boolean;
 }
 
 /** Vibe-driven postprocessing parameters. Controls bloom intensity/threshold
@@ -81,6 +84,7 @@ const VIBE_POSTFX: Record<Vibe, VibePostFX> = {
 export default function UniverseCanvas({
   reveal,
   onCanvasReady,
+  exportMode,
 }: UniverseCanvasProps) {
   // Lensing is the defining visual of a black-hole result. It is a single
   // UV warp with no additional scene pass, so it should not wait for the
@@ -177,6 +181,7 @@ export default function UniverseCanvas({
       }}
       dpr={targetDpr()}
     >
+      <ExportDprBoost exportMode={exportMode} />
       <RenderPerformanceMetrics />
 
       <ambientLight intensity={0.85} />
@@ -254,5 +259,29 @@ function TintOverlay({ color, opacity }: { color: string; opacity: number }) {
       />
     </mesh>
   );
+}
+
+/**
+ * Temporarily boosts the R3F renderer's pixel ratio to 2.0 during export
+ * so the source canvas renders at full resolution. Without this, the mobile
+ * DPR cap (1.25x) produces a tiny source canvas that gets upscaled 4x by
+ * the overlay, causing visible blur in the exported PNG/video.
+ */
+function ExportDprBoost({ exportMode }: { exportMode?: boolean }) {
+  const { gl } = useThree();
+  const defaultDpr = useRef(targetDpr());
+
+  useEffect(() => {
+    if (exportMode) {
+      gl.setPixelRatio(2);
+    } else {
+      gl.setPixelRatio(defaultDpr.current);
+    }
+    return () => {
+      gl.setPixelRatio(defaultDpr.current);
+    };
+  }, [exportMode, gl]);
+
+  return null;
 }
 

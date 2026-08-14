@@ -11,6 +11,7 @@ import { LoadingCosmos } from "@/components/shared/LoadingCosmos";
 import { VinylDisc } from "@/components/reveal/VinylDisc";
 import { PersonalityReading } from "@/components/reveal/PersonalityReading";
 import { ShareButton } from "@/components/reveal/ShareButton";
+import { CreatureChat } from "@/components/reveal/CreatureChat";
 import { Button } from "@/components/ui/button";
 import { useQuizStore } from "@/store/quizStore";
 import type { UniverseReveal } from "@/types/universe";
@@ -100,6 +101,8 @@ export default function RevealPage() {
   // this, getCanvas() returns null and handleShare throws the cryptic
   // "Universe canvas isn't ready yet." error.
   const [canvasReady, setCanvasReady] = useState(false);
+  // When true, UniverseCanvas boosts its DPR to 2.0 for crisp exports.
+  const [exportMode, setExportMode] = useState(false);
 
   // zustand `persist` rehydrates from localStorage asynchronously. On a
   // hard reload / direct navigation to /reveal, the first render runs
@@ -282,6 +285,7 @@ export default function RevealPage() {
       <div className="pointer-events-none absolute inset-0 z-0">
         <UniverseCanvas
           reveal={reveal as UniverseReveal}
+          exportMode={exportMode}
           onCanvasReady={(c) => {
             canvasRef.current = c;
             setCanvasReady(true);
@@ -310,6 +314,7 @@ export default function RevealPage() {
             language={language}
             reading={reveal.personality_reading}
             vibe={reveal.vibe}
+            onExportModeChange={setExportMode}
           />
           <Button
             asChild
@@ -380,6 +385,9 @@ export default function RevealPage() {
           </div>
         </motion.div>
       </div>
+
+      {/* Creature chat — floating chat bubble */}
+      <CreatureChat reveal={reveal as UniverseReveal} language={language} />
     </main>
   );
 }

@@ -11,6 +11,7 @@ import {
 } from "@/lib/schemas";
 import { enrichPlaylistTracks } from "@/lib/songKnowledge";
 import { getRecentSelections, recordSelection, type SongSelectionSource } from "@/lib/songSelectionStore";
+import { addStar } from "@/lib/constellationStore";
 import { sseStream, wantsEventStream, type ProgressCallback } from "@/lib/analyzeProgress";
 import { getSpotifyPlaylistTracks, spotifyConfigured } from "@/lib/spotify";
 import { getVibeStats, type VibeStats } from "@/lib/vibeStatsStore";
@@ -691,9 +692,27 @@ async function runAnalyze(
     );
   }
   progress({ stage: "done", msElapsed: 0 });
-  // Telegram notification is intentionally NOT sent here. We only want to
-  // be notified about reveals the user actually saw, so the /reveal page
-  // POSTs to /api/telegram/notify after it has hydrated and rendered.
+
+  // Store this reveal as a star in the shared constellation (fire-and-forget).
+  if (result) {
+    const songParts = (result.spotify_search_query ?? "").split(" ");
+    const songName = songParts.slice(0, -1).join(" ") || (result.spotify_search_query ?? "");
+    const songArtist = songParts.at(-1) ?? "";
+    addStar({
+      id: (crypto.randomUUID?.() ?? `${Date.now()}`).slice(0, 8),
+      vibe: result.vibe,
+      celestialType: result.celestial_type,
+      creatureKind: result.creature?.kind ?? "spirit",
+      creatureName: result.creature?.name ?? "",
+      primaryColor: result.primary_color,
+      secondaryColor: result.secondary_color,
+      readingSnippet: result.personality_reading.slice(0, 200),
+      songName,
+      songArtist,
+      createdAt: Date.now(),
+    }).catch(() => {}); // Best effort — don't block the reveal.
+  }
+
   return result;
 }
 
