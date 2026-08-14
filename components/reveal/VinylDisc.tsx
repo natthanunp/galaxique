@@ -237,80 +237,86 @@ export function VinylDisc({
       </div>
 
       {track && (
-        <div className={cn(
-          "flex flex-col items-center gap-1 rounded-xl bg-black/20 px-4 py-2.5 shadow-[0_2px_24px_rgba(0,0,0,0.55)] ring-1 ring-white/[0.07] backdrop-blur-md",
-          isHero
-            ? "absolute left-1/2 top-full mt-5 w-max max-w-[min(20rem,92vw)] -translate-x-1/2"
-            : "max-w-xs",
-        )}>
-          <p
-            className={cn(
-              "text-balance text-center font-semibold text-white [text-shadow:0_1px_5px_rgba(0,0,0,0.95)]",
-              size === "hero"
-                ? "line-clamp-2 text-lg leading-snug sm:text-xl"
-                : "line-clamp-2 text-base leading-snug sm:text-lg",
-            )}
-          >
-            {track.name}
-          </p>
-          <p
-            className={cn(
-              "line-clamp-1 text-center text-white/85 [text-shadow:0_1px_4px_rgba(0,0,0,0.9)]",
-              isHero ? "text-sm sm:text-base" : "text-sm",
-            )}
-          >
-            {track.artist}
-          </p>
-        </div>
-      )}
-
-      {track && (
-        <div className={cn(
-          "flex items-center gap-3",
-          isHero && "absolute left-1/2 top-full mt-26 w-max -translate-x-1/2",
-        )}>
-          {track.preview_url ? (
-            <button
-              type="button"
-              onClick={() => setPlaying(!isPlaying)}
-              aria-label={isPlaying ? "Pause song" : "Play song"}
-              title={isPlaying ? "Pause song" : "Play song"}
-              className={cn(
-                "flex items-center justify-center rounded-full text-black transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                size === "hero" ? "size-12" : "size-11",
-              )}
-              style={{
-                backgroundColor: primaryColor,
-                boxShadow: size === "hero"
-                  ? `0 0 24px -4px ${primaryColor}aa, 0 0 0 1px ${primaryColor}33`
-                  : undefined,
-              }}
-            >
-              {isPlaying ? (
-                <PauseIcon className={cn("fill-current", size === "hero" ? "size-5" : "size-4")} />
-              ) : (
-                <PlayIcon className={cn("ml-0.5 fill-current", size === "hero" ? "size-5" : "size-4")} />
-              )}
-            </button>
-          ) : (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Volume2Icon className="size-4" />
-              <span>
-                {language === "th"
-                  ? "เพลงนี้ไม่มีตัวอย่างให้ฟัง"
-                  : "Preview unavailable for this track."}
-              </span>
-            </div>
+        /* Combined song-info + play/Spotify row, absolutely positioned
+           under the disc on hero layouts. Wrapping the two pieces in a
+           single flex column with proper `gap-3` between them lets the
+           info card and the controls flow naturally — instead of each
+           being its own absolute block stacked from the disc's bottom
+           edge, which on desktop (lg:scale-110) caused the play button
+           to land INSIDE the song info card because the info card grew
+           taller than the play row's fixed `mt-26` offset. With the
+           flex column, the controls sit a clean 12px below the info
+           card regardless of how much the card grows on desktop. */
+        <div
+          className={cn(
+            isHero &&
+              "absolute left-1/2 top-full mt-5 flex w-max max-w-[min(24rem,92vw)] -translate-x-1/2 flex-col items-center gap-3",
           )}
-          <a
-            href={`https://open.spotify.com/track/${track.track_id}`}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1 rounded-full bg-black/25 px-2.5 py-1 text-xs text-white/90 shadow-[0_1px_8px_rgba(0,0,0,0.45)] ring-1 ring-white/[0.07] backdrop-blur-sm transition-colors hover:bg-black/45 hover:text-white hover:ring-white/20"
-          >
-            <ExternalLinkIcon className="size-3" />
-            {language === "th" ? "เปิดใน Spotify" : "Open in Spotify"}
-          </a>
+        >
+          <div className="flex w-full flex-col items-center gap-1 rounded-xl bg-black/20 px-4 py-2.5 shadow-[0_2px_24px_rgba(0,0,0,0.55)] ring-1 ring-white/[0.07] backdrop-blur-md">
+            <p
+              className={cn(
+                "text-balance text-center font-semibold text-white [text-shadow:0_1px_5px_rgba(0,0,0,0.95)]",
+                size === "hero"
+                  ? "line-clamp-2 text-lg leading-snug sm:text-xl"
+                  : "line-clamp-2 text-base leading-snug sm:text-lg",
+              )}
+            >
+              {track.name}
+            </p>
+            <p
+              className={cn(
+                "line-clamp-1 text-center text-white/85 [text-shadow:0_1px_4px_rgba(0,0,0,0.9)]",
+                isHero ? "text-sm sm:text-base" : "text-sm",
+              )}
+            >
+              {track.artist}
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            {track.preview_url ? (
+              <button
+                type="button"
+                onClick={() => setPlaying(!isPlaying)}
+                aria-label={isPlaying ? "Pause song" : "Play song"}
+                title={isPlaying ? "Pause song" : "Play song"}
+                className={cn(
+                  "flex items-center justify-center rounded-full text-black transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                  size === "hero" ? "size-12" : "size-11",
+                )}
+                style={{
+                  backgroundColor: primaryColor,
+                  boxShadow: size === "hero"
+                    ? `0 0 24px -4px ${primaryColor}aa, 0 0 0 1px ${primaryColor}33`
+                    : undefined,
+                }}
+              >
+                {isPlaying ? (
+                  <PauseIcon className={cn("fill-current", size === "hero" ? "size-5" : "size-4")} />
+                ) : (
+                  <PlayIcon className={cn("ml-0.5 fill-current", size === "hero" ? "size-5" : "size-4")} />
+                )}
+              </button>
+            ) : (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Volume2Icon className="size-4" />
+                <span>
+                  {language === "th"
+                    ? "เพลงนี้ไม่มีตัวอย่างให้ฟัง"
+                    : "Preview unavailable for this track."}
+                </span>
+              </div>
+            )}
+            <a
+              href={`https://open.spotify.com/track/${track.track_id}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 rounded-full bg-black/25 px-2.5 py-1 text-xs text-white/90 shadow-[0_1px_8px_rgba(0,0,0,0.45)] ring-1 ring-white/[0.07] backdrop-blur-sm transition-colors hover:bg-black/45 hover:text-white hover:ring-white/20"
+            >
+              <ExternalLinkIcon className="size-3" />
+              {language === "th" ? "เปิดใน Spotify" : "Open in Spotify"}
+            </a>
+          </div>
         </div>
       )}
 

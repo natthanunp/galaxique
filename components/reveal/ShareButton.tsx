@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogClose,
@@ -44,6 +45,20 @@ interface ShareButtonProps {
   vibe: string;
   /** Called with true when export starts (boosts R3F DPR) and false when it ends. */
   onExportModeChange?: (exporting: boolean) => void;
+  /** Button size — defaults to "default" (h-10) for the standalone
+   *  full-bleed layout. The reveal page header passes "sm" so the
+   *  share trigger matches the height of the surrounding icon buttons
+   *  in the top bar. */
+  size?: "default" | "sm";
+  /** Extra classes for the trigger button. Useful for matching the
+   *  surrounding button chrome (rounded-full, padding, etc.). */
+  className?: string;
+  /** When true, hide the "Share to Story" text label and render the
+   *  trigger as an icon-only square button. The aria-label still
+   *  describes the action for screen readers. The reveal page header
+   *  passes this on mobile so the share button doesn't crowd the
+   *  chat/retake siblings out of the screen. */
+  hideLabel?: boolean;
 }
 
 type Phase =
@@ -72,6 +87,9 @@ export function ShareButton({
   reading,
   vibe,
   onExportModeChange,
+  size = "default",
+  className,
+  hideLabel = false,
 }: ShareButtonProps) {
   const [open, setOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
@@ -368,18 +386,29 @@ export function ShareButton({
       <DialogTrigger asChild>
         <Button
           variant="default"
-          className="gap-2"
+          size={size}
+          className={cn(
+            hideLabel ? "size-10 gap-0 px-0" : "gap-2",
+            className,
+          )}
           disabled={disabled}
+          aria-label={
+            language === "th" ? "แชร์ไป Story" : "Share to Story"
+          }
           title={
             disabled
               ? language === "th"
                 ? "จักรวาลกำลังโหลด — ลองใหม่อีกครั้งในอีกสักครู่"
                 : "Universe is still loading — try again in a moment."
-              : undefined
+              : language === "th"
+                ? "แชร์ไป Story"
+                : "Share to Story"
           }
         >
           <ShareIcon className="size-4" />
-          {language === "th" ? "แชร์ไป Story" : "Share to Story"}
+          {!hideLabel && (
+            <span>{language === "th" ? "แชร์ไป Story" : "Share to Story"}</span>
+          )}
         </Button>
       </DialogTrigger>
       <DialogContent>

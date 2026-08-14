@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { ArrowLeftIcon, SparklesIcon } from "lucide-react";
+import { ArrowLeftIcon, MessageCircleIcon, SparklesIcon } from "lucide-react";
 
 import { LoadingCosmos } from "@/components/shared/LoadingCosmos";
 import { VinylDisc } from "@/components/reveal/VinylDisc";
@@ -14,6 +14,7 @@ import { ShareButton } from "@/components/reveal/ShareButton";
 import { CreatureChat } from "@/components/reveal/CreatureChat";
 import { Button } from "@/components/ui/button";
 import { useQuizStore } from "@/store/quizStore";
+import { humanizeCreatureKind } from "@/lib/creatureKind";
 import type { UniverseReveal } from "@/types/universe";
 // Three.js needs the DOM — load the canvas client-side only.
 const UniverseCanvas = dynamic(
@@ -103,6 +104,7 @@ export default function RevealPage() {
   const [canvasReady, setCanvasReady] = useState(false);
   // When true, UniverseCanvas boosts its DPR to 2.0 for crisp exports.
   const [exportMode, setExportMode] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   // zustand `persist` rehydrates from localStorage asynchronously. On a
   // hard reload / direct navigation to /reveal, the first render runs
@@ -296,9 +298,9 @@ export default function RevealPage() {
       {/* Floating top bar — Home/Retake buttons, kept above the scene.
           Uses `pointer-events-auto` to capture clicks while the canvas
           layer uses `pointer-events-none` so it doesn't block orbit-drag. */}
-      <header className="safe-area-top-4 pointer-events-none absolute inset-x-4 z-20 flex items-center justify-between gap-2 sm:inset-x-6">
+      <header className="safe-area-top-4 pointer-events-none absolute inset-x-3 z-20 flex items-center justify-between gap-1.5 sm:inset-x-6 sm:gap-2">
         <div className="pointer-events-auto">
-          <Button asChild variant="ghost" size="sm" className="gap-1">
+          <Button asChild variant="ghost" size="default" className="gap-1.5 rounded-full bg-card/60 px-3 ring-1 ring-white/10 backdrop-blur-md hover:bg-card/80 sm:px-4">
             <Link href="/" aria-label={language === "th" ? "หน้าแรก" : "Home"}>
               <ArrowLeftIcon className="size-4" />
               <span className="hidden sm:inline">
@@ -307,7 +309,55 @@ export default function RevealPage() {
             </Link>
           </Button>
         </div>
-        <div className="pointer-events-auto flex items-center gap-2">
+        <div className="pointer-events-auto flex min-w-0 items-center gap-1.5 sm:gap-2">
+          {reveal.creature && (
+            /* Conic-gradient ring matching the home page's "Talk to your
+               companion" treatment so the chat trigger pops on the
+               reveal screen too. The conic gradient is a CIRCULAR color
+               sweep from the center, so on a wide/short button the sweep
+               gets clipped by the rectangle's corners and only the
+               middle slice of the ring is visible. We render the
+               gradient on a square layer that's 200% the button size
+               (so the circle is larger than the rectangle on both axes)
+               and centered behind the button. The wrapper's
+               `overflow-hidden` clips the circle to the button shape,
+               leaving a clean rainbow border that animates a full 360°
+               every cycle. The button uses `size="default"` (h-10) to
+               match the share/retake buttons in the same row.
+
+               The label is ALWAYS shown (not hidden on mobile) so a
+               user landing on the reveal page can immediately tell the
+               round pink button is "Chat" with their companion — a
+               chat bubble icon alone reads as "comments" or "feedback"
+               and gets lost among the other icon-only sibling buttons.
+               On wider screens we expand the label to use the
+               companion's actual name ("Chat with Lumo") to make the
+               AI-companion affordance unmistakable. */
+            <span className="relative isolate inline-flex shrink min-w-0 items-stretch overflow-hidden rounded-full p-[1.5px]">
+              <span
+                className="pointer-events-none absolute left-1/2 top-1/2 aspect-square w-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_2.5s_linear_infinite]"
+                style={{
+                  background:
+                    "conic-gradient(from 0deg, #f43f5e, #f59e0b, #22c55e, #3b82f6, #a855f7, #f43f5e)",
+                }}
+              />
+              <Button
+                variant="ghost"
+                size="default"
+                className="relative z-10 min-w-0 gap-1.5 rounded-full border-0 px-3 text-white hover:brightness-110 sm:px-4"
+                style={{ backgroundColor: reveal.primary_color }}
+                onClick={() => setChatOpen(true)}
+                aria-label={language === "th" ? "คุยกับเพื่อนคู่ใจ" : "Chat with companion"}
+              >
+                <MessageCircleIcon className="size-4 shrink-0" />
+                <span className="truncate">
+                  {language === "th"
+                    ? `คุยกับ ${reveal.creature.name ?? "เพื่อนคู่ใจ"}`
+                    : `Talk to ${reveal.creature.name ?? "your companion"}`}
+                </span>
+              </Button>
+            </span>
+          )}
           <ShareButton
             getCanvas={() => canvasRef.current}
             disabled={!canvasReady}
@@ -315,12 +365,24 @@ export default function RevealPage() {
             reading={reveal.personality_reading}
             vibe={reveal.vibe}
             onExportModeChange={setExportMode}
+            /* Icon-only square — the chat button carries the labeled
+               "Talk to {creatureName}" affordance (the primary
+               companion action), so the share trigger doesn't need
+               to repeat it. Renders as a 40x40 round button. We let
+               the default `Button` variant provide its own
+               `bg-primary` purple fill — overriding it here with
+               `bg-card/60` would strip the solid background and
+               leave a bare ghost button. We only add the
+               rounded-full shape on top of the default styling. */
+            hideLabel
+            size="default"
+            className="size-10 rounded-full"
           />
           <Button
             asChild
             variant="ghost"
-            size="sm"
-            className="gap-1"
+            size="default"
+            className="gap-1.5 rounded-full bg-card/60 px-3 ring-1 ring-white/10 backdrop-blur-md hover:bg-card/80 sm:px-4"
           >
             <Link href="/quiz" aria-label={language === "th" ? "ทำใหม่" : "Retake"}>
               <SparklesIcon className="size-4" />
@@ -369,7 +431,7 @@ export default function RevealPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15 }}
-            className="pointer-events-auto relative z-20 mt-[calc(86svh-5rem)] flex w-full flex-col gap-3 self-end sm:mt-[calc(84svh-5.5rem)] sm:max-w-xl sm:gap-4 lg:absolute lg:right-8 lg:bottom-10 lg:mt-0 lg:w-[38%] lg:max-w-xl xl:w-[36%]"
+            className="pointer-events-auto relative z-20 mt-[calc(50svh+260px)] flex w-full flex-col gap-3 self-end sm:mt-[calc(46svh+260px)] sm:max-w-xl sm:gap-4 lg:absolute lg:right-8 lg:bottom-10 lg:mt-0 lg:w-[38%] lg:max-w-xl xl:w-[36%]"
         >
           <PersonalityReading
             reading={reveal.personality_reading}
@@ -386,8 +448,13 @@ export default function RevealPage() {
         </motion.div>
       </div>
 
-      {/* Creature chat — floating chat bubble */}
-      <CreatureChat reveal={reveal as UniverseReveal} language={language} />
+      {/* Creature chat — opened from the header trigger above */}
+      <CreatureChat
+        reveal={reveal as UniverseReveal}
+        language={language}
+        isOpen={chatOpen}
+        onOpenChange={setChatOpen}
+      />
     </main>
   );
 }
@@ -440,7 +507,7 @@ function RevealMeta({
             {language === "th" ? "เพื่อนคู่ใจ" : "companion"}
             {" · "}
             <span className="text-foreground/80">
-              {reveal.creature.name ?? reveal.creature.kind}
+              {reveal.creature.name ?? humanizeCreatureKind(reveal.creature.kind, language)}
             </span>
           </span>
         </>

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   SparklesIcon,
+  SparkleIcon,
   ArrowRightIcon,
   ExternalLinkIcon,
   DownloadIcon,
@@ -20,10 +21,17 @@ import { Button } from "@/components/ui/button";
 import { prefetchQuiz } from "@/lib/quizPrefetch";
 import { useQuizStore } from "@/store/quizStore";
 import type { VibeStats } from "@/lib/vibeStatsStore";
+import { humanizeCreatureKind } from "@/lib/creatureKind";
 import dynamic from "next/dynamic";
 
 const CreatureChat = dynamic(
   () => import("@/components/reveal/CreatureChat").then((m) => m.CreatureChat),
+  { ssr: false },
+);
+
+// 3D creature preview needs the DOM (WebGL canvas) — client-only.
+const CreaturePreview = dynamic(
+  () => import("@/components/shared/CreaturePreview").then((m) => m.CreaturePreview),
   { ssr: false },
 );
 
@@ -307,29 +315,28 @@ export default function LandingPage() {
             ) : null}
           </div>
 
-          <div className="mt-8 w-full max-w-2xl">
-            <VibeCounter language={language} />
-          </div>
-
-          {/* Returning user: show their companion + quick actions */}
+          {/* Returning user: show their companion + quick actions above the
+              vibe stats, so it's the first thing a returning visitor sees. */}
           {reveal?.creature && (
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="mt-6 w-full max-w-md rounded-2xl border border-border/50 bg-card/60 p-5 text-left backdrop-blur-md"
+              className="mt-8 w-full max-w-md rounded-2xl border border-border/50 bg-card/60 p-5 text-left backdrop-blur-md"
             >
-              <div className="flex items-center gap-3 mb-3">
-                <div
-                  className="size-12 rounded-full border border-white/20 shadow-lg"
-                  style={{ backgroundColor: reveal.primary_color }}
+              <div className="flex items-center gap-4 mb-4">
+                <CreaturePreview
+                  kind={reveal.creature.kind}
+                  color={reveal.primary_color}
+                  size={88}
+                  className="border border-white/20 shadow-lg"
                 />
                 <div>
                   <p className="text-sm font-semibold text-foreground">
                     {reveal.creature.name ?? (language === "th" ? "เพื่อนคู่ใจ" : "Your companion")}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {language === "th" ? `เป็น${reveal.creature.kind}ที่โคจรรอบ${reveal.celestial_type === "galaxy" ? "กาแล็กซี่" : reveal.celestial_type === "black_hole" ? "หลุมดำ" : "ดาวนิวตรอน"}ของคุณ`
+                    {language === "th" ? `เป็น${humanizeCreatureKind(reveal.creature.kind, language)}ที่โคจรรอบ${reveal.celestial_type === "galaxy" ? "กาแล็กซี่" : reveal.celestial_type === "black_hole" ? "หลุมดำ" : "ดาวนิวตรอน"}ของคุณ`
                       : `A ${reveal.creature.kind} orbiting your ${reveal.celestial_type.replace("_", " ")}`}
                   </p>
                 </div>
@@ -338,16 +345,46 @@ export default function LandingPage() {
                 <Button asChild size="sm" variant="default" className="flex-1">
                   <Link href="/reveal">{language === "th" ? "เยี่ยมชมจักรวาล" : "Visit your universe"}</Link>
                 </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setChatOpen(true)}
-                >
-                  {language === "th" ? "คุย" : "Chat"}
-                </Button>
+                {/* Conic-gradient ring spun behind an opaque button — the
+                    common "AI feature" rainbow-border treatment. The
+                    conic gradient is a CIRCULAR color sweep from the
+                    center, so on a wide/short button the sweep gets
+                    clipped by the rectangle's corners and only the
+                    middle slice of the ring is visible. To make the
+                    full color loop show we render the gradient on a
+                    square layer that's 200% the button size (so the
+                    circle is larger than the rectangle on both axes)
+                    and centered behind the button. The wrapper's
+                    `overflow-hidden` clips the circle to the button
+                    shape, leaving a clean rainbow border that
+                    animates a full 360° every cycle. */}
+                <span className="relative isolate inline-flex shrink-0 overflow-hidden rounded-md p-[1.5px]">
+                  <span
+                    className="pointer-events-none absolute left-1/2 top-1/2 aspect-square w-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_2.5s_linear_infinite]"
+                    style={{
+                      background:
+                        "conic-gradient(from 0deg, #f43f5e, #f59e0b, #22c55e, #3b82f6, #a855f7, #f43f5e)",
+                    }}
+                  />
+                  <Button
+                    size="sm"
+                    className="relative z-10 gap-1.5 border-0 text-white hover:brightness-110"
+                    style={{ backgroundColor: reveal.primary_color }}
+                    onClick={() => setChatOpen(true)}
+                  >
+                    <SparkleIcon className="size-4" />
+                    {language === "th"
+                      ? `คุยกับ${reveal.creature.name ?? "เพื่อนคู่ใจ"}`
+                      : `Talk to ${reveal.creature.name ?? "your companion"}`}
+                  </Button>
+                </span>
               </div>
             </motion.div>
           )}
+
+          <div className={reveal?.creature ? "mt-6 w-full max-w-2xl" : "mt-8 w-full max-w-2xl"}>
+            <VibeCounter language={language} />
+          </div>
 
           {/* Subtle tribute — no name used, just a soft line of credit. */}
           <motion.p
@@ -362,8 +399,8 @@ export default function LandingPage() {
 
         <footer className="absolute inset-x-6 bottom-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[10px] text-muted-foreground/70 sm:bottom-6">
           <span>{t.credits}</span>
-          <a className="inline-flex items-center gap-1 hover:text-foreground" href="https://sketchfab.com/jummydoodles" target="_blank" rel="noreferrer">
-            Spirit: JummyDoodles <ExternalLinkIcon className="size-2.5" />
+          <a className="inline-flex items-center gap-1 hover:text-foreground" href="https://sketchfab.com/20174720" target="_blank" rel="noreferrer">
+            Spirit: 20174720 <ExternalLinkIcon className="size-2.5" />
           </a>
           <a className="inline-flex items-center gap-1 hover:text-foreground" href="https://sketchfab.com/omabuarts" target="_blank" rel="noreferrer">
             Cat: Omabuarts <ExternalLinkIcon className="size-2.5" />

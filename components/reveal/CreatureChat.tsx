@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircleIcon, SendIcon, XIcon, SparklesIcon } from "lucide-react";
+import { SendIcon, XIcon, SparklesIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { Language, UniverseReveal } from "@/types/universe";
@@ -10,10 +10,10 @@ import type { Language, UniverseReveal } from "@/types/universe";
 interface CreatureChatProps {
   reveal: UniverseReveal;
   language: Language;
-  /** When true, the chat panel is open. Controlled by parent. */
-  isOpen?: boolean;
-  /** Called when the open state changes. */
-  onOpenChange?: (open: boolean) => void;
+  /** Whether the chat panel is open. Fully controlled by the parent page. */
+  isOpen: boolean;
+  /** Called when the open state should change (close button, backdrop click). */
+  onOpenChange: (open: boolean) => void;
 }
 
 interface ChatEntry {
@@ -32,10 +32,7 @@ function getSessionId(): string {
   return id;
 }
 
-export function CreatureChat({ reveal, language, isOpen: controlledIsOpen, onOpenChange }: CreatureChatProps) {
-  const [internalOpen, setInternalOpen] = useState(false);
-  const isOpen = controlledIsOpen ?? internalOpen;
-  const setIsOpen = (v: boolean) => { setInternalOpen(v); onOpenChange?.(v); };
+export function CreatureChat({ reveal, language, isOpen, onOpenChange }: CreatureChatProps) {
   const [messages, setMessages] = useState<ChatEntry[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -90,54 +87,38 @@ export function CreatureChat({ reveal, language, isOpen: controlledIsOpen, onOpe
     ? `สวัสดี! ฉันชื่อ${creatureName} ✨ มีอะไรอยากคุยด้วยไหม?`
     : `Hey! I'm ${creatureName} ✨ I'm your cosmic companion. Want to talk?`;
 
-  const primaryColor = reveal.primary_color ?? "#7c3aed";
-
   return (
-    <>
-      {/* Chat trigger — glowing, animated, impossible to miss */}
-      <motion.button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 left-4 z-40 flex items-center gap-2 rounded-full border border-white/20 px-4 py-2.5 text-sm font-medium shadow-lg backdrop-blur-md transition-all hover:brightness-110"
-        style={{
-          backgroundColor: primaryColor + "cc",
-          color: "#fff",
-          boxShadow: `0 0 20px ${primaryColor}60, 0 0 40px ${primaryColor}30`,
-        }}
-        initial={{ opacity: 0, y: 20, scale: 0.8 }}
-        animate={{
-          opacity: 1,
-          y: [0, -4, 0],
-          scale: 1,
-        }}
-        transition={{
-          opacity: { duration: 0.4 },
-          y: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-          scale: { duration: 0.4 },
-        }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        aria-label={language === "th" ? `คุยกับ${creatureName}` : `Chat with ${creatureName}`}
-      >
-        <MessageCircleIcon className="size-5" />
-        <span className="hidden sm:inline">{creatureName}</span>
-      </motion.button>
-
-      <AnimatePresence>
-        {isOpen && (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop — dims the page and closes the panel on click-outside */}
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-4 left-4 z-50 flex w-[min(380px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-border/50 bg-card/95 shadow-2xl backdrop-blur-xl sm:bottom-6 sm:left-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+            onClick={() => onOpenChange(false)}
+            aria-hidden
+          />
+
+          {/* Panel — bottom sheet on mobile, centered modal from sm: up */}
+          <motion.div
+            initial={{ opacity: 0, y: "100%" }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: "100%" }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-x-0 bottom-0 z-50 flex max-h-[80dvh] w-full flex-col overflow-hidden rounded-t-2xl border border-border/50 bg-card/95 shadow-2xl backdrop-blur-xl sm:inset-0 sm:m-auto sm:h-fit sm:max-h-150 sm:w-105 sm:max-w-[90vw] sm:rounded-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-label={creatureName}
           >
             <div className="flex items-center justify-between border-b border-border/30 px-4 py-3">
               <div className="flex items-center gap-2">
                 <SparklesIcon className="size-4 text-primary" />
                 <span className="text-sm font-semibold">{creatureName}</span>
               </div>
-              <button type="button" onClick={() => setIsOpen(false)}
+              <button type="button" onClick={() => onOpenChange(false)}
                 className="rounded-md p-1 text-muted-foreground transition hover:bg-muted hover:text-foreground"
                 aria-label={language === "th" ? "ปิด" : "Close"}>
                 <XIcon className="size-4" />
@@ -171,20 +152,22 @@ export function CreatureChat({ reveal, language, isOpen: controlledIsOpen, onOpe
               )}
             </div>
 
-            <div className="flex items-center gap-2 border-t border-border/30 px-3 py-2">
+            <div className="flex items-center gap-2 border-t border-border/30 px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+              {/* text-base (16px) prevents iOS Safari's auto-zoom-on-focus; autoComplete="off" stops the "AutoFill Contact" QuickType bar */}
               <input ref={inputRef} type="text" value={input} onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={language === "th" ? `พูดกับ${creatureName}...` : `Say something to ${creatureName}...`}
+                autoComplete="off"
+                placeholder={language === "th" ? `พูดกับ ${creatureName}...` : `Say something to ${creatureName}...`}
                 maxLength={500}
-                className="flex-1 bg-transparent px-2 py-1.5 text-sm text-foreground placeholder:text-muted-foreground outline-none" />
+                className="flex-1 bg-transparent px-2 py-1.5 text-base text-foreground placeholder:text-muted-foreground outline-none" />
               <Button size="sm" variant="ghost" onClick={() => void sendMessage()}
                 disabled={!input.trim() || isLoading} className="size-8 p-0">
                 <SendIcon className="size-4" />
               </Button>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+        </>
+      )}
+    </AnimatePresence>
   );
 }
