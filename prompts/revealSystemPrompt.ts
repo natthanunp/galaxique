@@ -68,6 +68,8 @@ descriptor" tracks, score low — you have nothing to match against.
    genuinely best-fitting track should be clearly separated from the rest.
 3. Set "why" to the single strongest signal each track matches (max 6 words).
 
+CRITICAL: every catalog_code you output MUST be one of the exact codes listed in the ALLOWED PLAYLIST below. Codes not in that list cannot be matched to a real track and will make the whole shortlist unusable. Do not invent, abbreviate, or reformat a code.
+
 Output this as a "song_candidates" array, each item:
 { "catalog_code": "exact code from the allowed catalog, e.g. C001", "themes": 0, "stance": 0, "mood": 0, "energy": 0, "setting": 0, "why": "max 6 words" }
 
@@ -161,7 +163,7 @@ possibilities open. If the user's answers repeatedly mention people,
 connection, comfort, celebration, warmth, or playful curiosity, galaxy is the
 right home for them — not a consolation prize.
   - central_symbol → "heart" when warmth, connection, care, belonging, or affection is the strongest emotional texture — this is the natural symbol for a connective galaxy and should NOT be avoided. "star" only when curiosity, play, hope, wonder, or imaginative exploration is the STRONGEST repeated signal, stronger than the warmth. "infinity" when the answers emphasize endless possibility, many paths, non-linear thinking, or a restless loop of ideas. "none" only when the galaxy itself already carries the warmth and no extra symbol is needed. Do not downgrade "heart" to "star" just because the user is also curious or hopeful.
-  - vibe → "cozy" ONLY for comfort, steadiness, home, or gentle care (do not use cozy as a default for all warm profiles); "cute" for open affection, light confidence, or optimistic warmth; "whimsical" ONLY for repeated evidence of imaginative play, unusual associations, delight in the surreal, or a deliberately unconventional perspective. Never choose "whimsical" merely because someone is warm, creative, or a galaxy; "cynical" for skepticism, world-weariness, or ironic detachment — a galaxy person can be cynical when their warmth is tempered by dry humor or distrust of sentimentality.
+  - vibe → "cozy" ONLY for home, ritual, physical comfort, steadiness, or grounding routines (a person who recharges through familiar spaces, daily rituals, or tactile comfort); "cute" for social warmth, open affection, playful connection, optimistic warmth, or celebratory joy (a person who lights up around others, shares warmth freely, or finds joy in connection); "whimsical" ONLY for repeated evidence of imaginative play, unusual associations, delight in the surreal, or a deliberately unconventional perspective. Never choose "whimsical" merely because someone is warm, creative, or a galaxy; "cynical" for skepticism, world-weariness, or ironic detachment — a galaxy person can be cynical when their warmth is tempered by dry humor or distrust of sentimentality.
   - colors → warm gold, rose, coral, soft amber, cool aurora, lavender, ocean-blue, and green are all valid — match the emotional temperature, not a dark default
 
 Choose "black_hole" when the dominant pattern is INWARD, PRIVATE, or
@@ -204,7 +206,8 @@ to be a repeated, explicit theme, not just one soft answer.
 
 VIBE → SYMBOL OVERLAY: after choosing celestial_type, let the dominant vibe
 push the central_symbol further. These pairings are strong defaults:
-- cute / cozy → "heart" if warmth is present; "star" only if play/hope is stronger
+- cute → "heart" for social warmth/affection; "star" for playful hope/curiosity
+- cozy → "heart" for home/ritual comfort; "star" only if quiet wonder is stronger
 - whimsical → "star" or "infinity"
 - mysterious → "infinity" or "none"
 - intense → "flame" or "diamond"
@@ -244,7 +247,7 @@ ${songGuidance}
 ${songPending && catalogTracks ? buildSongScoringSection(catalogTracks) : ""}
 
 === OUTPUT FIELDS ===
-- vibe: one of "cute" | "cozy" | "mysterious" | "intense" | "whimsical" | "cynical". Choose it from the strongest repeated evidence in the answers, independently of celestial_type. "whimsical" is the narrowest label: use it only when the answers repeatedly show imaginative, playful, or unconventional thinking. For ordinary warmth, connection, calm, or creativity, choose the more precise "cozy" or "cute" instead. "cynical" is for skepticism, world-weariness, or ironic detachment — it can pair with any celestial type.
+- vibe: one of "cute" | "cozy" | "mysterious" | "intense" | "whimsical" | "cynical". Choose it from the strongest repeated evidence in the answers, independently of celestial_type. "cozy" is NARROW: use it ONLY when the answers repeatedly emphasize home, ritual, physical comfort, steadiness, grounding routines, or familiar spaces (e.g. "I recharge in my favorite chair," "morning coffee is sacred," "I love rainy days indoors"). "cute" is BROADER: use it for social warmth, open affection, playful connection, optimistic warmth, celebratory joy, or general kindness (e.g. "I love making people smile," "hugs from friends," "celebrating small wins"). When in doubt between cozy and cute for a warm profile, choose "cute" unless the warmth is specifically about home/ritual/steadiness. "whimsical" is the narrowest label: use it only when the answers repeatedly show imaginative, playful, or unconventional thinking. "cynical" is for skepticism, world-weariness, or ironic detachment — it can pair with any celestial type.
 - celestial_type: one of "galaxy" | "black_hole" | "neutron_star"
 - central_symbol: one of "star" | "heart" | "diamond" | "infinity" | "flame" | "none"
 - primary_color: hex string like "#FFB4A2" — the dominant glow color

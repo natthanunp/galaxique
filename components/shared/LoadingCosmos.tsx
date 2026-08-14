@@ -63,6 +63,17 @@ interface LoadingCosmosProps {
   /** Approximate total budget for the analyze round-trip, used to scale
    *  the thin progress bar. Defaults to ~6.5 s, the measured median. */
   totalBudgetMs?: number;
+  /** Quiz-generation progress (SSE-driven). When set, the component shows
+   *  a "planning → writing n/8" story with a deterministic progress bar
+   *  instead of the time-based analyze bar. */
+  quizStage?: "planning" | "writing";
+  /** Questions written so far, 1-based. Only meaningful with `quizStage`. */
+  quizCompleted?: number;
+  /** Total questions in the batch. Only meaningful with `quizStage`. */
+  quizTotal?: number;
+  /** Short "AI is thinking about X" phrase from the planner, in the quiz's
+   *  language. Shown as a subtle live sub-line during the writing phase. */
+  thought?: string;
 }
 
 const STAGE_LABELS: Record<AnalyzeStage, { en: string; th: string }> = {
@@ -139,6 +150,10 @@ export function LoadingCosmos({
   language = "th",
   msElapsed,
   totalBudgetMs = DEFAULT_BUDGET_MS,
+  quizStage,
+  quizCompleted = 0,
+  quizTotal = 0,
+  thought,
 }: LoadingCosmosProps) {
   // Stage-driven message wins when no explicit label is given. The
   // AnimatePresence key on the motion.p below triggers a tiny crossfade
@@ -147,6 +162,7 @@ export function LoadingCosmos({
   const text = label ?? STAGE_LABELS[stage ?? "starting"][language];
   const key = label ? `label:${label}` : `stage:${stage ?? "starting"}`;
   const visual = STAGE_VISUAL[stage ?? "starting"];
+  const quizMode = quizStage !== undefined;
 
   // `useIsMounted` returns false during SSR + first client render and
   // true after hydration. We use it to gate the time-derived nodes
@@ -178,10 +194,9 @@ export function LoadingCosmos({
   // Don't pretend the request takes longer than the budget — once we
   // exceed it, the bar saturates and the counter keeps ticking. This
   // matches reality: the picker can occasionally push past the median.
-  const progressFraction = Math.max(
-    0,
-    Math.min(1, elapsedMs / totalBudgetMs),
-  );
+  const progressFraction = quizMode
+    ? (quizTotal > 0 ? quizCompleted / quizTotal : 0)
+    : Math.max(0, Math.min(1, elapsedMs / totalBudgetMs));
 
   return (
     <div
@@ -206,29 +221,58 @@ export function LoadingCosmos({
             exit={{ opacity: 0, y: -4, filter: "blur(6px)" }}
             transition={{ duration: 0.45, ease: "easeOut" }}
           >
-            {text}
+            {quizMode
+              ? quizStage === "planning"
+                ? (language === "th" ? "กำลังวางแผนคำถาม…" : "Planning your questions…")
+                : (language === "th" ? "กำลังเขียนคำถาม…" : "Writing your questions…")
+              : text}
           </motion.p>
         </AnimatePresence>
 
         {/* The explicit "loading gimmick": a 1-Hz-updating elapsed counter
-            so the user sees the wait instrumented in real time. */}
+            so the user sees the wait instrumented in real time. In quiz
+            mode the counter becomes a deterministic "n/8" so the user sees
+            real work being completed instead of seconds ticking by. */}
         <motion.p
           className="font-mono text-xs tabular-nums text-muted-foreground/60"
           aria-hidden="true"
         >
-          {Math.floor(elapsedMs / 1000)}s
+          {quizMode
+            ? `${quizCompleted}/${quizTotal}`
+            : `${Math.floor(elapsedMs / 1000)}s`}
         </motion.p>
+
+        {/* Live "AI is thinking about X" beat — the planner's per-question
+            scene phrase (quiz mode) or the user's own echoed answer (analyze
+            mode), crossfaded in as each writer/beat lands. It's the "AI
+            thought" gimmick the user asked for, at zero extra latency. */}
+        <AnimatePresence mode="wait" initial={false}>
+          {thought ? (
+            <motion.p
+              key={thought}
+              className="text-xs italic text-muted-foreground/70"
+              initial={{ opacity: 0, y: 3 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -3 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              aria-hidden="true"
+            >
+              {thought}
+            </motion.p>
+          ) : null}
+        </AnimatePresence>
       </div>
 
       {/* Thin progress bar. The fill grows with elapsedMs / totalBudgetMs
           and saturates cleanly at 100% so it never looks broken even if
-          the picker overshoots. */}
+          the picker overshoots. In quiz mode it maps deterministically to
+          questions-written / total. */}
       <div
         className="h-0.5 w-32 overflow-hidden rounded-full bg-foreground/10"
         aria-hidden="true"
       >
         <motion.div
-          className="h-full bg-gradient-to-r from-primary/60 via-primary to-accent"
+          className="h-full bg-linear-to-r from-primary/60 via-primary to-accent"
           style={{ width: `${progressFraction * 100}%` }}
           transition={{ duration: 0.25, ease: "linear" }}
         />

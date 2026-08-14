@@ -9,10 +9,12 @@ import { QuestionCard } from "@/components/quiz/QuestionCard";
 import { LoadingCosmos } from "@/components/shared/LoadingCosmos";
 import { Button } from "@/components/ui/button";
 import { streamAnalyze } from "@/lib/analyzeStream";
+import { streamQuiz } from "@/lib/quizStream";
 import { useMinDwell } from "@/lib/useMinDwell";
-import { prefetchQuiz, takePrefetchedQuiz } from "@/lib/quizPrefetch";
+import { takePrefetchedQuiz } from "@/lib/quizPrefetch";
 import { useQuizStore } from "@/store/quizStore";
 import type { AnalyzeStage } from "@/lib/analyzeProgress";
+import type { QuizProgressEvent } from "@/lib/quizProgress";
 
 /** Manages the multi-step quiz: fetches questions, collects answers, submits. */
 export function QuizStepper() {
@@ -37,6 +39,10 @@ export function QuizStepper() {
     () => questions.length === 0 || answers.length === 0,
   );
   const [fetchError, setFetchError] = useState<string | null>(null);
+  // Live progress from /api/generate-quiz's SSE stream. Null until the
+  // first event arrives; the loading screen shows the static fallback label
+  // until then.
+  const [quizProgress, setQuizProgress] = useState<QuizProgressEvent | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   // Live progress stage from /api/analyze's SSE stream. The throttle
@@ -56,6 +62,18 @@ export function QuizStepper() {
   // keeps the displayed elapsed monotonic without polling the server.
   const [analyzeMsElapsed, setAnalyzeMsElapsed] = useState(0);
   const elapsedAnchorRef = useRef<{ serverMs: number; localArrival: number } | null>(null);
+  // Rotating "AI is reading your answer" beat during the analyze wait. Cycles
+  // through the user's own answers client-side — zero extra latency, just
+  // surfacing the input the model is already chewing on. Index -1 = "reading
+  // your answers" intro before the first answer echo.
+  const [answerEchoIndex, setAnswerEchoIndex] = useState(-1);
+  useEffect(() => {
+    if (!submitting) return;
+    const id = window.setInterval(() => {
+      setAnswerEchoIndex((i) => (i + 1) % (questions.length + 1));
+    }, 1600);
+    return () => window.clearInterval(id);
+  }, [submitting, questions.length]);
   // Tick the counter at 100 ms locally between SSE events so the bar
   // grows visibly during the long LLM phase instead of sitting still
   // for ~5 s. Started/stopped with the submitting flag so we don't
@@ -95,19 +113,43 @@ export function QuizStepper() {
   const loadQuestions = useCallback(() => {
     setFetching(true);
     setFetchError(null);
+    setQuizProgress(null);
     const avoidAngles = useQuizStore.getState().seenAngles;
-    const request =
-      takePrefetchedQuiz(avoidAngles, language) ?? prefetchQuiz(avoidAngles, language);
-    return request
-      .then((data) => {
-        setQuestions(data.questions);
-        addSeenAngles(data.pickedAngles ?? []);
-        setFetching(false);
-      })
-      .catch((err: Error) => {
-        setFetchError(err.message);
-        setFetching(false);
-      });
+    // Fast path: a landing-page prefetch may already be in flight or done.
+    // Consume it directly — instant result, no progress needed.
+    const prefetched = takePrefetchedQuiz(avoidAngles, language);
+    if (prefetched) {
+      return prefetched
+        .then((data) => {
+          setQuestions(data.questions);
+          addSeenAngles(data.pickedAngles ?? []);
+          setFetching(false);
+        })
+        .catch((err: Error) => {
+          setFetchError(err.message);
+          setFetching(false);
+        });
+    }
+    // Slow path: stream progress from the server so the user sees
+    // "planning → writing n/8" instead of a static spinner.
+    streamQuiz(
+      { avoidAngles, language, nonce: undefined },
+      {
+        onProgress: (event) => setQuizProgress(event),
+        onResult: (data) => {
+          setQuestions(data.questions);
+          addSeenAngles(data.pickedAngles ?? []);
+          setFetching(false);
+        },
+        onError: (message) => {
+          setFetchError(message);
+          setFetching(false);
+        },
+      },
+    ).catch((err: Error) => {
+      setFetchError(err.message);
+      setFetching(false);
+    });
   }, [setQuestions, addSeenAngles, language]);
 
   useEffect(() => {
@@ -166,6 +208,7 @@ export function QuizStepper() {
     setSubmitting(true);
     setSubmitError(null);
     setLoading(true);
+    setAnswerEchoIndex(-1);
 
     // Build the final answers payload from the store + current selection.
     const finalAnswers = questions.map((q) => {
@@ -251,10 +294,36 @@ export function QuizStepper() {
     [effectiveSelectedIndex, currentQuestion, effectiveCustomAnswer],
   );
 
+  // The "AI is reading your answer" beat for the analyze screen. Cycles
+  // through the user's own answers; index 0 is the intro line, indexes
+  // 1..n echo each answer. All local — no server round-trip.
+  const analyzeThought = useMemo(() => {
+    if (!submitting) return undefined;
+    const prefix =
+      language === "th" ? "กำลังอ่านคำตอบของคุณ…" : "Reading your answers…";
+    if (answerEchoIndex <= 0 || answerEchoIndex > questions.length) {
+      return prefix;
+    }
+    const answer = answers[answerEchoIndex - 1]?.answer;
+    if (!answer) return prefix;
+    const trimmed = answer.length > 48 ? `${answer.slice(0, 48)}…` : answer;
+    return language === "th"
+      ? `"${trimmed}"`
+      : `"${trimmed}"`;
+  }, [submitting, answerEchoIndex, questions.length, answers, language]);
+
   // --- States ---
 
   if (fetching) {
-    return (
+    return quizProgress ? (
+      <LoadingCosmos
+        quizStage={quizProgress.stage}
+        quizCompleted={quizProgress.completed}
+        quizTotal={quizProgress.total}
+        thought={quizProgress.thought}
+        language={language}
+      />
+    ) : (
       <LoadingCosmos
         label={language === "th" ? "กำลังเตรียมคำถาม…" : "Preparing your questions…"}
       />
@@ -284,6 +353,7 @@ export function QuizStepper() {
         stage={analyzeStage}
         language={language}
         msElapsed={analyzeMsElapsed}
+        thought={analyzeThought}
       />
     );
   }

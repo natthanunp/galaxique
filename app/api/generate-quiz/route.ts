@@ -1,9 +1,24 @@
 import { NextResponse } from "next/server";
 
 import { callLlm, resolveProviderOrder } from "@/lib/llm";
-import { quizPayloadSchema } from "@/lib/schemas";
-import { buildQuizSystemPrompt } from "@/prompts/quizSystemPrompt";
+import {
+  quizPayloadSchema,
+  quizPlanSchema,
+  quizQuestionDraftSchema,
+} from "@/lib/schemas";
+import {
+  buildQuizSystemPrompt,
+  buildQuizPlannerPrompt,
+  buildQuizWriterPrompt,
+  type QuizPlanItem,
+} from "@/prompts/quizSystemPrompt";
 import { quizConfig, QUESTION_ANGLES } from "@/config/quizConfig";
+import { wantsEventStream } from "@/lib/analyzeProgress";
+import {
+  quizSseStream,
+  type QuizProgressCallback,
+} from "@/lib/quizProgress";
+import type { QuizQuestion } from "@/types/universe";
 
 export const runtime = "nodejs";
 // Quiz generation is dynamic per call; don't cache at the framework level.
@@ -118,6 +133,97 @@ const QUIZ_RESPONSE_FORMAT = {
   },
 };
 
+/** Strict-schema output for the PLANNER call: 8 {angle, dimension, temperature}
+ *  entries in English (~200 tokens). Small enough to complete on any provider,
+ *  fast. */
+const QUIZ_PLAN_RESPONSE_FORMAT = {
+  type: "json_schema" as const,
+  jsonSchema: {
+    name: "quiz_plan",
+    strict: true,
+    schema: {
+      type: "object",
+      additionalProperties: false,
+      required: ["questions"],
+      properties: {
+        questions: {
+          type: "array",
+          minItems: quizConfig.questionCount,
+          maxItems: quizConfig.questionCount,
+          items: {
+            type: "object",
+            additionalProperties: false,
+            required: ["angle", "dimension", "temperature", "opening", "thought"],
+            properties: {
+              angle: { type: "string", minLength: 1 },
+              dimension: { type: "string", minLength: 1 },
+              temperature: { type: "string", minLength: 1 },
+              opening: { type: "string", minLength: 1 },
+              thought: { type: "string", minLength: 1 },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+/** Strict-schema output for a single WRITER call: one question + 4 options. */
+const QUIZ_WRITER_RESPONSE_FORMAT = {
+  type: "json_schema" as const,
+  jsonSchema: {
+    name: "quiz_question",
+    strict: true,
+    schema: {
+      type: "object",
+      additionalProperties: false,
+      required: ["text", "options"],
+      properties: {
+        text: { type: "string", minLength: 1 },
+        options: {
+          type: "array",
+          minItems: 4,
+          maxItems: 4,
+          items: {
+            type: "object",
+            additionalProperties: false,
+            required: ["text"],
+            properties: { text: { type: "string", minLength: 1 } },
+          },
+        },
+      },
+    },
+  },
+};
+
+/** How many question-writer calls run concurrently. Capped so a single slow
+ *  provider isn't hit with 8 simultaneous requests (rate-limit / queueing
+ *  storms). 4 concurrent writers is still a ~4x wall-clock win over serial. */
+const WRITER_CONCURRENCY = Number(
+  process.env.QUIZ_WRITER_CONCURRENCY || "4",
+);
+
+/** Run `fn` over `items` with at most `limit` promises in flight at once,
+ *  preserving input order in the result. */
+async function mapWithConcurrency<T, R>(
+  items: readonly T[],
+  limit: number,
+  fn: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let nextIndex = 0;
+  const workerCount = Math.max(1, Math.min(limit, items.length));
+  await Promise.all(
+    Array.from({ length: workerCount }, async () => {
+      while (nextIndex < items.length) {
+        const index = nextIndex++;
+        results[index] = await fn(items[index], index);
+      }
+    }),
+  );
+  return results;
+}
+
 /**
  * Requests come from a browser bundle whose local storage can outlive several
  * releases. The shape and intent of these optional fields has stayed the
@@ -201,6 +307,22 @@ function hasExpectedScript(
   );
 }
 
+/** Lightweight post-correction map for frequent Thai spelling/verb-form
+ *  glitches from small fast models (e.g. qwen3-32b on Groq). Applied AFTER
+ *  schema validation so we only rewrite text, never structure. Add entries
+ *  here as new recurring errors are spotted in production. */
+const THAI_TEXT_CORRECTIONS: { pattern: RegExp; replacement: string }[] = [
+  // "แช่ม" is a common hallucinated form of "แช่" in self-care options.
+  { pattern: /แช่ม/g, replacement: "แช่" },
+];
+
+function correctThaiText(text: string): string {
+  return THAI_TEXT_CORRECTIONS.reduce(
+    (out, { pattern, replacement }) => out.replace(pattern, replacement),
+    text,
+  );
+}
+
 /** Coerce common LLM output quirks into the schema's expected shape in
  *  place. Cheap to do once per call; saves a 25s retry on otherwise-good
  *  output from models that drop object wrappers under JSON-schema pressure. */
@@ -266,171 +388,609 @@ function pickAngles(
   return arr.slice(0, count);
 }
 
-/** POST /api/generate-quiz — LLM call #1: generate the quiz questions.
- *  Body: { language: "en" | "th", avoidAngles?: string[], nonce?: string } */
-export async function POST(request: Request) {
-  try {
-    // Parse optional request metadata defensively. A stale bundle can send an
-    // old or malformed shape; discard unknown fields rather than failing
-    // before the quiz can be generated. `language` is required though —
-    // see parseRequestBody for why a silent fallback would override the
-    // user's UI selection on a stale bundle.
-    const raw = await request.json().catch(() => ({}));
-    const parsed = parseRequestBody(raw);
-    if (!parsed.ok) {
-      return NextResponse.json({ error: parsed.error }, { status: 400 });
-    }
-    const { avoidAngles, language, nonce } = parsed;
-    // Retain the most recent angles only. Sending an unbounded session history
-    // consumes context without making the next questions more distinct.
-    const recentAvoidAngles = avoidAngles.slice(-MAX_AVOID_ANGLES_IN_PROMPT);
+function isTimeoutError(err: unknown): boolean {
+  return err instanceof Error
+    && (err.name === "TimeoutError" || /aborted due to timeout/i.test(err.message));
+}
 
-    // Sample a fresh batch of style-reference angles from the static pool.
-    // These are only few-shot examples now — the model invents the actual
-    // angles it uses per call, so variety is no longer capped at the pool's
-    // size.
-    const exampleAngles = pickAngles(
-      QUESTION_ANGLES,
-      EXAMPLE_ANGLE_COUNT,
-      new Set(recentAvoidAngles),
-    );
+type SplitResult =
+  | { ok: true; questions: QuizQuestion[]; pickedAngles: string[] }
+  | { ok: false; timeout: boolean };
 
-    const requestNonce = nonce ?? cryptoRandomNonce();
-    const systemPrompt = buildQuizSystemPrompt(
-      exampleAngles,
-      recentAvoidAngles,
-      language,
-    );
-    const userPrompt = `Generate the quiz now for nonce=${requestNonce}. Invent ${quizConfig.questionCount} distinct angles as instructed, then write the question for each.`;
-    const preferredProviderSort = process.env.OPENROUTER_PROVIDER_SORT === "latency"
-      ? "latency"
-      : "throughput";
-    const fallbackProviderSort = preferredProviderSort === "throughput"
-      ? "latency"
-      : "throughput";
-    const needsThaiCopy = language === "th";
-    const temperature = needsThaiCopy ? 0.7 : 0.9;
-    const providerOrder = needsThaiCopy
-      ? THAI_QUIZ_PROVIDER_ORDER
-      : resolveProviderOrder();
+/** Model + provider routing for one language's split pipeline. Thai uses the
+ *  dedicated qwen3-32b/Groq route (with a genuinely-different fallback model);
+ *  English uses the default model and rotates its provider order on retry. */
+function splitRouting(language: "en" | "th") {
+  if (language === "th") {
+    return {
+      primaryModel: THAI_QUIZ_MODEL,
+      fallbackModel: THAI_QUIZ_FALLBACK_MODEL,
+      primaryProviders: THAI_QUIZ_PROVIDER_ORDER,
+      fallbackProviders: THAI_QUIZ_FALLBACK_PROVIDER_ORDER,
+      temperature: 0.7,
+    };
+  }
+  const providers = resolveProviderOrder();
+  return {
+    primaryModel: quizConfig.openrouterModel,
+    fallbackModel: quizConfig.openrouterModel,
+    primaryProviders: providers,
+    fallbackProviders: [...providers.slice(1), providers[0]],
+    temperature: 0.9,
+  };
+}
 
-    let validation: ReturnType<typeof quizPayloadSchema.safeParse> | null = null;
-    // Track whether either attempt failed with a timeout specifically (vs a
-    // schema/script failure). Surfaced as a clean 504 below so the client
-    // prefetch UI can show a recognizable "model is slow, try again" message
-    // instead of a generic "validation failed" 502.
-    let lastErrorWasTimeout = false;
-    // 2 attempts: single-language output is faster to generate, and a third
-    // slow retry costs more latency than it's worth.
-    for (let attempt = 0; attempt < 2; attempt++) {
-      let parsedLlm: unknown;
-      // On retry, switch to a DIFFERENT model entirely (when one is
-      // configured) and rotate the explicit provider order. Rotating
-      // providers within the same model often re-hits the same backend
-      // during a congestion event — using a different model is the
-      // real timeout fix. See THAI_QUIZ_FALLBACK_MODEL above.
-      const isFallbackAttempt = attempt === 1 && needsThaiCopy;
-      const attemptProviderOrder = isFallbackAttempt
-        ? THAI_QUIZ_FALLBACK_PROVIDER_ORDER
-        : (attempt === 0
-          ? providerOrder
-          : [...providerOrder.slice(1), providerOrder[0]]);
-      const attemptModel = isFallbackAttempt
-        ? THAI_QUIZ_FALLBACK_MODEL
-        : (needsThaiCopy ? THAI_QUIZ_MODEL : undefined);
-      try {
-        parsedLlm = await callLlm({
-          systemPrompt,
-          userPrompt,
-          ...(attemptModel ? { model: attemptModel } : {}),
-          providerOrder: attemptProviderOrder,
-          responseFormat: QUIZ_RESPONSE_FORMAT,
-          temperature,
-          // 8-question Thai quiz on Groq: 1500 tokens at 321 tok/s = ~5s of
-          // generation + ~300ms latency. The 30s budget is wide-margin safety
-          // against Groq hiccups; the previous tighter value (1500) caused
-          // the 28s-timeout retry that surfaced in prod. The fallback
-          // (deepseek-v4-flash at 76 tok/s on BaseTen) needs ~20s, so its
-          // budget stays at 28s with the same headroom.
-          maxTokens: needsThaiCopy ? 1500 : 2000,
-          // Groq p99 latency on qwen3-32b is ~1.9s; 18s is a 10x safety
-          // margin and turns a 2-3s typical generation into a tight-but-
-          // reliable budget. The 30s/28s numbers in the prior config were
-          // inherited from the slow DeepInfra era; they're no longer
-          // warranted and just delay the user-visible error on a true hang.
-          timeoutMs: isFallbackAttempt ? 28_000 : 18_000,
-          nonce: `${requestNonce}:${attempt}`,
-          purpose: "generate-quiz",
-          providerSort:
-            attempt === 0 ? preferredProviderSort : fallbackProviderSort,
-        });
-      } catch (err) {
-        const isAbort = err instanceof Error
-          && (err.name === "TimeoutError" || /aborted due to timeout/i.test(err.message));
-        if (isAbort) lastErrorWasTimeout = true;
-        console.warn(
-          attempt === 0
-            ? `[generate-quiz] attempt 1 failed via model=${attemptModel ?? "default"} providers=${attemptProviderOrder.join(", ")}; retrying via model=${THAI_QUIZ_FALLBACK_MODEL} providers=${THAI_QUIZ_FALLBACK_PROVIDER_ORDER.join(", ")}`
-            : `[generate-quiz] attempt 2 failed via model=${attemptModel ?? "default"} providers=${attemptProviderOrder.join(", ")}`,
-          err,
-        );
-        continue;
-      }
-
-      // Safety net: small open-source models routed through Groq/DeepInfra
-      // frequently collapse `{"text":"..."}` options into bare strings, and
-      // some flatten the question object itself. Normalize the output back
-      // into the schema before validating so a single stringly-typed response
-      // doesn't burn a 25s retry on an otherwise-correct output.
-      normalizeLlmQuizShape(parsedLlm);
-
-      const candidate = quizPayloadSchema.safeParse(parsedLlm);
-      validation = candidate;
-      if (candidate.success && !hasExpectedScript(candidate.data.questions, language)) {
-        console.warn(
-          `[generate-quiz] attempt ${attempt + 1} contained text outside the requested ${language} script; retrying`,
-        );
-        validation = null;
-      }
-      if (validation?.success) break;
-    }
-
-    if (!validation || !validation.success) {
-      // If both attempts failed with a timeout (vs a schema/script error),
-      // surface a 504 so the client prefetch UI can show a recognizable
-      // "model is slow" message instead of a generic "validation failed"
-      // 502. Falling through to 502 here would also be misleading because
-      // the model DID respond, just past the timeout.
-      if (lastErrorWasTimeout) {
-        return NextResponse.json(
-          {
-            error: "LLM request timed out after 2 attempts.",
-            code: "timeout",
-          },
-          { status: 504 },
-        );
-      }
-      return NextResponse.json(
-        {
-          error: "LLM output failed schema validation.",
-          issues: validation?.error.issues,
-        },
-        { status: 502 },
+/** Write one planned question on the primary model, retrying once on the
+ *  fallback model if the first attempt fails or fails validation. Returns the
+ *  validated draft or null (so a single failed question can be re-reconciled
+ *  rather than failing the whole batch). */
+async function writeOneQuestion(
+  planItem: QuizPlanItem,
+  index: number,
+  nonce: string,
+  language: "en" | "th",
+  preferredProviderSort: "latency" | "throughput",
+  fallbackProviderSort: "latency" | "throughput",
+): Promise<{ draft: NonNullable<ReturnType<typeof quizQuestionDraftSchema.safeParse>["data"]> } | null> {
+  const routing = splitRouting(language);
+  const systemPrompt = buildQuizWriterPrompt(planItem, language);
+  const userPrompt = `Write question ${index + 1} now for nonce=${nonce}:${index}.`;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const isFallback = attempt === 1;
+    const model = isFallback ? routing.fallbackModel : routing.primaryModel;
+    const providerOrder = isFallback
+      ? routing.fallbackProviders
+      : routing.primaryProviders;
+    try {
+      const parsed = await callLlm({
+        systemPrompt,
+        userPrompt,
+        model,
+        providerOrder,
+        responseFormat: QUIZ_WRITER_RESPONSE_FORMAT,
+        temperature: routing.temperature,
+        // One question + 4 options ≈ 90-120 tokens; 350 is a wide margin.
+        maxTokens: 350,
+        timeoutMs: isFallback ? 30_000 : 22_000,
+        nonce: `${nonce}:q${index}:${attempt}`,
+        purpose: "generate-quiz-writer",
+        providerSort: attempt === 0 ? preferredProviderSort : fallbackProviderSort,
+      });
+      const candidate = quizQuestionDraftSchema.safeParse(parsed);
+      if (candidate.success) return { draft: candidate.data };
+    } catch (err) {
+      console.warn(
+        `[generate-quiz] writer q${index + 1} attempt ${attempt + 1} failed`,
+        err,
       );
     }
+  }
+  return null;
+}
 
-    // The model invents its own angle per question (see quizSystemPrompt.ts);
-    // surface those as `pickedAngles` so the client can keep avoiding them on
-    // future calls. Strip the internal `angle` field from each question
-    // before returning — it's not part of the public question shape the
-    // client renders.
-    const pickedAngles = validation.data.questions.map((q) => q.angle);
-    const questions = validation.data.questions.map(
-      ({ angle: _angle, ...question }) => question,
-    );
+/** The validated shape of one writer's output. */
+type QuestionDraft = NonNullable<ReturnType<typeof quizQuestionDraftSchema.safeParse>["data"]>;
 
-    return NextResponse.json({ questions, pickedAngles });
+/** Normalize a question's opening for collision detection: lowercase, strip
+ *  punctuation, collapse whitespace, and take the first ~24 characters. Two
+ *  questions that both open "หลังเลิกงานเหนื่อยๆ" (or "หลังงานเสร็จ…") collide;
+ *  genuinely different scenes don't. */
+function openingFingerprint(text: string): string {
+  return text
+    .normalize("NFC")
+    .toLocaleLowerCase()
+    .replace(/[^\p{L}\p{N} ]/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 24);
+}
+
+/** Collision prefixes we explicitly don't want repeated across the batch
+ *  (the model's strongest priors). Kept language-neutral here because the
+ *  fingerprint already captures the script. */
+const BLOCKED_OPENINGS = ["หลังเลิกงาน", "หลังงานเสร็จ", "after work"];
+
+function isBlockedOpening(fingerprint: string): boolean {
+  return BLOCKED_OPENINGS.some((blocked) => fingerprint.includes(blocked));
+}
+
+/** After all 8 writers land, detect questions whose openings collide (or hit a
+ *  blocked prior) and re-roll the LATER duplicates once. Keeps the first
+ *  occurrence, re-rolls the rest with a hard "your scene is X, never use the
+ *  collided opening" nudge. Deterministic — this is the safety net that makes
+ *  the prompt-level scene anchor reliable, not a replacement for it. */
+async function dedupeQuestionOpenings(
+  drafts: QuestionDraft[],
+  planItems: QuizPlanItem[],
+  nonce: string,
+  language: "en" | "th",
+  preferredProviderSort: "latency" | "throughput",
+  fallbackProviderSort: "latency" | "throughput",
+): Promise<QuestionDraft[]> {
+  const result = [...drafts];
+  const seen = new Map<string, number>();
+  for (let i = 0; i < result.length; i++) {
+    const fp = openingFingerprint(result[i].text);
+    const existing = seen.get(fp);
+    if (existing !== undefined || isBlockedOpening(fp)) {
+      const reroll = await writeOneQuestionWithSceneNudge(
+        planItems[i],
+        i,
+        nonce,
+        language,
+        preferredProviderSort,
+        fallbackProviderSort,
+        existing !== undefined
+          ? openingFingerprint(result[existing].text)
+          : fp,
+      );
+      if (reroll) result[i] = reroll;
+    }
+    const newFp = openingFingerprint(result[i].text);
+    if (!seen.has(newFp)) seen.set(newFp, i);
+  }
+  return result;
+}
+
+/** Re-write one question with an explicit "never use this collided opening"
+ *  nudge appended to the user prompt. Same model/provider routing as the
+ *  normal writer; a single attempt (no inner retry) so a stubborn model can't
+ *  stall the whole batch — if this fails, we keep the collided original. */
+async function writeOneQuestionWithSceneNudge(
+  planItem: QuizPlanItem,
+  index: number,
+  nonce: string,
+  language: "en" | "th",
+  preferredProviderSort: "latency" | "throughput",
+  fallbackProviderSort: "latency" | "throughput",
+  collidedOpening: string,
+): Promise<QuestionDraft | null> {
+  const routing = splitRouting(language);
+  const systemPrompt = buildQuizWriterPrompt(planItem, language);
+  const userPrompt = `Write question ${index + 1} now for nonce=${nonce}:${index}.
+REMINDER: your assigned scene is "${planItem.thought}". Another question already opened with "${collidedOpening}" — you must NOT open with it or any near-paraphrase. Start from your own assigned scene.`;
+  try {
+    const parsed = await callLlm({
+      systemPrompt,
+      userPrompt,
+      model: routing.primaryModel,
+      providerOrder: routing.primaryProviders,
+      responseFormat: QUIZ_WRITER_RESPONSE_FORMAT,
+      temperature: routing.temperature,
+      maxTokens: 350,
+      timeoutMs: 22_000,
+      nonce: `${nonce}:q${index}:reroll`,
+      purpose: "generate-quiz-writer",
+      providerSort: preferredProviderSort,
+    });
+    const candidate = quizQuestionDraftSchema.safeParse(parsed);
+    if (candidate.success) return candidate.data;
   } catch (err) {
+    console.warn(`[generate-quiz] writer q${index + 1} re-roll failed`, err);
+  }
+  return null;
+}
+
+/** Split fast path: planner (1 small call) → 8 parallel single-question
+ *  writers → merge. Quality is preserved (each writer gets the FULL language
+ *  writing rules, focused on one question), and wall-clock time collapses
+ *  because no call produces more than ~200 tokens. If any question still
+ *  can't be written after retries, we return ok:false and the caller falls
+ *  back to the proven single-call path so the batch NEVER drops below
+ *  ${quizConfig.questionCount} questions. */
+async function generateQuizSplit(opts: {
+  exampleAngles: string[];
+  recentAvoidAngles: string[];
+  nonce: string;
+  language: "en" | "th";
+  preferredProviderSort: "latency" | "throughput";
+  fallbackProviderSort: "latency" | "throughput";
+  onProgress?: (completed: number, planItem: QuizPlanItem | null) => void;
+}): Promise<SplitResult> {
+  const {
+    exampleAngles,
+    recentAvoidAngles,
+    nonce,
+    language,
+    preferredProviderSort,
+    fallbackProviderSort,
+    onProgress,
+  } = opts;
+  const routing = splitRouting(language);
+
+  // 1. Planner — small, fast on any provider.
+  const plannerSystemPrompt = buildQuizPlannerPrompt(
+    exampleAngles,
+    recentAvoidAngles,
+    language,
+  );
+  const plannerUserPrompt = `Plan the quiz now for nonce=${nonce}.`;
+  let plan: NonNullable<ReturnType<typeof quizPlanSchema.safeParse>["data"]> | null = null;
+  let plannerTimedOut = false;
+  for (let attempt = 0; attempt < 2 && !plan; attempt++) {
+    const isFallback = attempt === 1;
+    const model = isFallback ? routing.fallbackModel : routing.primaryModel;
+    const providerOrder = isFallback
+      ? routing.fallbackProviders
+      : routing.primaryProviders;
+    try {
+      const parsed = await callLlm({
+        systemPrompt: plannerSystemPrompt,
+        userPrompt: plannerUserPrompt,
+        model,
+        providerOrder,
+        responseFormat: QUIZ_PLAN_RESPONSE_FORMAT,
+        temperature: routing.temperature,
+        maxTokens: 500,
+        timeoutMs: isFallback ? 30_000 : 15_000,
+        nonce: `${nonce}:plan:${attempt}`,
+        purpose: "generate-quiz-plan",
+        providerSort: attempt === 0 ? preferredProviderSort : fallbackProviderSort,
+      });
+      const candidate = quizPlanSchema.safeParse(parsed);
+      if (candidate.success) plan = candidate.data;
+    } catch (err) {
+      if (isTimeoutError(err)) plannerTimedOut = true;
+      console.warn(
+        `[generate-quiz] planner attempt ${attempt + 1} failed`,
+        err,
+      );
+    }
+  }
+  if (!plan) {
+    console.warn("[generate-quiz] split pipeline: planner failed; falling back");
+    return { ok: false, timeout: plannerTimedOut };
+  }
+
+  // 2. Writers — 8 parallel single-question calls, bounded concurrency.
+  //    Count successful writes as they land so the SSE client can show a
+  //    "writing n/8" progress beat instead of a static spinner.
+  let completedWriters = 0;
+  const slots = await mapWithConcurrency(
+    plan.questions,
+    WRITER_CONCURRENCY,
+    (item, index) =>
+      writeOneQuestion(
+        item,
+        index,
+        nonce,
+        language,
+        preferredProviderSort,
+        fallbackProviderSort,
+      ).then((result) => {
+        if (result) {
+          completedWriters += 1;
+          onProgress?.(completedWriters, item);
+        }
+        return { index, result };
+      }),
+  );
+
+  // 3. Reconcile: retry any failed questions once more, serially, on the
+  //    fallback model. A single flaky writer shouldn't sink the whole batch.
+  const drafts: (NonNullable<ReturnType<typeof quizQuestionDraftSchema.safeParse>["data"]> | null)[] =
+    slots.map((slot) => slot.result?.draft ?? null);
+  for (let i = 0; i < drafts.length; i++) {
+    if (drafts[i]) continue;
+    const retried = await writeOneQuestion(
+      plan.questions[i],
+      i,
+      nonce,
+      language,
+      fallbackProviderSort,
+      preferredProviderSort,
+    );
+    drafts[i] = retried?.draft ?? null;
+    if (drafts[i]) {
+      completedWriters += 1;
+      onProgress?.(completedWriters, plan.questions[i]);
+    }
+  }
+
+  // 4. If any question is still missing, bail to the single-call path rather
+  //    than shipping fewer than 8 questions.
+  if (drafts.some((draft) => draft === null)) {
+    console.warn(
+      "[generate-quiz] split pipeline: some writers failed after retries; falling back",
+    );
+    return { ok: false, timeout: false };
+  }
+
+  // 4b. Opening-variety guard: parallel writers sometimes converge on the
+  //     model's strongest prior (e.g. Thai "หลังเลิกงานเหนื่อยๆ") despite the
+  //     planner assigning distinct scenes. Detect questions whose openings
+  //     collide and re-roll the later duplicates once, with a hard "use your
+  //     assigned scene, not this one" nudge. Deterministic — doesn't rely on
+  //     the model obeying the first time.
+  const reRolled = await dedupeQuestionOpenings(
+    drafts as NonNullable<ReturnType<typeof quizQuestionDraftSchema.safeParse>["data"]>[],
+    plan.questions,
+    nonce,
+    language,
+    preferredProviderSort,
+    fallbackProviderSort,
+  );
+
+  const questions = reRolled.map((draft, i) => {
+    const planItem = plan!.questions[i];
+    return {
+      id: i + 1,
+      angle: planItem.angle,
+      text: draft.text,
+      options: draft.options,
+    };
+  });
+
+  // 5. Same script + spelling guards the single-call path uses.
+  if (!hasExpectedScript(questions, language)) {
+    console.warn(
+      "[generate-quiz] split pipeline: output contained unexpected script; falling back",
+    );
+    return { ok: false, timeout: false };
+  }
+
+  const corrected = questions.map((question) => ({
+    id: question.id,
+    text: language === "th" ? correctThaiText(question.text) : question.text,
+    options: question.options.map((option) => ({
+      text: language === "th" ? correctThaiText(option.text) : option.text,
+    })),
+  }));
+
+  return {
+    ok: true,
+    questions: corrected,
+    pickedAngles: questions.map((question) => question.angle),
+  };
+}
+
+/** Tiny error type so the worker can throw non-fatal failures (schema/script
+ *  validation failed, timeout) with a structured envelope that the SSE path
+ *  translates into an `event: error` and the JSON path returns directly. */
+class HttpError extends Error {
+  constructor(
+    public readonly status: number,
+    public readonly body: Record<string, unknown>,
+  ) {
+    super(typeof body.error === "string" ? body.error : "HTTP error");
+  }
+}
+
+interface GenerateQuizResult {
+  questions: QuizQuestion[];
+  pickedAngles: string[];
+}
+
+/** The full quiz-generation worker, shared by both the JSON and SSE response
+ *  paths. `progress` fires at each phase boundary so the client can animate a
+ *  "planning → writing n/8" loading story instead of one static spinner.
+ *
+ *  Throws `HttpError` for recoverable failures (schema 502, timeout 504) and
+ *  lets unexpected errors propagate. Both POST branches know how to render
+ *  either as a response. */
+async function runQuizGeneration(
+  parsed: { avoidAngles: string[]; language: "en" | "th"; nonce: string | undefined },
+  progress: QuizProgressCallback,
+): Promise<GenerateQuizResult> {
+  const { avoidAngles, language, nonce } = parsed;
+  // Retain the most recent angles only. Sending an unbounded session history
+  // consumes context without making the next questions more distinct.
+  const recentAvoidAngles = avoidAngles.slice(-MAX_AVOID_ANGLES_IN_PROMPT);
+
+  // Sample a fresh batch of style-reference angles from the static pool.
+  // These are only few-shot examples now — the model invents the actual
+  // angles it uses per call, so variety is no longer capped at the pool's
+  // size.
+  const exampleAngles = pickAngles(
+    QUESTION_ANGLES,
+    EXAMPLE_ANGLE_COUNT,
+    new Set(recentAvoidAngles),
+  );
+
+  const requestNonce = nonce ?? cryptoRandomNonce();
+  const needsThaiCopy = language === "th";
+  const temperature = needsThaiCopy ? 0.7 : 0.9;
+  const providerOrder = needsThaiCopy
+    ? THAI_QUIZ_PROVIDER_ORDER
+    : resolveProviderOrder();
+  const preferredProviderSort = process.env.OPENROUTER_PROVIDER_SORT === "latency"
+    ? "latency"
+    : "throughput";
+  const fallbackProviderSort = preferredProviderSort === "throughput"
+    ? "latency"
+    : "throughput";
+
+  // Track whether either attempt failed with a timeout specifically (vs a
+  // schema/script failure). Surfaced as a clean 504 below so the client
+  // prefetch UI can show a recognizable "model is slow, try again" message
+  // instead of a generic "validation failed" 502.
+  let lastErrorWasTimeout = false;
+
+  // Split fast path (both languages): a tiny planner + 8 parallel
+  // single-question writers. This preserves the full language writing rules
+  // (each writer gets them, focused on one question) while collapsing
+  // wall-clock time, because no single call emits more than ~200 tokens.
+  // Any failure falls through to the proven single-call path below, so the
+  // batch never ships fewer than 8 questions.
+  progress({ stage: "planning", completed: 0, total: quizConfig.questionCount });
+  const split = await generateQuizSplit({
+    exampleAngles,
+    recentAvoidAngles,
+    nonce: requestNonce,
+    language,
+    preferredProviderSort,
+    fallbackProviderSort,
+    onProgress: (completed, planItem) =>
+      progress({
+        stage: "writing",
+        completed,
+        total: quizConfig.questionCount,
+        thought: planItem ? planItem.thought : undefined,
+      }),
+  });
+  if (split.ok) {
+    return { questions: split.questions, pickedAngles: split.pickedAngles };
+  }
+  // Split pipeline fell back — continue to the single-call path. Preserve
+  // any planner timeout signal so a subsequent timeout isn't mislabeled.
+  lastErrorWasTimeout = split.timeout || lastErrorWasTimeout;
+
+  const systemPrompt = buildQuizSystemPrompt(
+    exampleAngles,
+    recentAvoidAngles,
+    language,
+  );
+  const userPrompt = `Generate the quiz now for nonce=${requestNonce}. Invent ${quizConfig.questionCount} distinct angles as instructed, then write the question for each.`;
+
+  let validation: ReturnType<typeof quizPayloadSchema.safeParse> | null = null;
+  // 2 attempts: single-language output is faster to generate, and a third
+  // slow retry costs more latency than it's worth.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    let parsedLlm: unknown;
+    // On retry, switch to a DIFFERENT model entirely (when one is
+    // configured) and rotate the explicit provider order. Rotating
+    // providers within the same model often re-hits the same backend
+    // during a congestion event — using a different model is the
+    // real timeout fix. See THAI_QUIZ_FALLBACK_MODEL above.
+    const isFallbackAttempt = attempt === 1 && needsThaiCopy;
+    const attemptProviderOrder = isFallbackAttempt
+      ? THAI_QUIZ_FALLBACK_PROVIDER_ORDER
+      : (attempt === 0
+        ? providerOrder
+        : [...providerOrder.slice(1), providerOrder[0]]);
+    const attemptModel = isFallbackAttempt
+      ? THAI_QUIZ_FALLBACK_MODEL
+      : (needsThaiCopy ? THAI_QUIZ_MODEL : undefined);
+    try {
+      parsedLlm = await callLlm({
+        systemPrompt,
+        userPrompt,
+        ...(attemptModel ? { model: attemptModel } : {}),
+        providerOrder: attemptProviderOrder,
+        responseFormat: QUIZ_RESPONSE_FORMAT,
+        temperature,
+        // 8-question Thai quiz on Groq: 1500 tokens at 321 tok/s = ~5s of
+        // generation + ~300ms latency. The 22s budget is a 4x safety margin
+        // against Groq hiccups and the slightly-longer Thai prompt. The
+        // fallback (deepseek-v4-flash at 76 tok/s on BaseTen) needs ~20s,
+        // so its budget stays at 30s.
+        maxTokens: needsThaiCopy ? 1500 : 2000,
+        // Groq p99 latency on qwen3-32b is ~1.9s; 22s is a 10x+ safety
+        // margin and absorbs occasional throughput dips without retrying.
+        timeoutMs: isFallbackAttempt ? 30_000 : 22_000,
+        nonce: `${requestNonce}:${attempt}`,
+        purpose: "generate-quiz",
+        providerSort:
+          attempt === 0 ? preferredProviderSort : fallbackProviderSort,
+      });
+    } catch (err) {
+      const isAbort = err instanceof Error
+        && (err.name === "TimeoutError" || /aborted due to timeout/i.test(err.message));
+      if (isAbort) lastErrorWasTimeout = true;
+      console.warn(
+        attempt === 0
+          ? `[generate-quiz] attempt 1 failed via model=${attemptModel ?? "default"} providers=${attemptProviderOrder.join(", ")}; retrying via model=${THAI_QUIZ_FALLBACK_MODEL} providers=${THAI_QUIZ_FALLBACK_PROVIDER_ORDER.join(", ")}`
+          : `[generate-quiz] attempt 2 failed via model=${attemptModel ?? "default"} providers=${attemptProviderOrder.join(", ")}`,
+        err,
+      );
+      continue;
+    }
+
+    // Safety net: small open-source models routed through Groq/DeepInfra
+    // frequently collapse `{"text":"..."}` options into bare strings, and
+    // some flatten the question object itself. Normalize the output back
+    // into the schema before validating so a single stringly-typed response
+    // doesn't burn a 25s retry on an otherwise-correct output.
+    normalizeLlmQuizShape(parsedLlm);
+
+    const candidate = quizPayloadSchema.safeParse(parsedLlm);
+    validation = candidate;
+    if (candidate.success && !hasExpectedScript(candidate.data.questions, language)) {
+      console.warn(
+        `[generate-quiz] attempt ${attempt + 1} contained text outside the requested ${language} script; retrying`,
+      );
+      validation = null;
+    }
+    if (validation?.success) break;
+  }
+
+  if (!validation || !validation.success) {
+    // If both attempts failed with a timeout (vs a schema/script error),
+    // surface a 504 so the client prefetch UI can show a recognizable
+    // "model is slow" message instead of a generic "validation failed"
+    // 502. Falling through to 502 here would also be misleading because
+    // the model DID respond, just past the timeout.
+    if (lastErrorWasTimeout) {
+      throw new HttpError(504, {
+        error: "LLM request timed out after 2 attempts.",
+        code: "timeout",
+      });
+    }
+    throw new HttpError(502, {
+      error: "LLM output failed schema validation.",
+      issues: validation?.error.issues,
+    });
+  }
+
+  // The model invents its own angle per question (see quizSystemPrompt.ts);
+  // surface those as `pickedAngles` so the client can keep avoiding them on
+  // future calls. Strip the internal `angle` field from each question
+  // before returning — it's not part of the public question shape the
+  // client renders. Also apply Thai post-corrections only when the quiz
+  // is Thai; leave English text untouched.
+  const pickedAngles = validation.data.questions.map((q) => q.angle);
+  const questions = validation.data.questions.map(
+    ({ angle: _angle, text, options, ...question }) => ({
+      ...question,
+      text: language === "th" ? correctThaiText(text) : text,
+      options: options.map((option) => ({
+        text: language === "th" ? correctThaiText(option.text) : option.text,
+      })),
+    }),
+  );
+
+  return { questions, pickedAngles };
+}
+
+/** POST /api/generate-quiz — LLM call #1: generate the quiz questions.
+ *  Body: { language: "en" | "th", avoidAngles?: string[], nonce?: string }
+ *
+ *  Two response modes:
+ *   - JSON (default): returns { questions, pickedAngles } as a single body.
+ *   - SSE (opt-in via `Accept: text/event-stream`): streams progress events
+ *     (`planning` → `writing n/8`) then `event: result` with the payload. */
+export async function POST(request: Request) {
+  // Parse optional request metadata defensively. A stale bundle can send an
+  // old or malformed shape; discard unknown fields rather than failing
+  // before the quiz can be generated. `language` is required though —
+  // see parseRequestBody for why a silent fallback would override the
+  // user's UI selection on a stale bundle.
+  const raw = await request.json().catch(() => ({}));
+  const parsed = parseRequestBody(raw);
+  if (!parsed.ok) {
+    return NextResponse.json({ error: parsed.error }, { status: 400 });
+  }
+
+  if (wantsEventStream(request)) {
+    const stream = quizSseStream((progress) => runQuizGeneration(parsed, progress));
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache, no-transform",
+        Connection: "keep-alive",
+        // Disable reverse-proxy buffering so events reach the client as
+        // they're written instead of being held until the response closes.
+        "X-Accel-Buffering": "no",
+      },
+    });
+  }
+
+  try {
+    return NextResponse.json(await runQuizGeneration(parsed, () => {}));
+  } catch (err) {
+    if (err instanceof HttpError) {
+      return NextResponse.json(err.body, { status: err.status });
+    }
     console.error("[generate-quiz]", err);
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json(

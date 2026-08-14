@@ -13,9 +13,9 @@ import { enrichPlaylistTracks } from "@/lib/songKnowledge";
 import { getRecentSelections, recordSelection, type SongSelectionSource } from "@/lib/songSelectionStore";
 import { sseStream, wantsEventStream, type ProgressCallback } from "@/lib/analyzeProgress";
 import { getSpotifyPlaylistTracks, spotifyConfigured } from "@/lib/spotify";
-import { getVibeStats } from "@/lib/vibeStatsStore";
+import { getVibeStats, type VibeStats } from "@/lib/vibeStatsStore";
 import { buildRevealSystemPrompt } from "@/prompts/revealSystemPrompt";
-import type { EnrichedPlaylistCandidate, Language, QuizAnswer, Vibe } from "@/types/universe";
+import type { EnrichedPlaylistCandidate, Language, QuizAnswer } from "@/types/universe";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -126,15 +126,15 @@ const SOFTMAX_TEMPERATURE = 4;
  *  the second attempt returns the same dominant vibe, accept it (the
  *  evidence genuinely supports it).
  *
- *  Tuned to fire LESS often (was 0.5 / 20, now 0.65 / 50) after the
- *  Thai-reveal latency investigation: at 0.5 the guardrail was triggering
- *  on a large fraction of Thai reveals because Thai users' answers skew
- *  toward the most-common vibes ("cozy", "mysterious"), doubling the
- *  per-request latency budget on a guess the LLM was going to get right
- *  anyway. Bumping to 0.65 + requiring 50 samples means we only retry when
- *  a vibe is genuinely over-represented (>2/3 of recent reveals) and we
- *  have enough samples to be confident in the skew. */
-const VIBE_SKEW_THRESHOLD = 0.65;
+ *  Tuned to fire LESS often (was 0.5 / 20, then 0.65 / 50, now 0.75 / 50)
+ *  after the Thai-reveal latency investigation: at 0.65 the guardrail was
+ *  triggering on a large fraction of Thai reveals because Thai users'
+ *  answers skew toward the most-common vibes ("cozy", "mysterious"),
+ *  doubling the per-request latency budget on a guess the LLM was going
+ *  to get right anyway. Bumping to 0.75 means we only retry when a vibe
+ *  is genuinely over-represented (>3/4 of recent reveals) and we have
+ *  enough samples to be confident in the skew. */
+const VIBE_SKEW_THRESHOLD = 0.75;
 const MIN_STATS_FOR_GUARDRAIL = 50;
 
 /** Biased sampler: returns up to `n` tracks from the full catalog, with
@@ -529,23 +529,55 @@ async function runAnalyze(
   let validation: ReturnType<typeof universeRevealSchema.safeParse> | null = null;
   let rawSongCandidates: ScoredSongCandidate[] = [];
   let llmAttempts = 0;
-  // The vibe distribution guardrail inspects the first successful attempt
-  // and, when the chosen vibe is over-represented in recent reveals,
-  // discards it and re-prompts with a rebalance nudge appended to the
-  // user message. A null guardrailTriggered means the second attempt was
-  // skipped (or this is the first attempt); a string is the dominant vibe
-  // name when the nudge was injected. We log this once at the end so the
-  // intervention is visible in production logs.
-  let guardrailTriggered: string | null = null;
+
+  // PROACTIVE vibe-diversity hint (replaces the old reactive retry): read
+  // the recent vibe distribution BEFORE the LLM call and, when one or more
+  // vibes are over-represented, prepend a soft hint to the user prompt.
+  // The hint asks the model to consider the full range of signals and to
+  // avoid defaulting to an over-represented vibe UNLESS the answers
+  // genuinely support it — so "cozy" stays valid when the user's answers
+  // lead there, but the model stops reflexively landing on the most common
+  // vibe when the evidence is mixed. This removes the old pattern of
+  // discarding a completed 20s call and re-prompting (which doubled
+  // per-request latency to ~46s), replacing it with zero extra latency:
+  // the hint rides along on the single call's existing prompt.
+  let proactiveVibeHint = "";
+  try {
+    const { stats } = await getVibeStats();
+    const total = stats.total;
+    if (total >= MIN_STATS_FOR_GUARDRAIL) {
+      const VIBE_KEYS: Array<keyof Omit<VibeStats, "total">> = [
+        "cute",
+        "cozy",
+        "mysterious",
+        "intense",
+        "whimsical",
+        "cynical",
+      ];
+      const overRepresented = VIBE_KEYS
+        .map((vibe) => ({ vibe, share: stats[vibe] / total }))
+        .filter((entry) => entry.share > VIBE_SKEW_THRESHOLD)
+        .sort((a, b) => b.share - a.share);
+      if (overRepresented.length > 0) {
+        const names = overRepresented
+          .map((entry) => `'${entry.vibe}' (${(entry.share * 100).toFixed(0)}% of recent)`)
+          .join(", ");
+        proactiveVibeHint =
+          `\n\nNOTE: recent results have skewed toward ${names}. Read the FULL range of signals in the answers before choosing the vibe. Do not default to an over-represented vibe out of habit — but if the answers genuinely and specifically support it, choose it without hesitation.`;
+        console.log(
+          `[analyze] proactive vibe hint injected: ${names} (${total} samples)`,
+        );
+      }
+    }
+  } catch (statsErr) {
+    // If the stats read fails for any reason, proceed without the hint —
+    // never block the happy path on a stats read.
+    console.warn("[analyze] vibe stats read failed, skipping proactive hint:", statsErr);
+  }
+
   for (let attempt = 0; attempt < 2; attempt++) {
     const benchLlmStart = BENCH ? benchStart() : BigInt(0);
-    let userPromptForAttempt = transcript;
-    if (attempt === 1 && guardrailTriggered) {
-      // Append a soft counter-nudge explaining the recent skew. The model
-      // is free to ignore it if the evidence clearly supports the same
-      // vibe; the nudge just asks it to re-examine the full signal range.
-      userPromptForAttempt = `${transcript}\n\nNOTE: recent results have been heavily skewed toward '${guardrailTriggered}'. If the user's answers genuinely support a different vibe, choose it. Do not force a different vibe if the evidence clearly supports '${guardrailTriggered}', but be extra careful to read the full range of signals.`;
-    }
+    const userPromptForAttempt = `${transcript}${proactiveVibeHint}`;
     try {
       const parsed = await callLlm({
         systemPrompt,
@@ -571,48 +603,6 @@ async function runAnalyze(
         const rawObj = parsed as Record<string, unknown>;
         const candidatesParse = songCandidatesSchema.safeParse(rawObj.song_candidates);
         rawSongCandidates = candidatesParse.success ? candidatesParse.data : [];
-
-        // Vibe distribution guardrail — only on the first successful
-        // attempt. We check whether the LLM's chosen vibe accounts for
-        // more than VIBE_SKEW_THRESHOLD of recent reveals (and there are
-        // enough samples to be statistically meaningful). If so, discard
-        // this attempt and retry with a rebalance nudge. The retry loop's
-        // `break` only fires after the second attempt completes, so the
-        // LLM gets its second chance.
-        if (attempt === 0) {
-          try {
-            const { stats } = await getVibeStats();
-            const total = stats.total;
-            if (total >= MIN_STATS_FOR_GUARDRAIL) {
-              const chosenVibe = revealParse.data.vibe as Vibe;
-              const vibeCount = (stats as Record<string, number>)[chosenVibe] ?? 0;
-              const share = total > 0 ? vibeCount / total : 0;
-              if (share > VIBE_SKEW_THRESHOLD) {
-                guardrailTriggered = chosenVibe;
-                // Discard this attempt — force the retry to run with the
-                // nudge by NOT breaking out of the loop.
-                validation = null;
-                rawSongCandidates = [];
-                console.log(
-                  `[analyze] distribution guardrail triggered: vibe=${chosenVibe} share=${(share * 100).toFixed(1)}% (${vibeCount}/${total}) — retrying with rebalance nudge`,
-                );
-                if (BENCH) {
-                  console.log(
-                    `[bench-analyze] phase=guardrail vibe=${chosenVibe} share=${(share * 100).toFixed(1)} ms=${benchMs(benchLlmStart).toFixed(1)}`,
-                  );
-                }
-                // Fall through to next attempt (no `break`).
-              } else {
-                guardrailTriggered = null;
-              }
-            }
-          } catch (statsErr) {
-            // If the stats read fails for any reason, don't block the
-            // happy path — accept this attempt as-is.
-            console.warn("[analyze] vibe stats read failed, skipping guardrail:", statsErr);
-            guardrailTriggered = null;
-          }
-        }
       }
       if (BENCH) {
         console.log(
@@ -650,6 +640,26 @@ async function runAnalyze(
   if (sampledTracks.length > 0) {
     let selectedTrack: EnrichedPlaylistCandidate | undefined;
     const benchPickerStart = BENCH ? benchStart() : BigInt(0);
+
+    // Diagnostics: surface WHY the shortlist is unusable so prompt/model
+    // issues can be distinguished from an empty catalog.
+    const validSampledCodes = new Set(
+      sampledTracks.map((_, i) => `C${String(i + 1).padStart(3, "0")}`),
+    );
+    if (rawSongCandidates.length > 0) {
+      const unusableCodes = rawSongCandidates
+        .map((c) => c.catalog_code)
+        .filter((code) => !validSampledCodes.has(code));
+      const resolvedCount = rawSongCandidates.filter((c) =>
+        validSampledCodes.has(c.catalog_code),
+      ).length;
+      console.log(
+        `[analyze] song shortlist: ${rawSongCandidates.length} candidates, ${resolvedCount} resolvable, ${unusableCodes.length} bad codes${unusableCodes.length > 0 ? ` (first bad: ${unusableCodes.slice(0, 3).join(", ")})` : ""}`,
+      );
+    } else {
+      console.log("[analyze] song shortlist: empty");
+    }
+
     if (rawSongCandidates.length > 0) {
       const pick = await pickWeightedSongSelection(
         rawSongCandidates,

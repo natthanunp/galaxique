@@ -33,6 +33,33 @@ export const quizPayloadSchema = z.object({
   questions: z.array(quizQuestionSchema).min(1),
 });
 
+/** One entry from the quiz PLANNER call: the invented English angle plus the
+ *  identity dimension and emotional temperature it maps to. The writer prompt
+ *  consumes these per question. Values are free strings (not enums) because
+ *  they're only guidance for the writer, never rendered output. */
+export const quizPlanItemSchema = z.object({
+  angle: z.string().min(1),
+  dimension: z.string().min(1),
+  temperature: z.string().min(1),
+  opening: z.string().min(1),
+  thought: z.string().min(1),
+});
+
+export const quizPlanSchema = z.object({
+  questions: z.array(quizPlanItemSchema).min(1),
+});
+
+/** Output from a single-question WRITER call: text + 4 options. `id` and
+ *  `angle` are filled in server-side from the plan, so the writer only
+ *  authors the rendered content. */
+export const quizQuestionDraftSchema = z.object({
+  text: z.string().min(1),
+  options: z
+    .array(quizOptionSchema)
+    .length(4)
+    .refine(hasDistinctOptionText, "options must have distinct text"),
+});
+
 /** Per-dimension match score for one catalog candidate, 0–10 per axis.
  *  Each axis corresponds to a curated descriptor field in songKnowledge.json,
  *  so the model scores by matching the answer signals against the track's

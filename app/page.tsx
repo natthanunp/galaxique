@@ -33,7 +33,7 @@ const INSTALL_PROMPT_DISMISSED_KEY = "galaxique-install-prompt-dismissed-v1";
 // number is the user-facing release; minor is the "this is the new model
 // + new prompt" cut. Keep it short — it sits next to the brand name in a
 // small pill.
-const APP_VERSION = "v1.5.1";
+const APP_VERSION = "v1.6.0";
 
 export default function LandingPage() {
   const language = useQuizStore((s) => s.language);
@@ -158,13 +158,13 @@ export default function LandingPage() {
         : "Answer a few short questions and watch your personal universe unfold in 3D, with a song that matches your vibe.",
     tribute:
       language === "th"
-        ? "แรงบันดาลใจจากใครบางคนที่ทำให้ผมเห็น Galaxy ต่างออกไปจากเดิม"
+        ? "ได้แรงบันดาลใจจากใครบางคนที่ทำให้ผมมองกาแล็กซี่แตกต่างออกไปจากเดิม"
         : "Inspired by someone who makes me see the Galaxy differently.",
     cta: language === "th" ? "เริ่มต้นเดินทาง" : "Begin your journey",
     secondary:
       language === "th"
-        ? "ใช้เวลาเพียง 2 นาที · ปรับแต่งโดย AI"
-        : "Takes about 2 minutes · AI-personalized",
+        ? "ใช้เวลาเพียง 3 นาที · ปรับแต่งโดย AI"
+        : "Takes about 3 minutes · AI-personalized",
     credits: language === "th" ? "เครดิตโมเดล 3 มิติ" : "3D model credits",
     installTitle: language === "th" ? "ติดตั้ง Galaxique" : "Install Galaxique",
     installDescriptionNative:
@@ -223,13 +223,16 @@ export default function LandingPage() {
   return (
     <>
       <StarfieldBackground />
-      <main className="relative flex min-h-dvh flex-col items-center justify-center px-6 py-16 text-center">
-        {/* Top bar: eyebrow badge on the left, language toggle on the right */}
+      <main className="relative flex min-h-dvh flex-col items-center px-6 pb-16 pt-[max(5rem,calc(env(safe-area-inset-top)+4rem))] text-center sm:pt-[max(5.5rem,calc(env(safe-area-inset-top)+4.5rem))]">
+        {/* Top bar: eyebrow badge on the left, language toggle on the right.
+            Sits at `safe-area-top-4` so it clears the Dynamic Island / status
+            bar on iOS PWA without burying the centered content on short
+            viewports. */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="safe-area-top-4 absolute inset-x-4 sm:inset-x-6 flex items-start justify-between gap-3"
+          className="safe-area-top-4 absolute inset-x-4 flex items-center justify-between gap-3 sm:inset-x-6"
         >
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-5 py-2 text-sm text-muted-foreground">
             <SparklesIcon className="size-4 text-accent" />
@@ -245,9 +248,9 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="flex flex-col items-center gap-6"
+          className="flex w-full flex-1 flex-col items-center justify-center gap-6"
         >
-          <h1 className="max-w-4xl py-3 text-5xl font-bold leading-[1.25] tracking-tight text-foreground sm:text-7xl">
+          <h1 className="max-w-4xl px-2 py-3 text-4xl font-bold leading-[1.2] tracking-tight text-foreground break-words sm:text-6xl sm:text-7xl sm:leading-[1.15]">
             {t.title}
           </h1>
 
