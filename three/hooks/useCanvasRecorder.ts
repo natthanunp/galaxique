@@ -34,8 +34,8 @@ interface UseCanvasRecorderResult {
  * canvas.captureStream(). Chrome/Firefox produce webm (later transcoded to
  * mp4 by useMp4Exporter); Safari doesn't support MediaRecorder's webm codecs
  * at all, so we fall back to recording mp4/H.264 directly there.
- * `preserveDrawingBuffer: true` must be set on the GL context (it is, in
- * UniverseCanvas).
+ * Direct `captureStream()` does not require WebGL's costly
+ * `preserveDrawingBuffer` option.
  */
 export function useCanvasRecorder({
   durationMs = 12000,
@@ -51,23 +51,28 @@ export function useCanvasRecorder({
   const cancelRef = useRef(false);
 
   const pickMime = useCallback((): string => {
+    // Prefer recording H.264 MP4 directly whenever the browser supports
+    // it — including Chrome. An MP4 source lets useMp4Exporter do a
+    // near-instant `-c copy` remux instead of a full libx264 transcode.
+    // The transcode path is only fast on a cross-origin-isolated page
+    // (multi-threaded core), but real-world Safari/Android-browser tabs
+    // are usually NOT isolated → single-threaded core → libx264 at
+    // 1080x1920 runs <1 fps and the export looks "stuck". Recording MP4
+    // sidesteps the transcode entirely, on any core, exactly like Safari
+    // always has. (WebM is kept as a fallback for browsers that don't
+    // expose MP4 recording — older Firefox, some WebViews.)
     const candidates = [
       mimeType,
-      // Video-only codecs — the app deliberately records without audio
-      // (see ShareButton: "The final MP4 deliberately has no audio").
-      // Including ",opus" in the codec string while the MediaStream has
-      // no audio track causes Firefox's MediaRecorder to produce a
-      // malformed WebM container that ffmpeg.wasm cannot demux. Chrome
-      // tolerates the mismatch, but Firefox does not.
+      "video/mp4;codecs=avc1.42E01E",
+      "video/mp4",
+      // WebM fallbacks — only used when the browser can't record MP4.
+      // Video-only: the app records without audio (see ShareButton), and
+      // including ",opus" while the MediaStream has no audio track makes
+      // Firefox's MediaRecorder emit a malformed WebM that ffmpeg.wasm
+      // can't demux (Chrome tolerates the mismatch).
       "video/webm;codecs=vp9",
       "video/webm;codecs=vp8",
       "video/webm",
-      // Safari has NEVER supported MediaRecorder with any webm codec — it
-      // only records H.264/AAC mp4. Without this fallback, `new
-      // MediaRecorder(...)` throws synchronously on iOS/macOS Safari and the
-      // whole export silently "doesn't work".
-      "video/mp4;codecs=avc1.42E01E",
-      "video/mp4",
     ].filter(Boolean) as string[];
     for (const c of candidates) {
       if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(c)) {
@@ -103,9 +108,21 @@ export function useCanvasRecorder({
           }
           const combinedStream = new MediaStream(tracks);
 
+          // 720x1280 mobile exports have 56% fewer pixels than the desktop
+          // 1080x1920 profile, so 4 Mbps preserves the same visual density
+          // while giving the device encoder enough headroom for 30fps.
+          const videoBitsPerSecond = canvas.width <= 720 || canvas.height <= 1280
+            ? 4_000_000
+            : 6_000_000;
+          console.log("[export] recorder config", {
+            width: canvas.width,
+            height: canvas.height,
+            fps,
+            videoBitsPerSecond,
+          });
           const recorder = new MediaRecorder(combinedStream, {
             mimeType: pickMime(),
-            videoBitsPerSecond: 15_000_000,
+            videoBitsPerSecond,
           });
           recorderRef.current = recorder;
 

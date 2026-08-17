@@ -43,8 +43,19 @@ interface ShareButtonProps {
   /** The reveal vibe — used to render the "Your vibe · …" label on the
    *  exported story card. */
   vibe: string;
-  /** Called with true when export starts (boosts R3F DPR) and false when it ends. */
-  onExportModeChange?: (exporting: boolean) => void;
+  /** Called while export is active. Video exports supply the static story card
+   * data that UniverseCanvas renders into the direct WebGL capture. */
+  onExportModeChange?: (
+    exporting: boolean,
+    overlay?: {
+      albumArtUrl: string | null;
+      trackName: string;
+      artist: string;
+      reading: string;
+      vibe: string;
+      language: Language;
+    },
+  ) => void;
   /** Button size — defaults to "default" (h-10) for the standalone
    *  full-bleed layout. The reveal page header passes "sm" so the
    *  share trigger matches the height of the surrounding icon buttons
@@ -74,6 +85,101 @@ function waitForFrames(count: number): Promise<void> {
   if (count <= 0) return Promise.resolve();
   return new Promise((resolve) => {
     requestAnimationFrame(() => resolve(waitForFrames(count - 1)));
+  });
+}
+
+function waitForPortraitCanvas(canvas: HTMLCanvasElement): Promise<void> {
+  const targetAspect = 9 / 16;
+  const timeoutAt = performance.now() + 3_000;
+
+  return new Promise((resolve, reject) => {
+    const check = () => {
+      const aspect = canvas.width / canvas.height;
+      // Export mode sets R3F's dpr to 2. Wait for the corresponding drawing
+      // buffer allocation rather than accepting the first CSS-resolution
+      // 9:16 resize, which produces a visibly soft video.
+      const expectedWidth = canvas.clientWidth * 1.9;
+      if (
+        canvas.width >= expectedWidth
+        && Math.abs(aspect - targetAspect) < 0.02
+      ) {
+        console.log("[export] portrait canvas ready", {
+          width: canvas.width,
+          height: canvas.height,
+          aspect: Number(aspect.toFixed(3)),
+          expectedWidth: Math.round(expectedWidth),
+        });
+        resolve();
+        return;
+      }
+      if (performance.now() >= timeoutAt) {
+        reject(new Error("The export canvas did not resize to a portrait story frame."));
+        return;
+      }
+      requestAnimationFrame(check);
+    };
+    check();
+  });
+}
+
+interface CanvasVideoFrameSource {
+  video: HTMLVideoElement;
+  stop: () => void;
+}
+
+/**
+ * Produces a single drawable video frame from a WebGL canvas. Unlike
+ * `drawImage(webglCanvas)`, this remains valid with preserveDrawingBuffer
+ * disabled. It is only used for the one-shot PNG path, never per video frame.
+ */
+async function createCanvasVideoFrameSource(
+  canvas: HTMLCanvasElement,
+): Promise<CanvasVideoFrameSource> {
+  const stream = canvas.captureStream(30);
+  const video = document.createElement("video");
+  video.autoplay = true;
+  video.muted = true;
+  video.playsInline = true;
+  video.srcObject = stream;
+
+  const stop = () => {
+    video.pause();
+    video.srcObject = null;
+    stream.getTracks().forEach((track) => track.stop());
+  };
+
+  try {
+    await video.play();
+    await waitForCanvasVideoFrame(video);
+    return { video, stop };
+  } catch (error) {
+    stop();
+    throw error;
+  }
+}
+
+function waitForCanvasVideoFrame(video: HTMLVideoElement): Promise<void> {
+  if (
+    video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
+    && video.videoWidth > 0
+    && video.videoHeight > 0
+  ) {
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve, reject) => {
+    const timeoutAt = performance.now() + 3_000;
+    const finish = () => {
+      if (video.videoWidth > 0 && video.videoHeight > 0) {
+        resolve();
+      } else if (performance.now() >= timeoutAt) {
+        reject(new Error("Timed out waiting for the universe photo frame."));
+      } else {
+        requestAnimationFrame(finish);
+      }
+    };
+
+    requestAnimationFrame(finish);
   });
 }
 
@@ -175,6 +281,7 @@ export function ShareButton({
    *  download the result as a PNG. No MediaRecorder, no ffmpeg, no 12s
    *  wait — finishes in <1s. Works in every browser. */
   const handleSavePhoto = async () => {
+    let frameSource: CanvasVideoFrameSource | null = null;
     cancelledRef.current = false;
     pendingShareRef.current = true;
     setErrorMsg("");
@@ -197,6 +304,11 @@ export function ShareButton({
       // auto-rotate at the wrong moment) or even blank.
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
       if (cancelledRef.current) return;
+      await waitForPortraitCanvas(sourceCanvas);
+      if (cancelledRef.current) return;
+
+      frameSource = await createCanvasVideoFrameSource(sourceCanvas);
+      if (cancelledRef.current) return;
 
       const starfieldCanvas = getStarfield?.() ?? null;
       // Always render the overlay bar (even without a track — show a
@@ -205,7 +317,7 @@ export function ShareButton({
       // and dark fill, the export looks like a flat silhouette over
       // white. drawOnce() handles all of that internally.
       const composed = await overlay.drawOnce({
-        source: sourceCanvas,
+        source: frameSource.video,
         background: starfieldCanvas,
         info: {
           albumArtUrl: track?.albumArtUrl ?? null,
@@ -218,8 +330,7 @@ export function ShareButton({
       });
       if (cancelledRef.current) return;
 
-      // canvas.toBlob is async and respects preserveDrawingBuffer: true
-      // (which UniverseCanvas already sets). We do NOT include the
+      // canvas.toBlob is async. We do NOT include the
       // Spotify audio in the PNG — the song is just *referenced* in the
       // overlay text + album art.
       const blob: Blob = await new Promise((resolve, reject) => {
@@ -228,11 +339,14 @@ export function ShareButton({
           "image/png",
         );
       });
+      frameSource.stop();
+      frameSource = null;
       if (cancelledRef.current) return;
 
       finishExport(blob, "image", "galaxique-universe.png");
 
     } catch (err) {
+      frameSource?.stop();
       if (cancelledRef.current) return;
       pendingShareRef.current = false;
       onExportModeChange?.(false);
@@ -249,7 +363,14 @@ export function ShareButton({
     setDownloadUrl(null);
     setDownloadKind(null);
     setPhase("recording");
-    onExportModeChange?.(true);
+    onExportModeChange?.(true, {
+      albumArtUrl: track?.albumArtUrl ?? null,
+      trackName: track?.name ?? (language === "th" ? "จักรวาลของคุณ" : "Your universe"),
+      artist: track?.artist ?? "Galaxique",
+      reading,
+      vibe,
+      language,
+    });
 
     try {
       await waitForFrames(2);
@@ -259,36 +380,23 @@ export function ShareButton({
       // between opening the dialog and clicking Start, fail with a clear
       // message rather than the downstream cryptic MediaRecorder error.
       if (!sourceCanvas) throw new Error("Universe canvas isn't ready yet.");
-
-      // Composite album art + song name/artist onto an offscreen canvas so
-      // the exported video visually shows the Spotify track, not just plays
-      // its audio. Pre-load the Thai font so the overlay doesn't render the
-      // first frames with a fallback typeface.
-      await overlay.loadFonts();
+      await waitForPortraitCanvas(sourceCanvas);
       if (cancelledRef.current) return;
 
-      const recordTarget = track
-        ? overlay.start({
-            source: sourceCanvas,
-            fps: 30,
-            info: {
-              albumArtUrl: track.albumArtUrl,
-              trackName: track.name,
-              artist: track.artist,
-              reading,
-              vibe,
-              language,
-            },
-          })
-        : sourceCanvas;
-
-      if (cancelledRef.current) return;
+      // Recording the R3F canvas directly keeps capture on the GPU path.
+      // The 2D overlay compositor is intentionally photo-only: on mobile,
+      // putting it in the video pipeline adds a fixed ~50ms sync per frame
+      // and hard-caps the final recording at ~21fps regardless of resolution.
+      console.log("[export] direct WebGL capture", {
+        width: sourceCanvas.width,
+        height: sourceCanvas.height,
+        fps: 30,
+      });
 
       // The final MP4 deliberately has no audio. Avoid fetching, decoding,
       // mixing, and MediaRecorder-encoding a preview track only for ffmpeg
       // to discard it later with `-an`.
-      const recorded = await recorder.record(recordTarget);
-      overlay.stop();
+      const recorded = await recorder.record(sourceCanvas);
       if (cancelledRef.current) return;
 
       // Surface what the recorder actually produced. Chrome/Firefox give us

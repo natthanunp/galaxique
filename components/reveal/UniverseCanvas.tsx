@@ -12,13 +12,26 @@ import { Lensing } from "@/three/effects/Lensing";
 import { targetDpr } from "@/lib/perf";
 import type { UniverseReveal, Vibe } from "@/types/universe";
 
+const EXPORT_DPR = 2;
+
 interface UniverseCanvasProps {
   reveal: UniverseReveal;
   /** Called once R3F mounts its <canvas> — used to grab it for video recording. */
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
-  /** When true, temporarily boosts the renderer DPR to 2.0 for crisp exports.
+  /** When true, sets the renderer DPR to a crisp-but-fast 1.5 for exports.
    *  Set this before recording and clear it after. */
   exportMode?: boolean;
+  /** Static metadata rendered into the direct WebGL recording as a texture. */
+  exportOverlay?: ExportOverlayInfo | null;
+}
+
+export interface ExportOverlayInfo {
+  albumArtUrl: string | null;
+  trackName: string;
+  artist: string;
+  reading: string;
+  vibe: string;
+  language: "en" | "th";
 }
 
 /** Vibe-driven postprocessing parameters. Controls bloom intensity/threshold
@@ -85,6 +98,7 @@ export default function UniverseCanvas({
   reveal,
   onCanvasReady,
   exportMode,
+  exportOverlay,
 }: UniverseCanvasProps) {
   // Lensing is the defining visual of a black-hole result. It is a single
   // UV warp with no additional scene pass, so it should not wait for the
@@ -164,12 +178,21 @@ export default function UniverseCanvas({
       // touches fall through to the page (which scrolls), while the
       // galaxy keeps auto-rotating. Desktop keeps the canvas interactive
       // for drag-to-orbit.
-      style={isNarrow ? { pointerEvents: "none" } : undefined}
+      style={
+        exportMode
+          ? { width: "100%", height: "100%", pointerEvents: "none" }
+          : isNarrow
+            ? { pointerEvents: "none" }
+            : undefined
+      }
       gl={{
         antialias: true,
         alpha: true,
         powerPreference: "high-performance",
-        preserveDrawingBuffer: true, // needed for canvas.captureStream / screenshots
+        // Export captures this canvas into a MediaStream and composites the
+        // resulting video, so retaining each WebGL backbuffer is unnecessary
+        // (and can force a costly GPU sync on mobile).
+        preserveDrawingBuffer: false,
         toneMapping: THREE.ACESFilmicToneMapping,
       }}
       onCreated={({ gl }) => {
@@ -179,9 +202,12 @@ export default function UniverseCanvas({
         const canvas = gl.domElement;
         onCanvasReady?.(canvas);
       }}
-      dpr={targetDpr()}
+      // This must be a Canvas prop, not gl.setPixelRatio() in an effect:
+      // R3F resizes the drawing buffer in response to `dpr`, while changing
+      // the renderer setting alone leaves captureStream at CSS resolution.
+      dpr={exportMode ? EXPORT_DPR : targetDpr()}
     >
-      <ExportDprBoost exportMode={exportMode} />
+      <ExportFrameMetrics active={Boolean(exportMode)} />
       <RenderPerformanceMetrics />
 
       <ambientLight intensity={0.85} />
@@ -190,6 +216,7 @@ export default function UniverseCanvas({
 
       <UniverseScene reveal={reveal} />
       {postfx.tintOpacity > 0 ? <TintOverlay color={postfx.tint} opacity={postfx.tintOpacity} /> : null}
+      {exportOverlay ? <ExportStoryCard info={exportOverlay} /> : null}
 
       <OrbitControls
         enablePan={false}
@@ -222,6 +249,163 @@ export default function UniverseCanvas({
       </EffectComposer>
     </Canvas>
   );
+}
+
+/** A one-time CanvasTexture card for direct WebGL video capture. Keeping this
+ * in the scene preserves the song and reading information without routing the
+ * video through the mobile browser's throttled 2D canvas capture path. */
+function ExportStoryCard({ info }: { info: ExportOverlayInfo }) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const { camera } = useThree();
+  const texture = useMemo(() => createExportStoryTexture(info), [info]);
+
+  useEffect(() => () => texture.dispose(), [texture]);
+
+  useFrame(() => {
+    if (!meshRef.current) return;
+    const distance = 1.5;
+    const perspectiveCamera = camera as THREE.PerspectiveCamera;
+    const visibleHeight = 2 * distance * Math.tan(
+      THREE.MathUtils.degToRad(perspectiveCamera.fov / 2),
+    );
+    meshRef.current.position.copy(camera.position);
+    meshRef.current.quaternion.copy(camera.quaternion);
+    meshRef.current.translateZ(-distance);
+    meshRef.current.translateY(-visibleHeight * 0.22);
+  });
+
+  return (
+    <mesh ref={meshRef} renderOrder={1_000}>
+      <planeGeometry args={[0.82, 0.62]} />
+      <meshBasicMaterial
+        map={texture}
+        transparent
+        depthWrite={false}
+        depthTest={false}
+        toneMapped={false}
+      />
+    </mesh>
+  );
+}
+
+function createExportStoryTexture(info: ExportOverlayInfo): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas");
+  canvas.width = 900;
+  canvas.height = 680;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  drawExportStoryTexture(ctx, info, null);
+
+  if (info.albumArtUrl) {
+    const art = new Image();
+    art.crossOrigin = "anonymous";
+    art.onload = () => {
+      drawExportStoryTexture(ctx, info, art);
+      texture.needsUpdate = true;
+    };
+    art.src = info.albumArtUrl;
+  }
+
+  return texture;
+}
+
+function drawExportStoryTexture(
+  ctx: CanvasRenderingContext2D,
+  info: ExportOverlayInfo,
+  art: HTMLImageElement | null,
+): void {
+  const canvas = ctx.canvas;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const width = canvas.width;
+  const height = canvas.height;
+  const pad = 56;
+  const radius = 38;
+  const gradient = ctx.createLinearGradient(0, 0, 0, height);
+  gradient.addColorStop(0, "rgba(8, 10, 20, 0.34)");
+  gradient.addColorStop(1, "rgba(4, 5, 12, 0.92)");
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, width, height, radius);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(255,255,255,0.16)";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  const vibe = info.language === "th" ? "โทนของคุณ" : "Your vibe";
+  const artSize = 136;
+  const artX = width - pad - artSize;
+  const artY = 52;
+  const textWidth = width - pad * 3 - artSize;
+  ctx.fillStyle = "rgba(255,255,255,0.64)";
+  ctx.font = '500 30px "Noto Sans Thai", sans-serif';
+  ctx.fillText(`${vibe} · ${info.vibe}`, pad, 68);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = '600 42px "Noto Sans Thai", sans-serif';
+  ctx.fillText(truncateCanvasText(ctx, info.trackName, textWidth), pad, 132);
+  ctx.fillStyle = "rgba(255,255,255,0.72)";
+  ctx.font = '400 30px "Noto Sans Thai", sans-serif';
+  ctx.fillText(truncateCanvasText(ctx, info.artist, textWidth), pad, 178);
+
+  if (art?.complete && art.naturalWidth > 0) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(artX, artY, artSize, artSize, 20);
+    ctx.clip();
+    ctx.drawImage(art, artX, artY, artSize, artSize);
+    ctx.restore();
+  }
+
+  ctx.fillStyle = "rgba(255,255,255,0.92)";
+  ctx.font = '400 32px "Noto Sans Thai", sans-serif';
+  const lines = wrapCanvasText(ctx, info.reading, width - pad * 2, info.language);
+  const lineHeight = 47;
+  lines.slice(0, 8).forEach((line, index) => {
+    const text = index === 7 && lines.length > 8 ? `${line}...` : line;
+    ctx.fillText(text, pad, 250 + index * lineHeight);
+  });
+
+}
+
+function wrapCanvasText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+  language: "en" | "th",
+): string[] {
+  const pieces = language === "th" && typeof Intl.Segmenter === "function"
+    ? Array.from(new Intl.Segmenter("th", { granularity: "word" }).segment(text), ({ segment }) => segment)
+    : text.split(/(\s+)/);
+  const lines: string[] = [];
+  let line = "";
+  for (const piece of pieces) {
+    const candidate = line + piece;
+    if (ctx.measureText(candidate).width <= maxWidth || !line) {
+      line = candidate;
+    } else {
+      lines.push(line.trim());
+      line = piece.trimStart();
+    }
+  }
+  if (line.trim()) lines.push(line.trim());
+  return lines;
+}
+
+function truncateCanvasText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+): string {
+  if (ctx.measureText(text).width <= maxWidth) return text;
+  let output = text;
+  while (output.length > 1 && ctx.measureText(`${output}...`).width > maxWidth) {
+    output = output.slice(0, -1);
+  }
+  return `${output}...`;
 }
 
 /** A camera-attached full-screen quad that adds a subtle vibe-tinted wash
@@ -261,26 +445,34 @@ function TintOverlay({ color, opacity }: { color: string; opacity: number }) {
   );
 }
 
-/**
- * Temporarily boosts the R3F renderer's pixel ratio to 2.0 during export
- * so the source canvas renders at full resolution. Without this, the mobile
- * DPR cap (1.25x) produces a tiny source canvas that gets upscaled 4x by
- * the overlay, causing visible blur in the exported PNG/video.
- */
-function ExportDprBoost({ exportMode }: { exportMode?: boolean }) {
-  const { gl } = useThree();
-  const defaultDpr = useRef(targetDpr());
+/** Temporary export diagnostic. Compare this cadence with useOverlayCanvas's
+ * `[export] perf` line: matching ~45ms gaps means the R3F render/present
+ * path is pacing rAF; a faster R3F cadence would isolate the synchronous
+ * WebGL-to-2D drawImage copy as the source of the stall. */
+function ExportFrameMetrics({ active }: { active: boolean }) {
+  const lastLogAt = useRef(0);
+  const frameCount = useRef(0);
+  const latestDeltaMs = useRef(0);
 
-  useEffect(() => {
-    if (exportMode) {
-      gl.setPixelRatio(2);
-    } else {
-      gl.setPixelRatio(defaultDpr.current);
+  useFrame((_, delta) => {
+    if (!active) {
+      lastLogAt.current = 0;
+      frameCount.current = 0;
+      return;
     }
-    return () => {
-      gl.setPixelRatio(defaultDpr.current);
-    };
-  }, [exportMode, gl]);
+
+    frameCount.current += 1;
+    latestDeltaMs.current = delta * 1_000;
+    const now = performance.now();
+    if (now - lastLogAt.current < 1_000) return;
+
+    console.log("[export] r3f", {
+      framesPerSec: frameCount.current,
+      frameDeltaMs: Math.round(latestDeltaMs.current),
+    });
+    lastLogAt.current = now;
+    frameCount.current = 0;
+  });
 
   return null;
 }

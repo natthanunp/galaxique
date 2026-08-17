@@ -93,8 +93,14 @@ export function useMp4Exporter(
 
   const exportToMp4 = useCallback(
     async (webm: Blob): Promise<Blob> => {
-      // Lazy-load ffmpeg + core on first use.
-      const { fetchFile } = await import("@ffmpeg/util");
+      // NOTE: we intentionally do NOT dynamically import @ffmpeg/util's
+      // fetchFile here. Under Turbopack (next dev / next build) that
+      // dynamic import() produced a chunk whose module execution
+      // intermittently failed with a `runModuleExecutionHooks` error —
+      // and fetchFile's only job for us is turning a Blob into a
+      // Uint8Array, which `Blob.arrayBuffer()` does natively. Inlining it
+      // (below) removes the flaky chunk AND lets us sniff the real
+      // container format from the bytes (see the writeFile step).
 
       // Lazily-loaded FFmpeg instance. We build a fresh instance per
       // export: caching across exports works on desktop Chrome but
@@ -198,9 +204,61 @@ export function useMp4Exporter(
 
       // Safari's MediaRecorder records mp4/H.264 directly (it has no webm
       // support at all — see useCanvasRecorder's pickMime). In that case we
-      // only need a fast remux (add faststart for IG/web playback) instead
-      // of a full re-encode, which is both slower and lossy.
-      const isAlreadyMp4 = webm.type.includes("mp4");
+      // only need a fast `-c copy` remux into a standard progressive mp4
+      // (IG/web-playable) instead of a full re-encode, which is both slower
+      // and lossy. No +faststart: see the note below about ffmpeg.wasm's
+      // faststart breaking QuickTime playback.
+      //
+      // Read the recorded blob into memory once (Blob.arrayBuffer(), not
+      // @ffmpeg/util's fetchFile — see the NOTE above about the flaky
+      // Turbopack dynamic-import chunk). We sniff the real container from
+      // the bytes instead of trusting blob.type: iOS Safari's MediaRecorder
+      // records H.264 mp4 reliably, but the blob.type it reports can omit
+      // "mp4" (or be empty) on some iOS versions, which would otherwise
+      // route a perfectly-good mp4 into the slow libx264 transcode branch
+      // and look like a "stuck at Converting to MP4" hang. Magic bytes are
+      // bulletproof: an MP4 family file has a `ftyp` box at offset 4;
+      // WebM/Matroska starts with the EBML magic 0x1A45DFA3.
+      let fileBytes: Uint8Array;
+      try {
+        fileBytes = new Uint8Array(await webm.arrayBuffer());
+      } catch (err) {
+        setTranscoding(false);
+        setProgress(0);
+        throw new Error(
+          `failed to read recorded video into memory: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
+      const isMp4ByMagic =
+        fileBytes.length >= 8 &&
+        fileBytes[4] === 0x66 && // f
+        fileBytes[5] === 0x74 && // t
+        fileBytes[6] === 0x79 && // y
+        fileBytes[7] === 0x70; //   p
+      const isWebmByMagic =
+        fileBytes.length >= 4 &&
+        fileBytes[0] === 0x1a &&
+        fileBytes[1] === 0x45 &&
+        fileBytes[2] === 0xdf &&
+        fileBytes[3] === 0xa3;
+      // Trust the magic bytes; only fall back to blob.type when the sniff
+      // is inconclusive (an unusual container we don't sniff for).
+      const isAlreadyMp4 =
+        isMp4ByMagic || (!isWebmByMagic && webm.type.includes("mp4"));
+      // Forward what we detected + the isolation/core choice to the
+      // dev-server log so the iOS Safari path can be confirmed from the
+      // log instead of guessed at.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const isolated = typeof window !== "undefined" && (window as any).crossOriginIsolated === true;
+      console.log("[export] format detect", {
+        blobType: webm.type,
+        blobSize: webm.size,
+        isMp4ByMagic,
+        isWebmByMagic,
+        isAlreadyMp4,
+        crossOriginIsolated: isolated,
+        coreUsed: isolated ? CORE_PATH_MT : CORE_PATH_ST,
+      });
       const inputName = isAlreadyMp4 ? "input.mp4" : "input.webm";
       const outputName = "output.mp4";
       const cleanupFiles = async () => {
@@ -213,7 +271,6 @@ export function useMp4Exporter(
       };
 
       try {
-        const fileBytes = await fetchFile(webm);
         await ffmpeg.writeFile(inputName, fileBytes);
       } catch (err) {
         setTranscoding(false);
@@ -266,10 +323,7 @@ export function useMp4Exporter(
       //     frames at the output cadence rather than mirroring input.
       //   * `-an` drops audio entirely — not needed for IG Story use.
       //   * `-threads 0` lets libx264 use the browser pthread pool from
-      //     @ffmpeg/core-mt. `-preset ultrafast` keeps the encode time
-      //     comfortably below the old single-threaded path while the
-      //     14 Mbps target retains the extra detail from the 8 Mbps
-      //     MediaRecorder source.
+      //     @ffmpeg/core-mt.
       // We also drop `-movflags +faststart` because ffmpeg.wasm
       // implements faststart by writing the moov atom at the end and
       // then moving it; some players (notably QuickTime on macOS) read
@@ -283,35 +337,45 @@ export function useMp4Exporter(
         // handler above to drive the dialog's progress bar. Without
         // it, our progress callback never sees `time=` updates and the
         // bar stays at 0.
-        await ffmpeg.exec(
-          isAlreadyMp4
-            ? [
+        //
+        // Two genuinely different paths:
+        //   * Safari's MediaRecorder already produced an H.264 mp4
+        //     (no webm support — see useCanvasRecorder's pickMime).
+        //     Re-encoding it is pure waste: a full libx264 pass at
+        //     `-preset medium` on the SINGLE-THREADED wasm core (iOS
+        //     Safari has no cross-origin isolation → no SharedArrayBuffer
+        //     → single-thread core) takes minutes and looks like a
+        //     "stuck at converting to MP4" hang. We do a fast
+        //     `-c copy` remux instead — near-instant, lossless.
+        //   * Chrome/Firefox give us webm, which DOES need a real
+        //     libx264 transcode. We use `veryfast` + `crf 23` (not
+        //     `medium` + `crf 18` + 20Mbps) so the 12s 1080p30 output
+        //     lands around ~5-8MB — big enough to look crisp on a phone
+        //     screen, small enough that Chrome Android's download/share
+        //     doesn't reject it with "A network error occurred".
+        //
+        // `exec(args, timeoutMs)` returns ffmpeg's ret code (0 = ok,
+        // 1 = timeout/error). We capture it so a non-zero exit (which
+        // ffmpeg.wasm does NOT throw on) surfaces as a clear error
+        // instead of a silent 0-byte output. The timeout is a generous
+        // ceiling — the remux is seconds, the re-encode is <1min on
+        // modern hardware — but it prevents a hung worker (mobile
+        // WebView) from leaving the promise pending forever.
+        const ret = isAlreadyMp4
+          ? await ffmpeg.exec(
+              [
                 "-progress",
                 "pipe:1",
                 "-i",
                 inputName,
-                "-vf",
-                "scale=1080:1920,fps=30",
-                "-an",
-                "-c:v",
-                "libx264",
-                "-threads",
-                "0",
-                "-preset",
-                "medium",
-                "-crf",
-                "18",
-                "-b:v",
-                "20M",
-                "-maxrate",
-                "26M",
-                "-bufsize",
-                "40M",
-                "-pix_fmt",
-                "yuv420p",
+                "-c",
+                "copy",
                 outputName,
-              ]
-            : [
+              ],
+              30_000,
+            )
+          : await ffmpeg.exec(
+              [
                 "-progress",
                 "pipe:1",
                 "-i",
@@ -324,20 +388,23 @@ export function useMp4Exporter(
                 "-threads",
                 "0",
                 "-preset",
-                "medium",
+                "veryfast",
                 "-crf",
-                "18",
-                "-b:v",
-                "20M",
-                "-maxrate",
-                "26M",
-                "-bufsize",
-                "40M",
+                "23",
                 "-pix_fmt",
                 "yuv420p",
                 outputName,
               ],
-        );
+              300_000,
+            );
+        if (ret !== 0) {
+          await cleanupFiles();
+          setTranscoding(false);
+          setProgress(0);
+          throw new Error(
+            `ffmpeg exited with code ${ret} (last ffmpeg log: ${lastFfmpegLine || "none"})`,
+          );
+        }
       } catch (err) {
         await cleanupFiles();
         setTranscoding(false);

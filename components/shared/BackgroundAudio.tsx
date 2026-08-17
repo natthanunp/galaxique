@@ -54,10 +54,17 @@ export function BackgroundAudio({
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !ready) return;
-    if (isSuspended) {
+    if (isSuspended || !enabled) {
+      // Either suspended by the store (e.g. another view wants silence) or
+      // the user clicked the mute button — both mean "stop right now". We
+      // keep the existing `playRequestRef` so any in-flight `play()` doesn't
+      // accidentally flip `isPlaying` back to true on a later microtask.
       audio.pause();
       playRequestRef.current = null;
-    } else if (mediaMode === "spotify" && spotifyUrl) {
+      if (isPlaying) setPlaying(false);
+      return;
+    }
+    if (mediaMode === "spotify" && spotifyUrl) {
       audio.loop = true;
       audio.muted = false;
       if (audio.src !== spotifyUrl) {
@@ -87,7 +94,7 @@ export function BackgroundAudio({
       if (audio.src !== absoluteAmbientSrc) {
         audio.src = src;
       }
-      if (enabled && unlocked) {
+      if (unlocked) {
         audio.muted = false;
         audio.play().catch(() => {
           // Browser may still block if no further user gesture — leave paused.
@@ -175,36 +182,94 @@ export function BackgroundAudio({
   }, [setPlaying]);
 
   const toggle = () => {
+    const audio = audioRef.current;
+    // The first user gesture on the page is what unlocks the browser's
+    // autoplay policy. When that very first gesture is the mute button
+    // itself, we have to honor the user's intent (mute) AND satisfy the
+    // gesture requirement, otherwise the button looks broken on the very
+    // first click — the song would keep playing and the icon wouldn't
+    // change until the second click. So: first click = unlock + mute (if
+    // the audio is currently producing sound) or just unlock (if it's
+    // already silent, e.g. browser blocked the play()).
     if (!unlocked) {
-      // First tap on the button itself starts the audio.
       setUnlocked(true);
+      if (audio && ready && enabled) {
+        // Currently unmuted → mute. Same code path as the regular mute
+        // branch below; inlined here so a first-click unlock still
+        // mutes the song that's already playing.
+        audio.pause();
+        playRequestRef.current = null;
+        setPlaying(false);
+        setEnabled(false);
+      }
       return;
     }
-    setEnabled((prev) => !prev);
+    if (!audio || !ready) {
+      // No audio element yet (SSR-ish state) — just flip the flag and let
+      // the player effect sync up once it mounts.
+      setEnabled((prev) => !prev);
+      return;
+    }
+    // Drive the audio element directly so play/pause stays in lockstep with
+    // the icon, and update the store so the rest of the app sees the new
+    // state immediately (no waiting for the player effect to re-run).
+    if (enabled) {
+      // Currently unmuted → mute: pause and clear isPlaying so the player
+      // effect doesn't auto-resume us.
+      audio.pause();
+      playRequestRef.current = null;
+      setPlaying(false);
+      setEnabled(false);
+    } else {
+      // Currently muted → unmute: re-enable and ask the store to play.
+      // For the spotify preview this triggers a fresh play() at the
+      // currentTime (so the song resumes from where it was paused, not
+      // from 0); for the ambient loop it lets the existing player
+      // effect start the loop on the next tick.
+      audio.muted = false;
+      setEnabled(true);
+      if (mediaMode === "spotify" && spotifyUrl) {
+        setPlaying(true);
+      }
+    }
   };
 
   return (
     <>
       <audio ref={audioRef} src={src} preload="auto" />
-      {mediaMode === "ambient" && (
-        <button
-          ref={buttonRef}
-          type="button"
-          onClick={toggle}
-          aria-label={enabled ? "Mute ambient audio" : "Play ambient audio"}
-          title={enabled ? "Mute ambient audio" : "Play ambient audio"}
-          className={cn(
-            "fixed bottom-4 right-4 z-50 flex size-10 items-center justify-center rounded-full border border-border/70 bg-card/80 text-foreground shadow-md backdrop-blur-md transition-all hover:scale-105 hover:bg-card",
-            className,
-          )}
-        >
-          {enabled ? (
-            <Volume2Icon className="size-4" />
-          ) : (
-            <VolumeXIcon className="size-4 text-muted-foreground" />
-          )}
-        </button>
-      )}
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={toggle}
+        aria-label={
+          mediaMode === "spotify"
+            ? enabled
+              ? "Mute song"
+              : "Play song"
+            : enabled
+              ? "Mute ambient audio"
+              : "Play ambient audio"
+        }
+        title={
+          mediaMode === "spotify"
+            ? enabled
+              ? "Mute song"
+              : "Play song"
+            : enabled
+              ? "Mute ambient audio"
+              : "Play ambient audio"
+        }
+        className={cn(
+          "fixed bottom-4 right-4 z-50 flex size-10 items-center justify-center rounded-full border border-border/70 bg-card/80 text-foreground shadow-md backdrop-blur-md transition-all hover:scale-105 hover:bg-card",
+          className,
+        )}
+      >
+        {enabled ? (
+          <Volume2Icon className="size-4" />
+        ) : (
+          <VolumeXIcon className="size-4 text-muted-foreground" />
+        )}
+      </button>
     </>
   );
 }

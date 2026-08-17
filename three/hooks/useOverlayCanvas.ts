@@ -12,8 +12,8 @@ interface OverlayInfo {
 }
 
 interface StartOverlayOptions {
-  /** The live Three.js canvas to mirror frame-by-frame. */
-  source: HTMLCanvasElement;
+  /** A live canvas or video frame source to mirror frame-by-frame. */
+  source: HTMLCanvasElement | HTMLVideoElement;
   /** Maximum compositor rate. Match this to captureStream() so the overlay
    *  does not redraw a full 1080x1920 frame more often than the recorder can
    *  retain it. */
@@ -107,11 +107,33 @@ export function useOverlayCanvas(): UseOverlayCanvasResult {
     canvas.width = IG_STORY_W;
     canvas.height = IG_STORY_H;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return source; // Defensive fallback — should never happen.
+    if (!ctx) return canvas; // Defensive fallback — should never happen.
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
 
+    // Pre-render the STATIC overlay (glass card + album art + track/
+    // artist/vibe text + the wrapped reading) onto an offscreen canvas
+    // ONCE, then blit it per frame. The card layout runs
+    // fitReadingText/wrapText/truncateToWidth — hundreds of
+    // ctx.measureText() calls — and re-running that every frame starved
+    // the rAF loop and dropped the recording from 30fps to ~22. None of
+    // it changes during the 12s recording, so caching it is both safe
+    // and a large per-frame speedup.
+    const staticCanvas = document.createElement("canvas");
+    staticCanvas.width = IG_STORY_W;
+    staticCanvas.height = IG_STORY_H;
+    const staticCtx = staticCanvas.getContext("2d");
+    if (staticCtx) {
+      staticCtx.imageSmoothingEnabled = true;
+      staticCtx.imageSmoothingQuality = "high";
+    }
+
     let art: HTMLImageElement | null = null;
+    const renderStatic = () => {
+      if (!staticCtx) return;
+      staticCtx.clearRect(0, 0, IG_STORY_W, IG_STORY_H);
+      drawStaticCard(staticCtx, art, info);
+    };
     if (info.albumArtUrl) {
       art = new Image();
       // Keep the canvas "origin-clean" so captureStream() isn't blocked by a
@@ -119,15 +141,47 @@ export function useOverlayCanvas(): UseOverlayCanvasResult {
       // this image simply fails to load (onerror) and we skip drawing it —
       // recording still proceeds without the art rather than breaking.
       art.crossOrigin = "anonymous";
+      // The card layout depends on whether art is present (the track-row
+      // height changes), so re-render the static layer once art arrives.
+      art.onload = renderStatic;
+      art.onerror = renderStatic;
       art.src = info.albumArtUrl;
     }
+    // Paint the static layer now (without art if it hasn't loaded yet);
+    // renderStatic() runs again on art.onload to add the album art.
+    renderStatic();
 
     const frameIntervalMs = 1_000 / fps;
     let lastDrawAt = -Infinity;
+    // TEMP instrumentation: the overlay-text cache didn't change the ~22fps
+    // cap, so the cost is elsewhere — either the WebGL→2D source readback
+    // in drawDynamicBackground (drawImage of the R3F canvas) or R3F's own
+    // 2x-DPR render blocking the main-thread rAF. This logs once/sec so we
+    // can pin it from the dev log and fix the right thing.
+    let lastLogAt = 0;
+    let lastDrawStart = 0;
+    let frameCount = 0;
     const draw = (now: number) => {
       if (now - lastDrawAt >= frameIntervalMs) {
-        drawFrame(ctx, source, background ?? null, art, info);
+        const t0 = performance.now();
+        // Per frame: redraw only the dynamic background (dark + starfield
+        // + live R3F source), then blit the cached static card on top.
+        drawDynamicBackground(ctx, source, background ?? null);
+        const t1 = performance.now();
+        ctx.drawImage(staticCanvas, 0, 0);
         lastDrawAt = now;
+        frameCount++;
+        if (now - lastLogAt >= 1000) {
+          console.log("[export] perf", {
+            drawsPerSec: frameCount,
+            rafGapMs: lastDrawStart ? Math.round(t0 - lastDrawStart) : -1,
+            drawBgMs: Math.round(t1 - t0),
+            blitMs: Math.round(performance.now() - t1),
+          });
+          lastLogAt = now;
+          frameCount = 0;
+        }
+        lastDrawStart = t0;
       }
       rafRef.current = requestAnimationFrame(draw);
     };
@@ -151,7 +205,7 @@ export function useOverlayCanvas(): UseOverlayCanvasResult {
       canvas.width = IG_STORY_W;
       canvas.height = IG_STORY_H;
       const ctx = canvas.getContext("2d");
-      if (!ctx) return Promise.resolve(source);
+      if (!ctx) return Promise.resolve(canvas);
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
 
@@ -185,16 +239,12 @@ export function useOverlayCanvas(): UseOverlayCanvasResult {
   return { start, drawOnce, loadFonts, stop };
 }
 
-// Instagram Story spec: 1080x1920, 9:16 portrait. The export on a 1x
-// display uses native 1080p; on Retina/2x+ displays we render at 2x the
-// linear resolution so the composited frame retains crispness from the
-// higher-dpr R3F canvas. Capped at 2x (2160x3840) to keep the overlay
-// rAF loop and MediaRecorder manageable on mobile.
-const IG_RENDER_DPR = typeof window !== "undefined"
-  ? Math.min(window.devicePixelRatio || 1, 2)
-  : 1;
-const IG_STORY_W = Math.round(1080 * IG_RENDER_DPR);
-const IG_STORY_H = Math.round(1920 * IG_RENDER_DPR);
+// PNG export composites a single frame, so it can retain Instagram's full
+// 1080x1920 story resolution on every device. Video no longer calls this 2D
+// compositor; it records the R3F WebGL canvas directly to sustain 30fps.
+const IG_STORY_W = 1080;
+const IG_STORY_H = 1920;
+const IG_RENDER_DPR = 1;
 
 // Page background color used for the card gradient (matches
 // `bg-background`: hsl(240 20% 4%)).
@@ -207,12 +257,16 @@ function backgroundAlpha(a: number): string {
   return `hsla(${BG_H}, ${BG_S}%, ${BG_L}%, ${a})`;
 }
 
-function drawFrame(
+/** Paints the parts of a frame that actually change while recording:
+ *  the dark base, the (possibly animated) starfield, and the live R3F
+ *  source canvas. Everything else (glass card + album art + text +
+ *  reading) is static and is pre-rendered once by the caller — see
+ *  useOverlayCanvas.start() — so the rAF loop stays cheap enough to
+ *  sustain 30fps instead of dropping to ~22. */
+function drawDynamicBackground(
   ctx: CanvasRenderingContext2D,
-  source: HTMLCanvasElement,
+  source: HTMLCanvasElement | HTMLVideoElement,
   background: HTMLCanvasElement | null,
-  art: HTMLImageElement | null,
-  info: OverlayInfo,
 ): void {
   const W = ctx.canvas.width;
   const H = ctx.canvas.height;
@@ -232,10 +286,26 @@ function drawFrame(
   //    fills, then center-crop horizontally. The central scene is fully
   //    visible through the top portion of the card's translucent scrim.
   drawCover(ctx, source, 0, 0, W, H);
+}
 
-  // 4. Glass reading card — rounded, translucent, and docked at the
-  //    bottom so the exported story matches the in-app
-  //    PersonalityReading card style.
+/** Renders the STATIC overlay — the glass reading card, album art, track
+ *  name/artist, vibe label, and the wrapped reading text. None of this
+ *  changes during a 12s recording, so it is rendered ONCE onto an offscreen
+ *  canvas (see useOverlayCanvas.start()) and blitted per frame. Drawing it
+ *  every frame used to run fitReadingText/wrapText/truncateToWidth —
+ *  hundreds of ctx.measureText() calls per frame — which alone dropped
+ *  the capture from 30fps to ~22fps. */
+function drawStaticCard(
+  ctx: CanvasRenderingContext2D,
+  art: HTMLImageElement | null,
+  info: OverlayInfo,
+): void {
+  const W = ctx.canvas.width;
+  const H = ctx.canvas.height;
+
+  // Glass reading card — rounded, translucent, and docked at the
+  // bottom so the exported story matches the in-app
+  // PersonalityReading card style.
   const margin = Math.round(W * 0.04);
   const pad = Math.round(W * 0.04);
   const cardR = Math.round(W * 0.03);
@@ -379,6 +449,22 @@ function drawFrame(
   });
 }
 
+/** Full one-shot composite (dynamic background + static card) used by
+ *  useOverlayCanvas.drawOnce() for the static PNG export path — no caching
+ *  there since it paints exactly once. The live video path (start())
+ *  pre-renders the card onto an offscreen canvas and blits it instead, so
+ *  the rAF loop only redraws the dynamic background. */
+function drawFrame(
+  ctx: CanvasRenderingContext2D,
+  source: HTMLCanvasElement | HTMLVideoElement,
+  background: HTMLCanvasElement | null,
+  art: HTMLImageElement | null,
+  info: OverlayInfo,
+): void {
+  drawDynamicBackground(ctx, source, background);
+  drawStaticCard(ctx, art, info);
+}
+
 /** Finds the largest font size (between maxSize and minSize) at which the
  *  full `text` fits inside the available reading height. Returns the chosen
  *  size, its line height, and the wrapped lines. */
@@ -472,14 +558,14 @@ function wrapText(
  *  always fills the full frame, regardless of source aspect ratio. */
 function drawCover(
   ctx: CanvasRenderingContext2D,
-  img: HTMLCanvasElement | HTMLImageElement,
+  img: HTMLCanvasElement | HTMLImageElement | HTMLVideoElement,
   x: number,
   y: number,
   w: number,
   h: number,
 ): void {
-  const iw = img.width;
-  const ih = img.height;
+  const iw = img instanceof HTMLVideoElement ? img.videoWidth : img.width;
+  const ih = img instanceof HTMLVideoElement ? img.videoHeight : img.height;
   if (iw === 0 || ih === 0) return;
   const scale = Math.max(w / iw, h / ih);
   const dw = iw * scale;

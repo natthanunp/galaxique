@@ -15,6 +15,7 @@ import { CreatureChat } from "@/components/reveal/CreatureChat";
 import { Button } from "@/components/ui/button";
 import { useQuizStore } from "@/store/quizStore";
 import { humanizeCreatureKind } from "@/lib/creatureKind";
+import type { ExportOverlayInfo } from "@/components/reveal/UniverseCanvas";
 import type { UniverseReveal } from "@/types/universe";
 // Three.js needs the DOM — load the canvas client-side only.
 const UniverseCanvas = dynamic(
@@ -104,6 +105,7 @@ export default function RevealPage() {
   const [canvasReady, setCanvasReady] = useState(false);
   // When true, UniverseCanvas boosts its DPR to 2.0 for crisp exports.
   const [exportMode, setExportMode] = useState(false);
+  const [exportOverlay, setExportOverlay] = useState<ExportOverlayInfo | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
 
   // zustand `persist` rehydrates from localStorage asynchronously. On a
@@ -284,15 +286,29 @@ export default function RevealPage() {
           covered the viewport, so once the reading pushed the page taller
           than one screen, everything below the fold showed the flat
           near-black page background — the "black bar" at the bottom. */}
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <UniverseCanvas
-          reveal={reveal as UniverseReveal}
-          exportMode={exportMode}
-          onCanvasReady={(c) => {
-            canvasRef.current = c;
-            setCanvasReady(true);
-          }}
-        />
+      <div className={exportMode
+        ? "fixed inset-0 z-0 flex items-center justify-center bg-[#05050a]"
+        : "pointer-events-none absolute inset-0 z-0"}
+      >
+        <div
+          className={exportMode ? "shrink-0" : "h-full w-full"}
+          style={exportMode
+            ? {
+                width: "min(100vw, 56.25dvh)",
+                height: "min(177.777vw, 100dvh)",
+              }
+            : undefined}
+        >
+          <UniverseCanvas
+            reveal={reveal as UniverseReveal}
+            exportMode={exportMode}
+            exportOverlay={exportOverlay}
+            onCanvasReady={(c) => {
+              canvasRef.current = c;
+              setCanvasReady(true);
+            }}
+          />
+        </div>
       </div>
 
       {/* Floating top bar — Home/Retake buttons, kept above the scene.
@@ -364,7 +380,10 @@ export default function RevealPage() {
             language={language}
             reading={reveal.personality_reading}
             vibe={reveal.vibe}
-            onExportModeChange={setExportMode}
+            onExportModeChange={(exporting, overlay) => {
+              setExportMode(exporting);
+              setExportOverlay(exporting ? overlay ?? null : null);
+            }}
             /* Icon-only square — the chat button carries the labeled
                "Talk to {creatureName}" affordance (the primary
                companion action), so the share trigger doesn't need
