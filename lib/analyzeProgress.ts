@@ -58,14 +58,14 @@ export function sseStream(
 ): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder();
   const requestStart = Date.now();
-  // Capture the controller in start() so the progress closure can write
-  // to it mid-flight. Null-safe enqueue() covers the brief window before
-  // the consumer starts pulling (Next.js's RSC runtime pulls immediately,
-  // but this is cheap insurance against any consumer that defers).
+  // Release the controller on cancellation and completion; late worker events are ignored.
   let controllerRef: ReadableStreamDefaultController<Uint8Array> | null = null;
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
       controllerRef = controller;
+    },
+    cancel() {
+      controllerRef = null;
     },
   });
   const progress: ProgressCallback = (event) => {
@@ -80,10 +80,11 @@ export function sseStream(
     };
     controllerRef?.enqueue(encoder.encode(formatSseEvent("progress", enriched)));
   };
-  void work(progress)
+  void Promise.resolve().then(() => work(progress))
     .then((result) => {
       controllerRef?.enqueue(encoder.encode(formatSseEvent("result", result)));
       controllerRef?.close();
+      controllerRef = null;
     })
     .catch((err: Error) => {
       const message = err instanceof Error ? err.message : "Unknown error";
@@ -96,6 +97,7 @@ export function sseStream(
         ),
       );
       controllerRef?.close();
+      controllerRef = null;
     });
   return stream;
 }

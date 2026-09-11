@@ -200,7 +200,7 @@ export function LoadingCosmos({
 
   return (
     <div
-      className="flex w-full max-w-xs flex-col items-center justify-center gap-7 py-16"
+      className="cosmic-panel rounded-2xl px-5 flex w-full max-w-xs flex-col items-center justify-center gap-7 py-16"
       role="status"
       aria-live="polite"
       aria-label={text}
@@ -298,7 +298,7 @@ function Constellation({ visual }: { visual: StageVisual }) {
       {/* Outer halo — visible from `spotify` onward. Driven by
           coreScale so it gently inflates with the active stage. */}
       <motion.div
-        className="absolute inset-0 rounded-full bg-primary/5 blur-xl"
+        className="absolute inset-0 rounded-full bg-primary/5 blur-md"
         animate={{ scale: visual.coreScale }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       />

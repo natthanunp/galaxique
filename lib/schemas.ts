@@ -1,101 +1,5 @@
 import { z } from "zod";
-
-/** Zod schemas mirroring the Gemini JSON schemas, used to validate model output
- *  at runtime (Gemini guarantees syntactic JSON, but values still need checking). */
-
-function hasDistinctOptionText(options: { text: string }[]): boolean {
-  const normalized = options.map((option) =>
-    option.text.normalize("NFC").trim().replace(/\s+/g, " ").toLocaleLowerCase(),
-  );
-  return new Set(normalized).size === normalized.length;
-}
-
-export const quizOptionSchema = z.object({
-  text: z.string().min(1),
-});
-
-export const quizQuestionSchema = z.object({
-  id: z.number().int().min(1),
-  /** The underlying facet-of-identity this question probes, invented by the
-   *  LLM itself (see prompts/quizSystemPrompt.ts). Used server-side to track
-   *  "seen" angles for future-call variety; stripped before the question is
-   *  sent to the client. */
-  angle: z.string().min(1),
-  text: z.string().min(1),
-  /** Exactly 4 single-language multiple-choice answer options. */
-  options: z
-    .array(quizOptionSchema)
-    .length(4)
-    .refine(hasDistinctOptionText, "options must have distinct text"),
-});
-
-export const quizPayloadSchema = z.object({
-  questions: z.array(quizQuestionSchema).min(1),
-});
-
-/** One entry from the quiz PLANNER call: the invented English angle plus the
- *  identity dimension and emotional temperature it maps to. The writer prompt
- *  consumes these per question. Values are free strings (not enums) because
- *  they're only guidance for the writer, never rendered output. */
-export const quizPlanItemSchema = z.object({
-  angle: z.string().min(1),
-  dimension: z.string().min(1),
-  temperature: z.string().min(1),
-  opening: z.string().min(1),
-  thought: z.string().min(1),
-});
-
-export const quizPlanSchema = z.object({
-  questions: z.array(quizPlanItemSchema).min(1),
-});
-
-/** Output from a single-question WRITER call: text + 4 options. `id` and
- *  `angle` are filled in server-side from the plan, so the writer only
- *  authors the rendered content. */
-export const quizQuestionDraftSchema = z.object({
-  text: z.string().min(1),
-  options: z
-    .array(quizOptionSchema)
-    .length(4)
-    .refine(hasDistinctOptionText, "options must have distinct text"),
-});
-
-/** Per-dimension match score for one catalog candidate, 0–10 per axis.
- *  Each axis corresponds to a curated descriptor field in songKnowledge.json,
- *  so the model scores by matching the answer signals against the track's
- *  actual `relationship_stance` / `mood` / `energy` / `setting` tags rather
- *  than emitting one holistic vibe-number (which collapsed to famous defaults
- *  and to meaningless "85" self-confidence). Mechanical per-axis scoring is
- *  what forces genuine descriptor comparison. */
-export const dimensionScoreSchema = z.object({
-  /** Do the track's curated themes match the specific ideas in the answers? */
-  themes: z.number().min(0).max(10),
-  /** Does the track's relationship stance match the emotional stance in the
-   *  answers (secure closeness vs. yearning vs. heartbreak vs. independence)? */
-  stance: z.number().min(0).max(10),
-  /** Does the track's emotional temperature match (dreamy/melancholic vs.
-   *  joyful vs. defiant vs. restrained)? */
-  mood: z.number().min(0).max(10),
-  /** Does the track's energy match (still/intimate vs. driving vs. expansive)? */
-  energy: z.number().min(0).max(10),
-  /** Does the track's setting/imagery match (late-night alone vs. wide-open
-   *  landscape vs. bright celebration)? */
-  setting: z.number().min(0).max(10),
-  /** Max 6 words naming the strongest signal this track matches. */
-  why: z.string(),
-});
-
-/** One scored catalog candidate, folded directly into the single merged
- *  reveal call (see prompts/revealSystemPrompt.ts "SONG SCORING" section and
- *  app/api/analyze/route.ts). Optional — a malformed/missing shortlist must
- *  not force a retry of the whole reveal response; it just falls through to
- *  the catalog fallback for that attempt. */
-export const songCandidateSchema = dimensionScoreSchema.extend({
-  /** Opaque code assigned by the server for this prompt. Hiding song
-   *  names/artists prevents the model's popularity prior from biasing
-   *  descriptor-only comparison. */
-  catalog_code: z.string().regex(/^C\d{3}$/),
-});
+import { THEMES } from "@/lib/profile";
 
 export const creatureSpecSchema = z.object({
   kind: z.enum([
@@ -117,7 +21,13 @@ export const creatureSpecSchema = z.object({
     "wings",
   ]),
   motion: z.enum(["swim", "fly", "orbit", "bob"]),
-  name: z.string().min(1).max(20).optional(),
+  // Optional only for reveals saved before companions were given names.
+  name: z.string().trim().min(1).max(20).optional(),
+});
+
+/** New reveal generations must always give their companion a real name. */
+export const generatedCreatureSpecSchema = creatureSpecSchema.extend({
+  name: z.string().trim().min(1).max(20),
 });
 
 const galaxyVisualConfigSchema = z.object({
@@ -153,6 +63,9 @@ export const celestialVisualConfigSchema = z.discriminatedUnion("celestial_type"
 ]);
 
 export const universeRevealSchema = z.object({
+  profile_version: z.literal(2).optional(),
+  theme: z.enum(THEMES).optional(),
+  reveal_id: z.string().uuid().optional(),
   vibe: z.enum(["cute", "cozy", "mysterious", "intense", "whimsical", "cynical"]),
   celestial_type: z.enum([
     "galaxy",
@@ -181,15 +94,3 @@ export const universeRevealSchema = z.object({
   spotify_search_query: z.string().min(2),
   personality_reading: z.string().min(1),
 });
-
-/** Scored catalog shortlist, present only when a playlist catalog was
- *  supplied (see "SONG SCORING" section in prompts/revealSystemPrompt.ts).
- *  Deliberately validated SEPARATELY from `universeRevealSchema` (see
- *  app/api/analyze/route.ts) so a malformed/missing shortlist doesn't force
- *  a retry of an otherwise-good reveal response — it just falls through to
- *  the catalog fallback pick for that attempt. */
-export const songCandidatesSchema = z.array(songCandidateSchema);
-
-export type QuizPayloadParsed = z.infer<typeof quizPayloadSchema>;
-export type UniverseRevealParsed = z.infer<typeof universeRevealSchema>;
-export type CreatureSpecParsed = z.infer<typeof creatureSpecSchema>;

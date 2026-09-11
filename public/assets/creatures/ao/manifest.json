@@ -1,0 +1,33 @@
+{
+  "bird": {
+    "blinn2": "/assets/creatures/ao/bird-0.png"
+  },
+  "cat": {
+    "Mat_Gradient": "/assets/creatures/ao/cat-0.png"
+  },
+  "dragon": {
+    "Eyes": "/assets/creatures/ao/dragon-0.png",
+    "Main": "/assets/creatures/ao/dragon-1.png",
+    "Belly": "/assets/creatures/ao/dragon-2.png",
+    "Claws": "/assets/creatures/ao/dragon-3.png",
+    "Wings": "/assets/creatures/ao/dragon-4.png"
+  },
+  "fish": {
+    "7288_barramundi fish_col": "/assets/creatures/ao/fish-0.png"
+  },
+  "fox": {
+    "fox_material": "/assets/creatures/ao/fox-0.png"
+  },
+  "jelly": {
+    "jellyfish_body": "/assets/creatures/ao/jelly-0.png",
+    "emit": "/assets/creatures/ao/jelly-1.png"
+  },
+  "spirit": {
+    "Legs": "/assets/creatures/ao/spirit-0.png",
+    "Book_cover": "/assets/creatures/ao/spirit-1.png",
+    "Book_Pages": "/assets/creatures/ao/spirit-2.png",
+    "Ghost_Sheet": "/assets/creatures/ao/spirit-3.png",
+    "Eyes": "/assets/creatures/ao/spirit-4.png",
+    "Eye_Highlights": "/assets/creatures/ao/spirit-5.png"
+  }
+}

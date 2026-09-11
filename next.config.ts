@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
-
+  allowedDevOrigins: ['192.168.1.38', '192.168.1.33'],
   // Prevent mobile Safari from serving a stale HTML shell from HTTP cache
   // after a new deployment. The service worker intentionally owns no cache,
   // but Safari can still keep the document and its _next/static chunks in

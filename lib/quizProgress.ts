@@ -52,13 +52,14 @@ export function quizSseStream(
 ): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder();
   const requestStart = Date.now();
-  // Capture the controller in start() so the progress closure can write
-  // to it mid-flight. Null-safe enqueue() covers the brief window before
-  // the consumer starts pulling.
+  // Release the controller on cancellation and completion; late worker events are ignored.
   let controllerRef: ReadableStreamDefaultController<Uint8Array> | null = null;
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
       controllerRef = controller;
+    },
+    cancel() {
+      controllerRef = null;
     },
   });
 
@@ -74,12 +75,13 @@ export function quizSseStream(
     );
   };
 
-  void work(progress)
+  void Promise.resolve().then(() => work(progress))
     .then((result) => {
       controllerRef?.enqueue(
         encoder.encode(`event: result\ndata: ${JSON.stringify(result)}\n\n`),
       );
       controllerRef?.close();
+      controllerRef = null;
     })
     .catch((err: Error) => {
       const message = err instanceof Error ? err.message : "Unknown error";
@@ -92,6 +94,7 @@ export function quizSseStream(
         ),
       );
       controllerRef?.close();
+      controllerRef = null;
     });
   return stream;
 }

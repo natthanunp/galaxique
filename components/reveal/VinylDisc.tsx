@@ -120,16 +120,10 @@ export function VinylDisc({
     };
   }, [query, trackId, setMediaMode, setSpotifyUrl, setStoreTrack, setPlaying]);
 
-  // Size preset → tailwind class. "hero" sits centered *inside* the
-  // 3D galaxy sphere — the disc is intentionally smaller than the
-  // galaxy so the swirling arms are clearly visible *around* it. A
-  // soft cosmic aura behind the disc bridges the gap so it feels
-  // like the disc is glowing from within the galaxy rather than
-  // pasted on top. We also taper the disc on short-tall phones so
-  // the reading dock has room below it.
+  // Keep the mobile hero; use a compact record in the desktop music dock.
   const discSizeClass =
     size === "hero"
-      ? "w-[clamp(140px,28vmin,210px)] sm:w-[clamp(160px,30vmin,260px)]"
+      ? "w-[clamp(140px,28vmin,210px)] sm:w-[clamp(160px,30vmin,260px)] lg:w-28"
       : "w-44 sm:w-48 md:w-52 lg:w-44 xl:w-48";
   const isHero = size === "hero";
 
@@ -137,7 +131,7 @@ export function VinylDisc({
     <div
       className={cn(
         isHero
-          ? "relative flex w-fit flex-col items-center text-center"
+          ? "relative flex w-fit flex-col items-center text-center lg:w-[380px] lg:flex-row lg:gap-5 lg:rounded-3xl lg:border lg:border-white/10 lg:bg-gradient-to-br lg:from-white/[0.06] lg:to-black/30 lg:p-5 lg:text-left lg:shadow-[0_12px_48px_rgba(0,0,0,0.25)] lg:backdrop-blur-xl"
           : "flex w-full flex-col items-center gap-4 text-center",
         className,
       )}
@@ -250,15 +244,20 @@ export function VinylDisc({
         <div
           className={cn(
             isHero &&
-              "absolute left-1/2 top-full mt-5 flex w-max max-w-[min(24rem,92vw)] -translate-x-1/2 flex-col items-center gap-3",
+              "absolute left-1/2 top-full mt-5 flex w-max max-w-[min(24rem,92vw)] -translate-x-1/2 flex-col items-center gap-3 lg:static lg:mt-0 lg:w-auto lg:min-w-0 lg:flex-1 lg:translate-x-0 lg:items-start",
           )}
         >
-          <div className="flex w-full flex-col items-center gap-1 rounded-xl bg-black/20 px-4 py-2.5 shadow-[0_2px_24px_rgba(0,0,0,0.55)] ring-1 ring-white/[0.07] backdrop-blur-md">
+          {isHero && (
+            <p className="hidden text-[10px] font-medium uppercase tracking-[0.2em] text-white/45 lg:block">
+              {language === "th" ? "เพลงประจำจักรวาลของคุณ" : "Your universe soundtrack"}
+            </p>
+          )}
+          <div className={cn("flex w-full flex-col items-center gap-1 rounded-xl bg-black/20 px-4 py-2.5 shadow-[0_2px_24px_rgba(0,0,0,0.55)] ring-1 ring-white/[0.07] backdrop-blur-md", isHero && "lg:items-start lg:rounded-none lg:bg-transparent lg:p-0 lg:shadow-none lg:ring-0 lg:backdrop-blur-none")}>
             <p
               className={cn(
                 "text-balance text-center font-semibold text-white [text-shadow:0_1px_5px_rgba(0,0,0,0.95)]",
                 size === "hero"
-                  ? "line-clamp-2 text-lg leading-snug sm:text-xl"
+                  ? "line-clamp-2 text-lg leading-snug sm:text-xl lg:text-left lg:text-base"
                   : "line-clamp-2 text-base leading-snug sm:text-lg",
               )}
             >
@@ -267,7 +266,7 @@ export function VinylDisc({
             <p
               className={cn(
                 "line-clamp-1 text-center text-white/85 [text-shadow:0_1px_4px_rgba(0,0,0,0.9)]",
-                isHero ? "text-sm sm:text-base" : "text-sm",
+                isHero ? "text-sm sm:text-base lg:text-left lg:text-xs lg:text-white/55" : "text-sm",
               )}
             >
               {track.artist}
@@ -282,7 +281,7 @@ export function VinylDisc({
                 title={isPlaying ? "Pause song" : "Play song"}
                 className={cn(
                   "flex items-center justify-center rounded-full text-black transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                  size === "hero" ? "size-12" : "size-11",
+                  size === "hero" ? "size-12 lg:size-9 lg:shrink-0" : "size-11",
                 )}
                 style={{
                   backgroundColor: primaryColor,

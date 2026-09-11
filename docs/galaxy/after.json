@@ -1,0 +1,344 @@
+[
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scene": "home",
+    "run": 0,
+    "fps": 59.88023952095874,
+    "p95Ms": 16.700000000000728,
+    "drawCalls": 1,
+    "loadMs": 803.5,
+    "canvasCount": 2,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scene": "home",
+    "run": 1,
+    "fps": 59.88023952095874,
+    "p95Ms": 16.700000000000728,
+    "drawCalls": 1,
+    "loadMs": 191.80000000447035,
+    "canvasCount": 2,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scene": "home",
+    "run": 2,
+    "fps": 59.88023952095874,
+    "p95Ms": 16.700000000000728,
+    "drawCalls": 1,
+    "loadMs": 244.90000000596046,
+    "canvasCount": 2,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scene": "galaxy",
+    "run": 0,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 26,
+    "loadMs": 294.57499999552965,
+    "canvasCount": 1,
+    "photoMs": 1434,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scene": "galaxy",
+    "run": 1,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 26,
+    "loadMs": 361.19999999552965,
+    "canvasCount": 1,
+    "photoMs": 1310,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scene": "galaxy",
+    "run": 2,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 26,
+    "loadMs": 325.4099999964237,
+    "canvasCount": 1,
+    "photoMs": 630,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scene": "black_hole",
+    "run": 0,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 26,
+    "loadMs": 220.79500000178814,
+    "canvasCount": 1,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scene": "black_hole",
+    "run": 1,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 26,
+    "loadMs": 279.8149999976158,
+    "canvasCount": 1,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scene": "black_hole",
+    "run": 2,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 26,
+    "loadMs": 218.1900000050664,
+    "canvasCount": 1,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scene": "neutron_star",
+    "run": 0,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 25,
+    "loadMs": 205.62999999523163,
+    "canvasCount": 1,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scene": "neutron_star",
+    "run": 1,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 25,
+    "loadMs": 226.21000000089407,
+    "canvasCount": 1,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scene": "neutron_star",
+    "run": 2,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 25,
+    "loadMs": 207.02500000596046,
+    "canvasCount": 1,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scene": "home",
+    "run": 0,
+    "fps": 59.88023952095874,
+    "p95Ms": 16.700000000000728,
+    "drawCalls": 1,
+    "loadMs": 235.79999999701977,
+    "canvasCount": 2,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scene": "home",
+    "run": 1,
+    "fps": 59.88023952095874,
+    "p95Ms": 16.799999999999727,
+    "drawCalls": 1,
+    "loadMs": 238.19999999552965,
+    "canvasCount": 2,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scene": "home",
+    "run": 2,
+    "fps": 59.88023952095874,
+    "p95Ms": 16.700000000000728,
+    "drawCalls": 1,
+    "loadMs": 248.39999999850988,
+    "canvasCount": 2,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scene": "galaxy",
+    "run": 0,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 26,
+    "loadMs": 260.4050000011921,
+    "canvasCount": 1,
+    "photoMs": 634,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scene": "galaxy",
+    "run": 1,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 26,
+    "loadMs": 274,
+    "canvasCount": 1,
+    "photoMs": 937,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scene": "galaxy",
+    "run": 2,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 26,
+    "loadMs": 265.179999999702,
+    "canvasCount": 1,
+    "photoMs": 643,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scene": "black_hole",
+    "run": 0,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 26,
+    "loadMs": 253.46000000089407,
+    "canvasCount": 1,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scene": "black_hole",
+    "run": 1,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 26,
+    "loadMs": 196.48000000417233,
+    "canvasCount": 1,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scene": "black_hole",
+    "run": 2,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 26,
+    "loadMs": 263.42500000447035,
+    "canvasCount": 1,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scene": "neutron_star",
+    "run": 0,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 25,
+    "loadMs": 233.19500000029802,
+    "canvasCount": 1,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scene": "neutron_star",
+    "run": 1,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 25,
+    "loadMs": 259.2749999985099,
+    "canvasCount": 1,
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scene": "neutron_star",
+    "run": 2,
+    "fps": 60.00600060006014,
+    "p95Ms": 16.670000000000073,
+    "drawCalls": 25,
+    "loadMs": 300.74000000208616,
+    "canvasCount": 1,
+    "errors": []
+  }
+]

@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "node scripts/copy-ffmpeg-core.mjs"
+    "postinstall": "node scripts/copy-ffmpeg-core.mjs",
+    "migrate:legacy-stats": "node scripts/migrate-legacy-stats.mjs",
+    "test:profile": "node --test scripts/test-profile.cjs"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.12.9",

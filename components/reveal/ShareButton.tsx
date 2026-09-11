@@ -1,5 +1,7 @@
 "use client";
 
+import type { ProfileMetadata } from "@/lib/profile";
+
 import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -11,6 +13,7 @@ import {
   AlertCircleIcon,
 } from "lucide-react";
 
+import { captureUniverseFrame } from "@/three/hooks/captureUniverseFrame";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -29,7 +32,7 @@ import { useOverlayCanvas } from "@/three/hooks/useOverlayCanvas";
 import { useMediaStore } from "@/store/mediaStore";
 import type { Language } from "@/types/universe";
 
-interface ShareButtonProps {
+interface ShareButtonProps extends ProfileMetadata {
   /** Accessor for the live R3F canvas element to record. */
   getCanvas: () => HTMLCanvasElement | null;
   /** Accessor for the 2D starfield DOM canvas, used as the background of
@@ -53,6 +56,8 @@ interface ShareButtonProps {
       artist: string;
       reading: string;
       vibe: string;
+      profile_version?: 2;
+      theme?: ProfileMetadata["theme"];
       language: Language;
     },
   ) => void;
@@ -192,6 +197,8 @@ export function ShareButton({
   language,
   reading,
   vibe,
+  profile_version,
+  theme,
   onExportModeChange,
   size = "default",
   className,
@@ -282,6 +289,7 @@ export function ShareButton({
    *  wait — finishes in <1s. Works in every browser. */
   const handleSavePhoto = async () => {
     let frameSource: CanvasVideoFrameSource | null = null;
+    let snapshot: ImageBitmap | null = null;
     cancelledRef.current = false;
     pendingShareRef.current = true;
     setErrorMsg("");
@@ -307,8 +315,14 @@ export function ShareButton({
       await waitForPortraitCanvas(sourceCanvas);
       if (cancelledRef.current) return;
 
-      frameSource = await createCanvasVideoFrameSource(sourceCanvas);
-      if (cancelledRef.current) return;
+      if (typeof createImageBitmap === "function") {
+        try { snapshot = await captureUniverseFrame(sourceCanvas); }
+        catch { /* Fall back if this browser cannot snapshot its WebGL buffer. */ }
+      }
+      if (!snapshot && !cancelledRef.current) {
+        frameSource = await createCanvasVideoFrameSource(sourceCanvas);
+      }
+      if (cancelledRef.current) { snapshot?.close(); frameSource?.stop(); return; }
 
       const starfieldCanvas = getStarfield?.() ?? null;
       // Always render the overlay bar (even without a track — show a
@@ -317,7 +331,7 @@ export function ShareButton({
       // and dark fill, the export looks like a flat silhouette over
       // white. drawOnce() handles all of that internally.
       const composed = await overlay.drawOnce({
-        source: frameSource.video,
+        source: snapshot ?? frameSource!.video,
         background: starfieldCanvas,
         info: {
           albumArtUrl: track?.albumArtUrl ?? null,
@@ -325,10 +339,12 @@ export function ShareButton({
           artist: track?.artist ?? "Galaxique",
           reading,
           vibe,
+          profile_version,
+          theme,
           language,
         },
       });
-      if (cancelledRef.current) return;
+      if (cancelledRef.current) { snapshot?.close(); frameSource?.stop(); return; }
 
       // canvas.toBlob is async. We do NOT include the
       // Spotify audio in the PNG — the song is just *referenced* in the
@@ -339,13 +355,16 @@ export function ShareButton({
           "image/png",
         );
       });
-      frameSource.stop();
+      snapshot?.close();
+      snapshot = null;
+      frameSource?.stop();
       frameSource = null;
       if (cancelledRef.current) return;
 
       finishExport(blob, "image", "galaxique-universe.png");
 
     } catch (err) {
+      snapshot?.close();
       frameSource?.stop();
       if (cancelledRef.current) return;
       pendingShareRef.current = false;
@@ -369,6 +388,8 @@ export function ShareButton({
       artist: track?.artist ?? "Galaxique",
       reading,
       vibe,
+      profile_version,
+      theme,
       language,
     });
 

@@ -24,7 +24,7 @@ export function isLowPowerDevice(): boolean {
   const ua = navigator.userAgent || "";
   const ram = (navigator as typeof navigator & { deviceMemory?: number }).deviceMemory ?? 8;
   const cores = navigator.hardwareConcurrency ?? 4;
-  const oldOrWeak = /Android [1-9]|iPhone OS [1-9]_|iPad.*OS [1-9]_/.test(ua);
+  const oldOrWeak = /Android [1-9](?:[.; ]|$)|iPhone OS [1-9]_|iPad.*OS [1-9]_/.test(ua);
   _isLowPower = isMobileDevice() && (ram < 4 || cores < 6 || oldOrWeak || window.innerWidth < 400);
   return _isLowPower;
 }
@@ -43,7 +43,7 @@ export function targetDpr(): number {
  * rasterization and shader JIT warm-up than Chrome/Safari on this app
  * (no Angle-equivalent fast path on Firefox; Edge has patchier driver
  * coverage for some GPUs). Used only as a conservative starting hint —
- * the live PerformanceMonitor in UniverseCanvas is the source of truth
+ * the live RenderPerformanceMetrics in UniverseCanvas is the source of truth
  * once real frame times are measured.
  */
 export function isFirefoxOrEdgeUA(): boolean {
@@ -59,6 +59,7 @@ export type QualityTier = "low" | "medium" | "high";
 export interface RenderMetrics {
   fps: number;
   frameTimeMs: number;
+  p95FrameTimeMs: number;
   drawCalls: number;
   triangles: number;
   points: number;
@@ -68,16 +69,11 @@ export interface RenderMetrics {
   sampledAt: number;
 }
 
-/** Initial tier before any live FPS measurement is available. Starts at
- *  "high" by default so the first paint is the best-looking frame, not the
- *  worst — the live <PerformanceMonitor> will downgrade within ~1s if the
- *  device can't sustain it. Only obviously low-power hardware (very old
- *  Android, <2GB RAM, very small screen) is pre-seeded lower to avoid a
- *  brief frame-rate cliff on the very first frame. A wrong "high" guess
- *  on a borderline device is corrected within ~1s, which is a much
- *  better failure mode than 12+ seconds of subpar visuals. */
+/** Start within a device-appropriate budget; sustained render samples adapt it.
+ * Mobile and conservative browser hints start at medium, low-power at low. */
 export function initialQualityTier(): QualityTier {
   if (isLowPowerDevice()) return "low";
+  if (isMobileDevice() || isFirefoxOrEdgeUA()) return "medium";
   return "high";
 }
 
@@ -101,7 +97,7 @@ export function tierDprCap(tier: QualityTier, baseDpr: number): number {
 }
 
 /** Which expensive postprocessing passes are allowed at this tier.
- *  Bloom and lensing are now always-on; the live <PerformanceMonitor>
+ *  Bloom and lensing are now always-on; the live render monitor
  *  adapts DPR and particle counts instead, which has a much smaller
  *  visual impact than silently disabling bloom (which made the
  *  accretion disk and central glow look "dead" on first paint). */

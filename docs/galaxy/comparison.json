@@ -1,0 +1,326 @@
+[
+  {
+    "width": 1440,
+    "scene": "home",
+    "metric": "fps",
+    "baseline": 59.88023952095874,
+    "updated": 59.88023952095874,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "home",
+    "metric": "p95Ms",
+    "baseline": 16.799999999999272,
+    "updated": 16.700000000000728,
+    "changePercent": -0.5952380952294556,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "home",
+    "metric": "loadMs",
+    "baseline": 436.8999999985099,
+    "updated": 244.90000000596046,
+    "changePercent": -43.945983060930246,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "home",
+    "metric": "drawCalls",
+    "baseline": 1,
+    "updated": 1,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "galaxy",
+    "metric": "fps",
+    "baseline": 60.00600060006014,
+    "updated": 60.00600060006014,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "galaxy",
+    "metric": "p95Ms",
+    "baseline": 16.670000000000073,
+    "updated": 16.670000000000073,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "galaxy",
+    "metric": "loadMs",
+    "baseline": 475.945000000298,
+    "updated": 325.4099999964237,
+    "changePercent": -31.62865457222579,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "galaxy",
+    "metric": "drawCalls",
+    "baseline": 27,
+    "updated": 26,
+    "changePercent": -3.703703703703709,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "galaxy",
+    "metric": "photoMs",
+    "baseline": 1412,
+    "updated": 1310,
+    "changePercent": -7.223796033994335,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "black_hole",
+    "metric": "fps",
+    "baseline": 60.00600060006014,
+    "updated": 60.00600060006014,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "black_hole",
+    "metric": "p95Ms",
+    "baseline": 16.670000000000073,
+    "updated": 16.670000000000073,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "black_hole",
+    "metric": "loadMs",
+    "baseline": 259.3149999976158,
+    "updated": 220.79500000178814,
+    "changePercent": -14.854520562320662,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "black_hole",
+    "metric": "drawCalls",
+    "baseline": 26,
+    "updated": 26,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "neutron_star",
+    "metric": "fps",
+    "baseline": 60.00600060006014,
+    "updated": 60.00600060006014,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "neutron_star",
+    "metric": "p95Ms",
+    "baseline": 16.670000000000073,
+    "updated": 16.670000000000073,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "neutron_star",
+    "metric": "loadMs",
+    "baseline": 421.0249999985099,
+    "updated": 207.02500000596046,
+    "changePercent": -50.82833560793464,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "neutron_star",
+    "metric": "drawCalls",
+    "baseline": 25,
+    "updated": 25,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "home",
+    "metric": "fps",
+    "baseline": 59.88023952095874,
+    "updated": 59.88023952095874,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "home",
+    "metric": "p95Ms",
+    "baseline": 16.799999999999727,
+    "updated": 16.700000000000728,
+    "changePercent": -0.5952380952321534,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "home",
+    "metric": "loadMs",
+    "baseline": 415.3999999985099,
+    "updated": 238.19999999552965,
+    "changePercent": -42.65767934607989,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "home",
+    "metric": "drawCalls",
+    "baseline": 1,
+    "updated": 1,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "galaxy",
+    "metric": "fps",
+    "baseline": 60.00600060006014,
+    "updated": 60.00600060006014,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "galaxy",
+    "metric": "p95Ms",
+    "baseline": 16.670000000000073,
+    "updated": 16.670000000000073,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "galaxy",
+    "metric": "loadMs",
+    "baseline": 269.19999999552965,
+    "updated": 265.179999999702,
+    "changePercent": -1.493313520020223,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "galaxy",
+    "metric": "drawCalls",
+    "baseline": 27,
+    "updated": 26,
+    "changePercent": -3.703703703703709,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "galaxy",
+    "metric": "photoMs",
+    "baseline": 657,
+    "updated": 643,
+    "changePercent": -2.13089802130898,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "black_hole",
+    "metric": "fps",
+    "baseline": 60.00600060006014,
+    "updated": 60.00600060006014,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "black_hole",
+    "metric": "p95Ms",
+    "baseline": 16.670000000000073,
+    "updated": 16.670000000000073,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "black_hole",
+    "metric": "loadMs",
+    "baseline": 250.87000000476837,
+    "updated": 253.46000000089407,
+    "changePercent": 1.0324072213004687,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "black_hole",
+    "metric": "drawCalls",
+    "baseline": 26,
+    "updated": 26,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "neutron_star",
+    "metric": "fps",
+    "baseline": 60.00600060006014,
+    "updated": 60.00600060006014,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "neutron_star",
+    "metric": "p95Ms",
+    "baseline": 16.670000000000073,
+    "updated": 16.670000000000073,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "neutron_star",
+    "metric": "loadMs",
+    "baseline": 309.10999999940395,
+    "updated": 259.2749999985099,
+    "changePercent": -16.122092459315507,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "neutron_star",
+    "metric": "drawCalls",
+    "baseline": 25,
+    "updated": 25,
+    "changePercent": 0,
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "scene": "galaxy",
+    "metric": "videoMs",
+    "baseline": 15267,
+    "updated": 14538,
+    "changePercent": -4.775004912556491,
+    "pass": true
+  },
+  {
+    "width": 390,
+    "scene": "galaxy",
+    "metric": "videoMs",
+    "baseline": 14190,
+    "updated": 14695,
+    "changePercent": 3.5588442565186673,
+    "pass": true
+  }
+]

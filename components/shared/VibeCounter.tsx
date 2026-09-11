@@ -3,15 +3,12 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { HeartIcon, FlameIcon, MoonIcon, ZapIcon, SparklesIcon, ShieldIcon } from "lucide-react";
-import type { VibeStats } from "@/lib/vibeStatsStore";
 
-/**
- * Real-time vibe statistics counter for the landing page.
- * Polls /api/stats every 15 seconds and displays a cool message
- * with the total count and per-vibe breakdown.
- */
+import { THEMES, THEME_LABELS, THEME_VIBE, type ProfileDisplayStats } from "@/lib/profile";
 
-const VIBE_ICON: Record<keyof Omit<VibeStats, "total">, typeof HeartIcon> = {
+type ProfileDisplayKey = keyof Omit<ProfileDisplayStats, "total">;
+
+const VIBE_ICON: Record<ProfileDisplayKey, typeof HeartIcon> = {
   cute: HeartIcon,
   cozy: FlameIcon,
   mysterious: MoonIcon,
@@ -20,7 +17,7 @@ const VIBE_ICON: Record<keyof Omit<VibeStats, "total">, typeof HeartIcon> = {
   cynical: ShieldIcon,
 };
 
-const VIBE_DOT: Record<keyof Omit<VibeStats, "total">, string> = {
+const VIBE_DOT: Record<ProfileDisplayKey, string> = {
   cute: "bg-rose-400",
   cozy: "bg-amber-400",
   mysterious: "bg-indigo-400",
@@ -29,17 +26,9 @@ const VIBE_DOT: Record<keyof Omit<VibeStats, "total">, string> = {
   cynical: "bg-slate-400",
 };
 
-const VIBE_LABEL: Record<keyof Omit<VibeStats, "total">, { en: string; th: string }> = {
-  cute: { en: "Cute", th: "น่ารัก" },
-  cozy: { en: "Cozy", th: "อบอุ่น" },
-  mysterious: { en: "Mysterious", th: "ลึกลับ" },
-  intense: { en: "Intense", th: "เข้มข้น" },
-  whimsical: { en: "Whimsical", th: "เพ้อฝัน" },
-  cynical: { en: "Cynical", th: "เย็นชา" },
-};
-
+/** Polls and displays statistics for the current profile system. */
 export function VibeCounter({ language = "en" }: { language?: "en" | "th" }) {
-  const [stats, setStats] = useState<VibeStats | null>(null);
+  const [stats, setStats] = useState<ProfileDisplayStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -61,7 +50,7 @@ export function VibeCounter({ language = "en" }: { language?: "en" | "th" }) {
     }
 
     fetchStats();
-    const interval = setInterval(fetchStats, 15000); // Poll every 15s
+    const interval = setInterval(fetchStats, 15000);
 
     return () => {
       mounted = false;
@@ -77,16 +66,12 @@ export function VibeCounter({ language = "en" }: { language?: "en" | "th" }) {
     );
   }
 
-  const total = stats.total;
-  const message =
-    language === "th"
-      ? `${total.toLocaleString()} จักรวาลถูกค้นพบ`
-      : `${total.toLocaleString()} universes discovered`;
-
-  // Sort vibes by count (descending) for the breakdown
-  const vibeEntries = (Object.entries(stats) as [keyof VibeStats, number][])
+  const message = language === "th"
+    ? `${stats.total.toLocaleString()} จักรวาลถูกค้นพบ`
+    : `${stats.total.toLocaleString()} universes discovered`;
+  const vibeEntries = (Object.entries(stats) as [keyof ProfileDisplayStats, number][])
     .filter(
-      (entry): entry is [keyof Omit<VibeStats, "total">, number] => entry[0] !== "total",
+      (entry): entry is [ProfileDisplayKey, number] => entry[0] !== "total",
     )
     .sort(([, a], [, b]) => b - a);
 
@@ -104,6 +89,7 @@ export function VibeCounter({ language = "en" }: { language?: "en" | "th" }) {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {vibeEntries.map(([vibe, count]) => {
           const Icon = VIBE_ICON[vibe];
+          const theme = THEMES.find((candidate) => THEME_VIBE[candidate] === vibe)!;
           return (
             <div
               key={vibe}
@@ -117,7 +103,7 @@ export function VibeCounter({ language = "en" }: { language?: "en" | "th" }) {
               </span>
               <div className="flex-1">
                 <div className="text-xs text-muted-foreground">
-                  {VIBE_LABEL[vibe][language]}
+                  {THEME_LABELS[theme][language]}
                 </div>
                 <div className="text-sm font-semibold text-foreground">
                   {count.toLocaleString()}

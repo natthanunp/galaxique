@@ -14,13 +14,13 @@ import {
   Share2Icon,
 } from "lucide-react";
 
-import { StarfieldBackground } from "@/components/shared/StarfieldBackground";
+import { AnimatedUniverseBackground } from "@/components/shared/AnimatedUniverseBackground";
 import { LanguageToggle } from "@/components/quiz/LanguageToggle";
 import { VibeCounter } from "@/components/shared/VibeCounter";
 import { Button } from "@/components/ui/button";
 import { prefetchQuiz } from "@/lib/quizPrefetch";
 import { useQuizStore } from "@/store/quizStore";
-import type { VibeStats } from "@/lib/vibeStatsStore";
+import type { ProfileDisplayStats } from "@/lib/profile";
 import { humanizeCreatureKind } from "@/lib/creatureKind";
 import dynamic from "next/dynamic";
 
@@ -48,7 +48,7 @@ const INSTALL_PROMPT_DISMISSED_KEY = "galaxique-install-prompt-dismissed-v1";
 // number is the user-facing release; minor is the "this is the new model
 // + new prompt" cut. Keep it short — it sits next to the brand name in a
 // small pill.
-const APP_VERSION = "v1.7.1";
+const APP_VERSION = "v1.8 Astra";
 
 export default function LandingPage() {
   const language = useQuizStore((s) => s.language);
@@ -62,7 +62,7 @@ export default function LandingPage() {
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const [showInstallSteps, setShowInstallSteps] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-  const [vibeStats, setVibeStats] = useState<VibeStats | null>(null);
+  const [vibeStats, setVibeStats] = useState<ProfileDisplayStats | null>(null);
 
   // Fetch vibe stats for the background color blending.
   useEffect(() => {
@@ -87,15 +87,8 @@ export default function LandingPage() {
   }
 
   const prefetchNextQuiz = () => {
-    prefetchQuiz(useQuizStore.getState().seenAngles, language);
+    void prefetchQuiz(useQuizStore.getState().seenAngles, language).catch(() => {});
   };
-
-  // Head start for mobile taps, which get little benefit from a touchstart
-  // prefetch alone (the request often hasn't progressed far by the time the
-  // tap navigates). Kick one off as soon as the landing page mounts.
-  useEffect(() => {
-    prefetchQuiz(useQuizStore.getState().seenAngles, language);
-  }, [language]);
 
   useEffect(() => {
     let wasDismissed = false;
@@ -248,7 +241,7 @@ export default function LandingPage() {
 
   return (
     <>
-      <StarfieldBackground vibeStats={vibeStats} />
+      <AnimatedUniverseBackground vibeStats={vibeStats} />
       <main className="relative flex min-h-dvh flex-col items-center px-6 pb-16 pt-[max(5rem,calc(env(safe-area-inset-top)+4rem))] text-center sm:pt-[max(5.5rem,calc(env(safe-area-inset-top)+4.5rem))]">
         {/* Top bar: eyebrow badge on the left, language toggle on the right.
             Sits at `safe-area-top-4` so it clears the Dynamic Island / status
@@ -276,7 +269,7 @@ export default function LandingPage() {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="flex w-full flex-1 flex-col items-center justify-center gap-6"
         >
-          <h1 className="max-w-4xl px-2 py-3 text-4xl font-bold leading-[1.2] tracking-tight text-foreground break-words sm:text-6xl sm:text-7xl sm:leading-[1.15]">
+          <h1 className="cosmic-heading max-w-4xl px-2 py-3 text-4xl font-bold leading-[1.2] tracking-tight text-foreground break-words sm:text-6xl lg:text-7xl sm:leading-[1.15]">
             {t.title}
           </h1>
 
@@ -322,7 +315,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="mt-8 w-full max-w-md rounded-2xl border border-border/50 bg-card/60 p-5 text-left backdrop-blur-md"
+              className="cosmic-panel mt-8 w-full max-w-md rounded-2xl border border-border/50 bg-card/60 p-5 text-left backdrop-blur-md"
             >
               <div className="flex items-center gap-4 mb-4">
                 <CreaturePreview

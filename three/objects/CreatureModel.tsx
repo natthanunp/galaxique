@@ -6,6 +6,8 @@ import { useAnimations, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
 
+import aoManifest from "@/public/assets/creatures/ao/manifest.json";
+import { COSMIC } from "@/lib/cosmicVisuals";
 import type { CreatureKind, CreatureSpec } from "@/types/universe";
 
 const CREATURE_MODELS = {
@@ -124,7 +126,7 @@ export function CreatureModel({
         if ("emissive" in litMaterial) {
           const emissiveMaterial = litMaterial as THREE.MeshStandardMaterial;
           emissiveMaterial.emissive.copy(glowColor);
-          emissiveMaterial.emissiveIntensity = spec.kind === "fish" ? 0.42 : 0.16;
+          emissiveMaterial.emissiveIntensity = spec.kind === "fish" ? 0.16 : 0.055;
         }
         if (spec.kind === "fish" && litMaterial instanceof THREE.MeshStandardMaterial) {
           litMaterial.onBeforeCompile = (shader) => {
@@ -149,6 +151,38 @@ export function CreatureModel({
 
     return clone;
   }, [model, primaryColor, scene, spec.kind]);
+
+  useEffect(() => {
+    let active = true;
+    const textures: THREE.Texture[] = [];
+    const ownedMaterials: THREE.Material[] = [];
+    const maps = aoManifest[spec.kind] as Record<string, string>;
+    const loader = new THREE.TextureLoader();
+    modelScene.traverse(node => {
+      if (!(node instanceof THREE.Mesh)) return;
+      const materials = Array.isArray(node.material) ? node.material : [node.material];
+      for (const material of materials) {
+        ownedMaterials.push(material);
+        const url = maps?.[material.name];
+        if (!url || !(material instanceof THREE.MeshStandardMaterial) || !node.geometry.attributes.uv) continue;
+        const texture = loader.load(url, () => {
+          if (!active) return;
+          material.aoMap = texture;
+          material.aoMapIntensity = COSMIC.aoIntensity;
+          material.needsUpdate = true;
+        }, undefined, () => { /* Keep existing material if an AO sidecar is unavailable. */ });
+        texture.flipY = false;
+        texture.colorSpace = THREE.NoColorSpace;
+        texture.channel = 0;
+        textures.push(texture);
+      }
+    });
+    return () => {
+      active = false;
+      textures.forEach(texture => texture.dispose());
+      ownedMaterials.forEach(material => material.dispose());
+    };
+  }, [modelScene, spec.kind]);
 
   useEffect(() => {
     const action = "animation" in model ? actions[model.animation] : undefined;
@@ -237,7 +271,7 @@ export function CreatureModel({
     <group ref={groupRef}>
       <pointLight
         color={secondaryColor}
-        intensity={2.1}
+        intensity={0.8}
         distance={6}
         position={[0.8, 1.1, 1.4]}
       />

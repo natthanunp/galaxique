@@ -1,32 +1,28 @@
 "use client";
-
-import { create } from "zustand";
-
-import {
-  type QualityTier,
-  type RenderMetrics,
-} from "@/lib/perf";
+import { create } from 'zustand';
+import { initialQualityTier, type QualityTier, type RenderMetrics } from '@/lib/perf';
 
 interface PerfState {
   tier: QualityTier;
   metrics: RenderMetrics | null;
   lastTierChangeAt: number;
-  /** Retained for compatibility; reveal quality is always high. */
+  initialize: () => void;
   upgrade: () => void;
-  /** Retained for compatibility; reveal quality is always high. */
   downgrade: () => void;
   recordMetrics: (metrics: RenderMetrics) => void;
 }
-
-/**
- * Shared render-quality tier. It is pinned to high for a visually consistent
- * reveal; metrics are collected only for diagnostics.
- */
-export const usePerfStore = create<PerfState>((set, get) => ({
-  tier: "high",
-  metrics: null,
-  lastTierChangeAt: 0,
-  upgrade: () => {},
-  downgrade: () => {},
-  recordMetrics: (metrics) => set({ metrics }),
-}));
+const tiers: QualityTier[] = ['low', 'medium', 'high'];
+export const usePerfStore = create<PerfState>((set, get) => {
+  const change = (direction: number) => {
+    const state = get(), now = performance.now();
+    if (now - state.lastTierChangeAt < 8000) return;
+    const tier = tiers[Math.max(0, Math.min(2, tiers.indexOf(state.tier) + direction))];
+    if (tier !== state.tier) set({ tier, lastTierChangeAt: now });
+  };
+  return {
+    tier: 'high', metrics: null, lastTierChangeAt: 0,
+    initialize: () => set({tier: initialQualityTier(), lastTierChangeAt: performance.now()}),
+    upgrade: () => change(1), downgrade: () => change(-1),
+    recordMetrics: metrics => set({metrics}),
+  };
+});

@@ -2,10 +2,11 @@
 
 import { motion } from "framer-motion";
 
+import { profileLabel, type ProfileMetadata } from "@/lib/profile";
 import { cn } from "@/lib/utils";
 import type { Language } from "@/types/universe";
 
-interface PersonalityReadingProps {
+interface PersonalityReadingProps extends ProfileMetadata {
   reading: string;
   vibe: string;
   language: Language;
@@ -16,27 +17,17 @@ interface PersonalityReadingProps {
   borderless?: boolean;
 }
 
-/** Thai translations for the LLM's `vibe` enum values, shown in the
- *  "Your vibe · {vibe}" label. The enum itself stays English at the data
- *  layer (schema/prompt); only the display label is localized here. */
-const VIBE_TH: Record<string, string> = {
-  cute: "น่ารัก",
-  cozy: "อบอุ่น",
-  mysterious: "ลึกลับ",
-  intense: "เข้มข้น",
-  whimsical: "เพ้อฝัน",
-  cynical: "เย็นชา",
-};
-
 /** Displays the song-aware three-sentence poetic reading with a gentle fade-in. */
 export function PersonalityReading({
   reading,
   vibe,
+  profile_version,
+  theme,
   language,
   className,
   borderless = true,
 }: PersonalityReadingProps) {
-  const vibeLabel = language === "th" ? (VIBE_TH[vibe] ?? vibe) : vibe;
+  const vibeLabel = profileLabel({ vibe, profile_version, theme }, language);
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -54,7 +45,7 @@ export function PersonalityReading({
             // padding so the reading doesn't push the rest of the UI
             // off the fold.
             "rounded-2xl bg-linear-to-b from-transparent via-black/35 to-black/75 p-4 shadow-[0_4px_30px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:p-6 lg:p-8"
-          : "rounded-xl border border-border/70 bg-card/70 p-5 backdrop-blur-md",
+          : "cosmic-panel rounded-xl p-5",
         className,
       )}
     >

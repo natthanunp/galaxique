@@ -1,5 +1,7 @@
 "use client";
 
+import type { ProfileMetadata } from "@/lib/profile";
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
@@ -7,9 +9,12 @@ import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
 import { UniverseScene } from "@/three/scene/UniverseScene";
+import { registerFrameCapture } from "@/three/hooks/captureUniverseFrame";
 import { RenderPerformanceMetrics } from "@/three/scene/RenderPerformanceMetrics";
 import { Lensing } from "@/three/effects/Lensing";
-import { targetDpr } from "@/lib/perf";
+import { usePerfStore } from "@/store/perfStore";
+import { useSceneActivity } from "@/lib/useSceneActivity";
+import { targetDpr, tierDprCap } from "@/lib/perf";
 import type { UniverseReveal, Vibe } from "@/types/universe";
 
 const EXPORT_DPR = 2;
@@ -25,7 +30,7 @@ interface UniverseCanvasProps {
   exportOverlay?: ExportOverlayInfo | null;
 }
 
-export interface ExportOverlayInfo {
+export interface ExportOverlayInfo extends ProfileMetadata {
   albumArtUrl: string | null;
   trackName: string;
   artist: string;
@@ -100,6 +105,9 @@ export default function UniverseCanvas({
   exportMode,
   exportOverlay,
 }: UniverseCanvasProps) {
+  const tier = usePerfStore(s => s.tier);
+  const active = useSceneActivity();
+  useEffect(() => { usePerfStore.getState().initialize(); }, []);
   // Lensing is the defining visual of a black-hole result. It is a single
   // UV warp with no additional scene pass, so it should not wait for the
   // adaptive monitor to promote a mobile viewport from medium to high.
@@ -129,9 +137,6 @@ export default function UniverseCanvas({
     return () => window.removeEventListener("resize", onResize);
   }, []);
   const isNarrow = viewport.width < 640;
-  const isShort = viewport.height < 500;
-  const isWide = viewport.width >= 1024;
-  const isUltraWide = viewport.width >= 1600;
   // On mobile the galaxy already auto-rotates, so it stays alive without
   // manual orbit. Disabling drag-to-orbit on narrow viewports lets a
   // single-finger swipe scroll the PAGE (the reading sits below the fold),
@@ -140,38 +145,16 @@ export default function UniverseCanvas({
   // get stuck unable to scroll down to the reading. Desktop keeps
   // drag-to-orbit since there's no scroll conflict there (wheel scrolls).
   const enableOrbit = !isNarrow;
-  // The vinyl disc is a DOM element pinned to the viewport center. The
-  // 3D galaxy needs to render AROUND it, not behind it — so the camera
-  // sits well back from the origin and the central object's silhouette
-  // extends well past the disc's screen footprint. We pull back further
-  // on every breakpoint than the previous tuning, especially on
-  // short-tall phones (where the disc's vmin size eats a huge chunk of
-  // the visible canvas).
-  const extraBack = isNarrow
-    ? isShort
-      ? 15
-      : 14
-    : isUltraWide
-      ? 7
-      : isWide
-        ? 5
-        : 3;
-  // Narrower FOV on wider screens reduces perspective stretching and
-  // keeps the galaxy/black hole circular. Phones keep a slightly wider
-  // FOV so the scene doesn't feel too far away.
-  const fov = isNarrow ? 55 : isUltraWide ? 45 : isWide ? 48 : 52;
-  // Camera pulled back so the full 3D galaxy is visible *around* the
-  // centered vinyl disc. The disc is a smaller DOM element pinned to
-  // the viewport center (see components/reveal/VinylDisc.tsx); a
-  // wider camera distance keeps the galaxy arms sweeping in from
-  // beyond the disc's edge rather than getting hidden behind it.
-  const cameraPos: [number, number, number] = [0, 0, 9 + extraBack];
-  const minDist = isNarrow ? 6 : isWide ? 7 : 5;
-  const maxDist = isNarrow ? 24 : isWide ? 28 : 22;
+  // Fit the scene to the shorter canvas dimension. Extra width or height
+  // reveals more space instead of enlarging the galaxy beyond the frame.
+  const cameraPos: [number, number, number] = [0, 0, 14];
+  const minDist = isNarrow ? 8 : 9;
+  const maxDist = isNarrow ? 22 : 24;
 
   return (
     <Canvas
-      camera={{ position: cameraPos, fov }}
+      frameloop={exportMode || active ? "always" : "demand"}
+      camera={{ position: cameraPos, fov: 55 }}
       // On mobile the canvas must not capture touches at all — otherwise
       // OrbitControls' `touch-action: none` swallows every swipe and the
       // page can't scroll to the reading. `pointer-events: none` lets
@@ -205,17 +188,20 @@ export default function UniverseCanvas({
       // This must be a Canvas prop, not gl.setPixelRatio() in an effect:
       // R3F resizes the drawing buffer in response to `dpr`, while changing
       // the renderer setting alone leaves captureStream at CSS resolution.
-      dpr={exportMode ? EXPORT_DPR : targetDpr()}
+      dpr={exportMode ? EXPORT_DPR : tierDprCap(tier, targetDpr())}
     >
+      <FrameCapture />
       <ExportFrameMetrics active={Boolean(exportMode)} />
-      <RenderPerformanceMetrics />
+      <RenderPerformanceMetrics adapt={!exportMode && active} />
+      <ResponsiveCamera />
 
-      <ambientLight intensity={0.85} />
-      <pointLight position={[8, 6, 8]} intensity={2.2} />
-      <pointLight position={[-8, -4, -6]} intensity={1.4} color={reveal.secondary_color} />
+      <ambientLight intensity={0.32} />
+      <directionalLight position={[6, 8, 7]} intensity={2.0} color="#fff0db" />
+      <hemisphereLight args={["#8fa8df", "#181322", 0.55]} />
+      <directionalLight position={[-5, 2, -4]} intensity={1.3} color={reveal.secondary_color} />
 
       <UniverseScene reveal={reveal} />
-      {postfx.tintOpacity > 0 ? <TintOverlay color={postfx.tint} opacity={postfx.tintOpacity} /> : null}
+      {postfx.tintOpacity > 0 ? <TintOverlay color={postfx.tint} opacity={postfx.tintOpacity * 0.25} /> : null}
       {exportOverlay ? <ExportStoryCard info={exportOverlay} /> : null}
 
       <OrbitControls
@@ -224,7 +210,7 @@ export default function UniverseCanvas({
         enableZoom={!isNarrow}
         minDistance={minDist}
         maxDistance={maxDist}
-        autoRotate
+        autoRotate={Boolean(exportMode || active)}
         autoRotateSpeed={0.6}
         enableDamping
         dampingFactor={0.08}
@@ -232,7 +218,7 @@ export default function UniverseCanvas({
 
       <EffectComposer enableNormalPass={false}>
         <Bloom
-          intensity={postfx.bloomIntensity}
+          intensity={postfx.bloomIntensity * 0.72}
           luminanceThreshold={postfx.bloomThreshold}
           luminanceSmoothing={0.15}
           mipmapBlur
@@ -249,6 +235,56 @@ export default function UniverseCanvas({
       </EffectComposer>
     </Canvas>
   );
+}
+
+/** Keep a 50° field of view on the shorter canvas axis: horizontal in
+ * portrait, vertical in landscape. Use the actual canvas box, including
+ * portrait exports, and update both projection values together before render.
+ * Camera distance remains controlled by OrbitControls so resizing preserves zoom.
+ */
+function ResponsiveCamera() {
+  useFrame(({ camera, size }) => {
+    const perspectiveCamera = camera as THREE.PerspectiveCamera;
+    if (!perspectiveCamera.isPerspectiveCamera || size.width <= 0 || size.height <= 0) return;
+    const aspect = size.width / size.height;
+    const targetFov =
+      (2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(50) / 2) / Math.min(1, aspect)) *
+        180) /
+      Math.PI;
+    if (Math.abs(perspectiveCamera.fov - targetFov) > 0.001 || perspectiveCamera.aspect !== aspect) {
+      perspectiveCamera.aspect = aspect;
+      perspectiveCamera.fov = targetFov;
+      perspectiveCamera.updateProjectionMatrix();
+    }
+  });
+  return null;
+}
+
+/** Runs after EffectComposer (priority 1), while the drawing buffer is valid. */
+function FrameCapture() {
+  const { gl, invalidate } = useThree();
+  const pending = useRef<{ resolve: (bitmap: ImageBitmap) => void; reject: (error: Error) => void } | null>(null);
+  useEffect(() => {
+    const unregister = registerFrameCapture(gl.domElement, () => new Promise((resolve, reject) => {
+      pending.current?.reject(new Error("A newer frame capture replaced this request."));
+      pending.current = { resolve, reject };
+      invalidate();
+    }));
+    return () => {
+      unregister();
+      pending.current?.reject(new Error("The universe closed before capture."));
+      pending.current = null;
+    };
+  }, [gl, invalidate]);
+  useFrame(() => {
+    const request = pending.current;
+    if (!request) return;
+    pending.current = null;
+    // Snapshot synchronously during this render tick; bitmap decoding is async.
+    try { createImageBitmap(gl.domElement).then(request.resolve, request.reject); }
+    catch (error) { request.reject(error instanceof Error ? error : new Error(String(error))); }
+  }, 2);
+  return null;
 }
 
 /** A one-time CanvasTexture card for direct WebGL video capture. Keeping this
@@ -476,4 +512,3 @@ function ExportFrameMetrics({ active }: { active: boolean }) {
 
   return null;
 }
-

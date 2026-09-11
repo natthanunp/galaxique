@@ -1,21 +1,13 @@
 "use client";
 
+import { profileLabel } from "@/lib/profile";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeftIcon, SparklesIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { StarfieldBackground } from "@/components/shared/StarfieldBackground";
+import { AnimatedUniverseBackground } from "@/components/shared/AnimatedUniverseBackground";
 import type { ConstellationStar } from "@/lib/constellationStore";
-
-const VIBE_LABEL: Record<string, { en: string; th: string }> = {
-  cute: { en: "Cute", th: "น่ารัก" },
-  cozy: { en: "Cozy", th: "อบอุ่น" },
-  mysterious: { en: "Mysterious", th: "ลึกลับ" },
-  intense: { en: "Intense", th: "เข้มข้น" },
-  whimsical: { en: "Whimsical", th: "เพ้อฝัน" },
-  cynical: { en: "Cynical", th: "เย็นชา" },
-};
 
 const CREATURE_EMOJI: Record<string, string> = {
   fish: "🐟", bird: "🐦", fox: "🦊", cat: "🐱",
@@ -43,6 +35,7 @@ export default function ConstellationPage() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<ConstellationStar | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawnTimeRef = useRef(0);
 
   useEffect(() => {
     fetch("/api/constellation")
@@ -57,6 +50,7 @@ export default function ConstellationPage() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     let raf = 0;
+    const motion = matchMedia("(prefers-reduced-motion: reduce)");
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = window.innerWidth * dpr;
@@ -66,7 +60,9 @@ export default function ConstellationPage() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     resize();
-    const draw = (t: number) => {
+    const draw = (time: number) => {
+      const t = motion.matches ? 0 : time;
+      drawnTimeRef.current = t;
       const W = window.innerWidth;
       const H = window.innerHeight;
       ctx.clearRect(0, 0, W, H);
@@ -97,11 +93,18 @@ export default function ConstellationPage() {
         ctx.fill();
         ctx.globalAlpha = 1;
       });
-      raf = requestAnimationFrame(draw);
+      if (!document.hidden && !motion.matches) raf = requestAnimationFrame(draw);
     };
-    raf = requestAnimationFrame(draw);
-    window.addEventListener("resize", resize);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
+    const resume = () => { cancelAnimationFrame(raf); draw(performance.now()); };
+    const onResize = () => { resize(); resume(); };
+    resume();
+    window.addEventListener("resize", onResize);
+    document.addEventListener("visibilitychange", resume);
+    motion.addEventListener("change", resume);
+    return () => {
+      cancelAnimationFrame(raf); window.removeEventListener("resize", onResize);
+      document.removeEventListener("visibilitychange", resume); motion.removeEventListener("change", resume);
+    };
   }, [stars]);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -112,7 +115,7 @@ export default function ConstellationPage() {
     const spread = Math.min(W, H) * 0.38;
     for (const star of stars) {
       const pos = seededPos(hashStr(star.id), stars.indexOf(star));
-      const angle = pos.x * Math.PI * 2 + (performance.now() * 0.00003);
+      const angle = pos.x * Math.PI * 2 + (drawnTimeRef.current * 0.00003);
       const dist = 0.15 + pos.y * 0.85;
       const x = cx + Math.cos(angle) * spread * dist;
       const y = cy + Math.sin(angle) * spread * dist * 0.7;
@@ -122,7 +125,7 @@ export default function ConstellationPage() {
 
   return (
     <>
-      <StarfieldBackground />
+      <AnimatedUniverseBackground />
       <main className="relative flex min-h-dvh flex-col items-center">
         <header className="mx-auto flex w-full max-w-4xl items-center justify-between py-4 px-4">
           <Button asChild variant="ghost" size="sm" className="gap-1">
@@ -156,11 +159,11 @@ export default function ConstellationPage() {
               onClick={() => setSelected(null)}>
               <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
                 onClick={(e) => e.stopPropagation()}
-                className="mx-4 max-w-sm w-full rounded-2xl border border-border/50 bg-card/95 p-6 shadow-2xl backdrop-blur-xl">
+                className="cosmic-panel mx-4 max-w-sm w-full rounded-2xl border border-border/50 bg-card/95 p-6 shadow-2xl backdrop-blur-xl">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="size-8 rounded-full" style={{ backgroundColor: selected.primaryColor }} />
                   <div>
-                    <p className="text-sm font-semibold">{VIBE_LABEL[selected.vibe]?.en ?? selected.vibe}</p>
+                    <p className="text-sm font-semibold">{profileLabel(selected, "en")}</p>
                     <p className="text-xs text-muted-foreground">{selected.celestialType.replace("_", " ")}</p>
                   </div>
                 </div>

@@ -268,7 +268,7 @@ Otherwise, respond with ONLY this JSON object (no markdown, no commentary):
 async function callOpenRouter(userPrompt) {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) throw new Error("OPENROUTER_API_KEY is required.");
-  const model = process.env.OPENROUTER_MODEL || "deepseek/deepseek-v4-flash";
+  const model = process.env.OPENROUTER_MODEL || "openai/gpt-oss-20b";
   const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {

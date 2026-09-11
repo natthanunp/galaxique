@@ -1,10 +1,12 @@
 "use client";
 
-import { useMemo, useRef, type ReactNode } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, type ReactNode } from "react";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 import { isMobileDevice, tierParticleMultiplier } from "@/lib/perf";
+import { COSMIC } from "@/lib/cosmicVisuals";
+import { useBakedTexture } from "@/three/hooks/useBakedTexture";
 import { usePerfStore } from "@/store/perfStore";
 
 interface GalaxyProps {
@@ -17,7 +19,10 @@ interface GalaxyProps {
 }
 
 const ARM_STARS = { high: 4500, medium: 3200, low: 2000 };
-const ARM_COUNT = 4;
+const ARM_COUNT = 3;
+function seededRandom(seed: number) {
+  return () => ((seed = Math.imul(seed, 1664525) + 1013904223 >>> 0) / 4294967296);
+}
 
 /**
  * A diffuse spiral galaxy.
@@ -38,24 +43,25 @@ export function Galaxy({
   const groupRef = useRef<THREE.Group>(null);
   const visualGroupRef = useRef<THREE.Group>(null);
   const armGroupRef = useRef<THREE.Group>(null);
-  const { camera } = useThree();
+  const pointsRef = useRef<THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial>>(null);
+  const emission = useBakedTexture(COSMIC.textureUrl("stellar-emission", tier));
+  const dust = useBakedTexture(COSMIC.textureUrl("dust-absorption", tier), 0, false);
 
   const cA = useMemo(() => new THREE.Color(primaryColor), [primaryColor]);
   const cB = useMemo(() => new THREE.Color(secondaryColor), [secondaryColor]);
-  const cHot = useMemo(() => cA.clone().lerp(new THREE.Color("#ffffff"), 0.35), [cA]);
-  const cDust = useMemo(() => cB.clone().lerp(new THREE.Color("#000000"), 0.55), [cB]);
+  const cHot = useMemo(() => new THREE.Color(COSMIC.core).lerp(cA, 0.12), [cA]);
 
   const coreMaterial = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
         color: cHot,
-        emissive: cA,
-        emissiveIntensity: 2.5,
+        emissive: cHot,
+        emissiveIntensity: 1.4,
         roughness: 0.3,
         metalness: 0.2,
         flatShading: false,
       }),
-    [cA, cHot],
+    [cHot],
   );
 
   // Glow aura around the core — a tiny, soft halo that adds a subtle
@@ -72,24 +78,25 @@ export function Galaxy({
     [cA],
   );
 
-  const diskMaterial = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: cDust,
-        emissive: cA,
-        emissiveIntensity: 0.08,
-        roughness: 0.85,
-        metalness: 0.0,
-        transparent: true,
-        opacity: 0.12,
-        flatShading: true,
-        side: THREE.DoubleSide,
-      }),
-    [cA, cDust],
-  );
+  const diskMaterial = useMemo(() => new THREE.ShaderMaterial({
+    uniforms: { uEmission: { value: emission }, uDust: { value: dust }, uA: { value: cA }, uB: { value: cB } },
+    vertexShader: `varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader: `varying vec2 vUv;uniform sampler2D uEmission;uniform sampler2D uDust;uniform vec3 uA;uniform vec3 uB;
+      void main(){
+        float radius=length(vUv-.5)*2.;
+        vec3 stars=texture2D(uEmission,vUv).rgb;
+        float dust=texture2D(uDust,vUv).r;
+        vec3 tint=mix(vec3(1.,.83,.61),mix(uA,uB,.45),smoothstep(.08,.8,radius));
+        vec3 light=stars*mix(vec3(1.),tint,.3)*2.3;
+        float alpha=clamp(max(max(stars.r,stars.g),stars.b)*4.+dust*.22,0.,.92);
+        gl_FragColor=vec4(light*(1.-dust*.35),alpha*(1.-smoothstep(.87,1.,radius)));
+      }`,
+    transparent: true, depthWrite: false, side: THREE.DoubleSide,
+  }), [emission, dust, cA, cB]);
 
   // --- Diffuse stellar spiral arms. ---
   const armGeometry = useMemo(() => {
+    const random = seededRandom(42);
     const count = Math.max(
       500,
       Math.floor(ARM_STARS[particleDensity] * (mobile ? 0.55 : 1) * tierParticleMultiplier(tier)),
@@ -101,24 +108,24 @@ export function Galaxy({
 
     for (let index = 0; index < count; index++) {
       const arm = index % ARM_COUNT;
-      const radiusProgress = Math.pow(Math.random(), 0.72);
+      const radiusProgress = Math.pow(random(), 0.72);
       const radius = 0.16 + radiusProgress * 3.95;
-      const armAngle = (arm / ARM_COUNT) * Math.PI * 2 + radius * 1.35;
-      const lateralSpread = 0.035 + radiusProgress * 0.22;
-      const lateral = (Math.random() + Math.random() + Math.random() - 1.5) * lateralSpread;
+      const armAngle = (arm / ARM_COUNT) * Math.PI * 2 + -radius * 1.33 + Math.sin(radius * 3.1 + arm) * 0.08;
+      const lateralSpread = 0.09 + radiusProgress * 0.28;
+      const lateral = (random() + random() + random() - 1.5) * lateralSpread;
       const angle = armAngle + lateral;
 
       positions[index * 3] = Math.cos(angle) * radius;
-      positions[index * 3 + 1] = (Math.random() - 0.5) * (0.04 + radiusProgress * 0.12);
+      positions[index * 3 + 1] = (random() - 0.5) * (0.12 + radiusProgress * 0.24);
       positions[index * 3 + 2] = Math.sin(angle) * radius;
 
       const color = cHot.clone().lerp(cB, Math.min(1, radiusProgress * 1.15));
-      const brightness = 0.72 + Math.random() * 0.5;
+      const brightness = 0.72 + random() * 0.5;
       colors[index * 3] = Math.min(1, color.r * brightness);
       colors[index * 3 + 1] = Math.min(1, color.g * brightness);
       colors[index * 3 + 2] = Math.min(1, color.b * brightness);
-      sizes[index] = 0.8 + Math.random() * 2.0;
-      seeds[index] = Math.random();
+      sizes[index] = 0.18 + random() * 0.62;
+      seeds[index] = random();
     }
 
     const geometry = new THREE.BufferGeometry();
@@ -131,6 +138,7 @@ export function Galaxy({
 
   // --- Sparse sparkle particles on the arms. ---
   const sparkleGeometry = useMemo(() => {
+    const random = seededRandom(84);
     const count = Math.max(
       15,
       Math.floor(
@@ -144,22 +152,22 @@ export function Galaxy({
 
     for (let i = 0; i < count; i++) {
       const arm = i % ARM_COUNT;
-      const t = Math.pow(Math.random(), 0.9);
+      const t = Math.pow(random(), 0.9);
       const r = 0.7 + t * 3.0;
       const angle = (arm / ARM_COUNT) * Math.PI * 2 + r * 1.1;
-      const lateral = (Math.random() - 0.5) * 0.3;
+      const lateral = (random() - 0.5) * 0.3;
       const x = Math.cos(angle) * r + Math.cos(angle + Math.PI / 2) * lateral;
       const z = Math.sin(angle) * r + Math.sin(angle + Math.PI / 2) * lateral;
-      const y = (Math.random() - 0.5) * 0.18;
+      const y = (random() - 0.5) * 0.18;
 
       positions[i * 3] = x;
       positions[i * 3 + 1] = y;
       positions[i * 3 + 2] = z;
 
-      sizes[i] = 1.5 + Math.random() * 2.5;
-      seeds[i] = Math.random();
+      sizes[i] = 0.45 + random() * 0.8;
+      seeds[i] = random();
 
-      const col = Math.random() > 0.6 ? cHot : cB;
+      const col = random() > 0.6 ? cHot : cB;
       colors[i * 3] = col.r;
       colors[i * 3 + 1] = col.g;
       colors[i * 3 + 2] = col.b;
@@ -202,7 +210,7 @@ export function Galaxy({
             if (d > 0.5) discard;
             float a = smoothstep(0.5, 0.0, d);
             a = pow(a, 1.4);
-            gl_FragColor = vec4(vColor * 1.6, a);
+            gl_FragColor = vec4(vColor * 1.15, a * .75);
           }
         `,
         transparent: true,
@@ -211,6 +219,11 @@ export function Galaxy({
       }),
     [],
   );
+
+  useEffect(() => () => { coreMaterial.dispose(); coreGlowMaterial.dispose(); diskMaterial.dispose(); }, [coreMaterial, coreGlowMaterial, diskMaterial]);
+  useEffect(() => () => armGeometry.dispose(), [armGeometry]);
+  useEffect(() => () => sparkleGeometry.dispose(), [sparkleGeometry]);
+  useEffect(() => () => sparkleMaterial.dispose(), [sparkleMaterial]);
 
   useFrame((state, delta) => {
     if (armGroupRef.current) {
@@ -224,7 +237,7 @@ export function Galaxy({
       visualGroupRef.current.rotation.x = Math.PI * 0.35;
       visualGroupRef.current.rotation.z = Math.PI * 0.05;
     }
-    sparkleMaterial.uniforms.uTime.value = state.clock.elapsedTime;
+    if (pointsRef.current) pointsRef.current.material.uniforms.uTime.value = state.clock.elapsedTime;
   });
 
   return (
@@ -234,13 +247,14 @@ export function Galaxy({
           while keeping the optional heart/star constellation upright. */}
       <group ref={visualGroupRef}>
         {/* Faint galactic disk. */}
-        <mesh material={diskMaterial} rotation={[Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.3, 4.0, 64]} />
-        </mesh>
+
 
         {/* Diffuse stellar arms remain legible around the smaller vinyl. */}
         <group ref={armGroupRef}>
-          <points geometry={armGeometry} material={sparkleMaterial} />
+          <mesh material={diskMaterial} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[8.4, 8.4]} />
+          </mesh>
+          <points ref={pointsRef} geometry={armGeometry} material={sparkleMaterial} />
         </group>
 
         {/* Bright smooth core with subtle glow aura. */}

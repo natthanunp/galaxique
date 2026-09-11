@@ -1,0 +1,66 @@
+[
+  {
+    "width": 1440,
+    "run": 0,
+    "fps": 59.88023952095874,
+    "p95Ms": 16.799999999999727,
+    "drawCallsPerFrame": 7,
+    "loadMs": 555.1000000014901,
+    "visibleMotion": true,
+    "reducedMotionPaused": true,
+    "hiddenPaused": true,
+    "overflow": false,
+    "navigation": true,
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "run": 1,
+    "fps": 59.88023952095874,
+    "p95Ms": 16.799999999999727,
+    "drawCallsPerFrame": 7,
+    "loadMs": 243.79999999701977,
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "run": 2,
+    "fps": 59.88023952095874,
+    "p95Ms": 16.800000000000182,
+    "drawCallsPerFrame": 7,
+    "loadMs": 227.30000000447035,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "run": 0,
+    "fps": 59.88023952095874,
+    "p95Ms": 16.700000000000728,
+    "drawCallsPerFrame": 7,
+    "loadMs": 190.39999999850988,
+    "visibleMotion": true,
+    "reducedMotionPaused": true,
+    "hiddenPaused": true,
+    "overflow": false,
+    "navigation": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "run": 1,
+    "fps": 59.88023952095874,
+    "p95Ms": 16.799999999999727,
+    "drawCallsPerFrame": 7,
+    "loadMs": 206.59999999403954,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "run": 2,
+    "fps": 59.88023952095874,
+    "p95Ms": 16.700000000000728,
+    "drawCallsPerFrame": 7,
+    "loadMs": 204.79999999701977,
+    "errors": []
+  }
+]

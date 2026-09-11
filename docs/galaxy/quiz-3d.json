@@ -1,0 +1,54 @@
+[
+  {
+    "width": 1440,
+    "stages": [
+      {
+        "stage": "loading-questions",
+        "draws": 280,
+        "sameCanvas": true,
+        "count": 1
+      },
+      {
+        "stage": "questionnaire",
+        "draws": 273,
+        "sameCanvas": true,
+        "count": 1
+      },
+      {
+        "stage": "loading-result",
+        "draws": 273,
+        "sameCanvas": true,
+        "count": 1
+      }
+    ],
+    "reachedReveal": true,
+    "constellation3D": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "stages": [
+      {
+        "stage": "loading-questions",
+        "draws": 273,
+        "sameCanvas": true,
+        "count": 1
+      },
+      {
+        "stage": "questionnaire",
+        "draws": 273,
+        "sameCanvas": true,
+        "count": 1
+      },
+      {
+        "stage": "loading-result",
+        "draws": 273,
+        "sameCanvas": true,
+        "count": 1
+      }
+    ],
+    "reachedReveal": true,
+    "constellation3D": true,
+    "errors": []
+  }
+]

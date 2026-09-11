@@ -1,8 +1,9 @@
 "use client";
 
+import { profileLabel, type ProfileMetadata } from "@/lib/profile";
 import { useCallback, useRef } from "react";
 
-interface OverlayInfo {
+interface OverlayInfo extends ProfileMetadata {
   albumArtUrl: string | null;
   trackName: string;
   artist: string;
@@ -13,7 +14,7 @@ interface OverlayInfo {
 
 interface StartOverlayOptions {
   /** A live canvas or video frame source to mirror frame-by-frame. */
-  source: HTMLCanvasElement | HTMLVideoElement;
+  source: HTMLCanvasElement | HTMLVideoElement | ImageBitmap;
   /** Maximum compositor rate. Match this to captureStream() so the overlay
    *  does not redraw a full 1080x1920 frame more often than the recorder can
    *  retain it. */
@@ -47,16 +48,7 @@ interface UseOverlayCanvasResult {
   stop: () => void;
 }
 
-/** Thai translations for the LLM's `vibe` enum values, shown in the
- *  exported story card label. */
-const VIBE_TH: Record<string, string> = {
-  cute: "น่ารัก",
-  cozy: "อบอุ่น",
-  mysterious: "ลึกลับ",
-  intense: "เข้มข้น",
-  whimsical: "เพ้อฝัน",
-  cynical: "เย็นชา",
-};
+
 
 /** Reads the Noto Sans Thai font family from the CSS variable that
  *  `next/font/google` sets in layout.tsx. Falls back to a direct Google
@@ -265,7 +257,7 @@ function backgroundAlpha(a: number): string {
  *  sustain 30fps instead of dropping to ~22. */
 function drawDynamicBackground(
   ctx: CanvasRenderingContext2D,
-  source: HTMLCanvasElement | HTMLVideoElement,
+  source: HTMLCanvasElement | HTMLVideoElement | ImageBitmap,
   background: HTMLCanvasElement | null,
 ): void {
   const W = ctx.canvas.width;
@@ -407,10 +399,7 @@ function drawStaticCard(
     ctx.restore();
   }
 
-  const vibeLabel =
-    info.language === "th"
-      ? `${VIBE_TH[info.vibe] ?? info.vibe}`
-      : info.vibe;
+  const vibeLabel = profileLabel(info, info.language);
   const vibeLabelFull =
     info.language === "th" ? `โทนของคุณ · ${vibeLabel}` : `Your vibe · ${vibeLabel}`;
 
@@ -456,7 +445,7 @@ function drawStaticCard(
  *  the rAF loop only redraws the dynamic background. */
 function drawFrame(
   ctx: CanvasRenderingContext2D,
-  source: HTMLCanvasElement | HTMLVideoElement,
+  source: HTMLCanvasElement | HTMLVideoElement | ImageBitmap,
   background: HTMLCanvasElement | null,
   art: HTMLImageElement | null,
   info: OverlayInfo,
@@ -558,7 +547,7 @@ function wrapText(
  *  always fills the full frame, regardless of source aspect ratio. */
 function drawCover(
   ctx: CanvasRenderingContext2D,
-  img: HTMLCanvasElement | HTMLImageElement | HTMLVideoElement,
+  img: HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | ImageBitmap,
   x: number,
   y: number,
   w: number,

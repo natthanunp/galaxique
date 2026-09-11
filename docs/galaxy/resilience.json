@@ -1,0 +1,37 @@
+{
+  "fallbackErrors": [],
+  "compatibilityPhoto": {
+    "width": 1080,
+    "height": 1920
+  },
+  "revealReducedMotionPaused": true,
+  "flowReachedReveal": true,
+  "calls": [
+    "/api/generate-quiz",
+    "/api/analyze",
+    "/api/spotify/search",
+    "/api/stats/increment",
+    "/api/telegram/notify",
+    "/api/spotify/search",
+    "/api/stats",
+    "/api/stats",
+    "/api/generate-quiz",
+    "/api/generate-quiz",
+    "/api/spotify/search",
+    "/api/stats/increment",
+    "/api/spotify/search"
+  ],
+  "errors": [],
+  "scroll": {
+    "y": 82,
+    "canvasPointerEvents": "none"
+  },
+  "photo": {
+    "size": 908411,
+    "width": 1080,
+    "height": 1920
+  },
+  "reducedMotionCanvasPaused": true,
+  "simulatedHiddenCanvasPaused": true,
+  "resumed": true
+}

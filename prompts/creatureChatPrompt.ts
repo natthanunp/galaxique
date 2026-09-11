@@ -1,3 +1,4 @@
+import { profileLabel, SIGNAL_DEFINITIONS } from "@/lib/profile";
 import type { Language, UniverseReveal } from "@/types/universe";
 
 /**
@@ -70,7 +71,9 @@ export function buildCreatureChatPrompt(
     neutron_star: { en: "a neutron star — dense, bright, and intensely alive", th: "ดาวนิวตรอน — หนาแน่น สว่าง และมีชีวิตชีวา" },
   };
 
-  const vibeDesc = vibeDescriptions[reveal.vibe]?.[language] ?? reveal.vibe;
+  const vibeDesc = reveal.theme
+    ? `${profileLabel(reveal, language)}: ${SIGNAL_DEFINITIONS[reveal.theme]}`
+    : vibeDescriptions[reveal.vibe]?.[language] ?? reveal.vibe;
   const celestialDesc = celestialDescriptions[reveal.celestial_type]?.[language] ?? reveal.celestial_type;
   const accentText = creature?.accent && creature.accent !== "none"
     ? ` You have ${creature.accent}.`

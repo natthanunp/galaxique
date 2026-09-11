@@ -134,17 +134,18 @@ three/          # All R3F/Three.js scene logic
   shaders/           # GLSL (glow particle)
   materials/         # GlowPointMaterial
   hooks/             # useUniverseConfig, useCanvasRecorder, useMp4Exporter
-lib/            # llm.ts (OpenRouter via @openrouter/sdk), spotify.ts, schemas.ts (Zod), utils.ts
-prompts/        # quizSystemPrompt.ts, revealSystemPrompt.ts
-config/         # quizConfig.ts (question count, theme, tone, model)
+lib/            # quiz.ts, analyze.ts, llm.ts, schemas.ts, spotify.ts
+prompts/        # companion chat prompt
+config/         # quizConfig.ts (question count and generic model)
 types/          # universe.ts (shared types)
 store/          # quizStore.ts (Zustand, persisted)
 ```
 
 ## 🔬 How the mapping works
 
-The personality → universe mapping is the heart of the app. The
-`prompts/revealSystemPrompt.ts` gives the LLM explicit rules:
+The personality → universe mapping is the heart of the app. `lib/analyze.ts`
+scores answer evidence separately from the creative reveal, then fixes the
+selected profile and song before the final writing call.
 
 - **Cozy / warm / loving** → `galaxy` (a warm spiral) + `heart` (or `star`)
   symbol, warm palette.
@@ -168,9 +169,9 @@ reaching the 3D layer.
 
 ## ⚙️ Configuration
 
-Edit `config/quizConfig.ts` to change the question count (3–10), theme, tone,
-or LLM model (default `deepseek/deepseek-v4-flash` via OpenRouter). Override
-with the `OPENROUTER_MODEL` env var.
+Edit `config/quizConfig.ts` to change the question count or generic LLM model
+(default `openai/gpt-oss-20b` via OpenRouter and Groq). Override with the
+`OPENROUTER_MODEL` and `OPENROUTER_PROVIDER_ORDER` environment variables.
 
 ## 📝 Notes
 

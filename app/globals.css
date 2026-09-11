@@ -4,7 +4,7 @@
 /* Shadcn "new-york" theme tokens, recolored for a deep-space aesthetic.
    The app is always dark (space), so we define a single dark palette. */
 :root {
-  --background: 240 20% 4%;
+  --background: 227 60% 3%;
   --foreground: 240 10% 92%;
 
   --card: 240 20% 7%;
@@ -13,14 +13,14 @@
   --popover: 240 20% 7%;
   --popover-foreground: 240 10% 92%;
 
-  --primary: 263 70% 66%;
+  --primary: 263 46% 62%;
   --primary-foreground: 0 0% 100%;
 
   --secondary: 240 20% 14%;
   --secondary-foreground: 240 10% 92%;
 
   --muted: 240 20% 14%;
-  --muted-foreground: 30 25% 82%;
+  --muted-foreground: 224 18% 76%;
 
   --accent: 280 60% 70%;
   --accent-foreground: 0 0% 100%;
@@ -80,13 +80,32 @@
   }
 }
 
-/* Slow drifting aurora gradient behind the whole app. */
-.cosmic-bg {
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 10%, hsl(263 70% 20% / 0.35), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 85% 20%, hsl(280 60% 22% / 0.30), transparent 60%),
-    radial-gradient(ellipse 90% 70% at 50% 100%, hsl(220 60% 18% / 0.30), transparent 60%),
-    hsl(var(--background));
+/* Shared night-sky surface; photographic detail lives in capture-compatible canvases. */
+.cosmic-bg { background: #03050c; }
+
+@layer base {
+  h1, h2, h3 { text-wrap: balance; letter-spacing: -.025em; }
+  p { text-wrap: pretty; }
+  button, a, input, textarea { -webkit-tap-highlight-color: transparent; }
+  ::selection { background: #9982c955; color: #fff7ea; }
+}
+
+@layer components {
+  .cosmic-panel, [data-slot="card"], [data-slot="dialog-content"] {
+    background: linear-gradient(145deg, rgba(19,24,40,.94), rgba(7,10,20,.94));
+    border: 1px solid rgba(184,199,232,.17);
+    box-shadow: 0 20px 60px #0005, inset 0 1px 0 #ffffff05;
+  }
+  .cosmic-heading { text-shadow: 0 2px 30px #03050c; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Full-bleed iOS PWAs render beneath the status bar. Keep floating controls

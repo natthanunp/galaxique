@@ -1,6 +1,8 @@
 import { OpenRouter } from "@openrouter/sdk";
 
 import { quizConfig } from "@/config/quizConfig";
+import { sanitizeLlmError } from "@/lib/llmError";
+import { withRequestDeadline } from "@/lib/requestDeadline";
 
 type LlmResponseFormat =
   | { type: "json_object" }
@@ -46,10 +48,14 @@ export interface LlmCallOptions {
   /** Optional provider order for a model override. Provider slugs must use
    *  the lowercase REST API form, e.g. "alibaba". */
   providerOrder?: string[];
+  /** Exclude an upstream provider that failed this logical request. */
+  providerIgnore?: string[];
   /** Response structure required from the model. Defaults to a JSON object. */
   responseFormat?: LlmResponseFormat;
   /** Max output tokens. */
   maxTokens?: number;
+  /** Model-specific reasoning effort. Omit to use the endpoint's default. */
+  reasoningEffort?: "max" | "xhigh" | "high" | "medium" | "low" | "minimal" | "none";
   /** Temperature (0–2). Lower = more deterministic. */
   temperature?: number;
   /** Per-request uniqueness key. Two concurrent calls with DIFFERENT nonces
@@ -72,6 +78,8 @@ export interface LlmCallOptions {
   /** OpenRouter provider ordering for this specific call. Useful when a
    *  route retries a timeout using the alternate strategy. */
   providerSort?: "latency" | "throughput";
+  /** Disable SDK retries when the caller owns a shared request deadline. */
+  singleAttempt?: boolean;
 }
 
 /** Explicit provider preference order for the configured model.
@@ -83,26 +91,13 @@ export interface LlmCallOptions {
  *  sub-second 502s from /api/generate-quiz that looked like a schema bug
  *  rather than a routing one.
  *
- *  IMPORTANT — this list is MODEL-SPECIFIC, not account-wide: each model on
- *  OpenRouter is served by its own distinct set of backing providers (query
- *  `GET /api/v1/models/<model>/endpoints` to check). The previous order
- *  (baidu/deepseek/alibaba/deepinfra/novita) was benchmarked for
- *  `deepseek/deepseek-v4-flash` — when `OPENROUTER_MODEL` was switched to
- *  `mistralai/mistral-small-3.2-24b-instruct`, NONE of baidu/deepseek/
- *  alibaba/novita serve this model at all, so `allowFallbacks` silently fell
- *  through to `deepinfra` (the only overlapping entry) every single time —
- *  which is the WORST-throughput of the 3 providers that actually serve this
- *  model, explaining why latency didn't improve after the model swap.
- *
- *  The configured `deepseek/deepseek-v4-flash-0731` model is served by
- *  DeepSeek, Baidu, DeepInfra, Novita, and other providers. Prefer the
- *  first-party route, then Baidu, before the slower fallback providers.
- *  Re-verify with the endpoints API any time `OPENROUTER_MODEL` changes —
- *  do not assume a prior order still applies.
+ *  IMPORTANT — this list is model-specific. The configured GPT-OSS 20B model
+ *  uses Groq for high-throughput generation. Re-check the endpoints API when
+ *  changing `OPENROUTER_MODEL`; provider names are not portable across models.
  *
  *  Override with OPENROUTER_PROVIDER_ORDER (comma-separated lowercase slugs)
  *  — see https://openrouter.ai/settings/preferences for enabling providers. */
-const DEFAULT_PROVIDER_ORDER = ["deepseek", "baidu", "deepinfra", "novita"];
+const DEFAULT_PROVIDER_ORDER = ["groq"];
 
 export function resolveProviderOrder(): string[] {
   const raw = process.env.OPENROUTER_PROVIDER_ORDER;
@@ -149,7 +144,7 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
     opts.providerSort ?? process.env.OPENROUTER_PROVIDER_SORT ?? "throughput";
   const timeoutMs = opts.timeoutMs ?? 20_000;
   try {
-    const result = await client.chat.send(
+    const result = await withRequestDeadline(timeoutMs, signal => client.chat.send(
       {
         chatRequest: {
           model,
@@ -160,11 +155,11 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
           responseFormat: opts.responseFormat ?? { type: "json_object" },
           temperature: opts.temperature ?? 0.9,
           maxTokens: opts.maxTokens ?? 2048,
-          // Some models (e.g. deepseek/deepseek-v4-flash) default to an
-          // extended "thinking" mode that adds several seconds of billed
-          // reasoning tokens. This app only needs fast structured JSON, not
-          // deep reasoning, so disable it explicitly via `effort: "none"`.
-          reasoning: { effort: "none" },
+          // Some endpoints require reasoning and reject effort "none".
+          // Use their default unless the caller explicitly configures it.
+          ...(opts.reasoningEffort !== undefined
+            ? { reasoning: { effort: opts.reasoningEffort } }
+            : {}),
           // `order` takes precedence over `sort` (and effectively disables it
           // — the SDK/API docs confirm `sort` only applies "if order is not
           // specified") and keeps us on endpoints this account can actually
@@ -189,6 +184,7 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
           // required (accept the throughput hit as a known tradeoff).
           provider: {
             order: opts.providerOrder ?? resolveProviderOrder(),
+            ...(opts.providerIgnore?.length ? { ignore: opts.providerIgnore } : {}),
             allowFallbacks: true,
             sort: providerSort as "latency" | "throughput",
             zdr: process.env.OPENROUTER_REQUIRE_ZDR === "true",
@@ -198,29 +194,42 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
       // Per-call `timeoutMs` lets large-output call sites (e.g.
       // generate-quiz) opt into a longer budget instead of sharing one fixed
       // value that's too tight for bigger payloads.
-      { timeoutMs, retryCodes: ["429", "5XX"] },
-    );
+      { timeoutMs, signal, retryCodes: ["429", "5XX"], ...(opts.singleAttempt ? { retries: { strategy: "none" as const } } : {}) },
+    ));
 
     if (!("choices" in result)) {
       throw new Error("OpenRouter returned a streaming response unexpectedly.");
     }
-    const content = result.choices[0]?.message?.content;
+    const choice = result.choices[0];
+    const content = choice?.message?.content;
     if (!content || typeof content !== "string") {
+      // Keep diagnostics bounded and safe. Never log the response object: SDK
+      // messages and errors can contain prompts, headers, or other user data.
+      console.warn(`[llm] ${purpose} empty completion`, {
+        finishReason: choice?.finishReason ?? null,
+        completionTokens: result.usage?.completionTokens ?? null,
+        reasoningTokens:
+          result.usage?.completionTokensDetails?.reasoningTokens ?? null,
+        hasReasoning: Boolean(
+          choice?.message?.reasoning || choice?.message?.reasoningDetails?.length,
+        ),
+        hasRefusal: Boolean(choice?.message?.refusal),
+      });
       throw new Error("OpenRouter returned an empty response.");
     }
-    console.log(`[llm] ${purpose} completed in ${Date.now() - start}ms`);
+    console.log(`[llm] ${purpose} completed in ${Date.now() - start}ms (model=${model})`);
     try {
       return parseJsonContent(content);
     } catch {
-      throw new Error(
-        `OpenRouter returned non-JSON output: ${content.slice(0, 200)}`,
-      );
+      throw new Error("OpenRouter returned non-JSON output.");
     }
   } catch (err) {
+    const safeError = sanitizeLlmError(err);
     console.error(
       `[llm] ${purpose} failed after ${Date.now() - start}ms (timeout=${timeoutMs}ms, model=${model}, providerSort=${providerSort})`,
-      err,
+      { name: safeError.name, kind: safeError.kind, status: safeError.statusCode, provider: safeError.provider },
     );
-    throw err;
+    // Never propagate the raw SDK error to callers that may log it again.
+    throw safeError;
   }
 }

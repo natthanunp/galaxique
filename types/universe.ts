@@ -1,3 +1,5 @@
+import type { ProfileMetadata } from "@/lib/profile";
+
 /** Shared types for the Galaxique universe visualizer. */
 
 /** UI language, selected on the landing page and threaded through the flow. */
@@ -127,7 +129,7 @@ export type CelestialVisualConfig =
   | { celestial_type: "neutron_star"; neutron_star: NeutronStarVisualConfig };
 
 /** The full reveal payload returned by LLM call #2 — drives the 3D scene + Spotify. */
-export interface UniverseReveal {
+export interface UniverseReveal extends ProfileMetadata {
   vibe: Vibe;
   celestial_type: CelestialType;
   central_symbol: CentralSymbol;

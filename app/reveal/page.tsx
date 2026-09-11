@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { ArrowLeftIcon, MessageCircleIcon, SparklesIcon } from "lucide-react";
 
+import { AnimatedUniverseBackground } from "@/components/shared/AnimatedUniverseBackground";
 import { LoadingCosmos } from "@/components/shared/LoadingCosmos";
 import { VinylDisc } from "@/components/reveal/VinylDisc";
 import { PersonalityReading } from "@/components/reveal/PersonalityReading";
@@ -23,7 +24,8 @@ const UniverseCanvas = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-full w-full items-center justify-center">
+      <div className="relative isolate flex h-full w-full items-center justify-center">
+        <AnimatedUniverseBackground />
         <LoadingCosmos label="Summoning your universe…" />
       </div>
     ),
@@ -171,7 +173,7 @@ export default function RevealPage() {
     if (!hydrated || !reveal) return;
     if (typeof window === "undefined") return;
 
-    const dedupeKey = `stats:${reveal.vibe}:${reveal.spotify_track_id || reveal.personality_reading.length}`;
+    const dedupeKey = reveal.reveal_id ?? `stats:${reveal.vibe}:${reveal.spotify_track_id || reveal.personality_reading.length}`;
     const sentKey = "galaxseea:stats-incremented";
     try {
       if (window.sessionStorage.getItem(sentKey) === dedupeKey) return;
@@ -180,24 +182,24 @@ export default function RevealPage() {
     }
 
     statsIncrementedRef.current = true;
-    try {
-      window.sessionStorage.setItem(sentKey, dedupeKey);
-    } catch {
-      // ignore — best-effort dedupe
-    }
-
-    void fetch("/api/stats/increment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        vibe: reveal.vibe,
-        celestial_type: reveal.celestial_type,
-      }),
-      keepalive: true,
-    }).catch((err) =>
-      console.error("[reveal] Stats increment failed", err),
-    );
-  }, [hydrated, reveal]);
+    void (async () => {
+      // The statistics endpoint deduplicates by reveal UUID, so one retry is safe.
+      const attempts = 2;
+      for (let attempt = 0; attempt < attempts; attempt++) {
+        try {
+          const response = await fetch("/api/stats/increment", {
+            method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true,
+            body: JSON.stringify({ vibe: reveal.vibe, celestial_type: reveal.celestial_type,
+              profile_version: reveal.profile_version, theme: reveal.theme, reveal_id: reveal.reveal_id, language }),
+          });
+          if (!response.ok) throw new Error("Statistics request failed");
+          try { window.sessionStorage.setItem(sentKey, dedupeKey); } catch { /* optional browser storage */ }
+          return;
+        } catch { /* Retry only UUID-deduplicated records. */ }
+      }
+      statsIncrementedRef.current = false;
+    })();
+  }, [hydrated, reveal, language]);
 
   // Notify the owner via Telegram once the reveal has actually been shown
   // to the user. Keyed off the resolved Spotify track id (or the reading
@@ -268,7 +270,8 @@ export default function RevealPage() {
 
   if (!hydrated || !reveal) {
     return (
-      <main className="safe-area-page relative flex min-h-dvh items-center justify-center">
+      <main className="safe-area-page relative isolate flex min-h-dvh items-center justify-center">
+        <AnimatedUniverseBackground />
         <LoadingCosmos />
       </main>
     );
@@ -281,14 +284,19 @@ export default function RevealPage() {
           space color so the transparent clear color never flashes white
           before the first frame paints.
 
-          `absolute inset-0` (not `fixed`) so the canvas stretches to the
-          FULL height of the scrollable page. With `fixed` the canvas only
-          covered the viewport, so once the reading pushed the page taller
-          than one screen, everything below the fold showed the flat
-          near-black page background — the "black bar" at the bottom. */}
+          MUST stay `fixed inset-0` (viewport-sized). It was once changed to
+          `absolute inset-0` so the canvas would stretch to the FULL height
+          of the scrollable page — but that made the canvas element as tall
+          as the whole document (~3x viewport height on mobile), and R3F
+          derives camera.aspect from the canvas size, so the horizontal FOV
+          collapsed and the scene looked squeezed/cropped on narrow screens.
+          `fixed` keeps the canvas viewport-sized (correct aspect) AND glued
+          to the viewport while the reading scrolls over it — the opaque
+          clear color (#05050a) means no black bar can ever flash below the
+          fold. */}
       <div className={exportMode
         ? "fixed inset-0 z-0 flex items-center justify-center bg-[#05050a]"
-        : "pointer-events-none absolute inset-0 z-0"}
+        : "pointer-events-none fixed inset-0 z-0"}
       >
         <div
           className={exportMode ? "shrink-0" : "h-full w-full"}
@@ -380,6 +388,8 @@ export default function RevealPage() {
             language={language}
             reading={reveal.personality_reading}
             vibe={reveal.vibe}
+            profile_version={reveal.profile_version}
+            theme={reveal.theme}
             onExportModeChange={(exporting, overlay) => {
               setExportMode(exporting);
               setExportOverlay(exporting ? overlay ?? null : null);
@@ -413,23 +423,15 @@ export default function RevealPage() {
         </div>
       </header>
 
-      {/* Immersive content overlay — the vinyl disc is the hero and sits
-          in the visual center of the viewport. The reading + meta strip
-          dock to the bottom on mobile and to the right edge on desktop,
-          leaving the disc clearly visible as the focal point. The
-          container is `pointer-events-none` so the canvas still receives
-          orbit-drag; only the children opt back in via
-          `pointer-events-auto`. */}
+      {/* Desktop docks keep the galaxy clear in the center. The overlay
+          passes orbit gestures through except on interactive content. */}
       <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-7xl flex-col items-stretch gap-0 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(5rem,calc(env(safe-area-inset-top)+4rem))] sm:px-6 sm:pt-[max(5.5rem,calc(env(safe-area-inset-top)+4.5rem))] lg:max-w-none lg:px-8 lg:flex-row lg:items-stretch lg:justify-end lg:gap-8 xl:gap-12">
-        {/* Vinyl hero — centered over the galaxy on every breakpoint.
-            On mobile it occupies a dedicated upper scene region, leaving
-            the reading to begin below the track controls instead of
-            competing with the focal point. */}
+        {/* Keep the mobile scene layout; dock the desktop player on the left. */}
         <motion.div
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9 }}
-            className="pointer-events-auto absolute left-1/2 top-[50svh] z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:top-[46svh] lg:left-1/2 lg:top-[45%] lg:-translate-x-1/2 lg:-translate-y-1/2"
+            className="pointer-events-auto absolute left-1/2 top-[50svh] z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:top-[46svh] lg:bottom-20 lg:left-8 lg:top-auto lg:translate-x-0 lg:translate-y-0"
         >
           <VinylDisc
             query={reveal.spotify_search_query}
@@ -437,7 +439,6 @@ export default function RevealPage() {
             language={language}
             primaryColor={reveal.primary_color}
             size="hero"
-            className="lg:scale-110"
           />
         </motion.div>
 
@@ -455,6 +456,8 @@ export default function RevealPage() {
           <PersonalityReading
             reading={reveal.personality_reading}
             vibe={reveal.vibe}
+            profile_version={reveal.profile_version}
+            theme={reveal.theme}
             language={language}
             borderless
           />

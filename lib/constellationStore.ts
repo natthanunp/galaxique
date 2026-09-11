@@ -1,4 +1,5 @@
 import { Redis } from "@upstash/redis";
+import type { ProfileMetadata } from "@/lib/profile";
 
 /**
  * Constellation store — stores minimal universe summaries in Upstash Redis
@@ -7,7 +8,7 @@ import { Redis } from "@upstash/redis";
  * Falls back to an in-memory array for local dev without Redis.
  */
 
-export interface ConstellationStar {
+export interface ConstellationStar extends ProfileMetadata {
   /** Short ID for the star (first 8 chars of a UUID). */
   id: string;
   vibe: string;

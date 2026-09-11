@@ -6,6 +6,7 @@ import {
   appendMessage,
 } from "@/lib/creatureChatStore";
 import { buildCreatureChatPrompt } from "@/prompts/creatureChatPrompt";
+import { sanitizeLlmError } from "@/lib/llmError";
 import type { Language, UniverseReveal } from "@/types/universe";
 
 export const runtime = "nodejs";
@@ -29,7 +30,11 @@ const client = new OpenRouter({
   appTitle: "Galaxique Creature Chat",
 });
 
-const CHAT_MODEL = "deepseek/deepseek-v4-flash";
+const CHAT_MODEL = process.env.OPENROUTER_CHAT_MODEL || process.env.OPENROUTER_MODEL || "openai/gpt-oss-20b";
+const CHAT_PROVIDERS = (process.env.OPENROUTER_PROVIDER_ORDER || "groq")
+  .split(",")
+  .map((provider) => provider.trim().toLowerCase())
+  .filter(Boolean);
 
 export async function POST(request: Request) {
   try {
@@ -68,9 +73,10 @@ export async function POST(request: Request) {
         model: CHAT_MODEL,
         messages: llmMessages,
         temperature: 0.85,
-        maxTokens: 200,
-        reasoning: { effort: "none" },
-        provider: { allowFallbacks: true },
+        // Budget includes internal reasoning; the prompt keeps replies to 1–2 sentences.
+        maxTokens: 1024,
+        reasoning: { effort: "low" },
+        provider: { order: CHAT_PROVIDERS, allowFallbacks: true, zdr: false },
       },
     }, { timeoutMs: 15_000 });
 
@@ -94,7 +100,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, response: cleaned, creatureName });
   } catch (error) {
-    console.error("[creature-chat] Error:", error);
+    const safeError = sanitizeLlmError(error);
+    console.error("[creature-chat] Error:", {
+      name: safeError.name, kind: safeError.kind, status: safeError.statusCode, provider: safeError.provider,
+    });
     return NextResponse.json(
       { success: false, response: null, error: "Failed" },
       { status: 500 },
