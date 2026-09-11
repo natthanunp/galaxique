@@ -23,7 +23,7 @@ interface UniverseCanvasProps {
   reveal: UniverseReveal;
   /** Called once R3F mounts its <canvas> — used to grab it for video recording. */
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
-  /** When true, sets the renderer DPR to a crisp-but-fast 1.5 for exports.
+  /** When true, sets the renderer DPR to a crisp-but-fast 2.0 for exports.
    *  Set this before recording and clear it after. */
   exportMode?: boolean;
   /** Static metadata rendered into the direct WebGL recording as a texture. */

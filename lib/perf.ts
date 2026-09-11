@@ -2,6 +2,7 @@
 
 let _isMobile: boolean | null = null;
 let _isLowPower: boolean | null = null;
+let _isHighPerformanceMobile: boolean | null = null;
 
 /**
  * Heuristic for mobile/low-power devices.
@@ -25,15 +26,39 @@ export function isLowPowerDevice(): boolean {
   const ram = (navigator as typeof navigator & { deviceMemory?: number }).deviceMemory ?? 8;
   const cores = navigator.hardwareConcurrency ?? 4;
   const oldOrWeak = /Android [1-9](?:[.; ]|$)|iPhone OS [1-9]_|iPad.*OS [1-9]_/.test(ua);
-  _isLowPower = isMobileDevice() && (ram < 4 || cores < 6 || oldOrWeak || window.innerWidth < 400);
+  // CSS viewport width describes the display, not the GPU. Treating every
+  // sub-400px phone as low-power forced recent iPhones into the 1x render
+  // path and made the reveal visibly soft on their 3x screens.
+  _isLowPower = isMobileDevice() && (ram < 4 || cores < 6 || oldOrWeak);
   return _isLowPower;
 }
 
-/** Cap DPR aggressively on mobile to reduce fill-rate pressure. */
+/** Detect phones/tablets that can safely begin at the full visual tier. */
+export function isHighPerformanceMobileDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  if (_isHighPerformanceMobile !== null) return _isHighPerformanceMobile;
+  if (!isMobileDevice() || isLowPowerDevice()) {
+    _isHighPerformanceMobile = false;
+    return false;
+  }
+
+  const ua = navigator.userAgent || "";
+  const ram = (navigator as typeof navigator & { deviceMemory?: number }).deviceMemory;
+  const cores = navigator.hardwareConcurrency ?? 4;
+  // Safari does not expose deviceMemory. Modern Apple mobile hardware with
+  // at least six logical cores is still a reliable high-performance signal.
+  const capableAppleMobile = /iPhone|iPad|iPod/i.test(ua) && cores >= 6;
+  const capableOtherMobile = cores >= 8 && (ram === undefined || ram >= 6);
+  _isHighPerformanceMobile = capableAppleMobile || capableOtherMobile;
+  return _isHighPerformanceMobile;
+}
+
+/** Use near-retina rendering on capable mobile displays. */
 export function targetDpr(): number {
   if (typeof window === "undefined") return 1;
   const dpr = window.devicePixelRatio || 1;
   if (isLowPowerDevice()) return Math.min(dpr, 1);
+  if (isHighPerformanceMobileDevice()) return Math.min(dpr, 2);
   if (isMobileDevice()) return Math.min(dpr, 1.25);
   return Math.min(dpr, 1.5);
 }
@@ -70,9 +95,10 @@ export interface RenderMetrics {
 }
 
 /** Start within a device-appropriate budget; sustained render samples adapt it.
- * Mobile and conservative browser hints start at medium, low-power at low. */
+ * Capable mobile starts high, other mobile/conservative browsers at medium. */
 export function initialQualityTier(): QualityTier {
   if (isLowPowerDevice()) return "low";
+  if (isHighPerformanceMobileDevice()) return "high";
   if (isMobileDevice() || isFirefoxOrEdgeUA()) return "medium";
   return "high";
 }
@@ -101,7 +127,7 @@ export function tierDprCap(tier: QualityTier, baseDpr: number): number {
  *  adapts DPR and particle counts instead, which has a much smaller
  *  visual impact than silently disabling bloom (which made the
  *  accretion disk and central glow look "dead" on first paint). */
-export function tierEffectsEnabled(tier: QualityTier): {
+export function tierEffectsEnabled(): {
   bloom: boolean;
   lensing: boolean;
 } {

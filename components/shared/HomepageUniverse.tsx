@@ -148,7 +148,11 @@ export default function HomepageUniverse({ vibeStats }: { vibeStats?: Record<str
   useEffect(() => { usePerfStore.getState().initialize(); }, []);
 
   return (
-    <div aria-hidden data-testid="homepage-universe" className="pointer-events-none fixed inset-0 -z-10 bg-[#03050c]">
+    <div
+      aria-hidden
+      data-testid="homepage-universe"
+      className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-screen min-h-lvh bg-[#03050c]"
+    >
       <Canvas
         camera={{ position: [0, 0, 17], fov: 50, near: 0.1, far: 100 }}
         dpr={tierDprCap(tier, targetDpr())}

@@ -16,9 +16,13 @@ function device({ width = 1440, ua = 'Chrome/140', touch = false, cores = 8, ram
   return load('lib/perf.ts', { window: { innerWidth: width, devicePixelRatio: 3 }, navigator: { userAgent: ua, maxTouchPoints: touch ? 5 : 0, hardwareConcurrency: cores, deviceMemory: ram } });
 }
 assert.equal(device().initialQualityTier(), 'high');
-assert.equal(device({ width: 430, ua: 'Android 13; Mobile', touch: true }).initialQualityTier(), 'medium', 'modern Android must not match old Android 1');
+const capableIPhone = device({ width: 390, ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) Mobile/15E148 Safari/604.1', touch: true, cores: 6 });
+assert.equal(capableIPhone.initialQualityTier(), 'high', 'narrow modern iPhones should not be classified as low-power');
+assert.equal(capableIPhone.targetDpr(), 2);
+assert.equal(device({ width: 430, ua: 'Android 13; Mobile', touch: true, cores: 8, ram: 8 }).initialQualityTier(), 'high', 'capable modern Android should start high');
+assert.equal(device({ width: 430, ua: 'Android 13; Mobile', touch: true, cores: 6, ram: 4 }).initialQualityTier(), 'medium');
 assert.equal(device({ width: 430, ua: 'Android 9; Mobile', touch: true }).initialQualityTier(), 'low');
-assert.equal(device({ width: 390, touch: true }).initialQualityTier(), 'low');
+assert.equal(device({ width: 390, touch: true, cores: 4 }).initialQualityTier(), 'low');
 assert.equal(device({ ua: 'Firefox/140' }).initialQualityTier(), 'medium');
 const perf = device();
 assert.equal(perf.tierDprCap('low', 1.5), 1);
