@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 
 import { wantsEventStream } from "@/lib/analyzeProgress";
-import { generateBalancedQuiz } from "@/lib/quiz";
+import { QUIZ_GENERATION_METRICS } from "@/lib/quiz";
+import { runSharedQuizJob } from "@/lib/quizJobs";
 import {
   quizSseStream,
   type QuizProgressCallback,
@@ -14,6 +15,43 @@ interface GenerateQuizInput {
   avoidAngles: string[];
   language: "en" | "th";
   nonce?: string;
+}
+
+function metricsFrom(value: unknown) {
+  if (!value || (typeof value !== "object" && typeof value !== "function")) return undefined;
+  return (value as { [QUIZ_GENERATION_METRICS]?: {
+    elapsedMs: number;
+    initialAccepted: number;
+    repairRounds: number;
+    repairCalls: number;
+    requestCount: number;
+    failedRequestCount: number;
+    promptTokens: number;
+    outputTokens: number;
+    reasoningTokens: number;
+    costUsd: number;
+    missingUsageCount: number;
+    providers: string[];
+    finishReasons: string[];
+  } })[QUIZ_GENERATION_METRICS];
+}
+
+function quizMetricHeaders(metrics: NonNullable<ReturnType<typeof metricsFrom>>): Record<string, string> {
+  return {
+    "Server-Timing": `quiz;dur=${metrics.elapsedMs}`,
+    "X-Quiz-Initial-Accepted": String(metrics.initialAccepted),
+    "X-Quiz-Repair-Rounds": String(metrics.repairRounds),
+    "X-Quiz-Repair-Calls": String(metrics.repairCalls),
+    "X-Quiz-Request-Count": String(metrics.requestCount),
+    "X-Quiz-Failed-Requests": String(metrics.failedRequestCount),
+    "X-Quiz-Prompt-Tokens": String(metrics.promptTokens),
+    "X-Quiz-Output-Tokens": String(metrics.outputTokens),
+    "X-Quiz-Reasoning-Tokens": String(metrics.reasoningTokens),
+    "X-Quiz-Cost-Usd": String(metrics.costUsd),
+    "X-Quiz-Missing-Usage": String(metrics.missingUsageCount),
+    "X-Quiz-Providers": metrics.providers.join(","),
+    "X-Quiz-Finish-Reasons": metrics.finishReasons.join(","),
+  };
 }
 
 function parseRequestBody(raw: unknown):
@@ -51,13 +89,18 @@ async function runQuizGeneration(
   progress: QuizProgressCallback,
 ) {
   try {
-    return await generateBalancedQuiz(input, progress);
+    return await runSharedQuizJob(input, progress);
   } catch (error) {
     console.warn(
       "[generate-quiz] failed",
       error instanceof Error ? error.name : "UnknownError",
     );
-    throw new Error("Could not finish all eight questions. Please try again.");
+    const publicError = new Error("Could not finish all eight questions. Please try again.");
+    const metrics = metricsFrom(error);
+    if (metrics) {
+      Object.defineProperty(publicError, QUIZ_GENERATION_METRICS, { value: metrics });
+    }
+    throw publicError;
   }
 }
 
@@ -84,11 +127,16 @@ export async function POST(request: Request) {
   }
 
   try {
-    return NextResponse.json(await runQuizGeneration(parsed.data, () => {}));
+    const result = await runQuizGeneration(parsed.data, () => {});
+    const metrics = result[QUIZ_GENERATION_METRICS];
+    return NextResponse.json(result, {
+      headers: quizMetricHeaders(metrics),
+    });
   } catch (error) {
+    const metrics = metricsFrom(error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to generate quiz." },
-      { status: 502 },
+      { status: 502, ...(metrics ? { headers: quizMetricHeaders(metrics) } : {}) },
     );
   }
 }

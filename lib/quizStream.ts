@@ -17,6 +17,11 @@
 
 import type { QuizProgressEvent } from "@/lib/quizProgress";
 import type { GeneratedQuiz } from "@/lib/quizPrefetch";
+import {
+  acquireQuizRequestNonce,
+  releaseQuizRequestNonce,
+} from "@/lib/quizRequestNonce";
+import type { Language } from "@/types/universe";
 
 export interface QuizStreamHandlers {
   /** Called once per `event: progress`. */
@@ -33,17 +38,37 @@ export interface QuizStreamHandlers {
  *  once. Throws if the response is not OK and not parseable as an error
  *  envelope. */
 export async function streamQuiz(
-  payload: { avoidAngles: readonly string[]; language: unknown; nonce?: string },
+  payload: {
+    avoidAngles: readonly string[];
+    language: Language;
+    nonce?: string;
+    explicitRetry?: boolean;
+  },
   handlers: QuizStreamHandlers,
 ): Promise<void> {
-  const response = await fetch("/api/generate-quiz", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "text/event-stream",
-    },
-    body: JSON.stringify(payload),
-  });
+  const nonce = payload.nonce ?? acquireQuizRequestNonce(
+    payload.avoidAngles,
+    payload.language,
+    payload.explicitRetry,
+  );
+  let response: Response;
+  try {
+    response = await fetch("/api/generate-quiz", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "text/event-stream",
+      },
+      body: JSON.stringify({
+        avoidAngles: payload.avoidAngles,
+        language: payload.language,
+        nonce,
+      }),
+    });
+  } catch (error) {
+    releaseQuizRequestNonce(payload.avoidAngles, payload.language, nonce);
+    throw error;
+  }
 
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("text/event-stream")) {
@@ -52,15 +77,18 @@ export async function streamQuiz(
         error?: string;
         detail?: string;
       };
+      releaseQuizRequestNonce(payload.avoidAngles, payload.language, nonce);
       throw new Error(body.error || body.detail || `HTTP ${response.status}`);
     }
     // Legacy JSON success path: server didn't honor our Accept header.
     const quiz = (await response.json()) as GeneratedQuiz;
     handlers.onResult?.(quiz);
+    releaseQuizRequestNonce(payload.avoidAngles, payload.language, nonce);
     return;
   }
 
   if (!response.ok || !response.body) {
+    releaseQuizRequestNonce(payload.avoidAngles, payload.language, nonce);
     throw new Error(`HTTP ${response.status}`);
   }
 
@@ -87,6 +115,8 @@ export async function streamQuiz(
   } catch (err) {
     handlers.onError?.(err instanceof Error ? err.message : "Stream failed");
     return;
+  } finally {
+    releaseQuizRequestNonce(payload.avoidAngles, payload.language, nonce);
   }
 
   function parseAndDispatch(rawEvent: string): void {

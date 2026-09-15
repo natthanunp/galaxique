@@ -80,6 +80,26 @@ export interface LlmCallOptions {
   providerSort?: "latency" | "throughput";
   /** Disable SDK retries when the caller owns a shared request deadline. */
   singleAttempt?: boolean;
+  /** Whether OpenRouter may route to another provider when the selected
+   *  endpoint fails. Defaults to true for existing callers. Quiz generation
+   *  sets this to false and performs only targeted same-endpoint repairs. */
+  allowProviderFallbacks?: boolean;
+  /** Optional outer-operation cancellation signal. */
+  signal?: AbortSignal;
+  /** Bounded, content-free request telemetry for evaluation and operations. */
+  onMetrics?: (metrics: LlmCallMetrics) => void;
+}
+
+export interface LlmCallMetrics {
+  status: "completed" | "failed";
+  elapsedMs: number;
+  model: string;
+  provider: string | null;
+  finishReason: string | null;
+  promptTokens: number | null;
+  completionTokens: number | null;
+  reasoningTokens: number | null;
+  costUsd: number | null;
 }
 
 /** Explicit provider preference order for the configured model.
@@ -143,6 +163,16 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
   const providerSort =
     opts.providerSort ?? process.env.OPENROUTER_PROVIDER_SORT ?? "throughput";
   const timeoutMs = opts.timeoutMs ?? 20_000;
+  let metricsReported = false;
+  const reportMetrics = (metrics: LlmCallMetrics) => {
+    if (metricsReported) return;
+    metricsReported = true;
+    try {
+      opts.onMetrics?.(metrics);
+    } catch {
+      // Telemetry must never make a completed model request fail.
+    }
+  };
   try {
     const result = await withRequestDeadline(timeoutMs, signal => client.chat.send(
       {
@@ -185,7 +215,7 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
           provider: {
             order: opts.providerOrder ?? resolveProviderOrder(),
             ...(opts.providerIgnore?.length ? { ignore: opts.providerIgnore } : {}),
-            allowFallbacks: true,
+            allowFallbacks: opts.allowProviderFallbacks ?? true,
             sort: providerSort as "latency" | "throughput",
             zdr: process.env.OPENROUTER_REQUIRE_ZDR === "true",
           },
@@ -195,13 +225,30 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
       // generate-quiz) opt into a longer budget instead of sharing one fixed
       // value that's too tight for bigger payloads.
       { timeoutMs, signal, retryCodes: ["429", "5XX"], ...(opts.singleAttempt ? { retries: { strategy: "none" as const } } : {}) },
-    ));
+    ), opts.signal);
 
     if (!("choices" in result)) {
       throw new Error("OpenRouter returned a streaming response unexpectedly.");
     }
     const choice = result.choices[0];
     const content = choice?.message?.content;
+    const successfulAttempt = [...(result.openrouterMetadata?.attempts ?? [])]
+      .reverse()
+      .find((attempt) => attempt.status >= 200 && attempt.status < 300);
+    reportMetrics({
+      status: "completed",
+      elapsedMs: Date.now() - start,
+      model: result.model || model,
+      provider: successfulAttempt?.provider
+        ?? (opts.allowProviderFallbacks === false && opts.providerOrder?.length === 1
+          ? opts.providerOrder[0]
+          : null),
+      finishReason: choice?.finishReason ?? null,
+      promptTokens: result.usage?.promptTokens ?? null,
+      completionTokens: result.usage?.completionTokens ?? null,
+      reasoningTokens: result.usage?.completionTokensDetails?.reasoningTokens ?? null,
+      costUsd: result.usage?.cost ?? null,
+    });
     if (!content || typeof content !== "string") {
       // Keep diagnostics bounded and safe. Never log the response object: SDK
       // messages and errors can contain prompts, headers, or other user data.
@@ -225,6 +272,17 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
     }
   } catch (err) {
     const safeError = sanitizeLlmError(err);
+    reportMetrics({
+      status: "failed",
+      elapsedMs: Date.now() - start,
+      model,
+      provider: safeError.provider ?? null,
+      finishReason: null,
+      promptTokens: null,
+      completionTokens: null,
+      reasoningTokens: null,
+      costUsd: null,
+    });
     console.error(
       `[llm] ${purpose} failed after ${Date.now() - start}ms (timeout=${timeoutMs}ms, model=${model}, providerSort=${providerSort})`,
       { name: safeError.name, kind: safeError.kind, status: safeError.statusCode, provider: safeError.provider },

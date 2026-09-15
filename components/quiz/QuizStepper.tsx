@@ -110,7 +110,7 @@ export function QuizStepper() {
   // `loadQuestions` is also called directly from the "Try again" button, so
   // retrying after a failed fetch doesn't require a full page reload.
   const didFetchRef = useRef(false);
-  const loadQuestions = useCallback(() => {
+  const loadQuestions = useCallback((explicitRetry = false) => {
     setFetching(true);
     setFetchError(null);
     setQuizProgress(null);
@@ -133,7 +133,7 @@ export function QuizStepper() {
     // Slow path: stream progress from the server so the user sees
     // "planning → writing n/8" instead of a static spinner.
     streamQuiz(
-      { avoidAngles, language, nonce: undefined },
+      { avoidAngles, language, explicitRetry },
       {
         onProgress: (event) => setQuizProgress(event),
         onResult: (data) => {
@@ -168,7 +168,7 @@ export function QuizStepper() {
 
   const handleRetryFetch = useCallback(() => {
     reset();
-    void loadQuestions();
+    void loadQuestions(true);
   }, [reset, loadQuestions]);
 
   const total = questions.length;

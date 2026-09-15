@@ -1,6 +1,10 @@
 "use client";
 
 import type { Language, QuizQuestion } from "@/types/universe";
+import {
+  acquireQuizRequestNonce,
+  releaseQuizRequestNonce,
+} from "@/lib/quizRequestNonce";
 
 export interface GeneratedQuiz {
   questions: QuizQuestion[];
@@ -24,38 +28,21 @@ async function requestQuiz(
   avoidAngles: readonly string[],
   language: Language,
 ): Promise<GeneratedQuiz> {
-  const response = await fetch("/api/generate-quiz", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ avoidAngles, language, nonce: generateNonce() }),
-  });
-  if (!response.ok) {
-    const body = await response.json().catch(() => ({}));
-    throw new Error(body.error || `Failed (${response.status})`);
+  const nonce = acquireQuizRequestNonce(avoidAngles, language);
+  try {
+    const response = await fetch("/api/generate-quiz", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ avoidAngles, language, nonce }),
+    });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw new Error(body.error || `Failed (${response.status})`);
+    }
+    return await response.json() as GeneratedQuiz;
+  } finally {
+    releaseQuizRequestNonce(avoidAngles, language, nonce);
   }
-  return response.json() as Promise<GeneratedQuiz>;
-}
-
-/** Generate a unique request nonce. Prefers `crypto.randomUUID` (available
- *  in secure contexts: HTTPS, localhost) but falls back to a Math.random-
- *  based UUID-shaped string for non-secure contexts like a phone on the
- *  same Wi-Fi accessing `http://<laptop-ip>:3000` — otherwise the quiz
- *  request throws `crypto.randomUUID is not a function` on the very first
- *  attempt. Uniqueness (not cryptographic strength) is all the server-side
- *  in-flight dedup needs; collisions are vanishingly unlikely with 32
- *  hex chars of entropy either way. */
-function generateNonce(): string {
-  const c = typeof globalThis !== "undefined" ? (globalThis.crypto as Crypto | undefined) : undefined;
-  if (c && typeof c.randomUUID === "function") {
-    return c.randomUUID();
-  }
-  // RFC 4122 v4-ish shape from two Math.random calls. Good enough for the
-  // request-dedupe key (collision odds per pair ≈ 1e-19).
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (ch) => {
-    const r = (Math.random() * 16) | 0;
-    const v = ch === "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
 }
 
 /** Begin the next quiz's request before navigation. Callers with matching
