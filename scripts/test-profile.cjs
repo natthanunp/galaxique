@@ -39,7 +39,7 @@ stub('lib/constellationStore.ts', { addStar: async star => stars.push(star) });
 for (const key of ['KV_REST_API_URL', 'KV_REST_API_TOKEN', 'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN']) delete process.env[key];
 const { THEMES, CELESTIAL_TYPES, THEME_VIBE, profileLabel } = require('../lib/profile.ts');
 const { ASSESSMENT_PROMPT, ASSESSMENT_REPAIR_PROMPT, validateAssessment, selectProfile, analyzeBodySchema } = require('../lib/profileAssessment.ts');
-const { validQuizQuestion, questionRejectionReasons, shuffleOptions, generateBalancedQuiz, buildBalancedQuizPrompt, createScenarioPlan, QUIZ_TOPICS, QUIZ_GENERATION_METRICS, DEFAULT_QUIZ_MODEL, DEFAULT_QUIZ_PROVIDERS } = require('../lib/quiz.ts');
+const { validQuizQuestion, questionRejectionReasons, shuffleOptions, generateBalancedQuiz, buildBalancedQuizPrompt, createScenarioPlan, QUIZ_TOPICS, QUIZ_OPTION_THEMES, QUIZ_GENERATION_METRICS, DEFAULT_QUIZ_MODEL, DEFAULT_QUIZ_PROVIDERS } = require('../lib/quiz.ts');
 const { rankSongs, selectSong } = require('../lib/songMatching.ts');
 const { analyzeFailureDiagnostic, runAnalyze } = require('../lib/analyze.ts');
 const { incrementProfileStat, getProfileStats } = require('../lib/profileStatsStore.ts');
@@ -193,13 +193,15 @@ test('assessment prompt interprets short choices in question context without cit
   assert.match(ASSESSMENT_PROMPT, /question supplies context/);
   assert.match(ASSESSMENT_REPAIR_PROMPT, /citing only an exact substring of the answer/);
 });
+const themed = (id, texts) => texts.map((text, i) => ({ text, theme: QUIZ_OPTION_THEMES[id - 1][i] }));
+const retheme = (question, id) => ({ ...question, id, options: question.options.map((option, i) => ({ ...option, theme: QUIZ_OPTION_THEMES[id - 1][i] })) });
 const englishQuestion = (id, overrides = {}) => ({
   id,
   topic: QUIZ_TOPICS[id - 1],
   setting: `distinct setting ${id}`,
   angle: `Angle ${id}`,
   text: `In situation ${id}, what do you do?`,
-  options: ['Ask a friend', 'Consider the options', 'Try something new', 'Make a plan'].map(text => ({ text })),
+  options: themed(id, ['Ask a friend', 'Consider the options', 'Try something new', 'Make a plan']),
   ...overrides,
 });
 const requestedIds = options => JSON.parse(options.userPrompt).requestedIds;
@@ -212,12 +214,12 @@ const thaiQuestion = id => ({
   setting: `distinct Thai setting ${id}`,
   angle: `Thai angle ${id}`,
   text: `เมื่อแผนลำดับที่ ${id} เปลี่ยนกะทันหัน คุณจะรับมือกับสถานการณ์นี้ยังไง?`,
-  options: [
+  options: themed(id, [
     'หยุดคิดสักครู่แล้วจัดลำดับสิ่งสำคัญใหม่',
     'ชวนคนที่เกี่ยวข้องมาคุยแล้วหาทางออกร่วมกัน',
     'ลองปรับแผนทันทีแล้วค่อยแก้รายละเอียดระหว่างทาง',
     'เก็บข้อมูลที่มีให้ครบก่อนตัดสินใจเลือกวิธีใหม่',
-  ].map(text => ({ text })),
+  ]),
 });
 const languageQuestionsFor = options => ({
   questions: requestedIds(options).map(id => options.systemPrompt.includes('ภาษาไทย')
@@ -232,22 +234,40 @@ test('scenario plans vary domains independently instead of cycling four whole pl
   assert.ok(thaiPlan.every(item => /\p{Script=Thai}/u.test(item.scene)));
   assert.ok(thaiPlan.every(item => /[a-z]/i.test(item.setting)));
 });
+test('option themes give every profile theme a fair share and are hidden from players', async () => {
+  const counts = Object.fromEntries(THEMES.map(theme => [theme, 0]));
+  for (const themes of QUIZ_OPTION_THEMES) {
+    assert.equal(new Set(themes).size, 4);
+    for (const theme of themes) counts[theme]++;
+  }
+  assert.ok(Object.values(counts).every(count => count >= 5 && count <= 6), JSON.stringify(counts));
+  const q = englishQuestion(1);
+  const swapped = { ...q, options: [q.options[0], q.options[1], q.options[2], { ...q.options[3], theme: q.options[0].theme }] };
+  assert.ok(questionRejectionReasons(swapped, 'en').some(reason => reason.startsWith('option_themes(')));
+  assert.equal(validQuizQuestion({ ...q, options: q.options.map(({ text }) => ({ text })) }, 'en'), false);
+  calls = [];
+  responder = options => questionsFor(options);
+  const result = await generateBalancedQuiz({ language: 'en', avoidAngles: [], nonce: 'hidden-themes' }, () => {});
+  assert.ok(result.questions.every(question => question.options.every(option => Object.keys(option).join() === 'text')));
+  assert.ok(buildBalancedQuizPrompt('en', [1]).includes('"theme":"affectionate"'));
+  assert.ok(buildBalancedQuizPrompt('th', [1]).includes('"theme":"affectionate"'));
+});
 test('question validation rejects bad scripts, overlong or duplicate options; shuffle preserves texts and IDs', () => {
   const q = englishQuestion(1);
   assert.equal(validQuizQuestion(q, 'en'), true);
   assert.equal(validQuizQuestion({ ...q, text: 'When two important plans overlap unexpectedly, how do you decide which commitment deserves your attention first today?' }, 'en'), true);
-  assert.equal(validQuizQuestion({ ...q, options: [{ text: 'Ask a trusted friend for another perspective' }, ...q.options.slice(1)] }, 'en'), true);
+  assert.equal(validQuizQuestion({ ...q, options: [{ ...q.options[0], text: 'Ask a trusted friend for another perspective' }, ...q.options.slice(1)] }, 'en'), true);
   assert.equal(validQuizQuestion({ ...q, options: Array(4).fill({ text: 'same' }) }, 'en'), false);
   const thai = {
     ...q,
     setting: 'a difficult household task',
     text: 'เจองานยากที่ต้องรีบจัดการ คุณจะเริ่มยังไง?',
-    options: [
+    options: themed(1, [
       'ถามเพื่อนให้ช่วยมองอีกมุมหนึ่ง',
       'คิดภาพรวมให้ชัดก่อนค่อยลงมือ',
       'ลองวิธีใหม่แล้วค่อยปรับไประหว่างทาง',
       'วางแผนเป็นขั้นตอนแล้วทำทีละส่วน',
-    ].map(text => ({ text })),
+    ]),
   };
   assert.equal(validQuizQuestion(thai, 'th'), true);
   assert.equal(validQuizQuestion({ ...thai, text: 'A question?' }, 'th'), false);
@@ -261,11 +281,12 @@ test('question validation rejects bad scripts, overlong or duplicate options; sh
   assert.ok(questionRejectionReasons({ ...thai, text: 'วันนี้ลองทำอาหารสูตรใหม่แล้วซอสข้นเกินไป จึงหยุดทำต่อ' }, 'th').includes('question_incomplete'));
   assert.equal(validQuizQuestion({ ...thai, text: 'พบเพื่อนเก่าในงาน งานนี้จะเริ่มคุยกันยังไง?' }, 'th'), false);
   assert.equal(validQuizQuestion({ ...thai, text: 'ในงานรวมตัวของอาคารคุณพบเพื่อนใหม่ คุณจะเริ่มต้นแชทยังไง?' }, 'th'), false);
-  assert.equal(validQuizQuestion({ ...thai, options: [{ text: 'ฟังเพลงที่ชอบ' }, ...thai.options.slice(1)] }, 'th'), true);
-  assert.equal(validQuizQuestion({ ...thai, id: 2, options: [{ text: 'ไม่ทำอะไรเลยสักพัก' }, ...thai.options.slice(1)] }, 'th'), true);
-  assert.equal(validQuizQuestion({ ...thai, id: 5, options: [{ text: 'ไม่ทำอะไรเลยสักพัก' }, ...thai.options.slice(1)] }, 'th'), false);
-  assert.ok(questionRejectionReasons({ ...thai, options: [{ text: 'ฟัง' }, ...thai.options.slice(1)] }, 'th').some(reason => reason.startsWith('option_1_too_short(actual=')));
-  assert.equal(validQuizQuestion({ ...thai, options: [{ text: 'สุ่มเลือกไปเลย' }, ...thai.options.slice(1)] }, 'th'), false);
+  assert.equal(validQuizQuestion({ ...thai, options: [{ ...thai.options[0], text: 'ฟังเพลงที่ชอบ' }, ...thai.options.slice(1)] }, 'th'), true);
+  assert.equal(validQuizQuestion(retheme({ ...thai, options: [{ ...thai.options[0], text: 'ไม่ทำอะไรเลยสักพัก' }, ...thai.options.slice(1)] }, 2), 'th'), true);
+  assert.equal(validQuizQuestion(retheme({ ...thai, options: [{ ...thai.options[0], text: 'ไม่ทำอะไรเลยสักพัก' }, ...thai.options.slice(1)] }, 5), 'th'), false);
+  assert.ok(questionRejectionReasons({ ...thai, options: [{ ...thai.options[0], text: 'ฟัง' }, ...thai.options.slice(1)] }, 'th').some(reason => reason.startsWith('option_1_too_short(actual=')));
+  assert.equal(validQuizQuestion({ ...thai, options: [{ ...thai.options[0], text: 'สุ่มเลือกไปเลย' }, ...thai.options.slice(1)] }, 'th'), false);
+  assert.equal(validQuizQuestion({ ...thai, options: [{ ...thai.options[0], text: 'ชวนคุยเรื่องอาหารตรงหน้า' }, ...thai.options.slice(1)] }, 'th'), false);
   const shuffled = shuffleOptions(q, () => 0);
   assert.equal(shuffled.id, q.id); assert.deepEqual(shuffled.options.map(o => o.text).sort(), q.options.map(o => o.text).sort());
   assert.notDeepEqual(shuffled.options, q.options); assert.equal(q.options[0].text, 'Ask a friend');
@@ -284,11 +305,11 @@ test('two initial batches run concurrently and a malformed item triggers only a 
         id: '1',
         topic: 'wrong-but-derived-from-id',
         angle: undefined,
-        options: question.options.map(option => option.text),
+        options: question.options.map(option => ({ ...option, theme: ` ${option.theme.toUpperCase()} ` })),
       }
     : question));
   deferred[1].resolve(questionsFor(deferred[1].options, (question, id) => id === 8
-    ? { ...question, options: Array(4).fill({ text: 'Same choice' }) }
+    ? { ...question, options: question.options.map(option => ({ ...option, text: 'Same choice' })) }
     : question));
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(calls.length, 3);
