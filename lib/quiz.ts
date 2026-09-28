@@ -1,7 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
-import { quizConfig } from "@/config/quizConfig";
 import { callLlm, resolveProviderOrder, type LlmCallMetrics } from "@/lib/llm";
 import { sanitizeLlmError } from "@/lib/llmError";
 import { buildThaiQuizPrompt } from "@/prompts/thaiQuizPrompt";
@@ -20,8 +19,9 @@ export const QUIZ_TOPICS = [
   "personal priorities",
 ] as const;
 
-export const DEFAULT_THAI_QUIZ_MODEL = "deepseek/deepseek-v4-flash";
-export const DEFAULT_THAI_QUIZ_PROVIDER = "alibaba";
+export const DEFAULT_QUIZ_MODEL = "openai/gpt-6-luna";
+// Both routes serve the same weights, so falling back never changes copy quality.
+export const DEFAULT_QUIZ_PROVIDERS = ["openai", "azure"] as const;
 
 const QUIZ_TOPIC_GUIDANCE = [
   "connection with people",
@@ -115,18 +115,23 @@ export function createScenarioPlan(nonce: string, language: Language = "en"): Qu
 }
 
 function quizModel(language: Language): string {
-  if (language === "th") return process.env.OPENROUTER_THAI_QUIZ_MODEL || DEFAULT_THAI_QUIZ_MODEL;
-  return process.env.OPENROUTER_QUIZ_MODEL || quizConfig.openrouterModel;
+  const override = language === "th"
+    ? process.env.OPENROUTER_THAI_QUIZ_MODEL
+    : process.env.OPENROUTER_QUIZ_MODEL;
+  return override || DEFAULT_QUIZ_MODEL;
 }
 
-function quizProviderOrder(language: Language): string[] {
+function quizProviderOrder(language: Language, model: string): string[] {
   const raw = language === "th"
-    ? process.env.OPENROUTER_THAI_QUIZ_PROVIDER_ORDER ?? DEFAULT_THAI_QUIZ_PROVIDER
+    ? process.env.OPENROUTER_THAI_QUIZ_PROVIDER_ORDER
     : process.env.OPENROUTER_QUIZ_PROVIDER_ORDER;
   const parsed = raw?.split(",").map((slug) => slug.trim().toLowerCase()).filter(Boolean);
-  // Quiz generation deliberately uses one provider. OpenRouter fallback is
-  // disabled as well, so repairs exercise the same model and endpoint.
-  return [(parsed?.[0] ?? resolveProviderOrder()[0] ?? "groq")];
+  if (parsed?.length) return parsed;
+  return model === DEFAULT_QUIZ_MODEL ? [...DEFAULT_QUIZ_PROVIDERS] : resolveProviderOrder();
+}
+
+function rotate<T>(items: T[]): T[] {
+  return items.length > 1 ? [...items.slice(1), items[0]] : items;
 }
 
 function quizOutputTokenBudget(language: Language, itemCount: number, repair: boolean): number {
@@ -138,9 +143,11 @@ function quizOutputTokenBudget(language: Language, itemCount: number, repair: bo
 }
 
 function quizReasoningEffort(language: Language, model: string) {
-  const override = language === "th"
-    ? process.env.OPENROUTER_THAI_QUIZ_REASONING_EFFORT ?? (model === DEFAULT_THAI_QUIZ_MODEL ? "none" : undefined)
-    : "low";
+  const configured = language === "th"
+    ? process.env.OPENROUTER_THAI_QUIZ_REASONING_EFFORT
+    : process.env.OPENROUTER_QUIZ_REASONING_EFFORT;
+  const override = configured
+    ?? (model === DEFAULT_QUIZ_MODEL ? "none" : language === "en" ? "low" : undefined);
   if (!override) return undefined;
   return z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"])
     .parse(override);
@@ -158,8 +165,8 @@ The eight domain IDs are fixed in this supplied order: ${QUIZ_TOPICS.map((topic,
 Write exactly the requested IDs: ${ids.join(", ")}. Return exactly ${ids.length} question${ids.length === 1 ? "" : "s"}, use each requested ID once, and return no other IDs. Derive the topic from the ID; copy that English topic into topic.
 Here is the shared scenario plan for the whole quiz: ${JSON.stringify(scenarioPlan)}. Copy the exact English setting value into the internal setting field, but use scene—not a literal translation of setting—as the natural-language anchor for visible text. You may adapt scene details naturally; do not move a scene to another ID. The other batch receives this same complete plan.
 Each question must show one concrete, observable moment. Its four options must be complete actions: distinct, equally respectable strategies with real tradeoffs. Never encode personality labels or stereotypes such as extrovert/introvert, leader/follower, emotional/rational, social loner, คนเข้าสังคม/คนเก็บตัว, ผู้นำ/ผู้ตาม, ใช้อารมณ์/ใช้เหตุผล. Never make one option the obviously ideal, kind, competent answer or make another rude, lazy, cruel, passive, or absurd. Neither warmth nor solitude is mandatory. Across the quiz, give care, stability, reflection, drive, imagination, and independent judgment fair opportunities. A domain is not a target mood. Avoid cosmic metaphors, clinical framing, repetitive openings, repeated settings, and more than one work or school scenario in the entire quiz. Invent a short English angle label specific to each scenario.
-Questions must contain at most 18 words; options should contain 2–6 words and must contain at most 7. Use natural, concrete English with enough context to picture the moment; no clipped labels or filler.
-${compactRepair ? "This is a targeted repair. Respect the accepted questions and rejection reasons in the user data; replace only the requested IDs without repeating an accepted setting or situation." : ""}
+Questions must contain at most 18 words (aim for 10–15); options should contain 2–6 words and must contain at most 7. Use natural, concrete English with enough context to picture the moment; no clipped labels or filler.
+${compactRepair ? "This is a targeted repair. Respect the accepted questions and rejection reasons in the user data; replace only the requested IDs without repeating an accepted setting or situation. When a reason reports too_long, cut nonessential detail until the question is 15 words or fewer and each option is 6 words or fewer." : ""}
 Before returning, silently verify: output only IDs [${ids.join(",")}]; every item has exactly four distinct options; all visible text passes the language and hard length limits; every option is a respectable action someone might genuinely choose.
 Return only JSON: {"questions":[{"id":${ids[0] ?? 1},"topic":"${QUIZ_TOPICS[(ids[0] ?? 1) - 1]}","setting":"${scenarioPlan.find((entry) => entry.id === (ids[0] ?? 1))?.setting ?? "planned setting"}","angle":"Specific angle","text":"Question?","options":[{"text":"Choice"}]}]}. Exactly four options per item. OUTPUT ONLY REQUESTED IDs [${ids.join(",")}].`;
 }
@@ -228,8 +235,12 @@ export function questionRejectionReasons(raw: unknown, language: Language): stri
   } else {
     if (question.options.some((option) => ENGLISH_BAD_CHOICE.test(option.text))) reasons.push("obviously_bad_option");
     if (texts.some((text) => !/[a-z]/i.test(text) || /[\p{Script=Thai}\p{Script=Han}]/u.test(text))) reasons.push("english_script");
-    if (question.text.trim().split(/\s+/).length > 18) reasons.push("question_length");
-    if (question.options.some((option) => option.text.trim().split(/\s+/).length > 7)) reasons.push("option_length");
+    const questionWords = question.text.trim().split(/\s+/).length;
+    if (questionWords > 18) reasons.push(`question_too_long(actual=${questionWords} words,max=18)`);
+    question.options.forEach((option, index) => {
+      const optionWords = option.text.trim().split(/\s+/).length;
+      if (optionWords > 7) reasons.push(`option_${index + 1}_too_long(actual=${optionWords} words,max=7)`);
+    });
   }
   return [...new Set(reasons)];
 }
@@ -261,6 +272,11 @@ interface QuizGenerationLimits {
   initialCallMs?: number;
   repairCallMs?: number;
 }
+
+// Repairs continue until the quiz is complete or the shared deadline is too
+// close for another targeted call; fixed round counts left time unused.
+const MAX_GENERATION_ROUNDS = 6;
+const MIN_REPAIR_ROUND_MS = 2_500;
 
 export interface QuizGenerationMetrics {
   elapsedMs: number;
@@ -320,7 +336,7 @@ function reviewRound(
         counts.set(question.id, (counts.get(question.id) ?? 0) + 1);
       }
     }
-    const batchCandidates: InternalQuizQuestion[] = [];
+    const returnedRequestedIds = new Set<number>();
     for (const rawQuestion of normalized) {
       const parsed = internalQuestionSchema.safeParse(rawQuestion);
       const id = parsed.success
@@ -332,6 +348,7 @@ function reviewRound(
         if (id !== undefined) addReason(rejections, id, "unrequested_id");
         continue;
       }
+      returnedRequestedIds.add(id);
       if (counts.get(id) !== 1) {
         addReason(rejections, id, "duplicate_id");
         continue;
@@ -342,10 +359,9 @@ function reviewRound(
         continue;
       }
       candidates.push(parsed.data);
-      batchCandidates.push(parsed.data);
     }
     for (const id of result.ids) {
-      if (!batchCandidates.some((candidate) => candidate.id === id)) addReason(rejections, id, "missing_id");
+      if (!returnedRequestedIds.has(id)) addReason(rejections, id, "missing_id");
     }
   }
 
@@ -408,7 +424,7 @@ export async function generateBalancedQuiz(
   const model = useTyphoon ? TYPHOON_QUIZ_MODEL : quizModel(input.language);
   const reasoningEffort = quizReasoningEffort(input.language, model);
   const generateBatch = useTyphoon ? callTyphoonQuiz : callLlm;
-  const providerOrder = quizProviderOrder(input.language);
+  let providerOrder = quizProviderOrder(input.language, model);
   const allIds = QUIZ_TOPICS.map((_, index) => index + 1);
   const controller = new AbortController();
   const deadlineTimer = setTimeout(() => {
@@ -427,7 +443,7 @@ export async function generateBalancedQuiz(
 
   progress({ stage: "planning", completed: 0, total: 8 });
   try {
-    for (let round = 0; round < 3 && good.size < allIds.length; round++) {
+    for (let round = 0; round < MAX_GENERATION_ROUNDS && good.size < allIds.length; round++) {
       const missingIds = allIds.filter((id) => !good.has(id));
       const batches = round === 0
         ? [missingIds.slice(0, 4), missingIds.slice(4, 8)].filter((ids) => ids.length > 0)
@@ -440,7 +456,7 @@ export async function generateBalancedQuiz(
       if (round > 0) repairCalls += batches.length;
       if (batches.length === 0 || controller.signal.aborted) break;
       const remaining = deadline - Date.now();
-      if (remaining <= 0) break;
+      if (remaining <= 0 || (round > 0 && remaining < MIN_REPAIR_ROUND_MS)) break;
       const roundStartedAt = Date.now();
       progress({ stage: "writing", completed: good.size, total: 8 });
       const results = await Promise.all(batches.map(async (ids, batchIndex): Promise<BatchResult> => {
@@ -451,7 +467,7 @@ export async function generateBalancedQuiz(
             model,
             providerOrder,
             providerSort: "throughput",
-            allowProviderFallbacks: false,
+            allowProviderFallbacks: providerOrder.length > 1,
             singleAttempt: true,
             reasoningEffort,
             systemPrompt: buildBalancedQuizPrompt(input.language, ids, round > 0, scenarioPlan),
@@ -464,7 +480,9 @@ export async function generateBalancedQuiz(
               rejectionReasons: Object.fromEntries(ids.map((id) => [id, previousRejections.get(id) ?? []])),
             }),
             responseFormat: { type: "json_object" },
-            temperature: 0.7,
+            // Keep the first pass creative, then make targeted repairs favor
+            // instruction compliance over variation.
+            temperature: round === 0 ? 0.7 : 0.2,
             maxTokens: quizOutputTokenBudget(input.language, ids.length, round > 0),
             timeoutMs,
             signal: controller.signal,
@@ -487,6 +505,9 @@ export async function generateBalancedQuiz(
       good = reviewed.good;
       if (round === 0) initialAccepted = good.size;
       previousRejections = reviewed.rejections;
+      // A timed-out endpoint gives OpenRouter no error to fall back on, so
+      // start the next round on the other provider instead.
+      if (results.some((result) => result.failure)) providerOrder = rotate(providerOrder);
       for (const reasons of reviewed.rejections.values()) {
         for (const reason of reasons) rejectionCounts.set(reason, (rejectionCounts.get(reason) ?? 0) + 1);
       }
@@ -537,6 +558,9 @@ export async function generateBalancedQuiz(
     console.warn("[quiz] incomplete AI quiz", {
       ...summary,
       missingIds: allIds.filter((id) => !good.has(id)),
+      finalRejections: Object.fromEntries(
+        [...previousRejections.entries()].sort(([left], [right]) => left - right),
+      ),
     });
     const error = new Error("Could not generate eight valid fresh questions.") as Error & {
       [QUIZ_GENERATION_METRICS]: QuizGenerationMetrics;

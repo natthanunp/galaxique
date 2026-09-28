@@ -39,9 +39,9 @@ stub('lib/constellationStore.ts', { addStar: async star => stars.push(star) });
 for (const key of ['KV_REST_API_URL', 'KV_REST_API_TOKEN', 'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN']) delete process.env[key];
 const { THEMES, CELESTIAL_TYPES, THEME_VIBE, profileLabel } = require('../lib/profile.ts');
 const { ASSESSMENT_PROMPT, ASSESSMENT_REPAIR_PROMPT, validateAssessment, selectProfile, analyzeBodySchema } = require('../lib/profileAssessment.ts');
-const { validQuizQuestion, questionRejectionReasons, shuffleOptions, generateBalancedQuiz, buildBalancedQuizPrompt, createScenarioPlan, QUIZ_TOPICS, QUIZ_GENERATION_METRICS, DEFAULT_THAI_QUIZ_MODEL, DEFAULT_THAI_QUIZ_PROVIDER } = require('../lib/quiz.ts');
+const { validQuizQuestion, questionRejectionReasons, shuffleOptions, generateBalancedQuiz, buildBalancedQuizPrompt, createScenarioPlan, QUIZ_TOPICS, QUIZ_GENERATION_METRICS, DEFAULT_QUIZ_MODEL, DEFAULT_QUIZ_PROVIDERS } = require('../lib/quiz.ts');
 const { rankSongs, selectSong } = require('../lib/songMatching.ts');
-const { runAnalyze } = require('../lib/analyze.ts');
+const { analyzeFailureDiagnostic, runAnalyze } = require('../lib/analyze.ts');
 const { incrementProfileStat, getProfileStats } = require('../lib/profileStatsStore.ts');
 const { sanitizeLlmError, LlmRequestError } = require('../lib/llmError.ts');
 const { buildCreatureChatPrompt } = require('../prompts/creatureChatPrompt.ts');
@@ -126,7 +126,7 @@ test('Thai Typhoon selection uses the same complete-quiz pipeline with no OpenRo
   let failedRequests = 0;
   global.fetch = async () => { failedRequests++; return new Response('', { status: 429 }); };
   await assert.rejects(generateBalancedQuiz({ language: 'th', avoidAngles: [] }, () => {}), /eight valid fresh questions/);
-  assert.equal(failedRequests, 6, 'only initial calls and two targeted repair rounds are permitted');
+  assert.equal(failedRequests, 12, 'initial calls plus deadline-bounded targeted repair rounds');
   assert.equal(calls.length, 0, 'a Typhoon outage must never fall back to OpenRouter');
 });
 const emptyBrief = () => ({ themes: [], stance: [], mood: [], energy: [], setting: [] });
@@ -301,13 +301,14 @@ test('two initial batches run concurrently and a malformed item triggers only a 
   const repairData = JSON.parse(calls[2].userPrompt);
   assert.equal(repairData.acceptedQuestions.length, 7);
   assert.ok(repairData.rejectionReasons['8'].includes('duplicate_options'));
-  assert.ok(buildBalancedQuizPrompt('th', [8], true).includes('ตัวเลือกละ 8–48'));
-  assert.ok(calls.every(c => c.singleAttempt && c.allowProviderFallbacks === false));
+  assert.ok(buildBalancedQuizPrompt('th', [8], true).includes('ตั้งเป้าคำถาม 32–64'));
+  assert.ok(buildBalancedQuizPrompt('th', [8], true).includes('อย่าเขียนชิดค่าสูงสุด'));
+  assert.ok(calls.every(c => c.singleAttempt && c.allowProviderFallbacks === true));
   assert.ok(calls.slice(0, 2).every(c => c.timeoutMs <= 12000));
   assert.ok(calls.slice(2).every(c => c.timeoutMs <= 8000));
-  assert.ok(calls.every(c => c.reasoningEffort === 'low'));
-  assert.ok(calls.every(c => c.model === 'openai/gpt-oss-20b'));
-  assert.deepEqual(calls[0].providerOrder, ['groq']);
+  assert.ok(calls.every(c => c.reasoningEffort === 'none'));
+  assert.ok(calls.every(c => c.model === DEFAULT_QUIZ_MODEL));
+  assert.deepEqual(calls[0].providerOrder, [...DEFAULT_QUIZ_PROVIDERS]);
   assert.equal(calls[0].maxTokens, 1440);
   assert.deepEqual(calls[0].responseFormat, { type: 'json_object' });
   assert.deepEqual(result[QUIZ_GENERATION_METRICS], {
@@ -322,30 +323,53 @@ test('two initial batches run concurrently and a malformed item triggers only a 
     reasoningTokens: 0,
     costUsd: 0.003,
     missingUsageCount: 0,
-    providers: ['groq'],
+    providers: [DEFAULT_QUIZ_PROVIDERS[0]],
     finishReasons: ['stop'],
   });
   calls = []; responder = () => ({ questions: [] });
   await assert.rejects(generateBalancedQuiz({ language: 'en', avoidAngles: [] }, () => {}), /eight valid fresh questions/);
-  assert.equal(calls.length, 6);
+  assert.equal(calls.length, 12, 'repairs continue for six rounds while the deadline allows');
   assert.ok(calls[2].maxTokens > calls[0].maxTokens / 2);
 });
-test('provider failures repair on the same model and provider without fallback or hidden retries', async () => {
+test('near-limit Thai questions get deterministic validation-only repair rounds', async () => {
+  calls = [];
+  let idFiveAttempts = 0;
+  responder = options => ({
+    questions: requestedIds(options).map(id => {
+      const question = thaiQuestion(id);
+      if (id !== 5) return question;
+      idFiveAttempts++;
+      return idFiveAttempts <= 3
+        ? { ...question, text: `${'ก'.repeat(73)}?` }
+        : question;
+    }),
+  });
+  const result = await generateBalancedQuiz({ language: 'th', avoidAngles: [], nonce: 'extra-validation-repair' }, () => {});
+  assert.equal(result.questions.length, 8);
+  assert.equal(calls.length, 5, 'two initial calls plus three targeted repairs');
+  assert.equal(result[QUIZ_GENERATION_METRICS].repairRounds, 3);
+  assert.equal(result[QUIZ_GENERATION_METRICS].repairCalls, 3);
+  assert.ok(calls.slice(0, 2).every(call => call.temperature === 0.7));
+  assert.ok(calls.slice(2).every(call => call.temperature === 0.2));
+});
+test('provider failures stay on the same model and start the next round on the other provider', async () => {
   calls = [];
   responder = options => {
-    if (requestedIds(options)[0] === 1 && calls.length <= 2) throw new LlmRequestError(429, 'groq');
+    if (requestedIds(options)[0] === 1 && calls.length <= 2) throw new LlmRequestError(429, 'openai');
     return questionsFor(options);
   };
   const result = await generateBalancedQuiz({ language: 'en', avoidAngles: [] }, () => {});
   assert.equal(result.questions.length, 8);
   assert.equal(calls.length, 4);
   assert.ok(calls.every(call => call.singleAttempt));
-  assert.ok(calls.every(call => call.allowProviderFallbacks === false));
+  assert.ok(calls.every(call => call.allowProviderFallbacks === true));
   assert.ok(calls.every(call => call.providerIgnore === undefined));
   assert.ok(calls.every(call => call.model === calls[0].model));
-  assert.ok(calls.every(call => JSON.stringify(call.providerOrder) === JSON.stringify(calls[0].providerOrder)));
+  assert.deepEqual(calls[0].providerOrder, ['openai', 'azure']);
+  assert.deepEqual(calls[2].providerOrder, ['azure', 'openai']);
+  assert.deepEqual(calls[3].providerOrder, ['azure', 'openai']);
 });
-test('Thai model settings select DeepSeek V4 without changing generic model settings and honor overrides', async t => {
+test('quiz model settings default to GPT-6 Luna for both languages and honor overrides', async t => {
   const names = ['OPENROUTER_THAI_QUIZ_MODEL', 'OPENROUTER_THAI_QUIZ_PROVIDER_ORDER', 'OPENROUTER_THAI_QUIZ_REASONING_EFFORT'];
   const originals = Object.fromEntries(names.map(name => [name, process.env[name]]));
   t.after(() => {
@@ -358,8 +382,8 @@ test('Thai model settings select DeepSeek V4 without changing generic model sett
   calls = [];
   responder = options => languageQuestionsFor(options);
   await generateBalancedQuiz({ language: 'th', avoidAngles: [], nonce: 'selected-default' }, () => {});
-  assert.ok(calls.every(call => call.model === DEFAULT_THAI_QUIZ_MODEL));
-  assert.ok(calls.every(call => JSON.stringify(call.providerOrder) === JSON.stringify([DEFAULT_THAI_QUIZ_PROVIDER])));
+  assert.ok(calls.every(call => call.model === DEFAULT_QUIZ_MODEL));
+  assert.ok(calls.every(call => JSON.stringify(call.providerOrder) === JSON.stringify(DEFAULT_QUIZ_PROVIDERS)));
   assert.ok(calls.every(call => call.reasoningEffort === 'none'));
 
   process.env.OPENROUTER_THAI_QUIZ_MODEL = 'qwen/qwen3-30b-a3b-instruct-2507';
@@ -379,7 +403,7 @@ test('provider outage never substitutes static questions for a fresh AI quiz', a
   calls = [];
   responder = () => { throw new LlmRequestError(undefined, undefined, true); };
   await assert.rejects(generateBalancedQuiz({ language: 'en', avoidAngles: [] }, () => {}), /eight valid fresh questions/);
-  assert.equal(calls.length, 6);
+  assert.equal(calls.length, 12);
 });
 test('cross-batch settings and work/school contexts retain lower IDs and repair rejected IDs', async () => {
   calls = [];
@@ -478,12 +502,49 @@ test('integrated reveal assesses without catalog, fixes classification/song befo
   assert.match(result.reveal_id, /^[a-f0-9-]{36}$/); assert.equal(stars.at(-1).songArtist, 'Test Artist');
   assert.equal(stars.at(-1).theme, 'driven'); assert.equal(selections.at(-1), 'one');
 });
+test('analyze deterministically restores an omitted selected-song artist without a reveal retry', async () => {
+  const { answers, assessment } = fixture('driven', 'neutron_star');
+  catalog = [track('one')]; calls = [];
+  responder = options => {
+    if (options.purpose === 'assessment') return assessment;
+    const data = JSON.parse(options.userPrompt);
+    return {
+      ...visualReveal(data.fixed, data.selected_song),
+      personality_reading: `พลังของคุณชัดเจนจากคำตอบ เพลง “${data.selected_song.name}” สะท้อนความมุ่งมั่นนั้น และ Sol ก็ร่วมเดินทางไปกับคุณ`,
+    };
+  };
+  const result = await runAnalyze({ answers, language: 'th' }, () => {});
+  assert.match(result.personality_reading, /“Song one” โดย Test Artist/);
+  assert.equal(calls.filter(call => call.purpose === 'reveal').length, 1);
+});
 test('invalid assessment retries once and never writes a creative default', async () => {
   calls = []; responder = () => ({ answers: [], song_brief: emptyBrief() }); catalog = [track('one')];
-  await assert.rejects(runAnalyze({ answers: fixture('driven', 'neutron_star').answers }, () => {}));
+  await assert.rejects(
+    runAnalyze({ answers: fixture('driven', 'neutron_star').answers }, () => {}),
+    error => {
+      assert.deepEqual(analyzeFailureDiagnostic(error), {
+        stage: 'assessment', kind: 'validation', attempt: 2,
+      });
+      return true;
+    },
+  );
   assert.equal(calls.length, 2); assert.ok(calls.every(c => c.purpose === 'assessment'));
   assert.ok(!calls[0].systemPrompt.includes(ASSESSMENT_REPAIR_PROMPT));
   assert.ok(calls[1].systemPrompt.includes(ASSESSMENT_REPAIR_PROMPT));
+});
+test('reveal failures expose a privacy-safe stage and kind after retry exhaustion', async () => {
+  const { answers, assessment } = fixture('driven', 'neutron_star');
+  catalog = [track('one')]; calls = [];
+  responder = options => options.purpose === 'assessment' ? assessment : {};
+  await assert.rejects(runAnalyze({ answers, language: 'en' }, () => {}), error => {
+    const diagnostic = analyzeFailureDiagnostic(error);
+    assert.deepEqual(diagnostic, {
+      stage: 'reveal', kind: 'validation', attempt: 2,
+    });
+    assert.ok(!JSON.stringify(diagnostic).includes(answers[0].answer));
+    return true;
+  });
+  assert.equal(calls.filter(call => call.purpose === 'reveal').length, 2);
 });
 test('stored legacy labels remain readable and current labels reach companion context', () => {
   assert.equal(profileLabel({ vibe: 'cynical' }, 'th'), 'เย็นชา');
@@ -544,8 +605,8 @@ test('JSON and SSE routes use the current generation and analysis by default; ma
   responder = () => { throw new LlmRequestError(429, 'groq'); };
   const failedQuiz = await quizRoute.POST(makeRequest('generate-quiz', { language: 'en', nonce: 'failed-metrics' }));
   assert.equal(failedQuiz.status, 502);
-  assert.equal(failedQuiz.headers.get('x-quiz-request-count'), '6');
-  assert.equal(failedQuiz.headers.get('x-quiz-failed-requests'), '6');
+  assert.equal(failedQuiz.headers.get('x-quiz-request-count'), '12');
+  assert.equal(failedQuiz.headers.get('x-quiz-failed-requests'), '12');
   assert.equal(failedQuiz.headers.get('x-quiz-output-tokens'), '0');
 });
 

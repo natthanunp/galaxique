@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { runAnalyze } from "@/lib/analyze";
+import { analyzeFailureDiagnostic, runAnalyze } from "@/lib/analyze";
 import {
   sseStream,
   wantsEventStream,
@@ -20,7 +20,7 @@ async function analyze(
   } catch (error) {
     console.warn(
       "[analyze] failed",
-      error instanceof Error ? error.name : "UnknownError",
+      analyzeFailureDiagnostic(error),
     );
     throw new Error("Could not finish your reading. Please try again.");
   }

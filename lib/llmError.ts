@@ -24,7 +24,7 @@ export function sanitizeLlmError(error: unknown): LlmRequestError {
   const e = error as { name?: unknown; message?: unknown; statusCode?: unknown; error?: { metadata?: { provider_name?: unknown } } } | null;
   const status = typeof e?.statusCode === "number" && e.statusCode >= 400 && e.statusCode <= 599 ? e.statusCode : undefined;
   // Map known provider display names to route slugs; never copy arbitrary upstream strings.
-  const providers: Record<string, string> = { DeepInfra: "deepinfra", Baidu: "baidu", BaseTen: "baseten", Groq: "groq", SiliconFlow: "siliconflow", Inception: "inception", DeepSeek: "deepseek", Parasail: "parasail", Novita: "novita" };
+  const providers: Record<string, string> = { DeepInfra: "deepinfra", Baidu: "baidu", BaseTen: "baseten", Groq: "groq", SiliconFlow: "siliconflow", Inception: "inception", DeepSeek: "deepseek", Parasail: "parasail", Novita: "novita", OpenAI: "openai", Azure: "azure" };
   const name = e?.error?.metadata?.provider_name;
   const provider = typeof name === "string" && Object.hasOwn(providers, name) ? providers[name] : undefined;
   const timeout = e?.name === "TimeoutError" || e?.name === "RequestTimeoutError";

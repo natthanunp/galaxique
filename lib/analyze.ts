@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { callLlm } from "@/lib/llm";
+import { LlmRequestError } from "@/lib/llmError";
 import { ASSESSMENT_PROMPT, ASSESSMENT_REPAIR_PROMPT, assessmentSchema, selectProfile, validateAssessment } from "@/lib/profileAssessment";
 import { SIGNAL_DEFINITIONS, THEME_LABELS } from "@/lib/profile";
 import {
@@ -15,6 +16,105 @@ import { addStar } from "@/lib/constellationStore";
 import type { Language, QuizAnswer } from "@/types/universe";
 import type { ProgressCallback } from "@/lib/analyzeProgress";
 
+type AnalyzeFailureStage = "assessment" | "catalog" | "selection" | "reveal" | "persistence" | "unknown";
+
+export interface AnalyzeFailureDiagnostic {
+  stage: AnalyzeFailureStage;
+  kind: string;
+  attempt?: number;
+  statusCode?: number;
+  provider?: string;
+}
+
+class AnalyzeOperationError extends Error {
+  readonly diagnostic: AnalyzeFailureDiagnostic;
+
+  constructor(diagnostic: AnalyzeFailureDiagnostic) {
+    super("Analyze operation failed.");
+    this.name = "AnalyzeOperationError";
+    this.diagnostic = diagnostic;
+  }
+}
+
+class AnalyzeValidationError extends Error {
+  readonly validationKind: string;
+
+  constructor(validationKind: string) {
+    super("Analyze validation failed.");
+    this.name = "AnalyzeValidationError";
+    this.validationKind = validationKind;
+  }
+}
+
+function failureKind(
+  error: unknown,
+  fallbackKind = "operation",
+): Omit<AnalyzeFailureDiagnostic, "stage" | "attempt"> {
+  if (error instanceof LlmRequestError) {
+    return {
+      kind: error.kind,
+      ...(error.statusCode !== undefined ? { statusCode: error.statusCode } : {}),
+      ...(error.provider ? { provider: error.provider } : {}),
+    };
+  }
+  if (error instanceof AnalyzeValidationError) return { kind: error.validationKind };
+  if (error instanceof z.ZodError) return { kind: "validation" };
+  if (error instanceof Error && error.name === "TimeoutError") return { kind: "timeout" };
+  return { kind: fallbackKind };
+}
+
+function analyzeFailure(
+  stage: AnalyzeFailureStage,
+  error: unknown,
+  attempt?: number,
+  fallbackKind?: string,
+): AnalyzeOperationError {
+  if (error instanceof AnalyzeOperationError) return error;
+  return new AnalyzeOperationError({
+    stage,
+    ...failureKind(error, fallbackKind),
+    ...(attempt !== undefined ? { attempt } : {}),
+  });
+}
+
+/** Privacy-safe diagnostics: never includes answers, prompts, response bodies, or raw errors. */
+export function analyzeFailureDiagnostic(error: unknown): AnalyzeFailureDiagnostic {
+  return error instanceof AnalyzeOperationError
+    ? error.diagnostic
+    : { stage: "unknown", ...failureKind(error) };
+}
+
+function ensureSelectedSongIdentity(
+  reading: string,
+  song: { name: string; artist: string },
+  language: Language,
+): string {
+  const identity = language === "th"
+    ? `“${song.name}” โดย ${song.artist}`
+    : `“${song.name}” by ${song.artist}`;
+  const merged = reading.replaceAll("[SELECTED SONG]", identity);
+  if (merged.includes(song.artist) || !merged.includes(song.name)) return merged;
+
+  // The reveal writer frequently keeps the exact title but omits the artist,
+  // especially in Thai. The server already owns the selected catalog identity,
+  // so add it deterministically instead of discarding an otherwise valid reveal.
+  for (const quotedTitle of [
+    `“${song.name}”`,
+    `\"${song.name}\"`,
+    `'${song.name}'`,
+  ]) {
+    if (merged.includes(quotedTitle)) {
+      return merged.replace(quotedTitle, identity);
+    }
+  }
+  return merged.replace(
+    song.name,
+    language === "th"
+      ? `${song.name} โดย ${song.artist}`
+      : `${song.name} by ${song.artist}`,
+  );
+}
+
 /** The assessment has no access to songs, population counts, or display labels. */
 export async function runAnalyze(body: { answers: QuizAnswer[]; language?: unknown; recentTrackIds?: string[] }, progress: ProgressCallback) {
   const language: Language = body.language === "en" ? "en" : "th";
@@ -23,7 +123,11 @@ export async function runAnalyze(body: { answers: QuizAnswer[]; language?: unkno
   const deadline = started + 60_000;
   const timeLeft = () => {
     const left = deadline - Date.now();
-    if (left < 1000) throw new Error("The reading took too long. Please try again.");
+    if (left < 1000) {
+      const error = new Error("The reading took too long. Please try again.");
+      error.name = "TimeoutError";
+      throw error;
+    }
     return Math.min(20_000, left);
   };
   progress({ stage: "starting", msElapsed: 0 });
@@ -43,22 +147,35 @@ export async function runAnalyze(body: { answers: QuizAnswer[]; language?: unkno
         // Weak evidence is never silently converted into a default galaxy.
         const profile = selectProfile(assessment, body.answers);
         return { assessment, profile };
-      } catch (error) { if (attempt === 1) throw error; }
+      } catch (error) {
+        if (attempt === 1) throw analyzeFailure("assessment", error, attempt + 1, "validation");
+      }
     }
     throw new Error("Could not assess your answers. Please try again.");
   };
   const catalogWork = async () => {
-    if (!spotifyConfigured()) throw new Error("Song matching needs a configured Spotify playlist.");
-    const tracks = await enrichPlaylistTracks(await getSpotifyPlaylistTracks());
-    return tracks.filter(t => language === "th" || !(t.knowledge?.is_thai ?? /\p{Script=Thai}/u.test(t.name + t.artist)));
+    try {
+      if (!spotifyConfigured()) throw new Error("Song matching needs a configured Spotify playlist.");
+      const tracks = await enrichPlaylistTracks(await getSpotifyPlaylistTracks());
+      return tracks.filter(t => language === "th" || !(t.knowledge?.is_thai ?? /\p{Script=Thai}/u.test(t.name + t.artist)));
+    } catch (error) {
+      throw analyzeFailure("catalog", error, undefined, "external_service");
+    }
   };
   // Independent I/O runs alongside assessment, never inside its prompt.
   const [{ assessment, profile }, tracks, history] = await Promise.all([
     assessmentWork(), catalogWork(), getRecentSelections(),
   ]);
   progress({ stage: "llm", msElapsed: Date.now() - started });
-  const picked = selectSong(rankSongs(tracks, assessment.song_brief), body.recentTrackIds, history.trackIds);
-  if (!picked) throw new Error("No described songs are available in this playlist. Please try again later.");
+  let picked;
+  try {
+    picked = selectSong(rankSongs(tracks, assessment.song_brief), body.recentTrackIds, history.trackIds);
+    if (!picked) {
+      throw new AnalyzeOperationError({ stage: "selection", kind: "no_match" });
+    }
+  } catch (error) {
+    throw analyzeFailure("selection", error);
+  }
   const selected = picked.track;
   progress({ stage: "picker", msElapsed: Date.now() - started });
   const fixedSchema = universeRevealSchema.omit({ profile_version: true, theme: true, reveal_id: true }).extend({
@@ -89,19 +206,38 @@ Use the selected song identity exactly for spotify_track_id and spotify_search_q
         nonce: `${nonce}:reveal:${attempt}`, purpose: "reveal",
       });
       const parsed = fixedSchema.parse(raw);
-      if (parsed.celestial_config.celestial_type !== profile.celestial_type || !parsed.personality_reading.includes(selected.name) || !parsed.personality_reading.includes(selected.artist) || parsed.personality_reading.includes("[SELECTED SONG]")) throw new Error("Reveal changed the assessed result or song");
-      result = { ...parsed, profile_version: 2 as const, theme: profile.theme, reveal_id: nonce, spotify_search_query: `${selected.name} ${selected.artist}` };
+      if (parsed.celestial_config.celestial_type !== profile.celestial_type) {
+        throw new AnalyzeValidationError("celestial_mismatch");
+      }
+      const personalityReading = ensureSelectedSongIdentity(
+        parsed.personality_reading,
+        selected,
+        language,
+      );
+      if (!personalityReading.includes(selected.name)) {
+        throw new AnalyzeValidationError("missing_song_title");
+      }
+      if (!personalityReading.includes(selected.artist)) {
+        throw new AnalyzeValidationError("missing_song_artist");
+      }
+      result = { ...parsed, personality_reading: personalityReading, profile_version: 2 as const, theme: profile.theme, reveal_id: nonce, spotify_search_query: `${selected.name} ${selected.artist}` };
       break;
-    } catch (error) { if (attempt === 1) throw error; }
+    } catch (error) {
+      if (attempt === 1) throw analyzeFailure("reveal", error, attempt + 1, "validation");
+    }
   }
-  if (!result) throw new Error("Could not write your reading. Please try again.");
-  await recordSelection(selected.track_id);
-  await addStar({
-    id: nonce, profile_version: 2, theme: profile.theme, vibe: result.vibe, celestialType: result.celestial_type,
-    creatureKind: result.creature?.kind ?? "spirit", creatureName: result.creature?.name ?? "",
-    primaryColor: result.primary_color, secondaryColor: result.secondary_color,
-    readingSnippet: result.personality_reading.slice(0, 200), songName: selected.name, songArtist: selected.artist, createdAt: Date.now(),
-  });
+  if (!result) throw analyzeFailure("reveal", new Error("Could not write the reading."));
+  try {
+    await recordSelection(selected.track_id);
+    await addStar({
+      id: nonce, profile_version: 2, theme: profile.theme, vibe: result.vibe, celestialType: result.celestial_type,
+      creatureKind: result.creature?.kind ?? "spirit", creatureName: result.creature?.name ?? "",
+      primaryColor: result.primary_color, secondaryColor: result.secondary_color,
+      readingSnippet: result.personality_reading.slice(0, 200), songName: selected.name, songArtist: selected.artist, createdAt: Date.now(),
+    });
+  } catch (error) {
+    throw analyzeFailure("persistence", error, undefined, "storage");
+  }
   // Aggregate diagnostics only; never log raw personal answers/evidence.
   console.info("[profile]", JSON.stringify({ language, theme: profile.theme, celestial: profile.celestial_type, mixed: profile.mixed, songScore: picked.score, elapsedMs: Date.now() - started }));
   progress({ stage: "done", msElapsed: Date.now() - started });
