@@ -14,7 +14,7 @@ import { GALAXY_RADIUS, hash32, loadArmField, placeOnArms, thaiDayColor, type Ar
 import { isMobileDevice, targetDpr } from "@/lib/perf";
 import { humanizeCreatureKind } from "@/lib/creatureKind";
 import { useSceneActivity } from "@/lib/useSceneActivity";
-import { useSoundtrack } from "@/lib/soundtrack";
+import { soundtrack, useSoundtrack } from "@/lib/soundtrack";
 import { SpiralGalaxy } from "@/three/objects/SpiralGalaxy";
 import { Meteors } from "@/three/objects/Meteors";
 import type { WorldSummary } from "@/lib/worldStore";
@@ -378,6 +378,7 @@ export function GalaxyExplorer({ language }: { language: Language }) {
   }, []);
 
   const land = useCallback((planet: Planet) => {
+    soundtrack().unlock();
     const c = controls.current;
     if (c) {
       sessionStorage.setItem(CAMERA_KEY, JSON.stringify({ position: c.object.position.toArray(), target: c.target.toArray() }));
@@ -388,7 +389,10 @@ export function GalaxyExplorer({ language }: { language: Language }) {
   const myPlanet = useCallback(() => {
     const planet = planets.find((p) => owned.includes(p.id));
     if (planet) focusPlanet(planet);
-    else if (owned[0]) router.push(`/w/${owned[0]}`);
+    else if (owned[0]) {
+      soundtrack().unlock();
+      router.push(`/w/${owned[0]}`);
+    }
   }, [planets, owned, focusPlanet, router]);
 
   const onKeyDown = (e: React.KeyboardEvent) => {

@@ -115,12 +115,14 @@ export function useSoundtrack(scene: SoundScene, ducked = false) {
     s.acquire();
     const unlock = () => s.unlock();
     const visibility = () => s.setHidden(document.hidden);
+    window.addEventListener("touchstart", unlock, { passive: true });
     window.addEventListener("pointerdown", unlock);
     window.addEventListener("pointerup", unlock);
     window.addEventListener("keydown", unlock);
     document.addEventListener("visibilitychange", visibility);
     return () => {
       s.release();
+      window.removeEventListener("touchstart", unlock);
       window.removeEventListener("pointerdown", unlock);
       window.removeEventListener("pointerup", unlock);
       window.removeEventListener("keydown", unlock);
