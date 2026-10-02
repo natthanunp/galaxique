@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Canvas, useThree } from "@react-three/fiber";
-import { ArrowLeftIcon, FlagIcon, SendIcon, SettingsIcon } from "lucide-react";
+import { ArrowLeftIcon, ChevronDownIcon, ChevronUpIcon, FlagIcon, SendIcon, SettingsIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { LandingScene, STAGE_SECONDS, type LandingStage } from "@/components/landing/LandingScene";
@@ -11,6 +11,7 @@ import { VinylDisc } from "@/components/reveal/VinylDisc";
 import { PersonalityReading } from "@/components/reveal/PersonalityReading";
 import { forgetOwnedWorld, getOwnedWorlds, manageLink, saveOwnedWorld } from "@/lib/ownedWorlds";
 import { targetDpr, tierDprCap } from "@/lib/perf";
+import { cn } from "@/lib/utils";
 import { useSoundtrack } from "@/lib/soundtrack";
 import { useSceneActivity } from "@/lib/useSceneActivity";
 import { useMediaStore } from "@/store/mediaStore";
@@ -102,6 +103,9 @@ export function PlanetLanding({ worldId, world }: { worldId: string; world: Worl
   const tier = usePerfStore((state) => state.tier);
   useEffect(() => { usePerfStore.getState().initialize(); }, []);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [readingOpen, setReadingOpen] = useState(false);
+  const chatScroll = useRef<HTMLDivElement>(null);
   const [stage, setStage] = useState<LandingStage>("approach");
   const stageStart = useRef(0);
   const [veil, setVeil] = useState(0);
@@ -132,6 +136,19 @@ export function PlanetLanding({ worldId, world }: { worldId: string; world: Worl
     if (reduce) setStage("surface");
     return () => abort.current?.abort();
   }, []);
+
+  useEffect(() => {
+    const query = matchMedia("(min-width: 1024px)");
+    const update = () => setIsDesktop(query.matches);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    chatScroll.current?.scrollTo({ top: chatScroll.current.scrollHeight });
+  }, [messages, shown, pending]);
 
   const toSurface = useCallback(() => {
     setStage("surface");
@@ -320,19 +337,26 @@ export function PlanetLanding({ worldId, world }: { worldId: string; world: Worl
       <p className="sr-only" aria-live="polite">{cue}</p>
 
       {stage === "surface" && world.song && (
-        <div className="absolute left-1/2 top-14 z-20 origin-top -translate-x-1/2 scale-75 sm:scale-90 lg:bottom-8 lg:left-8 lg:top-auto lg:origin-bottom-left lg:translate-x-0 lg:scale-100">
+        <div className="pointer-events-none absolute inset-x-0 top-[calc(max(0.75rem,env(safe-area-inset-top))+2.75rem)] z-20 flex justify-center lg:inset-x-auto lg:bottom-8 lg:left-8 lg:top-auto lg:justify-start">
           <VinylDisc query={`${world.song.name} ${world.song.artist}`} trackId={world.song.track_id} language={language}
-            primaryColor={world.planet.primary_color} size="hero" blend={false} />
+            primaryColor={world.planet.primary_color} size={isDesktop ? "hero" : "mini"} blend={false} className="pointer-events-auto" />
         </div>
       )}
 
       {stage === "surface" && (
-        <section className="absolute inset-x-0 bottom-0 z-20 mx-auto flex max-h-[55dvh] w-full max-w-lg flex-col gap-2 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:inset-x-auto lg:right-20 lg:mx-0 lg:max-w-xl lg:w-[40%]">
+        <section className="pointer-events-none absolute inset-x-0 bottom-0 z-20 mx-auto flex max-h-[55dvh] w-full max-w-lg flex-col gap-2 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:inset-x-auto lg:right-20 lg:mx-0 lg:max-w-xl lg:w-[40%]">
           {world.reading && (
-            <PersonalityReading reading={world.reading} vibe={world.scene.vibe} theme={world.scene.theme}
-              language={language} className="max-h-[24dvh] shrink-0 overflow-y-auto p-3 sm:p-4 lg:p-4 [&_p]:text-sm" />
+            <>
+              <button type="button" aria-expanded={readingOpen} onClick={() => setReadingOpen((v) => !v)}
+                className="pointer-events-auto flex items-center gap-1 self-start rounded-full bg-card/70 px-3 py-1.5 text-xs backdrop-blur-md lg:hidden">
+                {t.reading} {readingOpen ? <ChevronDownIcon className="size-3.5" /> : <ChevronUpIcon className="size-3.5" />}
+              </button>
+              <PersonalityReading reading={world.reading} vibe={world.scene.vibe} theme={world.scene.theme}
+                language={language} className={cn("pointer-events-auto max-h-[28dvh] shrink-0 overflow-y-auto p-3 sm:p-4 lg:block lg:max-h-[24dvh] lg:p-4 [&_p]:text-sm", !readingOpen && "hidden")} />
+            </>
           )}
-          <div className="flex min-h-0 flex-col gap-2 overflow-y-auto rounded-xl border border-white/10 bg-card/70 p-3 backdrop-blur-md" aria-live="polite">
+          <div className="pointer-events-auto flex min-h-0 flex-col gap-2 rounded-xl border border-white/10 bg-card/70 p-3 backdrop-blur-md">
+            <div ref={chatScroll} className="flex min-h-0 max-h-[15dvh] flex-col gap-2 overflow-y-auto lg:max-h-[30dvh]" aria-live="polite">
             {messages.map((m, i) => (
               <p key={i} className={m.role === "creature" ? "self-start rounded-2xl rounded-bl-md bg-muted/50 px-3 py-2 text-sm" : "self-end rounded-2xl rounded-br-md bg-primary px-3 py-2 text-sm text-primary-foreground"}>
                 {m.role === "creature" && <span className="mr-1 font-semibold">{world.creature.name}:</span>}
@@ -340,6 +364,7 @@ export function PlanetLanding({ worldId, world }: { worldId: string; world: Worl
               </p>
             ))}
             {pending && <p className="self-start text-sm text-muted-foreground">…</p>}
+            </div>
             <form className="flex items-center gap-2" onSubmit={(e) => { e.preventDefault(); void send(); }}>
               <label className="sr-only" htmlFor="visit-chat">{t.typing}</label>
               <input id="visit-chat" value={input} onChange={(e) => onType(e.target.value)} maxLength={500} autoComplete="off"

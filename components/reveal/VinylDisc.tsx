@@ -19,7 +19,7 @@ interface VinylDiscProps {
   /** Disc size preset. "sm" mirrors the original compact corner layout.
    *  "hero" makes the disc the visual focal point of the page (sits in
    *  the center of the viewport, in front of the 3D galaxy). */
-  size?: "sm" | "hero";
+  size?: "sm" | "hero" | "mini";
   /** Adds a soft cosmic aura + ring behind the disc that visually
    *  separates it from a busy galaxy background without forming a hard
    *  border. Defaults to true so the disc "blends in" with the cosmos
@@ -124,6 +124,56 @@ export function VinylDisc({
       setPlaying(false);
     };
   }, [query, trackId, setMediaMode, setSpotifyUrl, setSpotifyFallbackUrl, setStoreTrack, setPlaying]);
+
+  if (size === "mini") {
+    const art = track?.album_art_url ? mediaProxyUrl(track.album_art_url) : null;
+    return (
+      <div
+        className={cn(
+          "flex w-fit max-w-[calc(100vw-1.5rem)] items-center gap-2.5 rounded-full bg-black/55 p-1.5 pr-2 shadow-[0_2px_20px_rgba(0,0,0,0.5)] ring-1 ring-white/10 backdrop-blur-md",
+          className,
+        )}
+      >
+        <div
+          aria-hidden
+          className="size-10 shrink-0 rounded-full bg-[#1a1a22] bg-cover bg-center"
+          style={{
+            backgroundImage: art ? `url(${art})` : undefined,
+            boxShadow: `0 0 0 2px ${primaryColor}`,
+            animation: isPlaying ? "vinyl-spin 10s linear infinite" : "none",
+          }}
+        >
+          {status === "loading" && <div className="size-full animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold leading-tight text-white">{track?.name ?? (status === "error" ? errorMsg : "…")}</p>
+          <p className="truncate text-xs leading-tight text-white/70">{track?.artist}</p>
+        </div>
+        {track?.preview_url && (
+          <button
+            type="button"
+            onClick={() => setPlaying(!isPlaying)}
+            aria-label={isPlaying ? "Pause song" : "Play song"}
+            className="flex size-9 shrink-0 items-center justify-center rounded-full text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground"
+            style={{ backgroundColor: primaryColor }}
+          >
+            {isPlaying ? <PauseIcon className="size-4 fill-current" /> : <PlayIcon className="ml-0.5 size-4 fill-current" />}
+          </button>
+        )}
+        {track && (
+          <a
+            href={`https://open.spotify.com/track/${track.track_id}`}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={language === "th" ? "เปิดใน Spotify" : "Open in Spotify"}
+            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-white/90"
+          >
+            <ExternalLinkIcon className="size-4" />
+          </a>
+        )}
+      </div>
+    );
+  }
 
   // Keep the mobile hero; use a compact record in the desktop music dock.
   const discSizeClass =

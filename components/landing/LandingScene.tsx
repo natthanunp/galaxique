@@ -198,10 +198,8 @@ export function LandingScene({ world, stage, stageStart, reducedMotion, active, 
             enablePan={false}
             minDistance={2.8}
             maxDistance={6}
-            minPolarAngle={0.86}
-            maxPolarAngle={1.48}
-            minAzimuthAngle={-0.8}
-            maxAzimuthAngle={0.8}
+            minPolarAngle={0.7}
+            maxPolarAngle={1.5}
             enableDamping
           />
         </>
