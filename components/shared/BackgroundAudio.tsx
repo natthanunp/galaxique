@@ -174,19 +174,24 @@ export function BackgroundAudio({
 
   // After a blocked autoplay, the visitor's next gesture is the moment the browser allows sound.
   useEffect(() => {
-    const retry = () => {
+    const retry = (event: Event) => {
       const state = useMediaStore.getState();
       if (!blockedRef.current || state.mode !== "spotify" || !state.spotifyUrl || state.isSuspended) return;
+      const target = "target" in event ? (event.target as Node | null) : null;
+      if (buttonRef.current && target && buttonRef.current.contains(target)) return;
       blockedRef.current = false;
       state.setPlaying(true);
+      startPreview();
     };
     window.addEventListener("pointerdown", retry);
+    window.addEventListener("touchstart", retry);
     window.addEventListener("keydown", retry);
     return () => {
       window.removeEventListener("pointerdown", retry);
+      window.removeEventListener("touchstart", retry);
       window.removeEventListener("keydown", retry);
     };
-  }, []);
+  }, [startPreview]);
 
   // Try muted autoplay on mount. This always succeeds.
   useEffect(() => {
