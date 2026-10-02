@@ -10,7 +10,10 @@
     "postinstall": "node scripts/copy-ffmpeg-core.mjs",
     "migrate:legacy-stats": "node scripts/migrate-legacy-stats.mjs",
     "test:profile": "node --test scripts/test-profile.cjs",
-    "evaluate:quiz": "node scripts/evaluate-quizzes.mjs"
+    "evaluate:quiz": "node scripts/evaluate-quizzes.mjs",
+    "sync:playlist": "node scripts/sync-playlist.mjs",
+    "audit:knowledge": "node --no-warnings scripts/audit-song-knowledge.mjs",
+    "simulate:selection": "node scripts/simulate-selection.cjs"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.12.9",

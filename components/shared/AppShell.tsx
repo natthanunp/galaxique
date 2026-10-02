@@ -3,6 +3,7 @@
 import { ReactNode } from "react";
 
 import { BackgroundAudio } from "@/components/shared/BackgroundAudio";
+import { SiteSoundtrack } from "@/components/shared/SiteSoundtrack";
 
 /**
  * Site-wide shell that lives for the whole SPA session.
@@ -14,6 +15,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <>
       <BackgroundAudio />
+      <SiteSoundtrack />
       {children}
     </>
   );

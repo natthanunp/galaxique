@@ -1,0 +1,21 @@
+{
+  "synced_at": "2026-10-02T16:27:56.686Z",
+  "previous_snapshot": null,
+  "playlist_items": 238,
+  "counts": {
+    "added": 0,
+    "removed": 0,
+    "relinked": 0,
+    "metadata_changed": 0,
+    "unavailable": 0,
+    "duplicates": 0,
+    "local_or_episode": 0
+  },
+  "added": [],
+  "removed": [],
+  "relinked": [],
+  "metadata_changed": [],
+  "unavailable": [],
+  "duplicates": [],
+  "local_or_episode": []
+}

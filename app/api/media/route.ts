@@ -11,7 +11,7 @@ const ALLOWED_HOSTS = new Set([
 function isAllowedMediaUrl(url: URL): boolean {
   return (
     url.protocol === "https:" &&
-    (ALLOWED_HOSTS.has(url.hostname) || url.hostname.endsWith(".scdn.co"))
+    (ALLOWED_HOSTS.has(url.hostname) || url.hostname.endsWith(".scdn.co") || url.hostname.endsWith(".dzcdn.net"))
   );
 }
 
@@ -42,8 +42,10 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   try {
+    const range = request.headers.get("range");
     const upstream = await fetch(mediaUrl, {
       redirect: "follow",
+      headers: range ? { Range: range } : undefined,
       signal: AbortSignal.timeout(15_000),
     });
     const finalUrl = new URL(upstream.url);
@@ -57,14 +59,19 @@ export async function GET(request: Request): Promise<Response> {
     }
 
     const contentLength = upstream.headers.get("content-length");
+    // iTunes labels plain AAC previews audio/x-m4p (the DRM type); Chrome's demuxer rejects that with "no supported streams".
+    const servedType = /^audio\/x-m4[ap]$/.test(contentType) ? "audio/mp4" : contentType;
     const headers = new Headers({
       "Cache-Control": "public, max-age=86400, s-maxage=604800",
-      "Content-Type": contentType,
+      "Content-Type": servedType,
       "Cross-Origin-Resource-Policy": "same-origin",
+      "Accept-Ranges": "bytes",
     });
     if (contentLength) headers.set("Content-Length", contentLength);
+    const contentRange = upstream.headers.get("content-range");
+    if (contentRange) headers.set("Content-Range", contentRange);
 
-    return new Response(upstream.body, { headers });
+    return new Response(upstream.body, { status: upstream.status === 206 ? 206 : 200, headers });
   } catch {
     return NextResponse.json({ error: "Media fetch failed." }, { status: 502 });
   }

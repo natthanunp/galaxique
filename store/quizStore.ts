@@ -17,6 +17,8 @@ interface QuizState {
   questions: QuizQuestion[];
   answers: QuizAnswer[];
   reveal: UniverseReveal | null;
+  /** Private token proving this device created `reveal`; kept out of the reveal payload. */
+  revealToken: string | null;
   /** Angle strings the user has been shown across ALL past sessions (not
    *  just the current one), capped and persisted to localStorage. Sent as
    *  `avoidAngles` on every /api/generate-quiz call so a repeat visitor sees
@@ -37,7 +39,7 @@ interface QuizState {
   setQuestions: (questions: QuizQuestion[]) => void;
   setAnswer: (questionId: number, questionText: string, answer: string) => void;
   addSeenAngles: (angles: string[]) => void;
-  setReveal: (reveal: UniverseReveal | null) => void;
+  setReveal: (reveal: UniverseReveal | null, revealToken?: string | null) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   reset: () => void;
@@ -50,7 +52,7 @@ const MAX_SEEN_ANGLES = 80;
 /** Cap on the persisted recent-song history. 20 is enough to break repeat
  *  loops on famous defaults (Holocene, Apocalypse) without making the pool
  *  so large that the user never hears a favorite again. */
-const MAX_RECENT_TRACK_IDS = 20;
+const MAX_RECENT_TRACK_IDS = 50;
 
 type PersistedQuizState = Pick<
   QuizState,
@@ -58,6 +60,7 @@ type PersistedQuizState = Pick<
   | "questions"
   | "answers"
   | "reveal"
+  | "revealToken"
   | "seenAngles"
   | "recentTrackIds"
 >;
@@ -86,6 +89,7 @@ function migratePersistedQuizState(state: unknown): PersistedQuizState {
     questions: [],
     answers: [],
     reveal: null,
+    revealToken: null,
     seenAngles: asStringList(persisted.seenAngles, MAX_SEEN_ANGLES),
     recentTrackIds: asStringList(persisted.recentTrackIds, MAX_RECENT_TRACK_IDS),
   };
@@ -98,6 +102,7 @@ export const useQuizStore = create<QuizState>()(
       questions: [],
       answers: [],
       reveal: null,
+      revealToken: null,
       seenAngles: [],
       recentTrackIds: [],
       loading: false,
@@ -123,7 +128,7 @@ export const useQuizStore = create<QuizState>()(
           const deduped = Array.from(new Set(merged));
           return { seenAngles: deduped.slice(-MAX_SEEN_ANGLES) };
         }),
-      setReveal: (reveal) =>
+      setReveal: (reveal, revealToken = null) =>
         set((state) => {
           const trackId = reveal?.spotify_track_id ?? null;
           const recentTrackIds = trackId
@@ -136,7 +141,7 @@ export const useQuizStore = create<QuizState>()(
           if (reveal && typeof window !== "undefined") {
             localStorage.removeItem("galaxique-chat-session");
           }
-          return { reveal, recentTrackIds };
+          return { reveal, revealToken, recentTrackIds };
         }),
       setLoading: (loading) => set({ loading }),
       setError: (error) => set({ error }),
@@ -145,6 +150,7 @@ export const useQuizStore = create<QuizState>()(
           questions: [],
           answers: [],
           reveal: null,
+          revealToken: null,
           loading: false,
           error: null,
         }),
@@ -159,6 +165,7 @@ export const useQuizStore = create<QuizState>()(
         questions: state.questions,
         answers: state.answers,
         reveal: state.reveal,
+        revealToken: state.revealToken,
         seenAngles: state.seenAngles,
         recentTrackIds: state.recentTrackIds,
       }),

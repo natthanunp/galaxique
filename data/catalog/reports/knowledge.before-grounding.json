@@ -1,0 +1,7273 @@
+{
+  "1oAwsWBovWRIp7qLMGPIet": {
+    "knowledge_version": 2,
+    "name": "Apocalypse",
+    "artist": "Cigarettes After Sex",
+    "isrc": "USBQU1700034",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "nostalgia",
+      "intimacy",
+      "melancholy"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A soft, atmospheric track that explores themes of longing and nostalgia, with a sense of intimacy and melancholy."
+  },
+  "3y1EzRl5UEQxxd1f6Bv2aN": {
+    "knowledge_version": 2,
+    "name": "When I'm Small",
+    "artist": "Phantogram",
+    "isrc": "USBS51300075",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "childhood",
+      "memory"
+    ],
+    "relationship_stance": "awe",
+    "mood": "nostalgic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on the innocence and simplicity of childhood, with a dreamy and introspective musical character."
+  },
+  "79RJg6MqIJlBuedcMqB9F0": {
+    "knowledge_version": 2,
+    "name": "My Body Isn't Ready",
+    "artist": "sombr",
+    "isrc": "USWB12602270",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "body image",
+      "insecurity",
+      "self-doubt",
+      "romantic yearning"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "The song explores the artist's struggle with body image and self-esteem, preventing them from pursuing a romantic connection they desire."
+  },
+  "3hUxzQpSfdDqwM3ZTFQY0K": {
+    "knowledge_version": 2,
+    "name": "august",
+    "artist": "Taylor Swift",
+    "isrc": "USUG12002842",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "summer",
+      "nostalgia",
+      "young love"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "nostalgic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "summer afternoon",
+    "summary": "A reflective song about a past summer romance, with a catchy, upbeat melody that contrasts with the bittersweet lyrics."
+  },
+  "5y2ijHECwFYWqcAHKTZgzD": {
+    "knowledge_version": 2,
+    "name": "Risk It All",
+    "artist": "Bruno Mars",
+    "isrc": "USAT22509142",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "risk",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "passionate",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "intimate",
+    "summary": "The song expresses a willingness to take risks for love, with a mix of vulnerability and determination, backed by a lively rhythm and soulful vocals."
+  },
+  "48SGNp7AHeujwoPID3UCmn": {
+    "knowledge_version": 2,
+    "name": "ฝันที่ไม่ปลอดภัย",
+    "artist": "Television off",
+    "isrc": "THSM10551779",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "memory",
+      "escape",
+      "pain",
+      "longing"
+    ],
+    "relationship_stance": "longing",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores the idea of dreams as a safe haven from painful realities, with a gentle and introspective musical character."
+  },
+  "2G6eCn19b5NcRxImqgpCNa": {
+    "knowledge_version": 2,
+    "name": "ให้เธอหายไป",
+    "artist": "Television off",
+    "isrc": "THSM10551789",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "heartbreak",
+      "letting go",
+      "breakup"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "This song expresses the pain of ending a relationship and the desire to let go of someone, with a gentle and reflective musical character."
+  },
+  "1lD1Pjy7rNDOny7nFqmUHJ": {
+    "knowledge_version": 2,
+    "name": "คำตอบ ( Answer )",
+    "artist": "Safeplanet",
+    "isrc": "FR96X1842015",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "longing",
+      "confusion",
+      "yearning for understanding"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A song about the longing for answers and understanding in a relationship, with a gentle and introspective sonic character."
+  },
+  "27OEf7iSIOJ14txp16xweP": {
+    "knowledge_version": 2,
+    "name": "ลา ลา ลา",
+    "artist": "Dept",
+    "isrc": "THSM10551422",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "regret",
+      "nostalgia",
+      "longing"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "reflective",
+    "summary": "The song expresses the feelings of someone who cannot go back to fix past mistakes, with a gentle and melancholic musical character."
+  },
+  "2Wi2Tk4V4ctEZNkHkQBsZ2": {
+    "knowledge_version": 2,
+    "name": "ดอกไม้ของดาวหาง",
+    "artist": "FREEHAND",
+    "isrc": "FRS182138041",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "romantic yearning",
+      "longing",
+      "connection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A gentle, melancholic song about longing for a distant love, using celestial imagery to express the yearning for connection."
+  },
+  "2Ab1HQjbMcqHY3TkTycrYr": {
+    "knowledge_version": 2,
+    "name": "รสหวาน",
+    "artist": "FREEHAND",
+    "isrc": "FRS182138047",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "nostalgia",
+      "love",
+      "memories"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on past memories of love and intimacy, evoking a sense of nostalgia and longing for a past relationship."
+  },
+  "24VfUtHxbkCrscWC00toom": {
+    "knowledge_version": 2,
+    "name": "ความทรงจำ",
+    "artist": "Musketeers",
+    "isrc": "THBLR1200027",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "nostalgia",
+      "longing",
+      "memories"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "reflective",
+    "summary": "This song reflects on past memories and the enduring presence of love, with a gentle and nostalgic musical character."
+  },
+  "6SAcZT7H44417uxybshTEy": {
+    "knowledge_version": 2,
+    "name": "จากกันโดยสมบูรณ์",
+    "artist": "guncharlie",
+    "isrc": "DGA0S2470058",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "heartbreak",
+      "letting go",
+      "emotional release"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses the pain of a breakup and the struggle to move on, with a gentle, reflective musical arrangement."
+  },
+  "62E2nR0od0M5HYxuYLaDz7": {
+    "knowledge_version": 2,
+    "name": "The Black Dog",
+    "artist": "Taylor Swift",
+    "isrc": "USUG12401046",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "heartbreak",
+      "depression",
+      "observation",
+      "nostalgia"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song explores the pain of watching an ex move on with someone new, reflecting on past memories and feelings of depression."
+  },
+  "0D9lpJts3mXxe0fvovYUFv": {
+    "knowledge_version": 2,
+    "name": "จากตรงนี้ที่(เคย)สวยงาม [La La Bye]",
+    "artist": "AYLA's",
+    "isrc": "THW092300034",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "nostalgia",
+      "heartbreak",
+      "letting go"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on a past relationship that has ended, with the singer looking back on the good times and struggling to move on."
+  },
+  "4ZuflCpdf22z8J94WPIGrp": {
+    "knowledge_version": 2,
+    "name": "ดาวนำทาง (Quiet Night)",
+    "artist": "loserpop",
+    "isrc": "THWTD2421400",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "longing",
+      "hope",
+      "guidance"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A gentle ballad about seeking guidance from stars in the hope of reuniting with a lost love, featuring soft string arrangements and a quiet, reflective atmosphere."
+  },
+  "2GMENhG1ga12aWFMfzq9vN": {
+    "knowledge_version": 2,
+    "name": "ความลับของดวงจันทร์",
+    "artist": "FREEHAND",
+    "isrc": "FRS182138048",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "fear of intimacy",
+      "distance",
+      "vulnerability"
+    ],
+    "relationship_stance": "fear of closeness",
+    "mood": "anxious",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "intimate and uncertain",
+    "summary": "The song explores the fear of intimacy and the anxiety that comes with getting too close to someone, using celestial imagery to express these emotions."
+  },
+  "17UaCbdhkzTaCj4DbKTrPW": {
+    "knowledge_version": 2,
+    "name": "Soft Sounds from Another Planet",
+    "artist": "Japanese Breakfast",
+    "isrc": "USJ5G1713305",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "longing",
+      "reflection"
+    ],
+    "relationship_stance": "longing for connection",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on memories and longing for connection, with a dreamy and introspective sound."
+  },
+  "0I1cHghDEtreiO6tRrh2wm": {
+    "knowledge_version": 2,
+    "name": "Llego",
+    "artist": "Empire Of The Sun, Danny Ocean, FIFA Sound",
+    "isrc": "USUG12601352",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "es",
+    "is_thai": false,
+    "themes": [
+      "triumph",
+      "unity",
+      "overcoming obstacles"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "celebratory",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "This song celebrates triumph and unity, with lyrics conveying a sense of overcoming obstacles and reaching success, set to an upbeat and driving musical arrangement."
+  },
+  "6wOYnPq1hPihRepcDClPUw": {
+    "knowledge_version": 2,
+    "name": "Meet Me Halfway",
+    "artist": "Black Eyed Peas",
+    "isrc": "USUM70967700",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "compromise",
+      "connection",
+      "love",
+      "togetherness"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "optimistic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "The song encourages mutual effort and understanding in a relationship, with a lively and upbeat musical arrangement."
+  },
+  "6dGnYIeXmHdcikdzNNDMm2": {
+    "knowledge_version": 2,
+    "name": "Here Comes The Sun - Remastered 2009",
+    "artist": "The Beatles",
+    "isrc": "GBAYE0601696",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "renewal",
+      "hope",
+      "joy"
+    ],
+    "relationship_stance": "awe",
+    "mood": "bright",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "The song captures the feeling of joy and relief as winter ends and spring begins, with a lively and upbeat musical arrangement."
+  },
+  "4o0LyB69tylqDG6eTGhmig": {
+    "knowledge_version": 2,
+    "name": "Fire for You",
+    "artist": "Cannons",
+    "isrc": "USSM12004811",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "unrequited love",
+      "passion",
+      "heartbreak",
+      "longing"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song describes the intense passion and pain of a failed relationship, with lyrics that contrast the burning love with the emptiness felt when that love is unrequited, set to a driving musical arrangement."
+  },
+  "4qpOmcLuLFjaSvmbQIq4ft": {
+    "knowledge_version": 2,
+    "name": "To Love Somebody",
+    "artist": "Holly Humberstone",
+    "isrc": "GBUM72506603",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "desire",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "intimate and reflective",
+    "summary": "The song expresses a deep longing and vulnerability in love, with a gentle and restrained musical character."
+  },
+  "1LeItUMezKA1HdCHxYICed": {
+    "knowledge_version": 2,
+    "name": "Say My Name",
+    "artist": "ODESZA, Zyra",
+    "isrc": "GBCFB1404201",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "connection",
+      "intimacy"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song explores a deep yearning for connection and intimacy, with a driving beat and atmospheric production creating a sense of longing and anticipation."
+  },
+  "2GiJYvgVaD2HtM8GqD9EgQ": {
+    "knowledge_version": 2,
+    "name": "Electric Love",
+    "artist": "BØRNS",
+    "isrc": "USUM71416307",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "technology",
+      "connection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "nostalgic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song explores the complexities of modern love and connection through the lens of technology, with a driving beat and nostalgic lyrics."
+  },
+  "11ozIUBoXAgRTVWelDn4pL": {
+    "knowledge_version": 2,
+    "name": "Lights",
+    "artist": "Ellie Goulding",
+    "isrc": "GBUM71001002",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "light",
+      "hope",
+      "inspiration"
+    ],
+    "relationship_stance": "awe",
+    "mood": "uplifting",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "The song uses the metaphor of light to inspire and uplift, with a driving beat and anthemic chorus."
+  },
+  "57RA3JGafJm5zRtKJiKPIm": {
+    "knowledge_version": 2,
+    "name": "Are You Bored Yet? (feat. Clairo)",
+    "artist": "Wallows, Clairo",
+    "isrc": "USAT21812258",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "youth",
+      "connection"
+    ],
+    "relationship_stance": "playful connection",
+    "mood": "nostalgic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night social",
+    "summary": "A song about reminiscing on youthful memories and the connections made during that time, with a catchy, upbeat melody and lyrics that evoke a sense of nostalgia."
+  },
+  "1GexRDFzRQpNkflfXgI2lM": {
+    "knowledge_version": 2,
+    "name": "Tough Luck",
+    "artist": "Laufey",
+    "isrc": "QM6N22553535",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "breakup",
+      "self-worth",
+      "empowerment",
+      "betrayal"
+    ],
+    "relationship_stance": "independence",
+    "mood": "empowering",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night reflection",
+    "summary": "Laufey's 'Tough Luck' is an empowering anthem about reclaiming self-worth after a toxic breakup, with a blend of gentle strings and muted guitar rhythms."
+  },
+  "51t4KpMubQMCQXV8T4lK3F": {
+    "knowledge_version": 2,
+    "name": "Self Love",
+    "artist": "BLOND:ISH",
+    "isrc": "NL8RL2455440",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-acceptance",
+      "empowerment",
+      "inner strength"
+    ],
+    "relationship_stance": "independence",
+    "mood": "uplifting",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night reflection",
+    "summary": "The song encourages self-love and empowerment through a driving beat and uplifting lyrics, creating a sense of inner strength and independence."
+  },
+  "2PP99Q3WvAlEongTB8PlLS": {
+    "knowledge_version": 2,
+    "name": "wanna be yours (อยากให้เธอรัก)",
+    "artist": "Violette Wautier",
+    "isrc": "TH2DY2500587",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "language_flag": "thai-artist-other-language",
+    "is_thai": true,
+    "themes": [
+      "longing",
+      "love",
+      "yearning",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses a deep desire to be loved and seen, with lyrics reflecting a sense of longing and vulnerability, set to a gentle and melancholic melody.",
+    "notes": "Model suggested lyric_language=en; owner to decide."
+  },
+  "6rYgEHuyhO064Lgj48qlIe": {
+    "knowledge_version": 2,
+    "name": "I'll Call You Mine",
+    "artist": "girl in red",
+    "isrc": "GBKPL2136772",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A tender, introspective song about the vulnerability of loving someone and the fear of not being enough, with a soft, intimate sound."
+  },
+  "32XaqPVTVkkuOiOPQZ3SpA": {
+    "knowledge_version": 2,
+    "name": "midnight love",
+    "artist": "girl in red",
+    "isrc": "GBKPL2092453",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "intimacy",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores the quiet, tender moments of late-night conversations and the vulnerability that comes with opening up to someone, with a soft, intimate sound."
+  },
+  "5Ohxk2dO5COHF1krpoPigN": {
+    "knowledge_version": 2,
+    "name": "Sign of the Times",
+    "artist": "Harry Styles",
+    "isrc": "USSM11703595",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "change",
+      "resilience"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song explores the pain of a relationship ending and the resilience to move forward, with a powerful and emotive musical arrangement."
+  },
+  "2ZWlPOoWh0626oTaHrnl2a": {
+    "knowledge_version": 2,
+    "name": "Ivy",
+    "artist": "Frank Ocean",
+    "isrc": "QZ5C81600002",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A reflective and introspective song about love and longing, with a gentle, melancholic melody and soft instrumentation."
+  },
+  "1zHUEIQ6yzaWBzhNCV1SGW": {
+    "knowledge_version": 2,
+    "name": "Sofia",
+    "artist": "Clairo",
+    "isrc": "US4HB1900086",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "longing",
+      "memory"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on a past relationship with a sense of longing and nostalgia, using soft, intimate instrumentation to convey a sense of quiet reflection."
+  },
+  "3jt1ZVIuluGkV0sWWLSUzw": {
+    "knowledge_version": 2,
+    "name": "Appointments",
+    "artist": "Julien Baker",
+    "isrc": "USMTD1709988",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "faith",
+      "struggle",
+      "hope"
+    ],
+    "relationship_stance": "awe",
+    "mood": "reflective",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "A deeply personal exploration of faith and struggle, delivered with raw vulnerability and tender guitar work."
+  },
+  "325toqbCzE1g1pYIED7U4C": {
+    "knowledge_version": 2,
+    "name": "Take It Back",
+    "artist": "Pink Floyd",
+    "isrc": "GBN9X1100018",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "regret",
+      "apology",
+      "self-reflection"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses deep regret and a plea for forgiveness, with a gentle, melancholic melody and introspective lyrics."
+  },
+  "5JGEAz15LkPoOtFHttDtVs": {
+    "knowledge_version": 2,
+    "name": "With Or Without You - Remastered 2007",
+    "artist": "U2",
+    "isrc": "GBUM70709792",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "sacrifice",
+      "devotion"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "intimate and personal",
+    "summary": "A powerful ballad about the complexities of love and the struggle between staying and leaving, featuring soaring vocals and a driving rhythm."
+  },
+  "19woxaSpjOefa2JnAOoqW5": {
+    "knowledge_version": 2,
+    "name": "Garden (Say It Like Dat)",
+    "artist": "SZA",
+    "isrc": "USRC11701120",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-discovery",
+      "growth",
+      "reflection"
+    ],
+    "relationship_stance": "self-reflection",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "The song explores themes of personal growth and self-discovery, with a melancholic tone and restrained energy, set in an introspective setting."
+  },
+  "59wlTaYOL5tDUgXnbBQ3my": {
+    "knowledge_version": 2,
+    "name": "A Moment Apart",
+    "artist": "ODESZA",
+    "isrc": "GBCFB1700210",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "none",
+    "lyric_language": "none",
+    "is_thai": false,
+    "themes": [],
+    "relationship_stance": "secure closeness",
+    "mood": "uplifting",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "This track explores themes of connection and personal growth, with a driving beat and uplifting melodies that create a sense of forward momentum and togetherness."
+  },
+  "3GZD6HmiNUhxXYf8Gch723": {
+    "knowledge_version": 2,
+    "name": "Lost",
+    "artist": "Frank Ocean",
+    "isrc": "USUM71207186",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "nostalgia",
+      "reflection"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores themes of longing and nostalgia, with a melancholic tone and restrained energy, reflecting on past relationships and personal growth."
+  },
+  "1CSAUEapYQQOD50ardFG0K": {
+    "knowledge_version": 2,
+    "name": "Glide",
+    "artist": "NEIKED, Portugal. The Man",
+    "isrc": "DEE862500421",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "connection",
+      "nostalgia"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "warm",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "The song explores a deep, affectionate connection between two people, with a driving beat and warm, nostalgic lyrics."
+  },
+  "4Jv7lweGIUOFQ7Oq2AtAh9": {
+    "knowledge_version": 2,
+    "name": "I Follow Rivers - The Magician Remix",
+    "artist": "Lykke Li, The Magician",
+    "isrc": "SEVUM1100103",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "journey",
+      "transformation"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "A hauntingly beautiful track about following one's heart and desires, with a driving beat and ethereal vocals."
+  },
+  "3iEUDvanZwQhLCIqUmCR7N": {
+    "knowledge_version": 2,
+    "name": "The Spins",
+    "artist": "Mac Miller, Empire Of The Sun",
+    "isrc": "USA2P2015959",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "ambition",
+      "pleasure",
+      "authenticity",
+      "material wealth"
+    ],
+    "relationship_stance": "independence",
+    "mood": "defiant",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night social",
+    "summary": "A boastful song showcasing Mac Miller's flow and desire for material wealth and fame, set to an electronic beat."
+  },
+  "12YJ22eobkNvns5hYqt2Ye": {
+    "knowledge_version": 2,
+    "name": "A Moment - from \"Project Hail Mary\"",
+    "artist": "Daniel Pemberton",
+    "isrc": "USQX92601739",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "none",
+    "lyric_language": "none",
+    "is_thai": false,
+    "themes": [],
+    "relationship_stance": "awe",
+    "mood": "reflective",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "space",
+    "summary": "A reflective and restrained instrumental piece that captures the essence of scientific discovery and ambition in a space setting, with a prominent use of ambient choral music."
+  },
+  "2ctvdKmETyOzPb2GiJJT53": {
+    "knowledge_version": 2,
+    "name": "Breathe (In the Air)",
+    "artist": "Pink Floyd",
+    "isrc": "GBN9Y1100077",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "meditation",
+      "peace",
+      "nature"
+    ],
+    "relationship_stance": "awe",
+    "mood": "calm",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song encourages listeners to breathe and find peace in the present moment, with a gentle, atmospheric sound and references to nature."
+  },
+  "72Z17vmmeQKAg8bptWvpVG": {
+    "knowledge_version": 2,
+    "name": "Space Oddity - 2015 Remaster",
+    "artist": "David Bowie",
+    "isrc": "USJT11500173",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "isolation",
+      "loneliness",
+      "space",
+      "adventure"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "outer space",
+    "summary": "The song tells the story of an astronaut named Major Tom who becomes isolated in space, with a melancholic and restrained musical character."
+  },
+  "0FDzzruyVECATHXKHFs9eJ": {
+    "knowledge_version": 2,
+    "name": "A Sky Full of Stars",
+    "artist": "Coldplay",
+    "isrc": "GBAYE1400217",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "connection",
+      "celebration"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "euphoric",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "The song expresses a deep sense of love and connection, with a driving beat and uplifting lyrics that celebrate being with someone special."
+  },
+  "13P5rwmk2EsoFRIz9UCeh9": {
+    "knowledge_version": 2,
+    "name": "Cool Kids",
+    "artist": "Echosmith",
+    "isrc": "USWB11301764",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "youth",
+      "insecurity",
+      "social pressure",
+      "self-acceptance"
+    ],
+    "relationship_stance": "independence",
+    "mood": "reflective",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "teenage social scene",
+    "summary": "The song explores the pressures of fitting in and the desire to be accepted by the 'cool kids', with a catchy, upbeat melody and introspective lyrics."
+  },
+  "5DNODaGLQJIKWWsHaWT7fk": {
+    "knowledge_version": 2,
+    "name": "Hey Now - ARTY Remix",
+    "artist": "London Grammar, ARTY",
+    "isrc": "GBCEN1300930",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "romantic tension",
+      "fear",
+      "excitement",
+      "anxiety"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "tense",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "intimate",
+    "summary": "The song explores the duality of romantic feelings, capturing both the excitement and anxiety that come with being drawn to someone, set to a driving electronic beat."
+  },
+  "7fax7NlxOq2X9kMZw8QLE2": {
+    "knowledge_version": 2,
+    "name": "Tailwhip",
+    "artist": "Men I Trust",
+    "isrc": "TCADF1750478",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "introspection",
+      "melancholy"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "reflective",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores feelings of solitude and longing, with a soft, dreamy sound that evokes a sense of quiet introspection."
+  },
+  "6bpBsotzL05UzS1rHsIqk8": {
+    "knowledge_version": 2,
+    "name": "Livewire",
+    "artist": "Oh Wonder",
+    "isrc": "GB9L31400028",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "electricity",
+      "connection",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "yearning",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "intimate and electric",
+    "summary": "The song explores the spark and vulnerability of a new romantic connection, with a driving beat and electric synths."
+  },
+  "2X485T9Z5Ly0xyaghN73ed": {
+    "knowledge_version": 2,
+    "name": "Let It Happen",
+    "artist": "Tame Impala",
+    "isrc": "AUUM71500292",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "acceptance",
+      "transformation",
+      "letting go"
+    ],
+    "relationship_stance": "awe",
+    "mood": "dreamy",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song explores the process of surrendering to change and embracing the unknown, with a psychedelic and rhythmic sound."
+  },
+  "6K4t31amVTZDgR3sKmwUJJ": {
+    "knowledge_version": 2,
+    "name": "The Less I Know The Better",
+    "artist": "Tame Impala",
+    "isrc": "AUUM71500303",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-awareness",
+      "detachment",
+      "growth"
+    ],
+    "relationship_stance": "independence",
+    "mood": "reflective",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song explores the idea of personal growth and self-awareness through a relationship's end, with a driving beat and psychedelic sound."
+  },
+  "0ofHAoxe9vBkTCp2UQIavz": {
+    "knowledge_version": 2,
+    "name": "Dreams - 2004 Remaster",
+    "artist": "Fleetwood Mac",
+    "isrc": "USWB11301111",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "dreamy",
+      "nostalgic",
+      "romantic"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A soft, introspective song about romantic longing and memories, with a gentle, melodic guitar and soothing vocals."
+  },
+  "1P1X8ona1Bcbf85rbuCbGc": {
+    "knowledge_version": 2,
+    "name": "Secretive (บอกไม่ได้)",
+    "artist": "Sqweez Animal",
+    "isrc": "THSPD1500722",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "unrequited love",
+      "heartbreak",
+      "secrecy"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses a sense of heartbreak and longing for someone who is not reciprocating the feelings, with a gentle and melancholic tone."
+  },
+  "1qbmS6ep2hbBRaEZFpn7BX": {
+    "knowledge_version": 2,
+    "name": "Man I Need",
+    "artist": "Olivia Dean",
+    "isrc": "GBUM72503089",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "communication",
+      "self-worth",
+      "love",
+      "honesty"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "warm",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night social",
+    "summary": "A song about expressing needs and desires in a relationship, with a warm, driving beat and a focus on open communication and self-worth."
+  },
+  "0Jirkb7LGNWyVhKOsKFdZ2": {
+    "knowledge_version": 2,
+    "name": "Run Away With Me",
+    "artist": "Carly Rae Jepsen",
+    "isrc": "USUM71507009",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "romantic escape",
+      "adventure",
+      "longing"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "open road",
+    "summary": "The song captures a sense of romantic longing and adventure, with lyrics about escaping together and experiencing new places, set to a driving, upbeat pop melody."
+  },
+  "7982sGZuvo5OXsY6REzgIn": {
+    "knowledge_version": 2,
+    "name": "Boom Clap",
+    "artist": "Charli xcx",
+    "isrc": "GBAHS1400160",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "heartbreak",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "A reflective song about the bittersweet memories of a past love, with a catchy, upbeat melody that contrasts with the melancholic lyrics."
+  },
+  "0AxZUYeQ9bZwSdt1LmZuok": {
+    "knowledge_version": 2,
+    "name": "Heaven or Las Vegas",
+    "artist": "Cocteau Twins",
+    "isrc": "GBAFL9000039",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "ethereal",
+      "longing",
+      "dreamlike"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song evokes a sense of longing and introspection with its ethereal soundscapes and hazy vocals, creating a dreamlike atmosphere."
+  },
+  "1WYrTfvKjQYaYfVziGG1ET": {
+    "knowledge_version": 2,
+    "name": "Linger - Remastered 2026",
+    "artist": "The Cranberries",
+    "isrc": "USIR29300085",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "yearning",
+      "longing",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A gentle, introspective song about the vulnerability of unrequited love and the longing for connection."
+  },
+  "799KrpEbhZp0MHeiA8YK9P": {
+    "knowledge_version": 2,
+    "name": "Guilty as Sin?",
+    "artist": "Taylor Swift",
+    "isrc": "USUG12401036",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "fantasy",
+      "guilt",
+      "desire",
+      "judgment"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "reflective",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores the narrator's feelings of guilt and desire for someone they haven't physically touched, questioning societal judgment and the nature of emotional affairs."
+  },
+  "3hEfpBHxgieRLz4t3kLNEg": {
+    "knowledge_version": 2,
+    "name": "About You",
+    "artist": "The 1975",
+    "isrc": "GBK3W2202321",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "nostalgia",
+      "introspection"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "reflective",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores a deep, introspective love, with a soft, melancholic tone and a focus on personal memories and emotions."
+  },
+  "3siwsiaEoU4Kuuc9WKMUy5": {
+    "knowledge_version": 2,
+    "name": "No One Noticed",
+    "artist": "The Marías",
+    "isrc": "USAT22307579",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "loneliness",
+      "invisibility",
+      "longing"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores feelings of isolation and being overlooked, with a gentle, introspective sound."
+  },
+  "6aNhdTO95TOWpkdunBJPFK": {
+    "knowledge_version": 2,
+    "name": "Late Night Walks",
+    "artist": "Teddy Vogel",
+    "isrc": "QZNWS2213133",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "unknown",
+    "language_flag": "uncertain",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "connection",
+      "healing",
+      "introspection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "nostalgic",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night together",
+    "summary": "The song describes a deep emotional connection and healing found in late-night walks and conversations with a loved one under the stars.",
+    "notes": "Model suggested lyric_language=unknown; owner to decide."
+  },
+  "46RNrAkGsqWTDrv2ZPOAbx": {
+    "knowledge_version": 2,
+    "name": "Moon Song",
+    "artist": "Phoebe Bridgers",
+    "isrc": "USJ5G2020007",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A tender, introspective song about love and longing, with a soft, melancholic melody and heartfelt lyrics."
+  },
+  "1eZyd1mtOmlQu3YhSYmes7": {
+    "knowledge_version": 2,
+    "name": "lovergirl",
+    "artist": "Madison Beer",
+    "isrc": "USSM12602732",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "heartbreak",
+      "self-reflection",
+      "growth"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores the pain of a failed relationship and the process of moving on, with a gentle, reflective melody."
+  },
+  "20jbSiX29FDX4oQxBXyUEi": {
+    "knowledge_version": 2,
+    "name": "hate that i made you love me",
+    "artist": "Ariana Grande",
+    "isrc": "USUM72601821",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "heartbreak",
+      "regret",
+      "love"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses regret and heartache over a past relationship, with a soft and emotional musical arrangement."
+  },
+  "1YpRBLuUWsdahTFhZr9pwK": {
+    "knowledge_version": 2,
+    "name": "So Many Details",
+    "artist": "Toro y Moi",
+    "isrc": "US22N1307703",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "reflection",
+      "introspection"
+    ],
+    "relationship_stance": "awe",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on personal memories and experiences with a sense of longing and introspection, accompanied by a gentle, dreamy musical arrangement."
+  },
+  "2jpKZFnBk98Ud3EoZiBOTf": {
+    "knowledge_version": 2,
+    "name": "Here With Me",
+    "artist": "Marshmello, CHVRCHES",
+    "isrc": "USUG11900610",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "connection",
+      "longing",
+      "togetherness"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "warm",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "intimate",
+    "summary": "The song explores the comfort and security found in a close relationship, with a gentle and soothing musical backdrop."
+  },
+  "6SwnPNYCf3q4WsUQkMzAiI": {
+    "knowledge_version": 2,
+    "name": "Hearsay",
+    "artist": "LANDOKMAI",
+    "isrc": "THWTD2506600",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "language_flag": "thai-artist-other-language",
+    "is_thai": true,
+    "themes": [
+      "love",
+      "trust",
+      "defiance"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "affectionate",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "social",
+    "summary": "The song expresses a deep love and trust in a partner despite rumors and doubts from others, with a confident and upbeat musical character.",
+    "notes": "Model suggested lyric_language=en; owner to decide."
+  },
+  "75mFrseCKSI6Nz8WANXq90": {
+    "knowledge_version": 2,
+    "name": "ใจฉันตามเธอไป",
+    "artist": "YOUNGOHM",
+    "isrc": "DGA052566744",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "love",
+      "pain",
+      "longing"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "intimate",
+    "summary": "The song expresses a deep longing and love for someone, acknowledging both the joy and pain that comes with it, with a gentle and melancholic tone."
+  },
+  "5gatbCb4evWxs0CMMuiqGX": {
+    "knowledge_version": 2,
+    "name": "In Too Deep",
+    "artist": "Franc Moody",
+    "isrc": "GBKPL1779676",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses a deep sense of longing and nostalgia for a past love, with a gentle and melancholic tone."
+  },
+  "0dpyzcT3RMNNSd2xKBf35I": {
+    "knowledge_version": 2,
+    "name": "Be Sweet",
+    "artist": "Japanese Breakfast",
+    "isrc": "USJ5G2022502",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "reflection",
+      "longing"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A gentle, reflective song about longing and nostalgia, with a soft, intimate sound and lyrics that evoke a sense of yearning for something or someone."
+  },
+  "2gf1kAZFkjS8SPXsk7yNk9": {
+    "knowledge_version": 2,
+    "name": "Lavender",
+    "artist": "FOLK9",
+    "isrc": "FRX201803403",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "language_flag": "thai-artist-other-language",
+    "is_thai": true,
+    "themes": [
+      "nostalgia",
+      "comfort",
+      "transience"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "soothing",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "intimate",
+    "summary": "The song conveys a comforting message to a loved one, reflecting on the beauty and fleeting nature of memories, with a soothing and nostalgic tone.",
+    "notes": "Model suggested lyric_language=en; owner to decide."
+  },
+  "3A02hWQ2ebOFDWSbAMNnpw": {
+    "knowledge_version": 2,
+    "name": "bittersweet",
+    "artist": "Madison Beer",
+    "isrc": "USSM12503876",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "heartbreak",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores the pain of a past relationship and the lingering feelings that remain, with a soft and introspective musical arrangement."
+  },
+  "3CWuU5kIw8zsWJTcgreUwl": {
+    "knowledge_version": 2,
+    "name": "Strangers",
+    "artist": "Sigrid",
+    "isrc": "GBUM71705774",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "distance",
+      "connection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores the bittersweet feelings of longing for a distant love, with a gentle and reflective musical arrangement."
+  },
+  "1tGmXu0s8ob0VFjNoQlyKc": {
+    "knowledge_version": 2,
+    "name": "Never Say Die",
+    "artist": "CHVRCHES",
+    "isrc": "GBZN81800009",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "resilience",
+      "perseverance",
+      "struggle"
+    ],
+    "relationship_stance": "independence",
+    "mood": "determined",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song conveys a sense of determination and resilience in the face of adversity, with a driving beat and electronic instrumentation."
+  },
+  "0KVWVuutF9Dn8li4HdyAeU": {
+    "knowledge_version": 2,
+    "name": "Archie, Marry Me",
+    "artist": "Alvvays",
+    "isrc": "US3R41428202",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "romantic yearning",
+      "nostalgia",
+      "longing"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "reflective",
+    "energy": "driving",
+    "intensity": 3,
+    "setting": "summer afternoon",
+    "summary": "The song expresses a heartfelt plea for commitment and love, with a mix of nostalgia and longing, set against a gentle, melancholic indie-pop backdrop."
+  },
+  "21iSFtrC2VHP3PfImVTglV": {
+    "knowledge_version": 2,
+    "name": "Everybody Wants to Love You",
+    "artist": "Japanese Breakfast",
+    "isrc": "USA2P1569461",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "introspection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores the complexities of love and longing, with a gentle, introspective mood and a restrained energy."
+  },
+  "6IPwKM3fUUzlElbvKw2sKl": {
+    "knowledge_version": 2,
+    "name": "we fell in love in october",
+    "artist": "girl in red",
+    "isrc": "GBKPL1828677",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "love",
+      "memory"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on a past love that began in October, with a gentle and introspective sound that evokes memories and longing."
+  },
+  "4R2kfaDFhslZEMJqAFNpdd": {
+    "knowledge_version": 2,
+    "name": "cardigan",
+    "artist": "Taylor Swift",
+    "isrc": "USUG12002836",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "longing",
+      "memory"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A reflective ballad about reminiscing on a past relationship, with a soft, intimate sound."
+  },
+  "6ewcR0FnLdKjIt9gcMghrQ": {
+    "knowledge_version": 2,
+    "name": "All I Can Say",
+    "artist": "Kali Uchis",
+    "isrc": "USUG12501805",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A tender, reflective song about longing for a past love, with a soft, intimate sound."
+  },
+  "5ptViFrfoKdGPTdd9oQCwr": {
+    "knowledge_version": 2,
+    "name": "Universe",
+    "artist": "EXO",
+    "isrc": "KRA301700672",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "ko",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "connection",
+      "yearning"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song expresses a deep longing for a distant love, with a driving beat and emotional vocals."
+  },
+  "1ujxjsoNvh4XgS2fUNwkZ2": {
+    "knowledge_version": 2,
+    "name": "Space Song",
+    "artist": "Beach House",
+    "isrc": "USSUB1512203",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "dreamy",
+      "nostalgic",
+      "introspective"
+    ],
+    "relationship_stance": "awe",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores a sense of longing and introspection with a dreamy, atmospheric sound and soft, reflective lyrics."
+  },
+  "4SqWKzw0CbA05TGszDgMlc": {
+    "knowledge_version": 2,
+    "name": "I Love You So",
+    "artist": "The Walters",
+    "isrc": "TCACC1438995",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "heartbreak",
+      "unrequited love",
+      "emotional turmoil"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "anguished",
+    "energy": "restrained",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song explores the pain of loving someone who is not ready for a committed relationship, with the narrator torn between their deep feelings and the need to leave."
+  },
+  "0yuAWlxq59xT3agQ965OxE": {
+    "knowledge_version": 2,
+    "name": "Sunsetz",
+    "artist": "Cigarettes After Sex",
+    "isrc": "USBQU1700033",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "intimacy",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song captures a tender, intimate moment of longing and nostalgia, with soft, dreamy instrumentation and whispered vocals."
+  },
+  "2Ck6gblyk3UFCVPTh8o3TN": {
+    "knowledge_version": 2,
+    "name": "Youth",
+    "artist": "Daughter",
+    "isrc": "GBAFL1200314",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "youth",
+      "longing",
+      "passing time"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night reflection",
+    "summary": "A gentle, reflective song about the passage of time and the longing for youth and lost love, with a soft, intimate musical arrangement."
+  },
+  "35KiiILklye1JRRctaLUb4": {
+    "knowledge_version": 2,
+    "name": "Holocene",
+    "artist": "Bon Iver",
+    "isrc": "US38Y1113503",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nature",
+      "reflection",
+      "wonder",
+      "awe"
+    ],
+    "relationship_stance": "awe",
+    "mood": "wistful",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on the beauty of nature and the small moments of wonder in life, with a soft, intimate musical arrangement."
+  },
+  "4pvb0WLRcMtbPGmtejJJ6y": {
+    "knowledge_version": 2,
+    "name": "exile (feat. Bon Iver)",
+    "artist": "Taylor Swift, Bon Iver",
+    "isrc": "USUG12002838",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "heartbreak",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A duet about the lingering pain of a past relationship, with a soft, intimate musical arrangement."
+  },
+  "43iIQbw5hx986dUEZbr3eN": {
+    "knowledge_version": 2,
+    "name": "From The Start",
+    "artist": "Laufey",
+    "isrc": "QMDA62312093",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "nostalgia",
+      "longing"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A gentle, reflective song about longing for a past love, with soft piano and warm vocals creating an intimate atmosphere."
+  },
+  "2gYTC8DsplN3RNdpdBcCOQ": {
+    "knowledge_version": 2,
+    "name": "Die On This Hill",
+    "artist": "SIENNA SPIRO",
+    "isrc": "USUG12508560",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "stubborn love",
+      "inner conflict",
+      "letting go",
+      "pride"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 3,
+    "setting": "late-night alone",
+    "summary": "The song explores the struggle of holding onto a relationship that is no longer reciprocated, with a piano-driven ballad conveying a sense of stubborn love and painful clarity."
+  },
+  "5CZ40GBx1sQ9agT82CLQCT": {
+    "knowledge_version": 2,
+    "name": "traitor",
+    "artist": "Olivia Rodrigo",
+    "isrc": "USUG12101243",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "betrayal",
+      "heartbreak",
+      "anger"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "angry",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song expresses feelings of betrayal and heartbreak, with a driving beat and raw emotion."
+  },
+  "2mlNgAeIBnL78ZriXgrRHz": {
+    "knowledge_version": 2,
+    "name": "Glimpse of Us",
+    "artist": "Joji",
+    "isrc": "USWB12201789",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "longing",
+      "reflection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on a past relationship with a mix of longing and nostalgia, featuring a soft, intimate sound with a gentle beat."
+  },
+  "4ytyLpIwUXbdFsNOvgNnmP": {
+    "knowledge_version": 2,
+    "name": "Four Seasons",
+    "artist": "TAEYEON",
+    "isrc": "KRA301900154",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "ko",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "change",
+      "growth"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "A reflective ballad about the cyclical nature of love and personal growth, with a gentle, emotional melody."
+  },
+  "2g0LdZQce9xlcHb1mBJyuz": {
+    "knowledge_version": 2,
+    "name": "strawberry moon",
+    "artist": "IU",
+    "isrc": "KRA382163256",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "ko",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "longing",
+      "romance"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A gentle, reflective song about longing for a past love, with soft instrumentation and tender vocals."
+  },
+  "6wkYQMrFfb0huLB5Qn19Iv": {
+    "knowledge_version": 2,
+    "name": "We Almost Broke Up Again Last Night",
+    "artist": "Sabrina Carpenter",
+    "isrc": "USUM72504442",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "cyclical relationships",
+      "emotional exhaustion",
+      "reconciliation"
+    ],
+    "relationship_stance": "emotional exhaustion",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night reflection",
+    "summary": "The song explores the repetitive cycle of conflict and reconciliation in a tumultuous relationship, capturing the emotional exhaustion and predictability of near-breakups."
+  },
+  "0oxYB9GoOIDrdzniNdKC44": {
+    "knowledge_version": 2,
+    "name": "When the Sun Hits",
+    "artist": "Slowdive",
+    "isrc": "GBBQY0400041",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "longing",
+      "reflection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on past love and longing, with a gentle, dreamy sound and introspective lyrics."
+  },
+  "086myS9r57YsLbJpU0TgK9": {
+    "knowledge_version": 2,
+    "name": "Why'd You Only Call Me When You're High?",
+    "artist": "Arctic Monkeys",
+    "isrc": "GBCEL1300370",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "late-night calls",
+      "drunken behavior",
+      "unreliable relationships"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "frustrated",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song critiques a partner who only calls when they're drunk and emotionally vulnerable, with a mix of frustration and longing set to a driving, guitar-heavy sound."
+  },
+  "5RdhBLmB4DyFHLglRrfx63": {
+    "knowledge_version": 2,
+    "name": "I'll Be There",
+    "artist": "The Jackson 5",
+    "isrc": "USMO17082635",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "family",
+      "support",
+      "reassurance"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "warm",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "A young person expresses their commitment to always be there for their family, backed by a lively and upbeat rhythm."
+  },
+  "70pVCVMGjmIWPbWXDwf11e": {
+    "knowledge_version": 2,
+    "name": "petal",
+    "artist": "Ariana Grande",
+    "isrc": "USUM72601822",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "celebrity_culture",
+      "resilience",
+      "unfiltered_rage"
+    ],
+    "relationship_stance": "defiance",
+    "mood": "moody",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night reflection",
+    "summary": "A chilling, blunt critique of public scrutiny and the 'tragic pop star' narrative, exploring survival and personal agency within a toxic environment."
+  },
+  "6rVCUwfnuYTAsX4P9fIdIu": {
+    "knowledge_version": 2,
+    "name": "Dreams Come True",
+    "artist": "aespa",
+    "isrc": "KRA302100400",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "language_flag": "mixed-language",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "destiny",
+      "dreams",
+      "emotional openness"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "dreamy",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "The song explores the idea of dreams coming true through love and destiny, with a dreamy pop and electronic hip-hop sound.",
+    "notes": "Model suggested lyric_language=ko; owner to decide."
+  },
+  "2Kerz9H9IejzeIpjhDJoYG": {
+    "knowledge_version": 2,
+    "name": "Love",
+    "artist": "Lana Del Rey",
+    "isrc": "GBUM71604605",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "romantic love",
+      "nostalgia",
+      "longing"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores a deep, nostalgic love with a sense of longing and melancholy, set to a restrained, atmospheric sound."
+  },
+  "67QGnT1Vdfuuy4HkLTUVjj": {
+    "knowledge_version": 2,
+    "name": "11:11",
+    "artist": "TAEYEON",
+    "isrc": "KRA301700164",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "language_flag": "mixed-language",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "nostalgia",
+      "reflection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A gentle, reflective ballad about longing for a past love and the memories that linger, with a soft, intimate musical arrangement.",
+    "notes": "Model suggested lyric_language=ko; owner to decide."
+  },
+  "1uvyZBs4IZYRebHIB1747m": {
+    "knowledge_version": 2,
+    "name": "Purple Rain",
+    "artist": "Prince",
+    "isrc": "USWB10001880",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "rain",
+      "emotional turmoil",
+      "redemption",
+      "love"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "A powerful ballad about emotional turmoil and redemption, set against the backdrop of a rainstorm, with a driving piano melody and intense vocals."
+  },
+  "2TjdnqlpwOjhijHCwHCP2d": {
+    "knowledge_version": 2,
+    "name": "The Great Gig in the Sky",
+    "artist": "Pink Floyd",
+    "isrc": "GBN9Y1100080",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "none",
+    "lyric_language": "none",
+    "is_thai": false,
+    "themes": [],
+    "relationship_stance": "awe",
+    "mood": "ethereal",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "A powerful instrumental piece featuring a haunting vocal performance, evoking a sense of spiritual journey and emotional release."
+  },
+  "0JmnkIqdlnUzPaf8sqBRs3": {
+    "knowledge_version": 2,
+    "name": "Moonlight",
+    "artist": "Kali Uchis",
+    "isrc": "USUM72219486",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "romantic",
+      "nostalgic",
+      "intimate"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "warm",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night together",
+    "summary": "A tender love song about cherishing a romantic connection, with soft, intimate instrumentation and heartfelt lyrics."
+  },
+  "01aNqddaggrPJYUIdRApRD": {
+    "knowledge_version": 2,
+    "name": "bad enough",
+    "artist": "Madison Beer",
+    "isrc": "USSM12503873",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "heartbreak",
+      "self-reflection",
+      "empowerment"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores the pain of a failed relationship and the process of moving on, with a soft, introspective sound."
+  },
+  "3UoULw70kMsiVXxW0L3A33": {
+    "knowledge_version": 2,
+    "name": "pov",
+    "artist": "Ariana Grande",
+    "isrc": "USUM72020441",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "vulnerability",
+      "self-acceptance"
+    ],
+    "relationship_stance": "interdependence and vulnerability",
+    "mood": "reflective",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores relational strength—learning to trust someone else's view of you when your own self-image is broken."
+  },
+  "61OJxhoY3Ix50rYVKo8zRK": {
+    "knowledge_version": 2,
+    "name": "Can I Call You Tonight?",
+    "artist": "Dayglow",
+    "isrc": "TCADL1825079",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "longing",
+      "connection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses a gentle longing to reconnect with someone, with a soft, intimate sound that evokes memories and quiet reflection."
+  },
+  "1KCMF9fdF7sNE74R2V46af": {
+    "knowledge_version": 2,
+    "name": "You",
+    "artist": "Lane 8, Kasablanca",
+    "isrc": "GBEWA2403597",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "closeness",
+      "nostalgia",
+      "connection"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "longing",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "intimate",
+    "summary": "The song expresses a deep desire for physical and emotional closeness with someone, capturing a sense of nostalgia and longing for connection."
+  },
+  "6qOWwJlt1TOQ0V4Mji4Ytx": {
+    "knowledge_version": 2,
+    "name": "ดำสนิท",
+    "artist": "Hugo",
+    "isrc": "THMUN1360009",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "human nature",
+      "life's journey",
+      "societal truths"
+    ],
+    "relationship_stance": "awe",
+    "mood": "reflective",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "This song explores the transformation of human nature from purity to the accumulation of life's experiences, set to a gentle string arrangement."
+  },
+  "3Rg3dajXXNOuWLC95gPMrq": {
+    "knowledge_version": 2,
+    "name": "A Hymn",
+    "artist": "Khruangbin",
+    "isrc": "GB5EM1701752",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "spiritual",
+      "meditative",
+      "journey"
+    ],
+    "relationship_stance": "awe",
+    "mood": "tranquil",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "This instrumental track features a hypnotic groove and layered instrumentation, evoking a sense of spiritual journey and introspection."
+  },
+  "3RamvFV2OtTv3kozKLZnvP": {
+    "knowledge_version": 2,
+    "name": "Quarrel",
+    "artist": "Moses Sumney",
+    "isrc": "US38Y1730804",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-reflection",
+      "conflict",
+      "growth"
+    ],
+    "relationship_stance": "independence",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "The song explores personal struggles and self-discovery through a gentle, introspective lens, with a focus on overcoming internal conflicts."
+  },
+  "0bkW98npv8EsWQ2fXFzK56": {
+    "knowledge_version": 2,
+    "name": "From Eden",
+    "artist": "Hozier",
+    "isrc": "IEACJ1400142",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "redemption",
+      "loss",
+      "rebirth"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores themes of loss and redemption, with a melancholic tone and restrained energy, reflecting on past relationships and the journey towards self-discovery."
+  },
+  "2hKdd3qO7cWr2Jo0Bcs0MA": {
+    "knowledge_version": 2,
+    "name": "Drops of Jupiter (Tell Me)",
+    "artist": "Train",
+    "isrc": "USSM10019751",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "connection",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night reflection",
+    "summary": "A heartfelt ballad about love and longing, with a driving rhythm and introspective lyrics."
+  },
+  "3vQ4T78TTMOjQXGfXVKQJo": {
+    "knowledge_version": 2,
+    "name": "Redbone",
+    "artist": "Childish Gambino",
+    "isrc": "USYAH1600107",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A reflective song about love and longing, with a smooth, soulful sound and a sense of nostalgia."
+  },
+  "0wzCQjc8JRa39ej1TFkAFt": {
+    "knowledge_version": 2,
+    "name": "Endlessly",
+    "artist": "Kali Uchis",
+    "isrc": "USUM72219482",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A tender, slow-burning love song about yearning for a past relationship, with a dreamy, intimate sound."
+  },
+  "0cHtr7i0P0TpEODZr2WZDE": {
+    "knowledge_version": 2,
+    "name": "ดาวหางฮัลเลย์",
+    "artist": "fellow fellow",
+    "isrc": "DGA072377012",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "romantic love",
+      "awe",
+      "transformation"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "nostalgic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night reflection",
+    "summary": "The song describes a transformative experience of love, comparing it to seeing Halley's Comet, with a driving beat and nostalgic lyrics."
+  },
+  "37LhFxchiyAJVop5JgRZgY": {
+    "knowledge_version": 2,
+    "name": "Like Water",
+    "artist": "WENDY",
+    "isrc": "KRA302100113",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "language_flag": "mixed-language",
+    "is_thai": false,
+    "themes": [
+      "gratitude",
+      "healing",
+      "connection"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "comforting",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "emotional support",
+    "summary": "The song expresses gratitude and offers comfort, using the metaphor of water to describe how love can heal and support someone, with a gentle and intimate musical character.",
+    "notes": "Model suggested lyric_language=ko; owner to decide."
+  },
+  "6tDDoYIxWvMLTdKpjFkc1B": {
+    "knowledge_version": 2,
+    "name": "telepatía",
+    "artist": "Kali Uchis",
+    "isrc": "GBUM72005748",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "language_flag": "mixed-language",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "connection",
+      "intimacy"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "sensual",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night together",
+    "summary": "The song explores a deep, intimate connection between lovers, with a sultry and rhythmic sound that evokes a sense of passion and closeness.",
+    "notes": "Model suggested lyric_language=es; owner to decide."
+  },
+  "5tSmAABuoOfR59lrtXdDqm": {
+    "knowledge_version": 2,
+    "name": "If This Was A Movie",
+    "artist": "Taylor Swift",
+    "isrc": "USCJY1003670",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "reflection",
+      "romance"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on a past relationship with a sense of longing and nostalgia, using cinematic imagery to express the depth of the emotions felt."
+  },
+  "7uzmGiiJyRfuViKKK3lVmR": {
+    "knowledge_version": 2,
+    "name": "Mine",
+    "artist": "Bazzi",
+    "isrc": "USAT21704227",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "possession",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "yearning",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song explores the vulnerability and possessiveness that can come with love, with a driving beat and emotional lyrics."
+  },
+  "161DnLWsx1i3u1JT05lzqU": {
+    "knowledge_version": 2,
+    "name": "Talking to the Moon",
+    "artist": "Bruno Mars",
+    "isrc": "USAT21001985",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "loneliness",
+      "hope"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A gentle, piano-driven ballad about yearning for connection and love, with a sense of loneliness and hope."
+  },
+  "2VYnlKxB8jpbCeLUjQsebc": {
+    "knowledge_version": 2,
+    "name": "In A Good Way",
+    "artist": "Faye Webster",
+    "isrc": "US38W2040401",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "reflection",
+      "growth"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "warm",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A reflective song about personal growth and cherishing past experiences, with a warm and intimate sound."
+  },
+  "30VHURM5NOfoZmqp2iKawS": {
+    "knowledge_version": 2,
+    "name": "Butterflies",
+    "artist": "Kacey Musgraves",
+    "isrc": "USUM71800130",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-discovery",
+      "transformation",
+      "freedom"
+    ],
+    "relationship_stance": "independence",
+    "mood": "uplifting",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "open and expansive",
+    "summary": "The song describes a journey of self-discovery and transformation, with a driving beat and uplifting lyrics about embracing change and freedom."
+  },
+  "1dGr1c8CrMLDpV6mPbImSI": {
+    "knowledge_version": 2,
+    "name": "Lover",
+    "artist": "Taylor Swift",
+    "isrc": "USUG11901473",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "commitment",
+      "intimacy"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "romantic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night together",
+    "summary": "A tender, intimate love song about the deep connection and commitment between two people, with a soft, gentle musical arrangement."
+  },
+  "2uP6t2J5MEwhr9rDkAAzwh": {
+    "knowledge_version": 2,
+    "name": "Get You (feat. Kali Uchis)",
+    "artist": "Daniel Caesar, Kali Uchis",
+    "isrc": "TCACR1690004",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "intimacy"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "sensual",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night together",
+    "summary": "The song expresses a deep desire and longing for a romantic connection, with a sensual and intimate atmosphere created by soft instrumentation and tender vocals."
+  },
+  "7uMQlau2mW31kf0prr1ir9": {
+    "knowledge_version": 2,
+    "name": "ขอให้เธอใจดี (May she be kind)",
+    "artist": "FREEHAND",
+    "isrc": "FRX202359526",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "letting go",
+      "love",
+      "heartbreak"
+    ],
+    "relationship_stance": "letting go",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses a plea for a loved one to be kind and find happiness, even if it means letting go and moving on, with a gentle and reflective musical tone."
+  },
+  "3xAsJQO4g5ZBUL6U6k5CzW": {
+    "knowledge_version": 2,
+    "name": "Sunset In Pattaya",
+    "artist": "YOUNGOHM",
+    "isrc": "DGA052566742",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "nostalgia",
+      "reflection",
+      "longing"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "evening",
+    "summary": "The song reflects on a past love with a sense of longing and nostalgia, set against a gentle, melancholic melody."
+  },
+  "4RL77hMWUq35NYnPLXBpih": {
+    "knowledge_version": 2,
+    "name": "Skinny Love",
+    "artist": "Birdy",
+    "isrc": "GBAHS1100350",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "heartbreak",
+      "longing",
+      "distance"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A gentle, sorrowful ballad about the pain of a failing relationship and the longing for connection, with a soft, intimate vocal delivery and sparse instrumentation."
+  },
+  "1LzNfuep1bnAUR9skqdHCK": {
+    "knowledge_version": 2,
+    "name": "Fade Into You",
+    "artist": "Mazzy Star",
+    "isrc": "USCA29300105",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "intimacy",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses a deep, yearning love and the desire to fade into someone else, with a soft, dreamy musical backdrop."
+  },
+  "4BY4V1T0RJK1HmD2Q0ClyK": {
+    "knowledge_version": 2,
+    "name": "Oblivion",
+    "artist": "Grimes",
+    "isrc": "CA21O1200003",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "technology",
+      "love",
+      "transformation"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "futuristic",
+    "summary": "The song explores a futuristic love story with themes of technology and transformation, featuring a driving beat and dreamy synths."
+  },
+  "4qW3BbQAwZsrnu8a3ZRdyT": {
+    "knowledge_version": 2,
+    "name": "Self Aware",
+    "artist": "Temper City",
+    "isrc": "QZHN52696246",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-awareness",
+      "romantic limits",
+      "emotional tension"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "bittersweet",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "The song explores the tension between desire and self-awareness in a relationship, acknowledging its limits while still enjoying the connection."
+  },
+  "1CzBBeZ0OQr7Fvh9VzMAv1": {
+    "knowledge_version": 2,
+    "name": "สักวันจะไม่แตกสลาย (Dear Trauma)",
+    "artist": "FREEHAND",
+    "isrc": "THG012500521",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "self-doubt",
+      "healing",
+      "letting go"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "This song explores themes of self-doubt and healing from a painful relationship, with a gentle string-based sonic character."
+  },
+  "70pOmngGTSMHPjgIqVRFsI": {
+    "knowledge_version": 2,
+    "name": "ไกลกว่าดาว (Million Light-Years)",
+    "artist": "FREEHAND",
+    "isrc": "THG012500257",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "longing",
+      "nostalgia",
+      "love"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night reflection",
+    "summary": "The song reflects on a distant love, with the singer remembering their partner's smile and voice, and feeling their presence in the heart despite the physical distance, all set to a gentle, string-influenced melody."
+  },
+  "75enpZYDT6k0PNKu6SJ4W5": {
+    "knowledge_version": 2,
+    "name": "4am",
+    "artist": "girl in red",
+    "isrc": "GBLFP1888313",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "late-night thoughts",
+      "introspection",
+      "emotional vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores quiet, introspective feelings of love and longing, with a soft, gentle musical backdrop that enhances the sense of solitude and vulnerability."
+  },
+  "6mavVLsxaa4YcPje9qZKcf": {
+    "knowledge_version": 2,
+    "name": "When This Rain Stops",
+    "artist": "WENDY",
+    "isrc": "KRA302100112",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "ko",
+    "is_thai": false,
+    "themes": [
+      "emotional turmoil",
+      "self-reflection",
+      "healing",
+      "resilience"
+    ],
+    "relationship_stance": "self-reflection",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "A piano-driven ballad about finding comfort and strength during emotional turmoil, with lyrics that reflect on personal struggles and the hope of moving forward."
+  },
+  "5ThLZ2ecykVqTRcRlsWNby": {
+    "knowledge_version": 2,
+    "name": "OFFLINE",
+    "artist": "HYOLYN",
+    "isrc": "KRMIM2640635",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "language_flag": "mixed-language",
+    "is_thai": false,
+    "themes": [
+      "digital disconnect",
+      "longing",
+      "self-reflection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores feelings of loneliness and longing in a digital age, with a soft, intimate sound and reflective lyrics.",
+    "notes": "Model suggested lyric_language=ko; owner to decide."
+  },
+  "1ggsR5kCepKTW4F64bCFdV": {
+    "knowledge_version": 2,
+    "name": "Cheerleader",
+    "artist": "Porter Robinson",
+    "isrc": "USQE92400031",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "parasocial relationships",
+      "dependency",
+      "isolation",
+      "yearning"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "anxious",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "introspective",
+    "summary": "The song explores the complexities of obsessive and dependent relationships, with lyrics that reflect vulnerability and a search for belonging, set to an anxious and driving beat."
+  },
+  "0l4DTppOxy7NUaEcwXuOb6": {
+    "knowledge_version": 2,
+    "name": "Animal",
+    "artist": "Neon Trees",
+    "isrc": "USUM71001801",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "desire",
+      "passion"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song expresses a strong, almost primal desire for someone, with a driving beat and intense vocals."
+  },
+  "4vHNeBWDQpVCmGbaccrRzi": {
+    "knowledge_version": 2,
+    "name": "Goodie Bag",
+    "artist": "Still Woozy",
+    "isrc": "QZANL1712241",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "reflection",
+      "growth"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "wistful",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song reflects on personal growth and cherished memories, with a steady rhythm and warm, nostalgic lyrics."
+  },
+  "1myEOhXztRxUVfaAEQiKkU": {
+    "knowledge_version": 2,
+    "name": "Cosmic Love",
+    "artist": "Florence + The Machine",
+    "isrc": "GBUM70903473",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "devotion",
+      "destruction",
+      "eternity"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dramatic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "apocalyptic",
+    "summary": "The song explores an intense, all-consuming love that persists even in the face of the world's end, with powerful vocals and sweeping instrumentation."
+  },
+  "4ntIPuXf6DpvrZExXrn5QA": {
+    "knowledge_version": 2,
+    "name": "กลัวว่าฉันจะไม่เสียใจ (Fear)",
+    "artist": "PURPEECH",
+    "isrc": "THWTD2504500",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "fear of forgetting",
+      "emotional loss",
+      "nostalgia",
+      "growth"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "This song expresses a deep fear of losing the intensity of past emotions and the pain of forgetting, set to a gentle, string-accompanied melody."
+  },
+  "7yFMhCJOsH7khgpdnyrZAZ": {
+    "knowledge_version": 2,
+    "name": "Ride",
+    "artist": "Lana Del Rey",
+    "isrc": "GBUM71205878",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "freedom",
+      "nostalgia",
+      "adventure"
+    ],
+    "relationship_stance": "independence",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "open road",
+    "summary": "The song describes a journey of self-discovery and freedom, with a mix of nostalgia and melancholy, set to a driving beat and a sense of adventure."
+  },
+  "2OzhQlSqBEmt7hmkYxfT6m": {
+    "knowledge_version": 2,
+    "name": "Fortnight (feat. Post Malone)",
+    "artist": "Taylor Swift, Post Malone",
+    "isrc": "USUG12401028",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "friendship",
+      "time"
+    ],
+    "relationship_stance": "playful connection",
+    "mood": "nostalgic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "casual and social",
+    "summary": "The song reflects on a close friendship and the passage of time, with a catchy, upbeat melody and a sense of camaraderie."
+  },
+  "6wpGqhRvJGNNXwWlPmkMyO": {
+    "knowledge_version": 2,
+    "name": "I Still Haven't Found What I'm Looking For",
+    "artist": "U2",
+    "isrc": "GBUM70709783",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "spiritual",
+      "searching",
+      "faith",
+      "longing"
+    ],
+    "relationship_stance": "awe",
+    "mood": "yearning",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "universal",
+    "summary": "The song expresses a deep spiritual journey and the ongoing search for meaning and connection with the divine, set to an anthemic and uplifting musical backdrop."
+  },
+  "2PL9IBLQvJjE7hqCQyJl2g": {
+    "knowledge_version": 2,
+    "name": "Turn",
+    "artist": "The Wombats",
+    "isrc": "GBWWP1703234",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "heartbreak",
+      "nostalgia",
+      "longing"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on a past relationship with a mix of nostalgia and regret, using vivid imagery and a melancholic tone."
+  },
+  "3FtYbEfBqAlGO46NUDQSAt": {
+    "knowledge_version": 2,
+    "name": "Electric Feel",
+    "artist": "MGMT",
+    "isrc": "USSM10702131",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "psychedelic",
+      "dreamy",
+      "playful"
+    ],
+    "relationship_stance": "playful connection",
+    "mood": "whimsical",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "The song blends psychedelic sounds with a catchy, upbeat melody, creating a dreamy yet energetic atmosphere that evokes a sense of playful connection and wonder."
+  },
+  "3pDGJRDN3p6kCNZcD97FYY": {
+    "knowledge_version": 2,
+    "name": "Cosmic",
+    "artist": "Red Velvet",
+    "isrc": "KRA302400202",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "ko",
+    "is_thai": false,
+    "themes": [
+      "cosmic love",
+      "eternity",
+      "connection"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "dreamy",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night together",
+    "summary": "The song explores a love that feels vast and eternal, using cosmic imagery to describe the depth of the connection between two people, with a driving beat and lush production."
+  },
+  "7q9cMJ0oDZFZSnqatZNabo": {
+    "knowledge_version": 2,
+    "name": "เมื่อถูกค้นพบ (Finally She Found.)",
+    "artist": "FREEHAND",
+    "isrc": "THG012600230",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "love",
+      "discovery",
+      "gratitude"
+    ],
+    "relationship_stance": "being seen",
+    "mood": "warm",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "This song expresses gratitude and the joy of being loved, with a driving, warm energy that suggests a celebratory and connective atmosphere."
+  },
+  "3cLXrotzCjYCkN73PewALM": {
+    "knowledge_version": 2,
+    "name": "Good Goodbye",
+    "artist": "HWASA",
+    "isrc": "KRA382506038",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "ko",
+    "is_thai": false,
+    "themes": [
+      "empowerment",
+      "self-love",
+      "goodbye"
+    ],
+    "relationship_stance": "independence",
+    "mood": "confident",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night reflection",
+    "summary": "A bold declaration of self-worth and moving on, with a strong beat and empowering lyrics."
+  },
+  "6dOtVTDdiauQNBQEDOtlAB": {
+    "knowledge_version": 2,
+    "name": "BIRDS OF A FEATHER",
+    "artist": "Billie Eilish",
+    "isrc": "USUM72401994",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "connection",
+      "endurance"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "resolute",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "intimate",
+    "summary": "The song expresses a deep, enduring love and connection that persists through life, with a soft yet determined vocal delivery."
+  },
+  "2FHegFORo2cE19Rph47N0d": {
+    "knowledge_version": 2,
+    "name": "ดินแดน ( Din Dan )",
+    "artist": "Safeplanet",
+    "isrc": "FRX201772704",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "love",
+      "longing",
+      "imagination"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "nostalgic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses a longing for a place filled with love, reflecting on the desire to find a meaningful connection and the imagination of what that place might be like."
+  },
+  "4MOHCAGlvAcD6WBF73Yt1k": {
+    "knowledge_version": 2,
+    "name": "คล้าย",
+    "artist": "Dept",
+    "isrc": "THSM10551410",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "love",
+      "change of heart",
+      "connection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "The song explores the transformative power of love and the change in perspective it brings, accompanied by a mix of guitar and electronic sounds."
+  },
+  "3sslYZcFKtUvIEWN9lADgr": {
+    "knowledge_version": 2,
+    "name": "First Love/Late Spring",
+    "artist": "Mitski",
+    "isrc": "USA2B1511604",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "nostalgia",
+      "growth"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "A gentle, reflective song about the bittersweet memories of first love and the passage of time, with a soft, intimate musical arrangement."
+  },
+  "6RUUaEumPDW1ZDSUUluOyg": {
+    "knowledge_version": 2,
+    "name": "Speedracer",
+    "artist": "CAPYAC",
+    "isrc": "GBLFP1559008",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "none",
+    "lyric_language": "none",
+    "is_thai": false,
+    "themes": [],
+    "relationship_stance": "romantic yearning",
+    "mood": "yearning",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song expresses a desire to connect with a loved one immediately, using vivid imagery to convey the urgency and depth of the singer's feelings."
+  },
+  "2PRXyTkFmU0itou1ii4BPa": {
+    "knowledge_version": 2,
+    "name": "Shine",
+    "artist": "Olly Alexander (Years & Years)",
+    "isrc": "GBUM71501271",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-acceptance",
+      "empowerment",
+      "freedom"
+    ],
+    "relationship_stance": "self-love",
+    "mood": "uplifting",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "The song is about embracing one's true self and finding empowerment in self-acceptance, with a driving beat and uplifting lyrics."
+  },
+  "1v1oIWf2Xgh54kIWuKsDf6": {
+    "knowledge_version": 2,
+    "name": "Runaway",
+    "artist": "AURORA",
+    "isrc": "GBUM71500527",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "escape",
+      "self-discovery",
+      "freedom"
+    ],
+    "relationship_stance": "independence",
+    "mood": "hopeful",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "open road",
+    "summary": "A song about breaking free from constraints and embracing self-discovery, with a powerful and uplifting musical arrangement."
+  },
+  "19UnXjpLshSLobPspdyxlD": {
+    "knowledge_version": 2,
+    "name": "Less than a Lover",
+    "artist": "JENNIE",
+    "isrc": "USQX92604129",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "yearning",
+      "longing",
+      "desire"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses a deep longing for a romantic connection, with a gentle and melancholic tone."
+  },
+  "77zf87QsAz3H4XrENZOerR": {
+    "knowledge_version": 2,
+    "name": "Death Stranding",
+    "artist": "CHVRCHES",
+    "isrc": "GBZN81900001",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "connection",
+      "isolation",
+      "journey",
+      "hope"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores themes of connection and isolation through a melancholic, restrained melody and lyrics that convey a sense of longing and hope."
+  },
+  "0fBSs3fRoh1yJcne77fdu9": {
+    "knowledge_version": 2,
+    "name": "Video Games",
+    "artist": "Lana Del Rey",
+    "isrc": "GBUM71111621",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A reflective ballad about love and longing, with a dreamy, melancholic atmosphere and a restrained, intimate sound."
+  },
+  "7KNFJbMvPdplvrolBUkK2N": {
+    "knowledge_version": 2,
+    "name": "Shy Girl",
+    "artist": "Haute & Freddy",
+    "isrc": "USAT22502220",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-empowerment",
+      "rebellion",
+      "self-expression"
+    ],
+    "relationship_stance": "independence",
+    "mood": "empowering",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night introspection",
+    "summary": "The song encourages listeners to embrace their true selves and break free from societal expectations, with a bold and anthemic sound."
+  },
+  "41lw42I7uyqwPEQOPZwcOG": {
+    "knowledge_version": 2,
+    "name": "Star",
+    "artist": "Heize",
+    "isrc": "KRA491600869",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "language_flag": "thai-artist-other-language",
+    "is_thai": true,
+    "themes": [
+      "longing",
+      "dreamy",
+      "romantic"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A soft, intimate song about longing for a romantic connection, with a gentle melody and tender vocals.",
+    "notes": "Model suggested lyric_language=ko; owner to decide."
+  },
+  "55WNlLuVqXJM4DQRxXWSTh": {
+    "knowledge_version": 2,
+    "name": "give up, give in",
+    "artist": "Violette Wautier",
+    "isrc": "THUM72600096",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "language_flag": "thai-artist-other-language",
+    "is_thai": false,
+    "themes": [
+      "burnout",
+      "self-doubt",
+      "introspection"
+    ],
+    "relationship_stance": "self-reflection",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores feelings of exhaustion, confusion, and self-questioning, with a gentle and introspective musical character.",
+    "notes": "Model suggested lyric_language=en; owner to decide."
+  },
+  "2nvC4i2aMo4CzRjRflysah": {
+    "knowledge_version": 2,
+    "name": "In My Place",
+    "artist": "Coldplay",
+    "isrc": "GBAYE0200606",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-reflection",
+      "change",
+      "growth"
+    ],
+    "relationship_stance": "independence",
+    "mood": "reflective",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song explores personal growth and self-discovery, with a driving rhythm and introspective lyrics."
+  },
+  "34WI9hCaE3AzbOYT9wFXLP": {
+    "knowledge_version": 2,
+    "name": "High And Low",
+    "artist": "Empire Of The Sun",
+    "isrc": "AUUM71600588",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "synth-pop",
+      "dreamy",
+      "nostalgia",
+      "romantic"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "dreamy",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night and social",
+    "summary": "A synth-pop track with a driving beat and dreamy atmosphere, exploring themes of love and nostalgia."
+  },
+  "1bjeWoagtHmUKputLVyDxQ": {
+    "knowledge_version": 2,
+    "name": "Saturn",
+    "artist": "SZA",
+    "isrc": "USRC12400216",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-reflection",
+      "growth",
+      "empowerment"
+    ],
+    "relationship_stance": "independence",
+    "mood": "reflective",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "The song explores personal growth and self-awareness, with a gentle and introspective sound."
+  },
+  "36vmaZyO0iAE6FZ7287fg2": {
+    "knowledge_version": 2,
+    "name": "Dive",
+    "artist": "Olivia Dean",
+    "isrc": "GBUM72301484",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "self-discovery",
+      "growth"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "uplifting",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "nostalgic and warm",
+    "summary": "The song explores the journey of embracing love and personal growth, with a nostalgic and uplifting sound that encourages taking a leap into the unknown."
+  },
+  "0kN8xEmgMW9mh7UmDYHlJP": {
+    "knowledge_version": 2,
+    "name": "Versace on the Floor",
+    "artist": "Bruno Mars",
+    "isrc": "USAT21602949",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "romance",
+      "luxury",
+      "desire"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "sensual",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night intimate",
+    "summary": "A sultry love song about desire and luxury, with a smooth R&B groove and a confident, seductive delivery."
+  },
+  "0PG9fbaaHFHfre2gUVo7AN": {
+    "knowledge_version": 2,
+    "name": "Please Me",
+    "artist": "Cardi B, Bruno Mars",
+    "isrc": "USAT21811659",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "romance",
+      "desire",
+      "intimacy"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "playful",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night together",
+    "summary": "A seductive and confident track about the pleasures of a romantic relationship, with a mix of hip-hop and R&B influences."
+  },
+  "4VQH4VluDUOsOuDxccTeyN": {
+    "knowledge_version": 2,
+    "name": "Sanctuary",
+    "artist": "Joji",
+    "isrc": "ZZOPM2002183",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "nostalgia",
+      "reflection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores feelings of longing and nostalgia for a past relationship, with a gentle and reflective musical character."
+  },
+  "6rY5FAWxCdAGllYEOZMbjW": {
+    "knowledge_version": 2,
+    "name": "SLOW DANCING IN THE DARK",
+    "artist": "Joji",
+    "isrc": "ZZOPM1800452",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "introspection",
+      "longing",
+      "solitude"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores feelings of isolation and longing, with a soft, intimate sound that reflects on personal struggles and emotional vulnerability."
+  },
+  "3J44gxX4AcRApFyympWPIB": {
+    "knowledge_version": 2,
+    "name": "Past Won't Leave My Bed",
+    "artist": "Joji",
+    "isrc": "USA2P2553145",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "regret",
+      "longing"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on past relationships and the lingering emotions that remain, with a soft, introspective sound."
+  },
+  "3SEZEyvEALlomED5xFeqOs": {
+    "knowledge_version": 2,
+    "name": "summer depression",
+    "artist": "girl in red",
+    "isrc": "GBLFP1817508",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "melancholy",
+      "introspection",
+      "longing",
+      "isolation"
+    ],
+    "relationship_stance": "loneliness",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores feelings of loneliness and introspection, with a gentle, melancholic tone and a restrained energy."
+  },
+  "0IVHlst3XMgzXUJbIyZ8oO": {
+    "knowledge_version": 2,
+    "name": "Without You",
+    "artist": "Oh Wonder",
+    "isrc": "GB9L31400025",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "heartbreak",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores the pain of a breakup and the struggle to move on, with a gentle, intimate musical arrangement."
+  },
+  "6TcxxINfeaBEQ35sHMldTD": {
+    "knowledge_version": 2,
+    "name": "Dreams Tonite",
+    "artist": "Alvvays",
+    "isrc": "US3R41733402",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "longing",
+      "romance"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on a past romantic encounter with a sense of longing and nostalgia, featuring soft, dreamy instrumentation and tender vocals."
+  },
+  "5XeFesFbtLpXzIVDNQP22n": {
+    "knowledge_version": 2,
+    "name": "I Wanna Be Yours",
+    "artist": "Arctic Monkeys",
+    "isrc": "GBCEL1300373",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "romantic devotion",
+      "possession",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "yearning",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "intimate and personal",
+    "summary": "The song expresses a deep desire to be possessed and cherished by a loved one, using vivid and somewhat dark imagery to convey the intensity of the singer's feelings."
+  },
+  "4SELuafxWY1NQt9Rl5Cs2s": {
+    "knowledge_version": 2,
+    "name": "Clearest Blue",
+    "artist": "CHVRCHES",
+    "isrc": "GBZN81500005",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "distance",
+      "connection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores feelings of longing and distance in a relationship, with a melancholic yet hopeful tone, featuring synth-driven instrumentation and introspective lyrics."
+  },
+  "4rh7wySe2iEyEDEEzstKkt": {
+    "knowledge_version": 2,
+    "name": "Come Alive (feat. Toro y Moi)",
+    "artist": "Chromeo, Toro y Moi",
+    "isrc": "USAT21304637",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "synth-pop",
+      "nostalgia",
+      "dance"
+    ],
+    "relationship_stance": "playful connection",
+    "mood": "upbeat",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night social",
+    "summary": "This song combines funky synth-pop beats with nostalgic lyrics, creating a lively and danceable atmosphere that celebrates connection and good times."
+  },
+  "4BdGO1CaObRD4La9l5Zanz": {
+    "knowledge_version": 2,
+    "name": "Sit Next to Me",
+    "artist": "Foster The People",
+    "isrc": "USSM11704909",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "longing",
+      "connection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song reflects on a past relationship with a sense of longing and nostalgia, using a gentle, restrained musical arrangement."
+  },
+  "5yvVYFDUpbnjcnRBgjwTzM": {
+    "knowledge_version": 2,
+    "name": "Dracula - JENNIE Remix",
+    "artist": "Tame Impala, JENNIE",
+    "isrc": "USQX92600464",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nightlife",
+      "isolation",
+      "desire",
+      "darkness"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "mysterious",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night",
+    "summary": "The song uses vampire imagery to explore a desire to stay in the moment and escape reality through nightlife, with a shared performance dynamic between the two artists."
+  },
+  "2BOUrjXoRIo2YHVAyZyXVX": {
+    "knowledge_version": 2,
+    "name": "Colors",
+    "artist": "Beck",
+    "isrc": "US3841700001",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "color",
+      "imagination",
+      "freedom"
+    ],
+    "relationship_stance": "awe",
+    "mood": "playful",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "The song uses colors as a metaphor for creativity and self-expression, with a lively and upbeat musical arrangement."
+  },
+  "798T3RgzPTi05ntMgtvMAG": {
+    "knowledge_version": 2,
+    "name": "A Love Song",
+    "artist": "Ladyhawke",
+    "isrc": "UKEF41600003",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "romantic yearning",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses a deep sense of longing and nostalgia for a past love, with a melancholic and restrained energy that evokes a sense of solitude and reflection."
+  },
+  "0SEc0MKFrJTDyzImCHaGOA": {
+    "knowledge_version": 2,
+    "name": "Paralyzed",
+    "artist": "Roosevelt",
+    "isrc": "GBCFB2300200",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "vulnerability",
+      "introspection",
+      "emotional turmoil"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores feelings of emotional paralysis and vulnerability after a breakup, with a gentle, introspective sound."
+  },
+  "5xf1W1A21U0mtv8NdHNWcN": {
+    "knowledge_version": 2,
+    "name": "Fever",
+    "artist": "Roosevelt",
+    "isrc": "GBRTB1600014",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "desire",
+      "intimacy"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "passionate",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song explores a deep, almost feverish desire for someone, with a driving beat and sultry vocals creating a sense of urgency and intimacy."
+  },
+  "5pOm6H3kvDfjM1RoAlCOoL": {
+    "knowledge_version": 2,
+    "name": "Memento",
+    "artist": "Benjamin Varney",
+    "isrc": "FRX202258131",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "unknown",
+    "language_flag": "uncertain",
+    "is_thai": true,
+    "themes": [
+      "destiny",
+      "interconnectedness",
+      "self-deception"
+    ],
+    "relationship_stance": "awe",
+    "mood": "reflective",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "The song explores the interconnectedness of past, present, and future, with a reflective and restrained musical character.",
+    "notes": "Model suggested lyric_language=unknown; owner to decide."
+  },
+  "218RfuLb5cx1g6Wj8aeH2f": {
+    "knowledge_version": 2,
+    "name": "ละอองดาว (Fading)",
+    "artist": "YEW",
+    "isrc": "FR59R2647749",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "memory",
+      "love",
+      "farewell"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "This song reflects on the lingering feelings of love and memories that remain after a relationship has ended, with a gentle and emotional musical character."
+  },
+  "79yQQnouyRz6n9TEKxbHM5": {
+    "knowledge_version": 2,
+    "name": "Extraordinary",
+    "artist": "Anatomy Rabbit",
+    "isrc": "TCAFH2010770",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "love",
+      "admiration",
+      "uniqueness"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "warm",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "intimate",
+    "summary": "The song expresses admiration for the simple and ordinary beauty of a loved one, celebrating their unique qualities and finding extraordinary value in their ordinary aspects."
+  },
+  "00Hj710RrsLX5s9bothwlW": {
+    "knowledge_version": 2,
+    "name": "ไวน์",
+    "artist": "Max Jenmana",
+    "isrc": "FR2X41721087",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "love",
+      "memory",
+      "reflection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "The song explores the lingering memories of a past love, reflecting on the nature of love and the inevitability of change, with a gentle and reflective musical character."
+  },
+  "0QR1ZEGe5QBEYpmzh6PGov": {
+    "knowledge_version": 2,
+    "name": "นานนาน",
+    "artist": "Whal & Dolph",
+    "isrc": "THWTD1709700",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "love",
+      "longing",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "This song expresses a deep longing to stay with someone special, cherishing their beauty and sweetness, with a gentle and reflective musical character."
+  },
+  "3h6zRa7xxUIZCqYQ9Euz7C": {
+    "knowledge_version": 2,
+    "name": "I’d Do It Again",
+    "artist": "Violette Wautier",
+    "isrc": "THUM72000021",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "language_flag": "thai-artist-other-language",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "love",
+      "regret",
+      "memories"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "reflective",
+    "summary": "The song reflects on a past relationship filled with love and challenges, reminiscing about shared memories and the emotions that came with them.",
+    "notes": "Model suggested lyric_language=en; owner to decide."
+  },
+  "2bHIphJV9Tg2SSiEQlnZAy": {
+    "knowledge_version": 2,
+    "name": "จากนี้คงไม่มีเรา [Farewell]",
+    "artist": "AYLA's",
+    "isrc": "THSOH2603238",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "farewell",
+      "heartbreak",
+      "nostalgia"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "A gentle, reflective song about saying goodbye to a loved one, with soft instrumentation and tender vocals."
+  },
+  "1nwS2dkzE8XIFbDOMbjvKv": {
+    "knowledge_version": 2,
+    "name": "Back to Life - from \"Bumblebee\"",
+    "artist": "Hailee Steinfeld",
+    "isrc": "USUM71818515",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "transformation",
+      "self-discovery",
+      "empowerment"
+    ],
+    "relationship_stance": "independence",
+    "mood": "inspirational",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night reflection",
+    "summary": "The song is about personal growth and finding one's path, with a powerful and anthemic sound."
+  },
+  "4MBTPJod6j1k2mPbPaPFfH": {
+    "knowledge_version": 2,
+    "name": "The Heart of Me",
+    "artist": "Miike Snow",
+    "isrc": "USAT21503965",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "heartbreak",
+      "nostalgia"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores the lingering pain of a past relationship, with a gentle yet sorrowful musical arrangement that underscores the lyrics' sense of loss and longing."
+  },
+  "18mNRyfNGQvVfwTJo27sNR": {
+    "knowledge_version": 2,
+    "name": "Go!",
+    "artist": "M83, MAI LAN",
+    "isrc": "GB55H1600002",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "escape",
+      "freedom",
+      "nostalgia"
+    ],
+    "relationship_stance": "independence",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song captures a sense of longing and nostalgia, with a driving beat and melancholic lyrics that evoke a feeling of escape and freedom."
+  },
+  "7rVVBxV1Shckul3R8alUqw": {
+    "knowledge_version": 2,
+    "name": "Sleepwalking",
+    "artist": "The Chain Gang Of 1974",
+    "isrc": "USWB11302194",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "nostalgia",
+      "melancholy"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses a deep sense of longing and nostalgia for a past relationship, with a restrained and melancholic energy that evokes a late-night, introspective setting."
+  },
+  "6GyFP1nfCDB8lbD2bG0Hq9": {
+    "knowledge_version": 2,
+    "name": "Midnight City",
+    "artist": "M83",
+    "isrc": "GB55H1100002",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "synthetic",
+      "nostalgia",
+      "urban"
+    ],
+    "relationship_stance": "awe",
+    "mood": "nostalgic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night urban",
+    "summary": "The song captures a sense of wonder and nostalgia with its synthetic sounds and driving beat, evoking the feeling of a vibrant city at night."
+  },
+  "1ixbwbeBi5ufN4noUKmW5a": {
+    "knowledge_version": 2,
+    "name": "Paper Planes",
+    "artist": "M.I.A.",
+    "isrc": "GBBKS0700215",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "immigration",
+      "crime",
+      "survival"
+    ],
+    "relationship_stance": "independence",
+    "mood": "defiant",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "urban",
+    "summary": "The song explores themes of immigration and survival through a defiant lens, with a driving beat and a mix of English and Tamil lyrics."
+  },
+  "5SzoFexynLVceTLggJTZZM": {
+    "knowledge_version": 2,
+    "name": "Blue Velvet",
+    "artist": "Lana Del Rey",
+    "isrc": "GBUM71205019",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "romance",
+      "longing"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores a nostalgic and melancholic romance, with a restrained energy and a dreamy, cinematic sound."
+  },
+  "1GP8VW5Wk2w2obkWjGCGXd": {
+    "knowledge_version": 2,
+    "name": "So High School",
+    "artist": "Taylor Swift",
+    "isrc": "USUG12402544",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "nostalgia",
+      "new love",
+      "high school romance"
+    ],
+    "relationship_stance": "playful connection",
+    "mood": "nostalgic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "The song captures the excitement and giddiness of a new relationship, comparing it to the thrill of a high school crush, with references to real moments from the artist's relationship."
+  },
+  "62V2ZHslgQV98gH4AuVXnr": {
+    "knowledge_version": 2,
+    "name": "Ruin The Friendship",
+    "artist": "Taylor Swift",
+    "isrc": "USUG12506441",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "heartbreak",
+      "betrayal",
+      "regret"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores the aftermath of a friendship turned sour, with lyrics reflecting on the pain and regret of betrayal, set to a gentle, melancholic melody."
+  },
+  "0V3wPSX9ygBnCm8psDIegu": {
+    "knowledge_version": 2,
+    "name": "Anti-Hero",
+    "artist": "Taylor Swift",
+    "isrc": "USUG12205736",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-criticism",
+      "insecurity",
+      "vulnerability"
+    ],
+    "relationship_stance": "insecurity",
+    "mood": "reflective",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "introspective",
+    "summary": "The song explores the artist's insecurities and self-criticism, with a driving beat and a reflective mood."
+  },
+  "0b16LTzby1YRVd2nq2Z0fw": {
+    "knowledge_version": 2,
+    "name": "State Of Grace",
+    "artist": "Taylor Swift",
+    "isrc": "USCJY1231019",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "passion"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "yearning",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "A passionate love song with a driving beat, expressing intense emotions and longing for a romantic connection."
+  },
+  "5JVbvCHX10U2pLa5DEqGav": {
+    "knowledge_version": 2,
+    "name": "Safe and Sound",
+    "artist": "Capital Cities",
+    "isrc": "TCABD1246970",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "connection",
+      "comfort",
+      "security"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "warm",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night together",
+    "summary": "The song explores the comfort and security found in a close relationship, with a driving beat and warm, inviting vocals."
+  },
+  "0y60itmpH0aPKsFiGxmtnh": {
+    "knowledge_version": 2,
+    "name": "Wait a Minute!",
+    "artist": "WILLOW",
+    "isrc": "QMJMT1500801",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-discovery",
+      "empowerment",
+      "confidence"
+    ],
+    "relationship_stance": "independence",
+    "mood": "playful",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "The song is about embracing one's individuality and not letting others dictate their life, with a catchy and upbeat sonic character."
+  },
+  "0ug5NqcwcFR2xrfTkc7k8e": {
+    "knowledge_version": 2,
+    "name": "Style",
+    "artist": "Taylor Swift",
+    "isrc": "USCJY1431319",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "romance",
+      "nostalgia",
+      "passion"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "playful",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "sunlit and social",
+    "summary": "The song captures a playful and nostalgic romance, with a driving beat and a sense of secure closeness."
+  },
+  "3jjujdWJ72nww5eGnfs2E7": {
+    "knowledge_version": 2,
+    "name": "Adore You",
+    "artist": "Harry Styles",
+    "isrc": "USSM11912588",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "admiration",
+      "vulnerability"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "tender",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "intimate",
+    "summary": "The song expresses deep admiration and vulnerability in a loving relationship, with a gentle and intimate musical arrangement."
+  },
+  "5hM5arv9KDbCHS0k9uqwjr": {
+    "knowledge_version": 2,
+    "name": "Borderline",
+    "artist": "Tame Impala",
+    "isrc": "AUUM71900956",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "longing",
+      "vulnerability"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song explores the complexities of love and longing, with a gentle, introspective sound that conveys a sense of vulnerability and yearning."
+  },
+  "3fVnlF4pGqWI9flVENcT28": {
+    "knowledge_version": 2,
+    "name": "Wildest Dreams",
+    "artist": "Taylor Swift",
+    "isrc": "USCJY1431379",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "romance",
+      "nostalgia",
+      "longing"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "A reflective ballad about a passionate, secretive romance, with a sweeping, cinematic sound."
+  },
+  "5r5cp9IpziiIsR6b93vcnQ": {
+    "knowledge_version": 2,
+    "name": "Walking On A Dream",
+    "artist": "Empire Of The Sun",
+    "isrc": "AUEI10800039",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "dreamy",
+      "escapism",
+      "nostalgia"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "whimsical",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night alone",
+    "summary": "The song captures a sense of longing and escapism, with dreamy lyrics and a driving beat that evokes a sense of movement and nostalgia."
+  },
+  "5QxNmQBXpLPemzpDvsuiLM": {
+    "knowledge_version": 2,
+    "name": "DAY ONE",
+    "artist": "PUN",
+    "isrc": "THUM72400022",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "love journey",
+      "cherishing moments",
+      "relationship challenges"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "nostalgic",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "reflective",
+    "summary": "The song reflects on the journey of love from the first meeting to overcoming challenges, emphasizing the importance of treasuring special moments together."
+  },
+  "63oA4hG0SqvsUFfaEhgqVX": {
+    "knowledge_version": 2,
+    "name": "อยากจะกอดเธอนาน ๆ (HAVE A GOOD TIME)",
+    "artist": "BLVCKHEART",
+    "isrc": "FRX202581816",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "love",
+      "longing",
+      "comfort",
+      "togetherness"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "warm",
+    "energy": "still and intimate",
+    "intensity": 2,
+    "setting": "late-night together",
+    "summary": "This song expresses a desire to hold someone close and cherish the time together, with a gentle and intimate musical character."
+  },
+  "5q2xUSTyggCisITlHEvtB1": {
+    "knowledge_version": 2,
+    "name": "ติดเธอซะก่อน (Sweet Baby)",
+    "artist": "Jaonaay",
+    "isrc": "THS082500091",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "romantic yearning",
+      "longing",
+      "connection"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses a deep longing and fear of falling in love first, with a tender and melancholic tone."
+  },
+  "4GMsgN54SdPxMamKu9qQam": {
+    "knowledge_version": 2,
+    "name": "ขอให้เราทั้งคู่โชคดี (Good Luck to The Both of Us)",
+    "artist": "Tattoo Colour",
+    "isrc": "THSM10552421",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "parting",
+      "blessing",
+      "nostalgia"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "wistful",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "This song conveys a heartfelt blessing for a couple parting ways, reflecting on their shared memories and hoping for a better future, all wrapped in a gentle, melancholic melody."
+  },
+  "5MZe9NqyaSvtoaZKCeyGee": {
+    "knowledge_version": 2,
+    "name": "ขอ (WARM EYES)",
+    "artist": "Lomosonic",
+    "isrc": "THG012300816",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "nostalgia",
+      "acceptance",
+      "hope"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "reflective",
+    "summary": "This song expresses longing and acceptance after a relationship has ended, with a gentle rock sound that conveys both sadness and hope."
+  },
+  "142PiXzA84lmEw2RstFHFa": {
+    "knowledge_version": 2,
+    "name": "supernatural",
+    "artist": "Ariana Grande",
+    "isrc": "USUM72317274",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "connection",
+      "vulnerability"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "tender",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "intimate and personal",
+    "summary": "A song about the profound connection and vulnerability in a romantic relationship, with a powerful and emotive musical arrangement."
+  },
+  "3gJAFFELdZyIM8tiwLAikg": {
+    "knowledge_version": 2,
+    "name": "Handlebars (feat. Dua Lipa)",
+    "artist": "JENNIE, Dua Lipa",
+    "isrc": "USQX92500266",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "empowerment",
+      "confidence",
+      "playful"
+    ],
+    "relationship_stance": "independence",
+    "mood": "playful",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night party",
+    "summary": "The song is about embracing one's individuality and confidence, with a playful and energetic beat that encourages self-expression and fun."
+  },
+  "3euZKF0hmGxQ6h2JHHY4iu": {
+    "knowledge_version": 2,
+    "name": "Opalite",
+    "artist": "Taylor Swift",
+    "isrc": "USUG12506438",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "heartbreak",
+      "resilience",
+      "new love"
+    ],
+    "relationship_stance": "secure closeness",
+    "mood": "calm",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "intimate",
+    "summary": "The song reflects on overcoming heartbreak and finding new love, with a calm and restrained energy."
+  },
+  "50aQbgfdydBXABx2gATQHn": {
+    "knowledge_version": 2,
+    "name": "dance all night",
+    "artist": "ROSÉ",
+    "isrc": "USAT22409178",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "self-expression",
+      "freedom",
+      "joy"
+    ],
+    "relationship_stance": "independence",
+    "mood": "euphoric",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "late-night celebration",
+    "summary": "The song is an anthem of self-expression and joy, with a driving beat and euphoric energy, celebrating freedom and independence."
+  },
+  "5OdI6v2L7Aez4cclpbojiZ": {
+    "knowledge_version": 2,
+    "name": "stay a little longer",
+    "artist": "ROSÉ",
+    "isrc": "USAT22409174",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "heartbreak",
+      "nostalgia"
+    ],
+    "relationship_stance": "heartbreak",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "late-night alone",
+    "summary": "The song expresses a deep sense of longing and heartbreak, with lyrics that reflect on a past relationship and the pain of letting go."
+  },
+  "6Wobsw9uZ0D0xkfOjxXSq9": {
+    "knowledge_version": 2,
+    "name": "Messy (From F1® The Movie)",
+    "artist": "ROSÉ, F1 The Album",
+    "isrc": "USAT22503389",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "love",
+      "vulnerability",
+      "intensity",
+      "passion"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "emotional",
+    "energy": "driving",
+    "intensity": 4,
+    "setting": "intimate",
+    "summary": "The song explores the raw and imperfect nature of love, with a driving beat and emotional vocals that mirror the high-stakes passion of love"
+  },
+  "3lTTI3ldcvCbvQDfz7I49R": {
+    "knowledge_version": 2,
+    "name": "On My Mind",
+    "artist": "Alex Warren, ROSÉ",
+    "isrc": "USAT22504115",
+    "known": true,
+    "review_status": "legacy",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "legacy-import"
+      },
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "is_thai": false,
+    "themes": [
+      "longing",
+      "memory",
+      "emotional conflict"
+    ],
+    "relationship_stance": "romantic yearning",
+    "mood": "melancholic",
+    "energy": "restrained",
+    "intensity": 2,
+    "setting": "introspective",
+    "summary": "A folk-pop ballad about lingering emotions and the complexity of love that remains present despite efforts to suppress it."
+  },
+  "02KRPJcx4TJFLCXt9qwEUE": {
+    "knowledge_version": 2,
+    "name": "Unknown Planet",
+    "artist": "IU",
+    "isrc": "KRA382603793",
+    "known": true,
+    "review_status": "draft",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "ko",
+    "themes": [
+      "farewell",
+      "relationship memories",
+      "moving on"
+    ],
+    "relationship_stance": "Trying to leave a cherished past relationship behind, while acknowledging its memories.",
+    "mood": "Bittersweet and reflective",
+    "energy": "Unknown from the available evidence",
+    "intensity": 2,
+    "setting": "A personal farewell to a past relationship",
+    "summary": "The lyrics look back on shared moments while trying to move on; the musical sound cannot be determined from the available evidence."
+  },
+  "5GKBPdWbW4RQtx9VkQ6xKO": {
+    "knowledge_version": 2,
+    "name": "new trick",
+    "artist": "ROSÉ",
+    "isrc": "USAT22606409",
+    "known": true,
+    "review_status": "draft",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "themes": [
+      "resilience after heartbreak",
+      "personal empowerment",
+      "moving forward"
+    ],
+    "relationship_stance": "Treats heartbreak as something you can recover from",
+    "mood": "Playful and defiant",
+    "energy": "Catchy, high-energy bubblegum synth-punk",
+    "intensity": 4,
+    "setting": "An upbeat pop-rock setting",
+    "summary": "ROSÉ turns the idea of bouncing back from heartbreak into a playful, defiant anthem over catchy synth-punk pop."
+  },
+  "40tPP3K10yMZxwnT65REKj": {
+    "knowledge_version": 2,
+    "name": "Inner Light",
+    "artist": "Elderbrook, Bob Moses",
+    "isrc": "GBAYE2100859",
+    "known": true,
+    "review_status": "draft",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "themes": [
+      "inner strength",
+      "hope",
+      "emotional support"
+    ],
+    "relationship_stance": "supportive and reassuring",
+    "mood": "uplifting and reflective",
+    "energy": "steady, propulsive electronic dance groove",
+    "intensity": 3,
+    "setting": "late-night dancefloor",
+    "summary": "English vocals and a polished, melodic house groove give the song an uplifting, reflective feel centered on finding light and support."
+  },
+  "0USF54f34DPnAn9nEmqNIN": {
+    "knowledge_version": 2,
+    "name": "Love & Tears",
+    "artist": "GENER8ION, Yannis",
+    "isrc": "FRDWM2600240",
+    "known": true,
+    "review_status": "draft",
+    "confidence": "low",
+    "sources": [
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "themes": [
+      "falling",
+      "support",
+      "expectations versus reality"
+    ],
+    "relationship_stance": "Caring and present despite being unable to prevent someone’s fall",
+    "mood": "Reflective, with a hopeful undertone",
+    "energy": "Unknown from the available evidence",
+    "intensity": 3,
+    "setting": "An intimate moment of watching someone fall and trying to be there for them",
+    "summary": "The song reflects on the gap between believing you could catch someone and watching them fall anyway, with a pop classification in the available results but few details about its sound."
+  },
+  "0SN26lNl4kDUjil8Z7yLjq": {
+    "knowledge_version": 2,
+    "name": "Reverse Psychology",
+    "artist": "Temper City",
+    "isrc": "QT8CH2647468",
+    "known": true,
+    "review_status": "draft",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "themes": [
+      "mixed signals",
+      "emotional games",
+      "desire",
+      "fear of closeness"
+    ],
+    "relationship_stance": "Drawn to an emotionally complicated push and pull",
+    "mood": "Tense and alluring",
+    "energy": "Unknown from the provided results",
+    "setting": "A tumultuous relationship shaped by emotional push and pull",
+    "summary": "The song portrays attraction intensified by mixed signals and emotional games; its musical sound is unknown from the provided results."
+  },
+  "36OWvhv70Cu3LGC92N79qs": {
+    "knowledge_version": 2,
+    "name": "ขึ้นใจ (3am call)",
+    "artist": "Mirrr, BLVCKHEART",
+    "isrc": "THWTD2643300",
+    "known": true,
+    "review_status": "draft",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "longing after separation",
+      "memories of an ex",
+      "late-night yearning"
+    ],
+    "relationship_stance": "A distant former partner still longs for an ex, without expecting to be remembered in return.",
+    "mood": "wistful and heartbroken",
+    "energy": "soft, rhythmic R&B with a guest rap verse",
+    "intensity": 2,
+    "setting": "A lonely late night spent thinking about a past relationship.",
+    "summary": "Mirrr and BLVCKHEART pair Thai vocals and a rap verse in a soft, rhythmic R&B song about remembering an ex and longing for them after a breakup."
+  },
+  "0jmSojJLnjiQpGGM3HHlYS": {
+    "knowledge_version": 2,
+    "name": "รักให้เธอได้รู้ (Proof.)",
+    "artist": "PUN",
+    "isrc": "THUM72600077",
+    "known": true,
+    "review_status": "draft",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "romantic devotion",
+      "expressing love"
+    ],
+    "relationship_stance": "earnest and affectionate",
+    "mood": "tender and sincere",
+    "energy": "gentle, restrained pop",
+    "intensity": 2,
+    "setting": "an intimate romantic moment",
+    "summary": "A Thai-language love song about making affection clear, presented in a gentle pop style."
+  },
+  "11hcBLPtbMp4aQI6zGQLub": {
+    "knowledge_version": 2,
+    "name": "Patient Zero",
+    "artist": "Taylor Swift",
+    "isrc": "USUG12602391",
+    "known": true,
+    "review_status": "draft",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "themes": [
+      "toxic relationship",
+      "relationship aftermath",
+      "warning a new partner"
+    ],
+    "relationship_stance": "Cautionary toward an ex and his new partner",
+    "mood": "Wary and reflective",
+    "energy": "Unknown from the available evidence",
+    "setting": "A phone-call warning to an ex’s new partner",
+    "summary": "The song is described as a warning from someone who has left a toxic relationship to a partner experiencing the same pattern; its sound is unknown from the available evidence."
+  },
+  "4NhtEMpFYFW3mb9c2ZQlMH": {
+    "knowledge_version": 2,
+    "name": "ถ้าสักวัน (Crossroads)",
+    "artist": "FREEHAND",
+    "isrc": "THG012600583",
+    "known": true,
+    "review_status": "draft",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "unknown",
+    "language_flag": "uncertain",
+    "is_thai": true,
+    "themes": [
+      "ended relationship",
+      "meeting an ex again",
+      "looking back"
+    ],
+    "relationship_stance": "Reflective, imagining how it might feel to face a former lover again.",
+    "mood": "Wistful and contemplative",
+    "energy": "Unknown from the available sources",
+    "intensity": 3,
+    "setting": "A possible reunion with an ex after a relationship has ended",
+    "summary": "The song considers the feelings and perspective involved in a relationship ending, asking what it might be like to meet that former partner again; its sound is unknown from the available sources.",
+    "notes": "Model suggested lyric_language=unknown; owner to decide."
+  },
+  "3rsMVOw61uhP7Ub96xsK3o": {
+    "knowledge_version": 2,
+    "name": "แค่...หายไป (Gone)",
+    "artist": "Tilly Birds",
+    "isrc": "THSOH2605441",
+    "known": true,
+    "review_status": "draft",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "model-recall"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "th",
+    "is_thai": true,
+    "themes": [
+      "separation",
+      "absence",
+      "heartbreak"
+    ],
+    "relationship_stance": "longing after a relationship ends",
+    "mood": "melancholic and yearning",
+    "energy": "restrained pop-rock with a gradual emotional lift",
+    "intensity": 3,
+    "setting": "a private moment of reflecting on someone who is gone",
+    "summary": "A Thai-language breakup song about the ache of someone’s absence, carried by Tilly Birds’ emotionally direct pop-rock sound."
+  },
+  "1zyNO73bPNPC6KBi3raNmZ": {
+    "knowledge_version": 2,
+    "name": "CLICK",
+    "artist": "JISOO",
+    "isrc": "USWB12503602",
+    "known": true,
+    "review_status": "draft",
+    "confidence": "medium",
+    "sources": [
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "language_flag": "uncertain",
+    "themes": [
+      "instant attraction",
+      "unexpected connection",
+      "relationship uncertainty"
+    ],
+    "relationship_stance": "Drawn to someone despite reasons to hold back",
+    "mood": "Romantic and intrigued",
+    "energy": "Rhythmic, dance-pop energy",
+    "intensity": 3,
+    "setting": "A synth-led pop soundscape",
+    "summary": "“CLICK” pairs a synth-and-bass-driven dance-pop sound with the idea of an immediate connection that feels natural, even as getting closer may seem risky.",
+    "notes": "Model suggested lyric_language=unknown; owner to decide."
+  },
+  "6uhCnqc4Tncn1vqkuGubPO": {
+    "knowledge_version": 2,
+    "name": "HEAVEN",
+    "artist": "JENNIE",
+    "isrc": "USQX92604649",
+    "known": true,
+    "review_status": "draft",
+    "confidence": "high",
+    "sources": [
+      {
+        "type": "web-search"
+      }
+    ],
+    "lyrics": "present",
+    "lyric_language": "en",
+    "themes": [
+      "turbulent love",
+      "emotional chaos",
+      "addictive attraction"
+    ],
+    "relationship_stance": "Recognizes the relationship’s pain but embraces its euphoric pull",
+    "mood": "Dreamy yet emotionally unsettled",
+    "energy": "Intimate and restrained, with hazy guitar-led production",
+    "intensity": 3,
+    "setting": "A volatile romantic relationship",
+    "summary": "Over hazy, intimate guitar-led production, JENNIE portrays a messy relationship whose destructive turmoil still feels like heaven to her."
+  }
+}

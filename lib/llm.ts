@@ -1,7 +1,8 @@
 import { OpenRouter } from "@openrouter/sdk";
 
-import { quizConfig } from "@/config/quizConfig";
+import { SHARED_MODEL, type ReasoningEffort } from "@/config/models";
 import { sanitizeLlmError } from "@/lib/llmError";
+import { trackLlm } from "@/lib/metrics";
 import { withRequestDeadline } from "@/lib/requestDeadline";
 
 type LlmResponseFormat =
@@ -55,7 +56,7 @@ export interface LlmCallOptions {
   /** Max output tokens. */
   maxTokens?: number;
   /** Model-specific reasoning effort. Omit to use the endpoint's default. */
-  reasoningEffort?: "max" | "xhigh" | "high" | "medium" | "low" | "minimal" | "none";
+  reasoningEffort?: ReasoningEffort;
   /** Temperature (0–2). Lower = more deterministic. */
   temperature?: number;
   /** Per-request uniqueness key. Two concurrent calls with DIFFERENT nonces
@@ -102,31 +103,10 @@ export interface LlmCallMetrics {
   costUsd: number | null;
 }
 
-/** Explicit provider preference order for the configured model.
- *
- *  Why pin instead of relying on `provider.sort` alone: this OpenRouter
- *  account only has a SUBSET of a model's providers enabled. A bare `sort`
- *  can resolve to a disallowed endpoint and fail INSTANTLY with "No allowed
- *  providers are available for the selected model", which surfaced as
- *  sub-second 502s from /api/generate-quiz that looked like a schema bug
- *  rather than a routing one.
- *
- *  IMPORTANT — this list is model-specific. The configured GPT-OSS 20B model
- *  uses Groq for high-throughput generation. Re-check the endpoints API when
- *  changing `OPENROUTER_MODEL`; provider names are not portable across models.
- *
- *  Override with OPENROUTER_PROVIDER_ORDER (comma-separated lowercase slugs)
- *  — see https://openrouter.ai/settings/preferences for enabling providers. */
-const DEFAULT_PROVIDER_ORDER = ["groq"];
-
+/** Pinned order (not `sort` alone): this account enables only some providers
+ *  per model, and an unpinned sort can hit a disallowed endpoint. */
 export function resolveProviderOrder(): string[] {
-  const raw = process.env.OPENROUTER_PROVIDER_ORDER;
-  if (!raw) return DEFAULT_PROVIDER_ORDER;
-  const parsed = raw
-    .split(",")
-    .map((slug) => slug.trim().toLowerCase())
-    .filter(Boolean);
-  return parsed.length > 0 ? parsed : DEFAULT_PROVIDER_ORDER;
+  return [...SHARED_MODEL.providers];
 }
 
 /** Single in-flight LLM call keyed by nonce. Two concurrent calls with the
@@ -139,6 +119,20 @@ function parseJsonContent(content: string): unknown {
   const trimmed = content.trim();
   const fenced = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
   return JSON.parse(fenced?.[1]?.trim() ?? trimmed);
+}
+
+/** Zod emits `oneOf` for discriminated unions; OpenAI/Azure strict mode only accepts `anyOf` and returns 400 otherwise. */
+function toStrictSchema(node: unknown): unknown {
+  if (Array.isArray(node)) return node.map(toStrictSchema);
+  if (node && typeof node === "object") {
+    return Object.fromEntries(Object.entries(node).map(([key, value]) => [key === "oneOf" ? "anyOf" : key, toStrictSchema(value)]));
+  }
+  return node;
+}
+
+function normalizeResponseFormat(format: LlmResponseFormat): LlmResponseFormat {
+  if (format.type !== "json_schema") return format;
+  return { type: "json_schema", jsonSchema: { ...format.jsonSchema, schema: toStrictSchema(format.jsonSchema.schema) as Record<string, unknown> } };
 }
 
 /** Returns the parsed JSON object from OpenRouter. */
@@ -156,17 +150,14 @@ export function callLlm(opts: LlmCallOptions): Promise<unknown> {
 async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
   const start = Date.now();
   const purpose = opts.purpose ?? "unknown";
-  const model = opts.model ?? quizConfig.openrouterModel;
-  // Provider routing can be tuned per environment. Throughput is the default
-  // because a large, bilingual quiz needs sustained output speed; the quiz
-  // route retries a timeout once with the alternate latency strategy.
-  const providerSort =
-    opts.providerSort ?? process.env.OPENROUTER_PROVIDER_SORT ?? "throughput";
+  const model = opts.model ?? SHARED_MODEL.model;
+  const providerSort = opts.providerSort ?? SHARED_MODEL.providerSort;
   const timeoutMs = opts.timeoutMs ?? 20_000;
   let metricsReported = false;
   const reportMetrics = (metrics: LlmCallMetrics) => {
     if (metricsReported) return;
     metricsReported = true;
+    trackLlm(purpose, metrics);
     try {
       opts.onMetrics?.(metrics);
     } catch {
@@ -182,7 +173,7 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
             { role: "system", content: opts.systemPrompt },
             { role: "user", content: opts.userPrompt },
           ],
-          responseFormat: opts.responseFormat ?? { type: "json_object" },
+          responseFormat: normalizeResponseFormat(opts.responseFormat ?? { type: "json_object" }),
           temperature: opts.temperature ?? 0.9,
           maxTokens: opts.maxTokens ?? 2048,
           // Some endpoints require reasoning and reject effort "none".
@@ -190,34 +181,14 @@ async function callLlmRaw(opts: LlmCallOptions): Promise<unknown> {
           ...(opts.reasoningEffort !== undefined
             ? { reasoning: { effort: opts.reasoningEffort } }
             : {}),
-          // `order` takes precedence over `sort` (and effectively disables it
-          // — the SDK/API docs confirm `sort` only applies "if order is not
-          // specified") and keeps us on endpoints this account can actually
-          // reach. `allowFallbacks` stays true so a hiccup on the first
-          // provider rolls to the next one in the list instead of failing
-          // the request outright.
-          //
-          // `zdr` is set EXPLICITLY here (not left to the account-wide
-          // dashboard toggle at openrouter.ai/settings/privacy) after a real
-          // incident: with the account's ZDR-enforcement setting on, the
-          // "mistral" (official) and "venice" endpoints for
-          // mistralai/mistral-small-3.2-24b-instruct both silently 404'd
-          // ("No endpoints found") with no indication it was ZDR-related,
-          // forcing every request onto the slowest remaining provider
-          // (deepinfra, ~39 tok/s vs mistral's ~88-105 tok/s) and causing
-          // ~13-26s completions plus a wasted 25s-timeout-then-retry on
-          // roughly half of all requests. Default `false` (matches the
-          // account setting as of this fix) so behavior is explicit and
-          // version-controlled instead of silently dependent on a dashboard
-          // toggle someone could flip back later. Override per-deployment
-          // with OPENROUTER_REQUIRE_ZDR=true if data-retention compliance is
-          // required (accept the throughput hit as a known tradeoff).
+          // `order` takes precedence over `sort`; zdr is explicit so routing
+          // never silently depends on the account dashboard toggle.
           provider: {
             order: opts.providerOrder ?? resolveProviderOrder(),
             ...(opts.providerIgnore?.length ? { ignore: opts.providerIgnore } : {}),
-            allowFallbacks: opts.allowProviderFallbacks ?? true,
-            sort: providerSort as "latency" | "throughput",
-            zdr: process.env.OPENROUTER_REQUIRE_ZDR === "true",
+            allowFallbacks: opts.allowProviderFallbacks ?? SHARED_MODEL.allowFallbacks,
+            sort: providerSort,
+            zdr: SHARED_MODEL.zdr,
           },
         },
       },

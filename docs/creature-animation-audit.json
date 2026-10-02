@@ -1,0 +1,180 @@
+{
+  "bird": {
+    "clips": [
+      {
+        "name": "Take 001",
+        "channels": 2,
+        "duration": 4.96
+      }
+    ],
+    "skins": 1,
+    "coverage": {
+      "idle": "clip:Take 001",
+      "notice": "procedural",
+      "greet": "procedural",
+      "talk": "procedural",
+      "listen": "procedural",
+      "happy": "procedural",
+      "shy": "procedural",
+      "curious": "procedural",
+      "sleepy": "procedural",
+      "rest": "procedural"
+    }
+  },
+  "cat": {
+    "clips": [
+      {
+        "name": "Scene",
+        "channels": 45,
+        "duration": 0.83
+      }
+    ],
+    "skins": 1,
+    "coverage": {
+      "idle": "clip:Scene",
+      "notice": "procedural",
+      "greet": "procedural",
+      "talk": "procedural",
+      "listen": "procedural",
+      "happy": "procedural",
+      "shy": "procedural",
+      "curious": "procedural",
+      "sleepy": "procedural",
+      "rest": "procedural"
+    }
+  },
+  "dragon": {
+    "clips": [
+      {
+        "name": "DragonArmature|Dragon_Attack",
+        "channels": 25,
+        "duration": 0.88
+      },
+      {
+        "name": "DragonArmature|Dragon_Attack2",
+        "channels": 22,
+        "duration": 1.67
+      },
+      {
+        "name": "DragonArmature|Dragon_Death",
+        "channels": 24,
+        "duration": 1.21
+      },
+      {
+        "name": "DragonArmature|Dragon_Flying",
+        "channels": 16,
+        "duration": 1.67
+      },
+      {
+        "name": "DragonArmature|Dragon_Hit",
+        "channels": 22,
+        "duration": 1.67
+      }
+    ],
+    "skins": 1,
+    "coverage": {
+      "idle": "procedural",
+      "notice": "procedural",
+      "greet": "procedural",
+      "talk": "procedural",
+      "listen": "procedural",
+      "happy": "procedural",
+      "shy": "procedural",
+      "curious": "procedural",
+      "sleepy": "procedural",
+      "rest": "procedural"
+    }
+  },
+  "fish": {
+    "clips": [],
+    "skins": 0,
+    "coverage": {
+      "idle": "procedural",
+      "notice": "procedural",
+      "greet": "procedural",
+      "talk": "procedural",
+      "listen": "procedural",
+      "happy": "procedural",
+      "shy": "procedural",
+      "curious": "procedural",
+      "sleepy": "procedural",
+      "rest": "procedural"
+    }
+  },
+  "fox": {
+    "clips": [
+      {
+        "name": "Survey",
+        "channels": 21,
+        "duration": 3.42
+      },
+      {
+        "name": "Walk",
+        "channels": 21,
+        "duration": 0.71
+      },
+      {
+        "name": "Run",
+        "channels": 21,
+        "duration": 1.16
+      }
+    ],
+    "skins": 1,
+    "coverage": {
+      "idle": "procedural",
+      "notice": "procedural",
+      "greet": "procedural",
+      "talk": "procedural",
+      "listen": "procedural",
+      "happy": "procedural",
+      "shy": "procedural",
+      "curious": "procedural",
+      "sleepy": "procedural",
+      "rest": "procedural"
+    }
+  },
+  "jelly": {
+    "clips": [
+      {
+        "name": "ArmatureAction.001",
+        "channels": 66,
+        "duration": 2.1
+      }
+    ],
+    "skins": 1,
+    "coverage": {
+      "idle": "clip:ArmatureAction.001",
+      "notice": "procedural",
+      "greet": "procedural",
+      "talk": "procedural",
+      "listen": "procedural",
+      "happy": "procedural",
+      "shy": "procedural",
+      "curious": "procedural",
+      "sleepy": "procedural",
+      "rest": "procedural"
+    }
+  },
+  "spirit": {
+    "clips": [
+      {
+        "name": "Armature.001Action",
+        "channels": 30,
+        "duration": 1.04
+      }
+    ],
+    "skins": 1,
+    "coverage": {
+      "idle": "clip:Armature.001Action",
+      "notice": "procedural",
+      "greet": "procedural",
+      "talk": "procedural",
+      "listen": "procedural",
+      "happy": "procedural",
+      "shy": "procedural",
+      "curious": "procedural",
+      "sleepy": "procedural",
+      "rest": "procedural"
+    }
+  }
+}

@@ -13,6 +13,7 @@ import { VinylDisc } from "@/components/reveal/VinylDisc";
 import { PersonalityReading } from "@/components/reveal/PersonalityReading";
 import { ShareButton } from "@/components/reveal/ShareButton";
 import { CreatureChat } from "@/components/reveal/CreatureChat";
+import { PublishWorld } from "@/components/reveal/PublishWorld";
 import { Button } from "@/components/ui/button";
 import { useQuizStore } from "@/store/quizStore";
 import { humanizeCreatureKind } from "@/lib/creatureKind";
@@ -466,6 +467,9 @@ export default function RevealPage() {
               reveal={reveal}
               language={language}
             />
+          </div>
+          <div>
+            <PublishWorld reveal={reveal as UniverseReveal} language={language} />
           </div>
         </motion.div>
       </div>

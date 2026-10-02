@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SendIcon, XIcon, SparklesIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useQuizStore } from "@/store/quizStore";
 import type { Language, UniverseReveal } from "@/types/universe";
 
 interface CreatureChatProps {
@@ -37,6 +38,7 @@ export function CreatureChat({ reveal, language, isOpen, onOpenChange }: Creatur
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState("");
+  const revealToken = useQuizStore((s) => s.revealToken);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -51,10 +53,12 @@ export function CreatureChat({ reveal, language, isOpen, onOpenChange }: Creatur
   }, [isOpen]);
 
   const creatureName = reveal.creature?.name ?? (language === "th" ? "เพื่อนคู่ใจ" : "Companion");
+  // Readings made before server-side storage have no token and cannot be verified.
+  const chatAvailable = Boolean(reveal.reveal_id && revealToken);
 
   const sendMessage = useCallback(async () => {
     const text = input.trim();
-    if (!text || isLoading || !sessionId) return;
+    if (!text || isLoading || !sessionId || !chatAvailable) return;
     setInput("");
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setIsLoading(true);
@@ -62,13 +66,17 @@ export function CreatureChat({ reveal, language, isOpen, onOpenChange }: Creatur
       const res = await fetch("/api/creature-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId, message: text, reveal, language }),
+        body: JSON.stringify({ sessionId, message: text, revealId: reveal.reveal_id, revealToken, language }),
       });
       const data = await res.json();
       if (data.success && data.response) {
         setMessages((prev) => [...prev, { role: "creature", content: data.response }]);
       } else {
-        const fallback = language === "th" ? "*เอ่อ... ดาวตกขัดจังหวะ เดี๋ยวพูดใหม่นะ*" : "*a shooting star interrupted — ask me again?*";
+        const fallback = res.status === 429
+          ? (language === "th" ? "*ขอพักหายใจแป๊บนึงนะ เดี๋ยวค่อยคุยกันต่อ*" : "*let me catch my breath — talk again in a moment?*")
+          : res.status === 404
+            ? (language === "th" ? "*ฉันหาจักรวาลนี้ไม่เจอแล้ว ลองทำแบบทดสอบใหม่นะ*" : "*I can't find this universe anymore — try a new reading?*")
+            : (language === "th" ? "*เอ่อ... ดาวตกขัดจังหวะ เดี๋ยวพูดใหม่นะ*" : "*a shooting star interrupted — ask me again?*");
         setMessages((prev) => [...prev, { role: "creature", content: fallback }]);
       }
     } catch {
@@ -77,15 +85,19 @@ export function CreatureChat({ reveal, language, isOpen, onOpenChange }: Creatur
     } finally {
       setIsLoading(false);
     }
-  }, [input, isLoading, sessionId, reveal, language]);
+  }, [input, isLoading, sessionId, chatAvailable, reveal.reveal_id, revealToken, language]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void sendMessage(); }
   };
 
-  const greeting = language === "th"
-    ? `สวัสดี! ฉันชื่อ${creatureName} ✨ มีอะไรอยากคุยด้วยไหม?`
-    : `Hey! I'm ${creatureName} ✨ I'm your cosmic companion. Want to talk?`;
+  const greeting = !chatAvailable
+    ? (language === "th"
+        ? `สวัสดี! ฉันชื่อ${creatureName} ✨ จักรวาลนี้สร้างก่อนที่ฉันจะคุยได้ ทำแบบทดสอบใหม่แล้วมาคุยกันนะ`
+        : `Hey! I'm ${creatureName} ✨ This universe was made before I could talk — take a new reading to chat with me.`)
+    : language === "th"
+      ? `สวัสดี! ฉันชื่อ${creatureName} ✨ มีอะไรอยากคุยด้วยไหม?`
+      : `Hey! I'm ${creatureName} ✨ I'm your cosmic companion. Want to talk?`;
 
   return (
     <AnimatePresence>
@@ -159,6 +171,7 @@ export function CreatureChat({ reveal, language, isOpen, onOpenChange }: Creatur
                 autoComplete="off"
                 placeholder={language === "th" ? `พูดกับ ${creatureName}...` : `Say something to ${creatureName}...`}
                 maxLength={500}
+                disabled={!chatAvailable}
                 className="flex-1 bg-transparent px-2 py-1.5 text-base text-foreground placeholder:text-muted-foreground outline-none" />
               <Button size="sm" variant="ghost" onClick={() => void sendMessage()}
                 disabled={!input.trim() || isLoading} className="size-8 p-0">

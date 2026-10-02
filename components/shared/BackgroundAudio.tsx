@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Volume2Icon, VolumeXIcon } from "lucide-react";
 
 import { useMediaStore } from "@/store/mediaStore";
+import { FLAGS } from "@/config/flags";
 import { cn } from "@/lib/utils";
 
 interface BackgroundAudioProps {
@@ -44,6 +45,47 @@ export function BackgroundAudio({
   const setPlaying = useMediaStore((s) => s.setPlaying);
   const playRequestRef = useRef<Promise<void> | null>(null);
   const wasPlayingBeforeUnfocus = useRef(false);
+  const setAmbientEnabled = useMediaStore((s) => s.setAmbientEnabled);
+  const setPreviewAudible = useMediaStore((s) => s.setPreviewAudible);
+  // Set when the browser refused to start the preview without a gesture; the next gesture retries.
+  const blockedRef = useRef(false);
+  const fellBackRef = useRef(false);
+  useEffect(() => { setAmbientEnabled(enabled); }, [enabled, setAmbientEnabled]);
+
+  // Some browsers (e.g. Electron webviews) cannot decode the AAC preview; swap to the MP3 once.
+  const tryFallback = useCallback(() => {
+    const state = useMediaStore.getState();
+    if (fellBackRef.current || state.mode !== "spotify" || !state.spotifyFallbackUrl) return false;
+    fellBackRef.current = true;
+    playRequestRef.current = null;
+    state.setSpotifyUrl(state.spotifyFallbackUrl);
+    state.setSpotifyFallbackUrl(null);
+    state.setPlaying(true);
+    return true;
+  }, []);
+
+  const startPreview = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio || !audio.src || !audio.paused || playRequestRef.current) return;
+    audio.muted = false;
+    const playRequest = audio.play();
+    playRequestRef.current = playRequest;
+    playRequest.then(() => {
+      blockedRef.current = false;
+      if (playRequestRef.current === playRequest) setPlaying(true);
+    }).catch((error: DOMException) => {
+      if (playRequestRef.current !== playRequest) return;
+      // Interrupted by our own pause() or a source swap: the intent stands and the watchdog retries.
+      if (error?.name === "AbortError") return;
+      if (error?.name === "NotSupportedError" && tryFallback()) return;
+      if (error?.name === "NotAllowedError") blockedRef.current = true;
+      setPlaying(false);
+    }).finally(() => {
+      if (playRequestRef.current === playRequest) playRequestRef.current = null;
+    });
+  }, [setPlaying, tryFallback]);
+
+  useEffect(() => { if (!spotifyUrl) fellBackRef.current = false; }, [spotifyUrl]);
 
   // React to cross-route media handoff. This is the ONLY <audio> element on
   // the site, and it's already been unlocked by the first user gesture (see
@@ -67,28 +109,23 @@ export function BackgroundAudio({
     if (mediaMode === "spotify" && spotifyUrl) {
       audio.loop = true;
       audio.muted = false;
-      if (audio.src !== spotifyUrl) {
+      // audio.src is absolute; comparing it to the relative URL would reload (and pause) the element on every run.
+      const absoluteSpotifyUrl = new URL(spotifyUrl, window.location.href).href;
+      if (audio.src !== absoluteSpotifyUrl) {
         audio.src = spotifyUrl;
         audio.currentTime = 0;
       }
       if (isPlaying && audio.paused && !playRequestRef.current) {
-        const playRequest = audio.play();
-        playRequestRef.current = playRequest;
-        playRequest.then(() => {
-          if (playRequestRef.current === playRequest) setPlaying(true);
-        }).catch(() => {
-          // If the browser still blocks it, SpotifyPlayer's "Open in Spotify"
-          // link remains as a fallback.
-          if (playRequestRef.current === playRequest) setPlaying(false);
-        }).finally(() => {
-          if (playRequestRef.current === playRequest) {
-            playRequestRef.current = null;
-          }
-        });
+        startPreview();
       } else if (!isPlaying) {
         audio.pause();
       }
     } else if (mediaMode === "ambient") {
+      // The adaptive score (lib/soundtrack) replaces the single loop.
+      if (FLAGS.adaptiveSoundtrack) {
+        audio.pause();
+        return;
+      }
       audio.loop = true;
       const absoluteAmbientSrc = new URL(src, window.location.href).href;
       if (audio.src !== absoluteAmbientSrc) {
@@ -104,7 +141,52 @@ export function BackgroundAudio({
         setPlaying(false);
       }
     }
-  }, [mediaMode, spotifyUrl, isPlaying, isSuspended, setPlaying, enabled, unlocked, ready, src]);
+  }, [mediaMode, spotifyUrl, isPlaying, isSuspended, setPlaying, enabled, unlocked, ready, src, startPreview]);
+
+  // The score may only duck for a preview that is really audible, never for one that failed to start.
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const audible = () => setPreviewAudible(true);
+    const silent = () => setPreviewAudible(false);
+    const failed = () => { setPreviewAudible(false); tryFallback(); };
+    audio.addEventListener("playing", audible);
+    audio.addEventListener("error", failed);
+    for (const type of ["pause", "ended", "emptied", "abort"]) audio.addEventListener(type, silent);
+    return () => {
+      audio.removeEventListener("playing", audible);
+      audio.removeEventListener("error", failed);
+      for (const type of ["pause", "ended", "emptied", "abort"]) audio.removeEventListener(type, silent);
+      setPreviewAudible(false);
+    };
+  }, [setPreviewAudible, tryFallback]);
+
+  // Watchdog: while a preview is wanted but the element sits paused (aborted load, slow proxy), keep trying.
+  useEffect(() => {
+    if (!ready || !enabled || isSuspended || !isPlaying || mediaMode !== "spotify" || !spotifyUrl) return;
+    let attempts = 0;
+    const id = window.setInterval(() => {
+      if (document.hidden || ++attempts > 12) return;
+      startPreview();
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [ready, enabled, isSuspended, isPlaying, mediaMode, spotifyUrl, startPreview]);
+
+  // After a blocked autoplay, the visitor's next gesture is the moment the browser allows sound.
+  useEffect(() => {
+    const retry = () => {
+      const state = useMediaStore.getState();
+      if (!blockedRef.current || state.mode !== "spotify" || !state.spotifyUrl || state.isSuspended) return;
+      blockedRef.current = false;
+      state.setPlaying(true);
+    };
+    window.addEventListener("pointerdown", retry);
+    window.addEventListener("keydown", retry);
+    return () => {
+      window.removeEventListener("pointerdown", retry);
+      window.removeEventListener("keydown", retry);
+    };
+  }, []);
 
   // Try muted autoplay on mount. This always succeeds.
   useEffect(() => {
@@ -114,11 +196,9 @@ export function BackgroundAudio({
     audio.muted = true;
     audio.loop = true;
     const p = audio.play();
-    if (p && typeof p.catch === "function") {
-      p.then(() => setReady(true)).catch(() => setReady(true));
-    } else {
-      setReady(true);
-    }
+    // Without a src the browser may leave this promise pending forever, so readiness cannot depend on it.
+    if (p && typeof p.catch === "function") p.catch(() => {});
+    queueMicrotask(() => setReady(true));
   }, [defaultVolume]);
 
   // On the first user interaction outside the audio button, mark audio as
@@ -147,8 +227,9 @@ export function BackgroundAudio({
     const pauseWhenUnfocused = () => {
       const audio = audioRef.current;
       if (!audio) return;
+      // Intent counts too: a play() that was still loading reports paused, and would never resume.
       wasPlayingBeforeUnfocus.current =
-        wasPlayingBeforeUnfocus.current || !audio.paused;
+        wasPlayingBeforeUnfocus.current || !audio.paused || useMediaStore.getState().isPlaying;
       audio.pause();
       playRequestRef.current = null;
       setPlaying(false);
@@ -236,7 +317,7 @@ export function BackgroundAudio({
 
   return (
     <>
-      <audio ref={audioRef} src={src} preload="auto" />
+      <audio ref={audioRef} src={FLAGS.adaptiveSoundtrack ? undefined : src} preload={FLAGS.adaptiveSoundtrack ? "none" : "auto"} />
       <button
         ref={buttonRef}
         type="button"

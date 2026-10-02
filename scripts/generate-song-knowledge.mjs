@@ -21,13 +21,14 @@
  *
  * Reads credentials from .env.local (SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET,
  * SPOTIFY_REFRESH_TOKEN, SPOTIFY_PLAYLIST_ID, OPENROUTER_API_KEY,
- * OPENROUTER_MODEL, BRAVE_SEARCH_API_KEY). The resulting JSON is plain data —
+ * BRAVE_SEARCH_API_KEY). The model comes from config/models.ts. The resulting JSON is plain data —
  * safe to hand-edit afterward to correct any entry the model got wrong.
  */
 
 import { readFile, writeFile, mkdir } from "fs/promises";
 import { readFileSync } from "fs";
 import path from "path";
+import { SHARED_MODEL } from "../config/models.ts";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const OUT_PATH = path.join(ROOT, "data", "songKnowledge.json");
@@ -97,15 +98,17 @@ async function getUserAccessToken() {
 
 async function fetchPlaylistTracks(token, playlistId) {
   const tracks = [];
-  let offset = 0;
-  const limit = 50;
-  while (tracks.length < 300) {
-    const url = `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlistId)}/items?${new URLSearchParams(
-      { limit: String(limit), offset: String(offset) },
-    )}`;
+  let url = `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlistId)}/items?limit=50`;
+  while (url) {
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    if (res.status === 429) {
+      const waitMs = (Number(res.headers.get("retry-after")) || 2) * 1000;
+      console.warn(`  ! Spotify rate-limited — waiting ${waitMs}ms`);
+      await new Promise((r) => setTimeout(r, waitMs));
+      continue;
+    }
     if (!res.ok) {
       throw new Error(
         `Spotify playlist request failed (${res.status}): ${await res.text()}`,
@@ -122,8 +125,7 @@ async function fetchPlaylistTracks(token, playlistId) {
         artist: t.artists.map((a) => a.name).join(", "),
       })),
     );
-    if (!data.next || page.length === 0) break;
-    offset += limit;
+    url = data.next;
   }
   return tracks;
 }
@@ -268,7 +270,7 @@ Otherwise, respond with ONLY this JSON object (no markdown, no commentary):
 async function callOpenRouter(userPrompt) {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) throw new Error("OPENROUTER_API_KEY is required.");
-  const model = process.env.OPENROUTER_MODEL || "openai/gpt-oss-20b";
+  const model = SHARED_MODEL.model;
   const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -289,7 +291,7 @@ async function callOpenRouter(userPrompt) {
       temperature: 0.2,
       max_tokens: 400,
       reasoning: { enabled: false },
-      provider: { sort: "throughput" },
+      provider: { order: SHARED_MODEL.providers, allow_fallbacks: SHARED_MODEL.allowFallbacks, sort: SHARED_MODEL.providerSort },
     }),
   });
   if (!res.ok) {

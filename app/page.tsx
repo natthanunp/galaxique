@@ -22,6 +22,7 @@ import { prefetchQuiz } from "@/lib/quizPrefetch";
 import { useQuizStore } from "@/store/quizStore";
 import type { ProfileDisplayStats } from "@/lib/profile";
 import { humanizeCreatureKind } from "@/lib/creatureKind";
+import { FLAGS } from "@/config/flags";
 import dynamic from "next/dynamic";
 
 const CreatureChat = dynamic(
@@ -32,6 +33,11 @@ const CreatureChat = dynamic(
 // 3D creature preview needs the DOM (WebGL canvas) — client-only.
 const CreaturePreview = dynamic(
   () => import("@/components/shared/CreaturePreview").then((m) => m.CreaturePreview),
+  { ssr: false },
+);
+
+const GalaxyExplorer = dynamic(
+  () => import("@/components/galaxy/GalaxyExplorer").then((m) => m.GalaxyExplorer),
   { ssr: false },
 );
 
@@ -48,7 +54,7 @@ const INSTALL_PROMPT_DISMISSED_KEY = "galaxique-install-prompt-dismissed-v1";
 // number is the user-facing release; minor is the "this is the new model
 // + new prompt" cut. Keep it short — it sits next to the brand name in a
 // small pill.
-const APP_VERSION = "v1.8 Astra";
+const APP_VERSION = "v2.0";
 
 export default function LandingPage() {
   const language = useQuizStore((s) => s.language);
@@ -241,8 +247,9 @@ export default function LandingPage() {
 
   return (
     <>
-      <AnimatedUniverseBackground vibeStats={vibeStats} />
-      <main className="relative flex min-h-dvh flex-col items-center px-6 pb-16 pt-[max(5rem,calc(env(safe-area-inset-top)+4rem))] text-center sm:pt-[max(5.5rem,calc(env(safe-area-inset-top)+4.5rem))]">
+      {FLAGS.galaxyHomepage ? <GalaxyExplorer language={language} /> : <AnimatedUniverseBackground vibeStats={vibeStats} />}
+      {/* The overlay lets drags/taps reach the galaxy except on interactive content. */}
+      <main className="pointer-events-none relative flex min-h-dvh flex-col items-center px-6 pb-16 pt-[max(5rem,calc(env(safe-area-inset-top)+4rem))] text-center sm:pt-[max(5.5rem,calc(env(safe-area-inset-top)+4.5rem))] [&_a]:pointer-events-auto [&_aside]:pointer-events-auto [&_button]:pointer-events-auto [&_.cosmic-panel]:pointer-events-auto">
         {/* Top bar: eyebrow badge on the left, language toggle on the right.
             Sits at `safe-area-top-4` so it clears the Dynamic Island / status
             bar on iOS PWA without burying the centered content on short
@@ -267,17 +274,21 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="flex w-full flex-1 flex-col items-center justify-center gap-6"
+          className={FLAGS.galaxyHomepage
+            ? "flex w-full flex-1 flex-col items-center justify-end gap-4 pt-[45svh] sm:items-start sm:justify-center sm:pt-0 sm:text-left lg:pl-8"
+            : "flex w-full flex-1 flex-col items-center justify-center gap-6"}
         >
-          <h1 className="cosmic-heading max-w-4xl px-2 py-3 text-4xl font-bold leading-[1.2] tracking-tight text-foreground break-words sm:text-6xl lg:text-7xl sm:leading-[1.15]">
+          <h1 className={FLAGS.galaxyHomepage
+            ? "cosmic-heading max-w-xl px-2 py-2 text-3xl font-bold leading-[1.2] tracking-tight text-foreground break-words sm:text-5xl"
+            : "cosmic-heading max-w-4xl px-2 py-3 text-4xl font-bold leading-[1.2] tracking-tight text-foreground break-words sm:text-6xl lg:text-7xl sm:leading-[1.15]"}>
             {t.title}
           </h1>
 
-          <p className="max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className={FLAGS.galaxyHomepage ? "max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base" : "max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg"}>
             {t.subtitle}
           </p>
 
-          <div className="mt-4 flex flex-col items-center gap-3">
+          <div className={FLAGS.galaxyHomepage ? "mt-2 flex flex-col items-center gap-3 sm:items-start" : "mt-4 flex flex-col items-center gap-3"}>
             <Button asChild size="lg" className="group">
               <Link
                 href="/quiz"

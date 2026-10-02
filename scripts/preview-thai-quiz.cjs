@@ -1,23 +1,13 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-// Explicit, paid smoke test of the real pipeline; never changes the running server.
-// node --env-file=.env.local scripts/preview-thai-quiz.cjs <model-id> [count] [provider] [reasoning-effort]
+// Explicit, paid smoke test of the real pipeline with the shared model in config/models.ts.
+// node --env-file=.env.local scripts/preview-thai-quiz.cjs [count]
 const fs = require('node:fs');
 const path = require('node:path');
 const Module = require('node:module');
 const ts = require('typescript');
 const root = path.resolve(__dirname, '..');
-const [model, count = '1', provider = 'groq', reasoningEffort = 'default'] = process.argv.slice(2);
-if (!model || !/^[1-5]$/.test(count)) throw new Error('Supply a model ID and a count from 1 to 5.');
-process.env.OPENROUTER_THAI_QUIZ_MODEL = model;
-if (reasoningEffort === 'default') delete process.env.OPENROUTER_THAI_QUIZ_REASONING_EFFORT;
-else process.env.OPENROUTER_THAI_QUIZ_REASONING_EFFORT = reasoningEffort;
-if (!/^[a-z0-9/-]+$/.test(provider)) throw new Error('Supply one provider slug.');
-process.env.OPENROUTER_THAI_QUIZ_PROVIDER_ORDER = provider;
-// Explicit transport selection; inherited server configuration cannot alter a comparison.
-process.env.THAI_QUIZ_ENGINE = provider === 'typhoon' ? 'typhoon' : 'openrouter';
-if (provider === 'typhoon' && model !== 'typhoon-v2.5-30b-a3b-instruct') {
-  throw new Error('The Typhoon transport supports typhoon-v2.5-30b-a3b-instruct.');
-}
+const [count = '1'] = process.argv.slice(2);
+if (!/^[1-5]$/.test(count)) throw new Error('Supply a count from 1 to 5.');
 const resolve = Module._resolveFilename;
 Module._resolveFilename = function (id, ...args) {
   return resolve.call(this, id.startsWith('@/') ? path.join(root, id.slice(2)) : id, ...args);
@@ -26,6 +16,10 @@ require.extensions['.ts'] = (mod, file) => mod._compile(ts.transpileModule(fs.re
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
 }).outputText, file);
 const { generateBalancedQuiz } = require('../lib/quiz.ts');
+const { SHARED_MODEL, TASKS } = require('../config/models.ts');
+const model = SHARED_MODEL.model;
+const provider = SHARED_MODEL.providers.join(',');
+const reasoningEffort = TASKS.quiz.reasoningEffort;
 // Only this synthetic-data preview can print generated batches, for reviewing
 // prose that validation withheld. Production logging remains sanitized.
 if (process.env.QUIZ_PREVIEW_CONTENT === 'true') {

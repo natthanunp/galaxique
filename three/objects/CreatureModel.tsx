@@ -10,7 +10,7 @@ import aoManifest from "@/public/assets/creatures/ao/manifest.json";
 import { COSMIC } from "@/lib/cosmicVisuals";
 import type { CreatureKind, CreatureSpec } from "@/types/universe";
 
-const CREATURE_MODELS = {
+export const CREATURE_MODELS = {
   bird: {
     url: "/assets/creatures/bird.glb",
     scale: 0.22,
@@ -50,7 +50,7 @@ const CREATURE_MODELS = {
     url: "/assets/creatures/spirit.glb",
     scale: 0.15,
     rotationY: Math.PI / 2,
-    animation: "Scene",
+    animation: "Armature.001Action",
   },
 } as const;
 

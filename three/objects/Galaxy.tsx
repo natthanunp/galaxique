@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, type ReactNode } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -14,6 +14,8 @@ interface GalaxyProps {
   secondaryColor: string;
   rotationSpeed: number;
   particleDensity: "high" | "medium" | "low";
+  /** Multiplies particle sizes when the galaxy is scaled up and far away, where 1px points would shimmer. */
+  pointScale?: number;
   /** Optional overlay (e.g. a heart / star symbol) rendered at the core. */
   children?: ReactNode;
 }
@@ -36,6 +38,7 @@ export function Galaxy({
   secondaryColor,
   rotationSpeed,
   particleDensity,
+  pointScale = 1,
   children,
 }: GalaxyProps) {
   const mobile = isMobileDevice();
@@ -79,7 +82,7 @@ export function Galaxy({
   );
 
   const diskMaterial = useMemo(() => new THREE.ShaderMaterial({
-    uniforms: { uEmission: { value: emission }, uDust: { value: dust }, uA: { value: cA }, uB: { value: cB } },
+    uniforms: { uEmission: { value: null }, uDust: { value: null }, uA: { value: new THREE.Color() }, uB: { value: new THREE.Color() } },
     vertexShader: `varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
     fragmentShader: `varying vec2 vUv;uniform sampler2D uEmission;uniform sampler2D uDust;uniform vec3 uA;uniform vec3 uB;
       void main(){
@@ -92,7 +95,14 @@ export function Galaxy({
         gl_FragColor=vec4(light*(1.-dust*.35),alpha*(1.-smoothstep(.87,1.,radius)));
       }`,
     transparent: true, depthWrite: false, side: THREE.DoubleSide,
-  }), [emission, dust, cA, cB]);
+  }), []);
+
+  useLayoutEffect(() => {
+    diskMaterial.uniforms.uEmission.value = emission;
+    diskMaterial.uniforms.uDust.value = dust;
+    diskMaterial.uniforms.uA.value.copy(cA);
+    diskMaterial.uniforms.uB.value.copy(cB);
+  }, [diskMaterial, emission, dust, cA, cB]);
 
   // --- Diffuse stellar spiral arms. ---
   const armGeometry = useMemo(() => {
@@ -184,7 +194,7 @@ export function Galaxy({
   const sparkleMaterial = useMemo(
     () =>
       new THREE.ShaderMaterial({
-        uniforms: { uTime: { value: 0 }, uPixelRatio: { value: 1 }, uTwinkle: { value: 0.2 } },
+        uniforms: { uTime: { value: 0 }, uPixelRatio: { value: 1 }, uTwinkle: { value: 0.2 }, uPointScale: { value: 1 } },
         vertexShader: /* glsl */ `
           attribute float size;
           attribute float aSeed;
@@ -192,13 +202,14 @@ export function Galaxy({
           uniform float uTime;
           uniform float uPixelRatio;
           uniform float uTwinkle;
+          uniform float uPointScale;
           varying vec3 vColor;
           void main() {
             vColor = aColor;
             vec4 mv = modelViewMatrix * vec4(position, 1.0);
             float tw = 1.0 + sin(uTime * 2.0 + aSeed * 6.2831) * uTwinkle;
             float safeDepth = max(4.0, -mv.z);
-            gl_PointSize = size * uPixelRatio * tw * (60.0 / safeDepth);
+            gl_PointSize = size * uPixelRatio * tw * uPointScale * (60.0 / safeDepth);
             gl_Position = projectionMatrix * mv;
           }
         `,
@@ -220,7 +231,9 @@ export function Galaxy({
     [],
   );
 
-  useEffect(() => () => { coreMaterial.dispose(); coreGlowMaterial.dispose(); diskMaterial.dispose(); }, [coreMaterial, coreGlowMaterial, diskMaterial]);
+  useEffect(() => () => coreMaterial.dispose(), [coreMaterial]);
+  useEffect(() => () => coreGlowMaterial.dispose(), [coreGlowMaterial]);
+  useEffect(() => () => diskMaterial.dispose(), [diskMaterial]);
   useEffect(() => () => armGeometry.dispose(), [armGeometry]);
   useEffect(() => () => sparkleGeometry.dispose(), [sparkleGeometry]);
   useEffect(() => () => sparkleMaterial.dispose(), [sparkleMaterial]);
@@ -238,6 +251,7 @@ export function Galaxy({
       visualGroupRef.current.rotation.z = Math.PI * 0.05;
     }
     if (pointsRef.current) pointsRef.current.material.uniforms.uTime.value = state.clock.elapsedTime;
+    sparkleMaterial.uniforms.uPointScale.value = pointScale;
   });
 
   return (

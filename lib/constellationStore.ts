@@ -1,31 +1,29 @@
 import { Redis } from "@upstash/redis";
-import type { ProfileMetadata } from "@/lib/profile";
 
 /**
- * Constellation store — stores minimal universe summaries in Upstash Redis
- * so every completed reveal becomes a star in the shared public sky.
- *
- * Falls back to an in-memory array for local dev without Redis.
+ * Read-only access to the legacy constellation feed (`galaxseea:constellation`).
+ * Those summaries were stored without publishing consent, so callers only get
+ * decorative fields. New public worlds will live in a separate, opt-in store.
  */
 
-export interface ConstellationStar extends ProfileMetadata {
-  /** Short ID for the star (first 8 chars of a UUID). */
-  id: string;
-  vibe: string;
-  celestialType: string;
-  creatureKind: string;
-  creatureName: string;
-  primaryColor: string;
-  secondaryColor: string;
-  readingSnippet: string;
-  songName: string;
-  songArtist: string;
-  /** Unix timestamp ms. */
-  createdAt: number;
+interface LegacyRecord {
+  id?: string;
+  primaryColor?: string;
+  celestialType?: string;
+}
+
+/** Decorative, non-selectable star: no ID, text, creature, or song. */
+export interface LegacyStar {
+  /** Stable placement seed derived from the record; not reversible to its ID. */
+  seed: number;
+  color: string;
+  celestialType: "galaxy" | "black_hole" | "neutron_star";
 }
 
 const LIST_KEY = "galaxseea:constellation";
-const MAX_STARS = 500; // Keep the sky manageable
+const MAX_STARS = 500;
+const HEX = /^#[0-9a-f]{6}$/i;
+const TYPES = new Set(["galaxy", "black_hole", "neutron_star"]);
 
 let redisClient: Redis | null | undefined;
 
@@ -37,39 +35,32 @@ function getRedisClient(): Redis | null {
   return redisClient;
 }
 
-/** In-memory fallback. */
-const memoryStars: ConstellationStar[] = [];
-
-/** Store a new star in the constellation. */
-export async function addStar(star: ConstellationStar): Promise<void> {
-  const client = getRedisClient();
-  if (!client) {
-    memoryStars.unshift(star);
-    if (memoryStars.length > MAX_STARS) memoryStars.length = MAX_STARS;
-    return;
+function seedOf(value: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < value.length; i++) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
   }
-  try {
-    await client.lpush(LIST_KEY, JSON.stringify(star));
-    await client.ltrim(LIST_KEY, 0, MAX_STARS - 1);
-  } catch (err) {
-    console.error("[constellationStore] Redis write failed:", err);
-    memoryStars.unshift(star);
-    if (memoryStars.length > MAX_STARS) memoryStars.length = MAX_STARS;
-  }
+  return hash >>> 0;
 }
 
-/** Get all stars in the constellation (newest first). */
-export async function getStars(): Promise<ConstellationStar[]> {
+export async function getLegacyStars(): Promise<LegacyStar[]> {
   const client = getRedisClient();
-  if (!client) return [...memoryStars];
-  try {
-    const raw = await client.lrange<string>(LIST_KEY, 0, MAX_STARS - 1);
-    return raw.map((s) => {
-      try { return JSON.parse(s) as ConstellationStar; }
-      catch { return null; }
-    }).filter((s): s is ConstellationStar => s !== null);
-  } catch (err) {
-    console.error("[constellationStore] Redis read failed:", err);
-    return [...memoryStars];
-  }
+  if (!client) return [];
+  const raw = await client.lrange<string | LegacyRecord>(LIST_KEY, 0, MAX_STARS - 1);
+  return raw.flatMap((entry, index) => {
+    let record: LegacyRecord;
+    try {
+      record = typeof entry === "string" ? JSON.parse(entry) : entry;
+    } catch {
+      return [];
+    }
+    return [{
+      seed: seedOf(`${record.id ?? index}`),
+      color: record.primaryColor && HEX.test(record.primaryColor) ? record.primaryColor : "#9fb4ff",
+      celestialType: (record.celestialType && TYPES.has(record.celestialType)
+        ? record.celestialType
+        : "galaxy") as LegacyStar["celestialType"],
+    }];
+  });
 }

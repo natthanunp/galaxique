@@ -1,6 +1,11 @@
 import { readFile } from "fs/promises";
 import path from "path";
 
+import {
+  catalogSnapshotSchema,
+  knowledgeFileSchema,
+  SELECTABLE_STATUSES,
+} from "@/lib/catalogSchema";
 import type {
   EnrichedPlaylistCandidate,
   SongKnowledgeEntry,
@@ -46,4 +51,36 @@ export async function enrichPlaylistTracks(
     ...track,
     knowledge: knowledge[track.track_id],
   }));
+}
+
+const CATALOG_DIR = path.join(process.cwd(), "data", "catalog");
+let catalogCache: Promise<EnrichedPlaylistCandidate[] | null> | null = null;
+
+async function readCatalog(): Promise<EnrichedPlaylistCandidate[] | null> {
+  let approvedRaw: string;
+  try {
+    approvedRaw = await readFile(path.join(CATALOG_DIR, "approved.json"), "utf-8");
+  } catch {
+    return null;
+  }
+  const approved = catalogSnapshotSchema.parse(JSON.parse(approvedRaw));
+  const knowledge = knowledgeFileSchema.parse(
+    JSON.parse(await readFile(path.join(CATALOG_DIR, "knowledge.json"), "utf-8")),
+  );
+  return approved.tracks.flatMap((track) => {
+    const entry = knowledge[track.track_id];
+    const listed = track.status === "active" || (track.status === "removed" && track.retained);
+    if (!listed || !entry?.known || !SELECTABLE_STATUSES.has(entry.review_status)) return [];
+    return [{ track_id: track.track_id, name: track.name, artist: track.artist, isrc: track.isrc, knowledge: entry }];
+  });
+}
+
+/** Selectable tracks from the approved snapshot only, never the live playlist.
+ *  Null until a snapshot has been approved (scripts/sync-playlist.mjs --approve). */
+export function getSelectableCatalog(): Promise<EnrichedPlaylistCandidate[] | null> {
+  catalogCache ??= readCatalog().catch((error) => {
+    catalogCache = null;
+    throw error;
+  });
+  return catalogCache;
 }

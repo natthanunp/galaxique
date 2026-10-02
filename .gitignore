@@ -45,3 +45,4 @@ next-env.d.ts
 
 # Reproducible local visual QA screenshots and intermediate Blender renders
 /artifacts/galaxy/
+.agents

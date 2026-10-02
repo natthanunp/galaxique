@@ -1,0 +1,5 @@
+Galaxique original score — D Dorian, 96 s loop: organ pad, pedal bass, felt-piano arpeggio and melody, choir swells, long hall reverb.
+Composition source: galaxique-score.mid (pad, drone, pulse, shimmer). Composed for Galaxique; no samples or third-party material.
+Current loops in public/audio/score are rendered by scripts/compose-soundtrack.mjs with a simple built-in synth as placeholders.
+Before production: render the MIDI with high-quality instruments in a DAW, keep the DAW project here, export seamless 96 s loops
+at about -18 LUFS as Opus/AAC with MP3 fallback, and do a listening review.

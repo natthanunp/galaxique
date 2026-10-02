@@ -1,24 +1,11 @@
 "use client";
 
-import { profileLabel } from "@/lib/profile";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeftIcon, SparklesIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedUniverseBackground } from "@/components/shared/AnimatedUniverseBackground";
-import type { ConstellationStar } from "@/lib/constellationStore";
-
-const CREATURE_EMOJI: Record<string, string> = {
-  fish: "🐟", bird: "🐦", fox: "🦊", cat: "🐱",
-  dragon: "🐉", jelly: "🪼", spirit: "👻",
-};
-
-function hashStr(str: string): number {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
-  return h >>> 0;
-}
+import type { LegacyStar } from "@/lib/constellationStore";
 
 function seededPos(seed: number, i: number): { x: number; y: number } {
   let h = (seed + i * 2654435761) >>> 0;
@@ -31,11 +18,9 @@ function seededPos(seed: number, i: number): { x: number; y: number } {
 }
 
 export default function ConstellationPage() {
-  const [stars, setStars] = useState<ConstellationStar[]>([]);
+  const [stars, setStars] = useState<LegacyStar[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState<ConstellationStar | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drawnTimeRef = useRef(0);
 
   useEffect(() => {
     fetch("/api/constellation")
@@ -62,7 +47,6 @@ export default function ConstellationPage() {
     resize();
     const draw = (time: number) => {
       const t = motion.matches ? 0 : time;
-      drawnTimeRef.current = t;
       const W = window.innerWidth;
       const H = window.innerHeight;
       ctx.clearRect(0, 0, W, H);
@@ -71,7 +55,7 @@ export default function ConstellationPage() {
       const cy = H / 2;
       const spread = Math.min(W, H) * 0.38;
       stars.forEach((star, i) => {
-        const pos = seededPos(hashStr(star.id), i);
+        const pos = seededPos(star.seed, i);
         const angle = pos.x * Math.PI * 2 + rot;
         const dist = 0.15 + pos.y * 0.85;
         const x = cx + Math.cos(angle) * spread * dist;
@@ -81,12 +65,12 @@ export default function ConstellationPage() {
         ctx.globalAlpha = 0.6 + tw * 0.4;
         ctx.beginPath();
         ctx.arc(x, y, sz * tw, 0, Math.PI * 2);
-        ctx.fillStyle = star.primaryColor;
+        ctx.fillStyle = star.color;
         ctx.fill();
         ctx.globalAlpha = tw * 0.4;
         const g = ctx.createRadialGradient(x, y, 0, x, y, sz * 3 * tw);
-        g.addColorStop(0, star.primaryColor + "40");
-        g.addColorStop(1, star.primaryColor + "00");
+        g.addColorStop(0, star.color + "40");
+        g.addColorStop(1, star.color + "00");
         ctx.fillStyle = g;
         ctx.beginPath();
         ctx.arc(x, y, sz * 3 * tw, 0, Math.PI * 2);
@@ -106,22 +90,6 @@ export default function ConstellationPage() {
       document.removeEventListener("visibilitychange", resume); motion.removeEventListener("change", resume);
     };
   }, [stars]);
-
-  const handleClick = (e: React.MouseEvent) => {
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    const cx = W / 2;
-    const cy = H / 2;
-    const spread = Math.min(W, H) * 0.38;
-    for (const star of stars) {
-      const pos = seededPos(hashStr(star.id), stars.indexOf(star));
-      const angle = pos.x * Math.PI * 2 + (drawnTimeRef.current * 0.00003);
-      const dist = 0.15 + pos.y * 0.85;
-      const x = cx + Math.cos(angle) * spread * dist;
-      const y = cy + Math.sin(angle) * spread * dist * 0.7;
-      if (Math.hypot(e.clientX - x, e.clientY - y) < 20) { setSelected(star); return; }
-    }
-  };
 
   return (
     <>
@@ -147,34 +115,11 @@ export default function ConstellationPage() {
             </div>
           ) : (
             <p className="mb-2 text-sm text-muted-foreground">
-              {stars.length.toLocaleString()} universes — click a star to explore
+              {stars.length.toLocaleString()} universes
             </p>
           )}
         </div>
-        <canvas ref={canvasRef} onClick={handleClick} className="fixed inset-0 z-0 cursor-pointer" />
-        <AnimatePresence>
-          {selected && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-              onClick={() => setSelected(null)}>
-              <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
-                onClick={(e) => e.stopPropagation()}
-                className="cosmic-panel mx-4 max-w-sm w-full rounded-2xl border border-border/50 bg-card/95 p-6 shadow-2xl backdrop-blur-xl">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="size-8 rounded-full" style={{ backgroundColor: selected.primaryColor }} />
-                  <div>
-                    <p className="text-sm font-semibold">{profileLabel(selected, "en")}</p>
-                    <p className="text-xs text-muted-foreground">{selected.celestialType.replace("_", " ")}</p>
-                  </div>
-                </div>
-                <p className="text-sm leading-relaxed text-foreground/80 mb-3">{selected.readingSnippet}</p>
-                {selected.creatureName && <p className="text-xs text-muted-foreground">{CREATURE_EMOJI[selected.creatureKind] ?? "✨"} {selected.creatureName}</p>}
-                {selected.songName && <p className="mt-2 text-xs text-muted-foreground">🎵 {selected.songName} — {selected.songArtist}</p>}
-                <button onClick={() => setSelected(null)} className="mt-4 w-full rounded-lg bg-muted/50 py-2 text-sm text-foreground/70 hover:bg-muted transition">Close</button>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 z-0" aria-hidden />
       </main>
     </>
   );

@@ -1,0 +1,175 @@
+{
+  "generated_at": "2026-10-02T20:52:55.108Z",
+  "catalog": {
+    "active": 236,
+    "selectable": 236,
+    "ineligible": []
+  },
+  "languages": [
+    {
+      "language": "th",
+      "briefs": 3000,
+      "eligible_pool": 236,
+      "excluded_by_language": 0,
+      "avg_shortlist_size": 16.2,
+      "shortlist_inclusion": 0.992,
+      "selection_coverage": 0.979,
+      "repeat_rate_last20": 0.108,
+      "top10_share": 0.163,
+      "gini": 0.452,
+      "mean_relevance_vs_best": 0.788,
+      "briefs_with_no_overlap": 0,
+      "never_competitive": [
+        {
+          "track_id": "3GZD6HmiNUhxXYf8Gch723",
+          "name": "Lost",
+          "artist": "Frank Ocean",
+          "reason": "descriptors rarely overlap synthetic briefs",
+          "best_rank": 117
+        },
+        {
+          "track_id": "5OdI6v2L7Aez4cclpbojiZ",
+          "name": "stay a little longer",
+          "artist": "ROSÉ",
+          "reason": "descriptors rarely overlap synthetic briefs",
+          "best_rank": 175
+        }
+      ],
+      "most_selected": [
+        {
+          "name": "The Less I Know The Better",
+          "artist": "Tame Impala",
+          "share": 0.021
+        },
+        {
+          "name": "Meet Me Halfway",
+          "artist": "Black Eyed Peas",
+          "share": 0.021
+        },
+        {
+          "name": "The Heart of Me",
+          "artist": "Miike Snow",
+          "share": 0.019
+        },
+        {
+          "name": "Lover",
+          "artist": "Taylor Swift",
+          "share": 0.019
+        },
+        {
+          "name": "Style",
+          "artist": "Taylor Swift",
+          "share": 0.015
+        },
+        {
+          "name": "Be Sweet",
+          "artist": "Japanese Breakfast",
+          "share": 0.014
+        },
+        {
+          "name": "telepatía",
+          "artist": "Kali Uchis",
+          "share": 0.014
+        },
+        {
+          "name": "Sofia",
+          "artist": "Clairo",
+          "share": 0.014
+        },
+        {
+          "name": "Apocalypse",
+          "artist": "Cigarettes After Sex",
+          "share": 0.013
+        },
+        {
+          "name": "Tailwhip",
+          "artist": "Men I Trust",
+          "share": 0.012
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "briefs": 3000,
+      "eligible_pool": 194,
+      "excluded_by_language": 42,
+      "avg_shortlist_size": 16.03,
+      "shortlist_inclusion": 0.99,
+      "selection_coverage": 0.969,
+      "repeat_rate_last20": 0.123,
+      "top10_share": 0.163,
+      "gini": 0.432,
+      "mean_relevance_vs_best": 0.783,
+      "briefs_with_no_overlap": 0,
+      "never_competitive": [
+        {
+          "track_id": "3GZD6HmiNUhxXYf8Gch723",
+          "name": "Lost",
+          "artist": "Frank Ocean",
+          "reason": "descriptors rarely overlap synthetic briefs",
+          "best_rank": 96
+        },
+        {
+          "track_id": "5OdI6v2L7Aez4cclpbojiZ",
+          "name": "stay a little longer",
+          "artist": "ROSÉ",
+          "reason": "descriptors rarely overlap synthetic briefs",
+          "best_rank": 145
+        }
+      ],
+      "most_selected": [
+        {
+          "name": "The Less I Know The Better",
+          "artist": "Tame Impala",
+          "share": 0.021
+        },
+        {
+          "name": "Style",
+          "artist": "Taylor Swift",
+          "share": 0.019
+        },
+        {
+          "name": "The Heart of Me",
+          "artist": "Miike Snow",
+          "share": 0.018
+        },
+        {
+          "name": "Lover",
+          "artist": "Taylor Swift",
+          "share": 0.018
+        },
+        {
+          "name": "Meet Me Halfway",
+          "artist": "Black Eyed Peas",
+          "share": 0.017
+        },
+        {
+          "name": "telepatía",
+          "artist": "Kali Uchis",
+          "share": 0.015
+        },
+        {
+          "name": "Apocalypse",
+          "artist": "Cigarettes After Sex",
+          "share": 0.015
+        },
+        {
+          "name": "Sofia",
+          "artist": "Clairo",
+          "share": 0.014
+        },
+        {
+          "name": "Be Sweet",
+          "artist": "Japanese Breakfast",
+          "share": 0.014
+        },
+        {
+          "name": "Saturn",
+          "artist": "SZA",
+          "share": 0.013
+        }
+      ]
+    }
+  ],
+  "golden": null
+}

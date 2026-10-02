@@ -1,0 +1,4516 @@
+[
+  {
+    "id": "en-01",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "independence",
+        "introspection",
+        "protest"
+      ],
+      "stance": [],
+      "mood": [
+        "melancholy"
+      ],
+      "energy": [],
+      "setting": [
+        "late-night"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "0SEc0MKFrJTDyzImCHaGOA",
+        "name": "Paralyzed",
+        "artist": "Roosevelt"
+      },
+      {
+        "track_id": "1YpRBLuUWsdahTFhZr9pwK",
+        "name": "So Many Details",
+        "artist": "Toro y Moi"
+      },
+      {
+        "track_id": "21iSFtrC2VHP3PfImVTglV",
+        "name": "Everybody Wants to Love You",
+        "artist": "Japanese Breakfast"
+      },
+      {
+        "track_id": "3SEZEyvEALlomED5xFeqOs",
+        "name": "summer depression",
+        "artist": "girl in red"
+      },
+      {
+        "track_id": "55WNlLuVqXJM4DQRxXWSTh",
+        "name": "give up, give in",
+        "artist": "Violette Wautier"
+      },
+      {
+        "track_id": "6rY5FAWxCdAGllYEOZMbjW",
+        "name": "SLOW DANCING IN THE DARK",
+        "artist": "Joji"
+      },
+      {
+        "track_id": "75enpZYDT6k0PNKu6SJ4W5",
+        "name": "4am",
+        "artist": "girl in red"
+      },
+      {
+        "track_id": "18mNRyfNGQvVfwTJo27sNR",
+        "name": "Go!",
+        "artist": "M83, MAI LAN"
+      },
+      {
+        "track_id": "0dpyzcT3RMNNSd2xKBf35I",
+        "name": "Be Sweet",
+        "artist": "Japanese Breakfast"
+      },
+      {
+        "track_id": "0oxYB9GoOIDrdzniNdKC44",
+        "name": "When the Sun Hits",
+        "artist": "Slowdive"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-02",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "questioning",
+        "magic"
+      ],
+      "stance": [],
+      "mood": [
+        "adventure"
+      ],
+      "energy": [
+        "intense"
+      ],
+      "setting": [
+        "night"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "34WI9hCaE3AzbOYT9wFXLP",
+        "name": "High And Low",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "3pDGJRDN3p6kCNZcD97FYY",
+        "name": "Cosmic",
+        "artist": "Red Velvet"
+      },
+      {
+        "track_id": "5r5cp9IpziiIsR6b93vcnQ",
+        "name": "Walking On A Dream",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "086myS9r57YsLbJpU0TgK9",
+        "name": "Why'd You Only Call Me When You're High?",
+        "artist": "Arctic Monkeys"
+      },
+      {
+        "track_id": "0b16LTzby1YRVd2nq2Z0fw",
+        "name": "State Of Grace",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0kN8xEmgMW9mh7UmDYHlJP",
+        "name": "Versace on the Floor",
+        "artist": "Bruno Mars"
+      },
+      {
+        "track_id": "0l4DTppOxy7NUaEcwXuOb6",
+        "name": "Animal",
+        "artist": "Neon Trees"
+      },
+      {
+        "track_id": "0PG9fbaaHFHfre2gUVo7AN",
+        "name": "Please Me",
+        "artist": "Cardi B, Bruno Mars"
+      },
+      {
+        "track_id": "18mNRyfNGQvVfwTJo27sNR",
+        "name": "Go!",
+        "artist": "M83, MAI LAN"
+      },
+      {
+        "track_id": "1GexRDFzRQpNkflfXgI2lM",
+        "name": "Tough Luck",
+        "artist": "Laufey"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-03",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "insecurity",
+        "serene"
+      ],
+      "stance": [
+        "forest",
+        "anguish"
+      ],
+      "mood": [
+        "insecurity"
+      ],
+      "energy": [
+        "restrained"
+      ],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "79RJg6MqIJlBuedcMqB9F0",
+        "name": "My Body Isn't Ready",
+        "artist": "sombr"
+      },
+      {
+        "track_id": "55WNlLuVqXJM4DQRxXWSTh",
+        "name": "give up, give in",
+        "artist": "Violette Wautier"
+      },
+      {
+        "track_id": "01aNqddaggrPJYUIdRApRD",
+        "name": "bad enough",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "0AxZUYeQ9bZwSdt1LmZuok",
+        "name": "Heaven or Las Vegas",
+        "artist": "Cocteau Twins"
+      },
+      {
+        "track_id": "0bkW98npv8EsWQ2fXFzK56",
+        "name": "From Eden",
+        "artist": "Hozier"
+      },
+      {
+        "track_id": "0dpyzcT3RMNNSd2xKBf35I",
+        "name": "Be Sweet",
+        "artist": "Japanese Breakfast"
+      },
+      {
+        "track_id": "0fBSs3fRoh1yJcne77fdu9",
+        "name": "Video Games",
+        "artist": "Lana Del Rey"
+      },
+      {
+        "track_id": "0IVHlst3XMgzXUJbIyZ8oO",
+        "name": "Without You",
+        "artist": "Oh Wonder"
+      },
+      {
+        "track_id": "0ofHAoxe9vBkTCp2UQIavz",
+        "name": "Dreams - 2004 Remaster",
+        "artist": "Fleetwood Mac"
+      },
+      {
+        "track_id": "0oxYB9GoOIDrdzniNdKC44",
+        "name": "When the Sun Hits",
+        "artist": "Slowdive"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-04",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "freedom",
+        "street",
+        "affection",
+        "past"
+      ],
+      "stance": [
+        "peaceful"
+      ],
+      "mood": [
+        "cosmic",
+        "dancing"
+      ],
+      "energy": [
+        "driving"
+      ],
+      "setting": [
+        "late-night"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "18mNRyfNGQvVfwTJo27sNR",
+        "name": "Go!",
+        "artist": "M83, MAI LAN"
+      },
+      {
+        "track_id": "6GyFP1nfCDB8lbD2bG0Hq9",
+        "name": "Midnight City",
+        "artist": "M83"
+      },
+      {
+        "track_id": "50aQbgfdydBXABx2gATQHn",
+        "name": "dance all night",
+        "artist": "ROSÉ"
+      },
+      {
+        "track_id": "34WI9hCaE3AzbOYT9wFXLP",
+        "name": "High And Low",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "2X485T9Z5Ly0xyaghN73ed",
+        "name": "Let It Happen",
+        "artist": "Tame Impala"
+      },
+      {
+        "track_id": "3pDGJRDN3p6kCNZcD97FYY",
+        "name": "Cosmic",
+        "artist": "Red Velvet"
+      },
+      {
+        "track_id": "0PG9fbaaHFHfre2gUVo7AN",
+        "name": "Please Me",
+        "artist": "Cardi B, Bruno Mars"
+      },
+      {
+        "track_id": "1LeItUMezKA1HdCHxYICed",
+        "name": "Say My Name",
+        "artist": "ODESZA, Zyra"
+      },
+      {
+        "track_id": "5xf1W1A21U0mtv8NdHNWcN",
+        "name": "Fever",
+        "artist": "Roosevelt"
+      },
+      {
+        "track_id": "6tDDoYIxWvMLTdKpjFkc1B",
+        "name": "telepatía",
+        "artist": "Kali Uchis"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-05",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "recharge",
+        "dancing",
+        "grounded",
+        "insecurity"
+      ],
+      "stance": [
+        "retreat"
+      ],
+      "mood": [
+        "rebellious",
+        "sunny"
+      ],
+      "energy": [
+        "driving"
+      ],
+      "setting": [
+        "sea"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "0V3wPSX9ygBnCm8psDIegu",
+        "name": "Anti-Hero",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "13P5rwmk2EsoFRIz9UCeh9",
+        "name": "Cool Kids",
+        "artist": "Echosmith"
+      },
+      {
+        "track_id": "4rh7wySe2iEyEDEEzstKkt",
+        "name": "Come Alive (feat. Toro y Moi)",
+        "artist": "Chromeo, Toro y Moi"
+      },
+      {
+        "track_id": "5DNODaGLQJIKWWsHaWT7fk",
+        "name": "Hey Now - ARTY Remix",
+        "artist": "London Grammar, ARTY"
+      },
+      {
+        "track_id": "086myS9r57YsLbJpU0TgK9",
+        "name": "Why'd You Only Call Me When You're High?",
+        "artist": "Arctic Monkeys"
+      },
+      {
+        "track_id": "0b16LTzby1YRVd2nq2Z0fw",
+        "name": "State Of Grace",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "0I1cHghDEtreiO6tRrh2wm",
+        "name": "Llego",
+        "artist": "Empire Of The Sun, Danny Ocean, FIFA Sound"
+      },
+      {
+        "track_id": "0Jirkb7LGNWyVhKOsKFdZ2",
+        "name": "Run Away With Me",
+        "artist": "Carly Rae Jepsen"
+      },
+      {
+        "track_id": "0kN8xEmgMW9mh7UmDYHlJP",
+        "name": "Versace on the Floor",
+        "artist": "Bruno Mars"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-06",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "calm",
+        "bravery",
+        "thoughtful",
+        "dancing"
+      ],
+      "stance": [
+        "missing"
+      ],
+      "mood": [
+        "affection"
+      ],
+      "energy": [],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "0dpyzcT3RMNNSd2xKBf35I",
+        "name": "Be Sweet",
+        "artist": "Japanese Breakfast"
+      },
+      {
+        "track_id": "0oxYB9GoOIDrdzniNdKC44",
+        "name": "When the Sun Hits",
+        "artist": "Slowdive"
+      },
+      {
+        "track_id": "17UaCbdhkzTaCj4DbKTrPW",
+        "name": "Soft Sounds from Another Planet",
+        "artist": "Japanese Breakfast"
+      },
+      {
+        "track_id": "21iSFtrC2VHP3PfImVTglV",
+        "name": "Everybody Wants to Love You",
+        "artist": "Japanese Breakfast"
+      },
+      {
+        "track_id": "2mlNgAeIBnL78ZriXgrRHz",
+        "name": "Glimpse of Us",
+        "artist": "Joji"
+      },
+      {
+        "track_id": "4VQH4VluDUOsOuDxccTeyN",
+        "name": "Sanctuary",
+        "artist": "Joji"
+      },
+      {
+        "track_id": "5tSmAABuoOfR59lrtXdDqm",
+        "name": "If This Was A Movie",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "67QGnT1Vdfuuy4HkLTUVjj",
+        "name": "11:11",
+        "artist": "TAEYEON"
+      },
+      {
+        "track_id": "6aNhdTO95TOWpkdunBJPFK",
+        "name": "Late Night Walks",
+        "artist": "Teddy Vogel"
+      },
+      {
+        "track_id": "75enpZYDT6k0PNKu6SJ4W5",
+        "name": "4am",
+        "artist": "girl in red"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-07",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "quiet",
+        "optimistic"
+      ],
+      "stance": [
+        "anxiety"
+      ],
+      "mood": [
+        "storm",
+        "pining"
+      ],
+      "energy": [],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "0V3wPSX9ygBnCm8psDIegu",
+        "name": "Anti-Hero",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "6rY5FAWxCdAGllYEOZMbjW",
+        "name": "SLOW DANCING IN THE DARK",
+        "artist": "Joji"
+      },
+      {
+        "track_id": "11ozIUBoXAgRTVWelDn4pL",
+        "name": "Lights",
+        "artist": "Ellie Goulding"
+      },
+      {
+        "track_id": "161DnLWsx1i3u1JT05lzqU",
+        "name": "Talking to the Moon",
+        "artist": "Bruno Mars"
+      },
+      {
+        "track_id": "3jt1ZVIuluGkV0sWWLSUzw",
+        "name": "Appointments",
+        "artist": "Julien Baker"
+      },
+      {
+        "track_id": "6dGnYIeXmHdcikdzNNDMm2",
+        "name": "Here Comes The Sun - Remastered 2009",
+        "artist": "The Beatles"
+      },
+      {
+        "track_id": "77zf87QsAz3H4XrENZOerR",
+        "name": "Death Stranding",
+        "artist": "CHVRCHES"
+      },
+      {
+        "track_id": "0b16LTzby1YRVd2nq2Z0fw",
+        "name": "State Of Grace",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "1KCMF9fdF7sNE74R2V46af",
+        "name": "You",
+        "artist": "Lane 8, Kasablanca"
+      },
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-08",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "kindness",
+        "rebellious",
+        "driven",
+        "wistful"
+      ],
+      "stance": [
+        "sunny",
+        "party"
+      ],
+      "mood": [
+        "nostalgia",
+        "stars"
+      ],
+      "energy": [],
+      "setting": [
+        "nature"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "5CZ40GBx1sQ9agT82CLQCT",
+        "name": "traitor",
+        "artist": "Olivia Rodrigo"
+      },
+      {
+        "track_id": "7KNFJbMvPdplvrolBUkK2N",
+        "name": "Shy Girl",
+        "artist": "Haute & Freddy"
+      },
+      {
+        "track_id": "5JVbvCHX10U2pLa5DEqGav",
+        "name": "Safe and Sound",
+        "artist": "Capital Cities"
+      },
+      {
+        "track_id": "5RdhBLmB4DyFHLglRrfx63",
+        "name": "I'll Be There",
+        "artist": "The Jackson 5"
+      },
+      {
+        "track_id": "1GP8VW5Wk2w2obkWjGCGXd",
+        "name": "So High School",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "2GiJYvgVaD2HtM8GqD9EgQ",
+        "name": "Electric Love",
+        "artist": "BØRNS"
+      },
+      {
+        "track_id": "2OzhQlSqBEmt7hmkYxfT6m",
+        "name": "Fortnight (feat. Post Malone)",
+        "artist": "Taylor Swift, Post Malone"
+      },
+      {
+        "track_id": "3hUxzQpSfdDqwM3ZTFQY0K",
+        "name": "august",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "3y1EzRl5UEQxxd1f6Bv2aN",
+        "name": "When I'm Small",
+        "artist": "Phantogram"
+      },
+      {
+        "track_id": "57RA3JGafJm5zRtKJiKPIm",
+        "name": "Are You Bored Yet? (feat. Clairo)",
+        "artist": "Wallows, Clairo"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-09",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "comforting",
+        "steady"
+      ],
+      "stance": [
+        "commitment",
+        "connection"
+      ],
+      "mood": [
+        "new beginnings"
+      ],
+      "energy": [],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "17UaCbdhkzTaCj4DbKTrPW",
+        "name": "Soft Sounds from Another Planet",
+        "artist": "Japanese Breakfast"
+      },
+      {
+        "track_id": "1GP8VW5Wk2w2obkWjGCGXd",
+        "name": "So High School",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "2OzhQlSqBEmt7hmkYxfT6m",
+        "name": "Fortnight (feat. Post Malone)",
+        "artist": "Taylor Swift, Post Malone"
+      },
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "4rh7wySe2iEyEDEEzstKkt",
+        "name": "Come Alive (feat. Toro y Moi)",
+        "artist": "Chromeo, Toro y Moi"
+      },
+      {
+        "track_id": "57RA3JGafJm5zRtKJiKPIm",
+        "name": "Are You Bored Yet? (feat. Clairo)",
+        "artist": "Wallows, Clairo"
+      },
+      {
+        "track_id": "1v1oIWf2Xgh54kIWuKsDf6",
+        "name": "Runaway",
+        "artist": "AURORA"
+      },
+      {
+        "track_id": "6wOYnPq1hPihRepcDClPUw",
+        "name": "Meet Me Halfway",
+        "artist": "Black Eyed Peas"
+      },
+      {
+        "track_id": "5JVbvCHX10U2pLa5DEqGav",
+        "name": "Safe and Sound",
+        "artist": "Capital Cities"
+      },
+      {
+        "track_id": "5RdhBLmB4DyFHLglRrfx63",
+        "name": "I'll Be There",
+        "artist": "The Jackson 5"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-10",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "liberation",
+        "mystery"
+      ],
+      "stance": [
+        "belonging",
+        "anger"
+      ],
+      "mood": [
+        "reminiscing",
+        "driven"
+      ],
+      "energy": [
+        "driving"
+      ],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "1GP8VW5Wk2w2obkWjGCGXd",
+        "name": "So High School",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "2OzhQlSqBEmt7hmkYxfT6m",
+        "name": "Fortnight (feat. Post Malone)",
+        "artist": "Taylor Swift, Post Malone"
+      },
+      {
+        "track_id": "57RA3JGafJm5zRtKJiKPIm",
+        "name": "Are You Bored Yet? (feat. Clairo)",
+        "artist": "Wallows, Clairo"
+      },
+      {
+        "track_id": "1tGmXu0s8ob0VFjNoQlyKc",
+        "name": "Never Say Die",
+        "artist": "CHVRCHES"
+      },
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "4rh7wySe2iEyEDEEzstKkt",
+        "name": "Come Alive (feat. Toro y Moi)",
+        "artist": "Chromeo, Toro y Moi"
+      },
+      {
+        "track_id": "0Jirkb7LGNWyVhKOsKFdZ2",
+        "name": "Run Away With Me",
+        "artist": "Carly Rae Jepsen"
+      },
+      {
+        "track_id": "18mNRyfNGQvVfwTJo27sNR",
+        "name": "Go!",
+        "artist": "M83, MAI LAN"
+      },
+      {
+        "track_id": "1v1oIWf2Xgh54kIWuKsDf6",
+        "name": "Runaway",
+        "artist": "AURORA"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-11",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "caring",
+        "liberation"
+      ],
+      "stance": [],
+      "mood": [
+        "wonder",
+        "intimate"
+      ],
+      "energy": [
+        "mid-tempo"
+      ],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "0Jirkb7LGNWyVhKOsKFdZ2",
+        "name": "Run Away With Me",
+        "artist": "Carly Rae Jepsen"
+      },
+      {
+        "track_id": "5JVbvCHX10U2pLa5DEqGav",
+        "name": "Safe and Sound",
+        "artist": "Capital Cities"
+      },
+      {
+        "track_id": "5RdhBLmB4DyFHLglRrfx63",
+        "name": "I'll Be There",
+        "artist": "The Jackson 5"
+      },
+      {
+        "track_id": "0AxZUYeQ9bZwSdt1LmZuok",
+        "name": "Heaven or Las Vegas",
+        "artist": "Cocteau Twins"
+      },
+      {
+        "track_id": "0ofHAoxe9vBkTCp2UQIavz",
+        "name": "Dreams - 2004 Remaster",
+        "artist": "Fleetwood Mac"
+      },
+      {
+        "track_id": "2X485T9Z5Ly0xyaghN73ed",
+        "name": "Let It Happen",
+        "artist": "Tame Impala"
+      },
+      {
+        "track_id": "34WI9hCaE3AzbOYT9wFXLP",
+        "name": "High And Low",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "3pDGJRDN3p6kCNZcD97FYY",
+        "name": "Cosmic",
+        "artist": "Red Velvet"
+      },
+      {
+        "track_id": "4BY4V1T0RJK1HmD2Q0ClyK",
+        "name": "Oblivion",
+        "artist": "Grimes"
+      },
+      {
+        "track_id": "6rVCUwfnuYTAsX4P9fIdIu",
+        "name": "Dreams Come True",
+        "artist": "aespa"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-12",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "ironic",
+        "brooding",
+        "wonder",
+        "warmth"
+      ],
+      "stance": [
+        "caring"
+      ],
+      "mood": [
+        "devotion"
+      ],
+      "energy": [],
+      "setting": [
+        "car"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "0Jirkb7LGNWyVhKOsKFdZ2",
+        "name": "Run Away With Me",
+        "artist": "Carly Rae Jepsen"
+      },
+      {
+        "track_id": "1v1oIWf2Xgh54kIWuKsDf6",
+        "name": "Runaway",
+        "artist": "AURORA"
+      },
+      {
+        "track_id": "7yFMhCJOsH7khgpdnyrZAZ",
+        "name": "Ride",
+        "artist": "Lana Del Rey"
+      },
+      {
+        "track_id": "1dGr1c8CrMLDpV6mPbImSI",
+        "name": "Lover",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      },
+      {
+        "track_id": "5yvVYFDUpbnjcnRBgjwTzM",
+        "name": "Dracula (with JENNIE)",
+        "artist": "Tame Impala, JENNIE"
+      },
+      {
+        "track_id": "5JVbvCHX10U2pLa5DEqGav",
+        "name": "Safe and Sound",
+        "artist": "Capital Cities"
+      },
+      {
+        "track_id": "5RdhBLmB4DyFHLglRrfx63",
+        "name": "I'll Be There",
+        "artist": "The Jackson 5"
+      },
+      {
+        "track_id": "0ofHAoxe9vBkTCp2UQIavz",
+        "name": "Dreams - 2004 Remaster",
+        "artist": "Fleetwood Mac"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-13",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "adoration",
+        "quiet",
+        "recharge",
+        "escape"
+      ],
+      "stance": [
+        "love",
+        "self-doubt"
+      ],
+      "mood": [
+        "power"
+      ],
+      "energy": [
+        "danceable"
+      ],
+      "setting": [
+        "sea"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "2PRXyTkFmU0itou1ii4BPa",
+        "name": "Shine",
+        "artist": "Olly Alexander (Years & Years)"
+      },
+      {
+        "track_id": "0V3wPSX9ygBnCm8psDIegu",
+        "name": "Anti-Hero",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0Jirkb7LGNWyVhKOsKFdZ2",
+        "name": "Run Away With Me",
+        "artist": "Carly Rae Jepsen"
+      },
+      {
+        "track_id": "18mNRyfNGQvVfwTJo27sNR",
+        "name": "Go!",
+        "artist": "M83, MAI LAN"
+      },
+      {
+        "track_id": "1v1oIWf2Xgh54kIWuKsDf6",
+        "name": "Runaway",
+        "artist": "AURORA"
+      },
+      {
+        "track_id": "0b16LTzby1YRVd2nq2Z0fw",
+        "name": "State Of Grace",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0kN8xEmgMW9mh7UmDYHlJP",
+        "name": "Versace on the Floor",
+        "artist": "Bruno Mars"
+      },
+      {
+        "track_id": "0KVWVuutF9Dn8li4HdyAeU",
+        "name": "Archie, Marry Me",
+        "artist": "Alvvays"
+      },
+      {
+        "track_id": "1myEOhXztRxUVfaAEQiKkU",
+        "name": "Cosmic Love",
+        "artist": "Florence + The Machine"
+      },
+      {
+        "track_id": "1qbmS6ep2hbBRaEZFpn7BX",
+        "name": "Man I Need",
+        "artist": "Olivia Dean"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-14",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "contemplation",
+        "morning",
+        "transformation"
+      ],
+      "stance": [
+        "reflective"
+      ],
+      "mood": [
+        "parting",
+        "exploration"
+      ],
+      "energy": [
+        "steady beat"
+      ],
+      "setting": [
+        "daytime"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "3hUxzQpSfdDqwM3ZTFQY0K",
+        "name": "august",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0y60itmpH0aPKsFiGxmtnh",
+        "name": "Wait a Minute!",
+        "artist": "WILLOW"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "0I1cHghDEtreiO6tRrh2wm",
+        "name": "Llego",
+        "artist": "Empire Of The Sun, Danny Ocean, FIFA Sound"
+      },
+      {
+        "track_id": "0KVWVuutF9Dn8li4HdyAeU",
+        "name": "Archie, Marry Me",
+        "artist": "Alvvays"
+      },
+      {
+        "track_id": "0ug5NqcwcFR2xrfTkc7k8e",
+        "name": "Style",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "11ozIUBoXAgRTVWelDn4pL",
+        "name": "Lights",
+        "artist": "Ellie Goulding"
+      },
+      {
+        "track_id": "1CSAUEapYQQOD50ardFG0K",
+        "name": "Glide",
+        "artist": "NEIKED, Portugal. The Man"
+      },
+      {
+        "track_id": "1GP8VW5Wk2w2obkWjGCGXd",
+        "name": "So High School",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-15",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "tender",
+        "happy",
+        "euphoria"
+      ],
+      "stance": [],
+      "mood": [
+        "confidence"
+      ],
+      "energy": [
+        "upbeat"
+      ],
+      "setting": [
+        "moonlit"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "50aQbgfdydBXABx2gATQHn",
+        "name": "dance all night",
+        "artist": "ROSÉ"
+      },
+      {
+        "track_id": "0PG9fbaaHFHfre2gUVo7AN",
+        "name": "Please Me",
+        "artist": "Cardi B, Bruno Mars"
+      },
+      {
+        "track_id": "1LeItUMezKA1HdCHxYICed",
+        "name": "Say My Name",
+        "artist": "ODESZA, Zyra"
+      },
+      {
+        "track_id": "5xf1W1A21U0mtv8NdHNWcN",
+        "name": "Fever",
+        "artist": "Roosevelt"
+      },
+      {
+        "track_id": "6tDDoYIxWvMLTdKpjFkc1B",
+        "name": "telepatía",
+        "artist": "Kali Uchis"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "6dGnYIeXmHdcikdzNNDMm2",
+        "name": "Here Comes The Sun - Remastered 2009",
+        "artist": "The Beatles"
+      },
+      {
+        "track_id": "086myS9r57YsLbJpU0TgK9",
+        "name": "Why'd You Only Call Me When You're High?",
+        "artist": "Arctic Monkeys"
+      },
+      {
+        "track_id": "0b16LTzby1YRVd2nq2Z0fw",
+        "name": "State Of Grace",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0kN8xEmgMW9mh7UmDYHlJP",
+        "name": "Versace on the Floor",
+        "artist": "Bruno Mars"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-16",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "daytime",
+        "ocean"
+      ],
+      "stance": [
+        "mystery",
+        "quiet"
+      ],
+      "mood": [
+        "magical"
+      ],
+      "energy": [],
+      "setting": [
+        "storm"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "0AxZUYeQ9bZwSdt1LmZuok",
+        "name": "Heaven or Las Vegas",
+        "artist": "Cocteau Twins"
+      },
+      {
+        "track_id": "0Jirkb7LGNWyVhKOsKFdZ2",
+        "name": "Run Away With Me",
+        "artist": "Carly Rae Jepsen"
+      },
+      {
+        "track_id": "0ofHAoxe9vBkTCp2UQIavz",
+        "name": "Dreams - 2004 Remaster",
+        "artist": "Fleetwood Mac"
+      },
+      {
+        "track_id": "2X485T9Z5Ly0xyaghN73ed",
+        "name": "Let It Happen",
+        "artist": "Tame Impala"
+      },
+      {
+        "track_id": "34WI9hCaE3AzbOYT9wFXLP",
+        "name": "High And Low",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "3pDGJRDN3p6kCNZcD97FYY",
+        "name": "Cosmic",
+        "artist": "Red Velvet"
+      },
+      {
+        "track_id": "4BY4V1T0RJK1HmD2Q0ClyK",
+        "name": "Oblivion",
+        "artist": "Grimes"
+      },
+      {
+        "track_id": "6rVCUwfnuYTAsX4P9fIdIu",
+        "name": "Dreams Come True",
+        "artist": "aespa"
+      },
+      {
+        "track_id": "2ctvdKmETyOzPb2GiJJT53",
+        "name": "Breathe (In the Air)",
+        "artist": "Pink Floyd"
+      },
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-17",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "renewal",
+        "joy",
+        "maturity",
+        "soft"
+      ],
+      "stance": [
+        "belonging",
+        "club"
+      ],
+      "mood": [
+        "crush"
+      ],
+      "energy": [
+        "slow"
+      ],
+      "setting": [
+        "night"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "1dGr1c8CrMLDpV6mPbImSI",
+        "name": "Lover",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "17UaCbdhkzTaCj4DbKTrPW",
+        "name": "Soft Sounds from Another Planet",
+        "artist": "Japanese Breakfast"
+      },
+      {
+        "track_id": "161DnLWsx1i3u1JT05lzqU",
+        "name": "Talking to the Moon",
+        "artist": "Bruno Mars"
+      },
+      {
+        "track_id": "77zf87QsAz3H4XrENZOerR",
+        "name": "Death Stranding",
+        "artist": "CHVRCHES"
+      },
+      {
+        "track_id": "1eZyd1mtOmlQu3YhSYmes7",
+        "name": "lovergirl",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "2VYnlKxB8jpbCeLUjQsebc",
+        "name": "In A Good Way",
+        "artist": "Faye Webster"
+      },
+      {
+        "track_id": "50aQbgfdydBXABx2gATQHn",
+        "name": "dance all night",
+        "artist": "ROSÉ"
+      },
+      {
+        "track_id": "01aNqddaggrPJYUIdRApRD",
+        "name": "bad enough",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "0AxZUYeQ9bZwSdt1LmZuok",
+        "name": "Heaven or Las Vegas",
+        "artist": "Cocteau Twins"
+      },
+      {
+        "track_id": "0bkW98npv8EsWQ2fXFzK56",
+        "name": "From Eden",
+        "artist": "Hozier"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-18",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "missing",
+        "thoughtful"
+      ],
+      "stance": [
+        "intimate"
+      ],
+      "mood": [
+        "intimate",
+        "dream"
+      ],
+      "energy": [
+        "groovy"
+      ],
+      "setting": [
+        "ocean"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "3pDGJRDN3p6kCNZcD97FYY",
+        "name": "Cosmic",
+        "artist": "Red Velvet"
+      },
+      {
+        "track_id": "6rVCUwfnuYTAsX4P9fIdIu",
+        "name": "Dreams Come True",
+        "artist": "aespa"
+      },
+      {
+        "track_id": "142PiXzA84lmEw2RstFHFa",
+        "name": "supernatural",
+        "artist": "Ariana Grande"
+      },
+      {
+        "track_id": "3jjujdWJ72nww5eGnfs2E7",
+        "name": "Adore You",
+        "artist": "Harry Styles"
+      },
+      {
+        "track_id": "2VYnlKxB8jpbCeLUjQsebc",
+        "name": "In A Good Way",
+        "artist": "Faye Webster"
+      },
+      {
+        "track_id": "3hEfpBHxgieRLz4t3kLNEg",
+        "name": "About You",
+        "artist": "The 1975"
+      },
+      {
+        "track_id": "4vHNeBWDQpVCmGbaccrRzi",
+        "name": "Goodie Bag",
+        "artist": "Still Woozy"
+      },
+      {
+        "track_id": "2jpKZFnBk98Ud3EoZiBOTf",
+        "name": "Here With Me",
+        "artist": "Marshmello, CHVRCHES"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "0I1cHghDEtreiO6tRrh2wm",
+        "name": "Llego",
+        "artist": "Empire Of The Sun, Danny Ocean, FIFA Sound"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-19",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "driven",
+        "nocturnal",
+        "magical"
+      ],
+      "stance": [
+        "goodbye"
+      ],
+      "mood": [
+        "relaxed",
+        "everyday"
+      ],
+      "energy": [
+        "restrained"
+      ],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "01aNqddaggrPJYUIdRApRD",
+        "name": "bad enough",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "0bkW98npv8EsWQ2fXFzK56",
+        "name": "From Eden",
+        "artist": "Hozier"
+      },
+      {
+        "track_id": "0IVHlst3XMgzXUJbIyZ8oO",
+        "name": "Without You",
+        "artist": "Oh Wonder"
+      },
+      {
+        "track_id": "0SEc0MKFrJTDyzImCHaGOA",
+        "name": "Paralyzed",
+        "artist": "Roosevelt"
+      },
+      {
+        "track_id": "1eZyd1mtOmlQu3YhSYmes7",
+        "name": "lovergirl",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "20jbSiX29FDX4oQxBXyUEi",
+        "name": "hate that i made you love me",
+        "artist": "Ariana Grande"
+      },
+      {
+        "track_id": "2gYTC8DsplN3RNdpdBcCOQ",
+        "name": "Die On This Hill",
+        "artist": "SIENNA SPIRO"
+      },
+      {
+        "track_id": "2PL9IBLQvJjE7hqCQyJl2g",
+        "name": "Turn",
+        "artist": "The Wombats"
+      },
+      {
+        "track_id": "325toqbCzE1g1pYIED7U4C",
+        "name": "Take It Back",
+        "artist": "Pink Floyd"
+      },
+      {
+        "track_id": "3A02hWQ2ebOFDWSbAMNnpw",
+        "name": "bittersweet",
+        "artist": "Madison Beer"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-20",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "grief",
+        "bittersweet",
+        "sadness",
+        "change"
+      ],
+      "stance": [],
+      "mood": [
+        "transformation",
+        "transformation"
+      ],
+      "energy": [
+        "driving"
+      ],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "2nvC4i2aMo4CzRjRflysah",
+        "name": "In My Place",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "5Ohxk2dO5COHF1krpoPigN",
+        "name": "Sign of the Times",
+        "artist": "Harry Styles"
+      },
+      {
+        "track_id": "0y60itmpH0aPKsFiGxmtnh",
+        "name": "Wait a Minute!",
+        "artist": "WILLOW"
+      },
+      {
+        "track_id": "1nwS2dkzE8XIFbDOMbjvKv",
+        "name": "Back to Life - from \"Bumblebee\"",
+        "artist": "Hailee Steinfeld"
+      },
+      {
+        "track_id": "1v1oIWf2Xgh54kIWuKsDf6",
+        "name": "Runaway",
+        "artist": "AURORA"
+      },
+      {
+        "track_id": "2X485T9Z5Ly0xyaghN73ed",
+        "name": "Let It Happen",
+        "artist": "Tame Impala"
+      },
+      {
+        "track_id": "30VHURM5NOfoZmqp2iKawS",
+        "name": "Butterflies",
+        "artist": "Kacey Musgraves"
+      },
+      {
+        "track_id": "36vmaZyO0iAE6FZ7287fg2",
+        "name": "Dive",
+        "artist": "Olivia Dean"
+      },
+      {
+        "track_id": "4BY4V1T0RJK1HmD2Q0ClyK",
+        "name": "Oblivion",
+        "artist": "Grimes"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-21",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "magical",
+        "dreams",
+        "darkness",
+        "summer"
+      ],
+      "stance": [],
+      "mood": [
+        "drive",
+        "quiet"
+      ],
+      "energy": [
+        "intense"
+      ],
+      "setting": [
+        "routine"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "5yvVYFDUpbnjcnRBgjwTzM",
+        "name": "Dracula (with JENNIE)",
+        "artist": "Tame Impala, JENNIE"
+      },
+      {
+        "track_id": "6rVCUwfnuYTAsX4P9fIdIu",
+        "name": "Dreams Come True",
+        "artist": "aespa"
+      },
+      {
+        "track_id": "3hUxzQpSfdDqwM3ZTFQY0K",
+        "name": "august",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "1tGmXu0s8ob0VFjNoQlyKc",
+        "name": "Never Say Die",
+        "artist": "CHVRCHES"
+      },
+      {
+        "track_id": "34WI9hCaE3AzbOYT9wFXLP",
+        "name": "High And Low",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "3pDGJRDN3p6kCNZcD97FYY",
+        "name": "Cosmic",
+        "artist": "Red Velvet"
+      },
+      {
+        "track_id": "5r5cp9IpziiIsR6b93vcnQ",
+        "name": "Walking On A Dream",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "086myS9r57YsLbJpU0TgK9",
+        "name": "Why'd You Only Call Me When You're High?",
+        "artist": "Arctic Monkeys"
+      },
+      {
+        "track_id": "0b16LTzby1YRVd2nq2Z0fw",
+        "name": "State Of Grace",
+        "artist": "Taylor Swift"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-22",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "sky",
+        "street",
+        "confidence",
+        "discovery"
+      ],
+      "stance": [
+        "parting",
+        "travel"
+      ],
+      "mood": [
+        "whimsical",
+        "night"
+      ],
+      "energy": [
+        "hushed"
+      ],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "5r5cp9IpziiIsR6b93vcnQ",
+        "name": "Walking On A Dream",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "0y60itmpH0aPKsFiGxmtnh",
+        "name": "Wait a Minute!",
+        "artist": "WILLOW"
+      },
+      {
+        "track_id": "3gJAFFELdZyIM8tiwLAikg",
+        "name": "Handlebars (feat. Dua Lipa)",
+        "artist": "JENNIE, Dua Lipa"
+      },
+      {
+        "track_id": "01aNqddaggrPJYUIdRApRD",
+        "name": "bad enough",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "0bkW98npv8EsWQ2fXFzK56",
+        "name": "From Eden",
+        "artist": "Hozier"
+      },
+      {
+        "track_id": "0IVHlst3XMgzXUJbIyZ8oO",
+        "name": "Without You",
+        "artist": "Oh Wonder"
+      },
+      {
+        "track_id": "0SEc0MKFrJTDyzImCHaGOA",
+        "name": "Paralyzed",
+        "artist": "Roosevelt"
+      },
+      {
+        "track_id": "1eZyd1mtOmlQu3YhSYmes7",
+        "name": "lovergirl",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "20jbSiX29FDX4oQxBXyUEi",
+        "name": "hate that i made you love me",
+        "artist": "Ariana Grande"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-23",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "peaceful",
+        "support",
+        "self-discovery",
+        "memory"
+      ],
+      "stance": [
+        "parting"
+      ],
+      "mood": [
+        "persistence",
+        "skeptical"
+      ],
+      "energy": [
+        "danceable"
+      ],
+      "setting": [
+        "streets"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "5Ohxk2dO5COHF1krpoPigN",
+        "name": "Sign of the Times",
+        "artist": "Harry Styles"
+      },
+      {
+        "track_id": "6GyFP1nfCDB8lbD2bG0Hq9",
+        "name": "Midnight City",
+        "artist": "M83"
+      },
+      {
+        "track_id": "62E2nR0od0M5HYxuYLaDz7",
+        "name": "The Black Dog",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "1ixbwbeBi5ufN4noUKmW5a",
+        "name": "Paper Planes",
+        "artist": "M.I.A."
+      },
+      {
+        "track_id": "086myS9r57YsLbJpU0TgK9",
+        "name": "Why'd You Only Call Me When You're High?",
+        "artist": "Arctic Monkeys"
+      },
+      {
+        "track_id": "4o0LyB69tylqDG6eTGhmig",
+        "name": "Fire for You",
+        "artist": "Cannons"
+      },
+      {
+        "track_id": "5CZ40GBx1sQ9agT82CLQCT",
+        "name": "traitor",
+        "artist": "Olivia Rodrigo"
+      },
+      {
+        "track_id": "1eZyd1mtOmlQu3YhSYmes7",
+        "name": "lovergirl",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "01aNqddaggrPJYUIdRApRD",
+        "name": "bad enough",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "325toqbCzE1g1pYIED7U4C",
+        "name": "Take It Back",
+        "artist": "Pink Floyd"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-24",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "ocean",
+        "rainy",
+        "change",
+        "sunlit"
+      ],
+      "stance": [
+        "forest",
+        "memory"
+      ],
+      "mood": [
+        "commitment"
+      ],
+      "energy": [
+        "slow"
+      ],
+      "setting": [
+        "sunlit"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "0y60itmpH0aPKsFiGxmtnh",
+        "name": "Wait a Minute!",
+        "artist": "WILLOW"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "0I1cHghDEtreiO6tRrh2wm",
+        "name": "Llego",
+        "artist": "Empire Of The Sun, Danny Ocean, FIFA Sound"
+      },
+      {
+        "track_id": "0ug5NqcwcFR2xrfTkc7k8e",
+        "name": "Style",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "11ozIUBoXAgRTVWelDn4pL",
+        "name": "Lights",
+        "artist": "Ellie Goulding"
+      },
+      {
+        "track_id": "1CSAUEapYQQOD50ardFG0K",
+        "name": "Glide",
+        "artist": "NEIKED, Portugal. The Man"
+      },
+      {
+        "track_id": "1GP8VW5Wk2w2obkWjGCGXd",
+        "name": "So High School",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      },
+      {
+        "track_id": "2PRXyTkFmU0itou1ii4BPa",
+        "name": "Shine",
+        "artist": "Olly Alexander (Years & Years)"
+      },
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-25",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "adoration",
+        "grounded",
+        "courage"
+      ],
+      "stance": [
+        "power"
+      ],
+      "mood": [
+        "alone"
+      ],
+      "energy": [
+        "swaying"
+      ],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "70pVCVMGjmIWPbWXDwf11e",
+        "name": "petal",
+        "artist": "Ariana Grande"
+      },
+      {
+        "track_id": "51t4KpMubQMCQXV8T4lK3F",
+        "name": "Self Love",
+        "artist": "BLOND:ISH"
+      },
+      {
+        "track_id": "0b16LTzby1YRVd2nq2Z0fw",
+        "name": "State Of Grace",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0fBSs3fRoh1yJcne77fdu9",
+        "name": "Video Games",
+        "artist": "Lana Del Rey"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "0Jirkb7LGNWyVhKOsKFdZ2",
+        "name": "Run Away With Me",
+        "artist": "Carly Rae Jepsen"
+      },
+      {
+        "track_id": "0JmnkIqdlnUzPaf8sqBRs3",
+        "name": "Moonlight",
+        "artist": "Kali Uchis"
+      },
+      {
+        "track_id": "0kN8xEmgMW9mh7UmDYHlJP",
+        "name": "Versace on the Floor",
+        "artist": "Bruno Mars"
+      },
+      {
+        "track_id": "0KVWVuutF9Dn8li4HdyAeU",
+        "name": "Archie, Marry Me",
+        "artist": "Alvvays"
+      },
+      {
+        "track_id": "0ofHAoxe9vBkTCp2UQIavz",
+        "name": "Dreams - 2004 Remaster",
+        "artist": "Fleetwood Mac"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-26",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "dreams",
+        "imagination",
+        "neon",
+        "self-doubt"
+      ],
+      "stance": [
+        "dreams"
+      ],
+      "mood": [
+        "connection"
+      ],
+      "energy": [
+        "mid-tempo"
+      ],
+      "setting": [
+        "nocturnal"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "6GyFP1nfCDB8lbD2bG0Hq9",
+        "name": "Midnight City",
+        "artist": "M83"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      },
+      {
+        "track_id": "1ujxjsoNvh4XgS2fUNwkZ2",
+        "name": "Space Song",
+        "artist": "Beach House"
+      },
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      },
+      {
+        "track_id": "1YpRBLuUWsdahTFhZr9pwK",
+        "name": "So Many Details",
+        "artist": "Toro y Moi"
+      },
+      {
+        "track_id": "2ctvdKmETyOzPb2GiJJT53",
+        "name": "Breathe (In the Air)",
+        "artist": "Pink Floyd"
+      },
+      {
+        "track_id": "2TjdnqlpwOjhijHCwHCP2d",
+        "name": "The Great Gig in the Sky",
+        "artist": "Pink Floyd"
+      },
+      {
+        "track_id": "2X485T9Z5Ly0xyaghN73ed",
+        "name": "Let It Happen",
+        "artist": "Tame Impala"
+      },
+      {
+        "track_id": "3Rg3dajXXNOuWLC95gPMrq",
+        "name": "A Hymn",
+        "artist": "Khruangbin"
+      },
+      {
+        "track_id": "3y1EzRl5UEQxxd1f6Bv2aN",
+        "name": "When I'm Small",
+        "artist": "Phantogram"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-27",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "transformation",
+        "doubt",
+        "self-worth"
+      ],
+      "stance": [
+        "reflection",
+        "gentle"
+      ],
+      "mood": [
+        "skepticism"
+      ],
+      "energy": [
+        "hushed"
+      ],
+      "setting": [
+        "neon"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "55WNlLuVqXJM4DQRxXWSTh",
+        "name": "give up, give in",
+        "artist": "Violette Wautier"
+      },
+      {
+        "track_id": "79RJg6MqIJlBuedcMqB9F0",
+        "name": "My Body Isn't Ready",
+        "artist": "sombr"
+      },
+      {
+        "track_id": "19woxaSpjOefa2JnAOoqW5",
+        "name": "Garden (Say It Like Dat)",
+        "artist": "SZA"
+      },
+      {
+        "track_id": "1bjeWoagtHmUKputLVyDxQ",
+        "name": "Saturn",
+        "artist": "SZA"
+      },
+      {
+        "track_id": "6mavVLsxaa4YcPje9qZKcf",
+        "name": "When This Rain Stops",
+        "artist": "WENDY"
+      },
+      {
+        "track_id": "1nwS2dkzE8XIFbDOMbjvKv",
+        "name": "Back to Life - from \"Bumblebee\"",
+        "artist": "Hailee Steinfeld"
+      },
+      {
+        "track_id": "1ixbwbeBi5ufN4noUKmW5a",
+        "name": "Paper Planes",
+        "artist": "M.I.A."
+      },
+      {
+        "track_id": "6GyFP1nfCDB8lbD2bG0Hq9",
+        "name": "Midnight City",
+        "artist": "M83"
+      },
+      {
+        "track_id": "1GexRDFzRQpNkflfXgI2lM",
+        "name": "Tough Luck",
+        "artist": "Laufey"
+      },
+      {
+        "track_id": "1qbmS6ep2hbBRaEZFpn7BX",
+        "name": "Man I Need",
+        "artist": "Olivia Dean"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-28",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "sorrow",
+        "optimistic",
+        "affectionate",
+        "relaxed"
+      ],
+      "stance": [
+        "sunshine",
+        "ambiguous"
+      ],
+      "mood": [
+        "dark",
+        "solitary"
+      ],
+      "energy": [
+        "minimal"
+      ],
+      "setting": [
+        "club"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "3gJAFFELdZyIM8tiwLAikg",
+        "name": "Handlebars (feat. Dua Lipa)",
+        "artist": "JENNIE, Dua Lipa"
+      },
+      {
+        "track_id": "161DnLWsx1i3u1JT05lzqU",
+        "name": "Talking to the Moon",
+        "artist": "Bruno Mars"
+      },
+      {
+        "track_id": "3jt1ZVIuluGkV0sWWLSUzw",
+        "name": "Appointments",
+        "artist": "Julien Baker"
+      },
+      {
+        "track_id": "77zf87QsAz3H4XrENZOerR",
+        "name": "Death Stranding",
+        "artist": "CHVRCHES"
+      },
+      {
+        "track_id": "5DNODaGLQJIKWWsHaWT7fk",
+        "name": "Hey Now - ARTY Remix",
+        "artist": "London Grammar, ARTY"
+      },
+      {
+        "track_id": "1oAwsWBovWRIp7qLMGPIet",
+        "name": "Apocalypse",
+        "artist": "Cigarettes After Sex"
+      },
+      {
+        "track_id": "0JmnkIqdlnUzPaf8sqBRs3",
+        "name": "Moonlight",
+        "artist": "Kali Uchis"
+      },
+      {
+        "track_id": "0yuAWlxq59xT3agQ965OxE",
+        "name": "Sunsetz",
+        "artist": "Cigarettes After Sex"
+      },
+      {
+        "track_id": "1dGr1c8CrMLDpV6mPbImSI",
+        "name": "Lover",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "1KCMF9fdF7sNE74R2V46af",
+        "name": "You",
+        "artist": "Lane 8, Kasablanca"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-29",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "insecurity",
+        "rebellious",
+        "change",
+        "joy"
+      ],
+      "stance": [],
+      "mood": [
+        "magic",
+        "imaginative"
+      ],
+      "energy": [
+        "groovy"
+      ],
+      "setting": [
+        "forest"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "0y60itmpH0aPKsFiGxmtnh",
+        "name": "Wait a Minute!",
+        "artist": "WILLOW"
+      },
+      {
+        "track_id": "0V3wPSX9ygBnCm8psDIegu",
+        "name": "Anti-Hero",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "13P5rwmk2EsoFRIz9UCeh9",
+        "name": "Cool Kids",
+        "artist": "Echosmith"
+      },
+      {
+        "track_id": "79RJg6MqIJlBuedcMqB9F0",
+        "name": "My Body Isn't Ready",
+        "artist": "sombr"
+      },
+      {
+        "track_id": "50aQbgfdydBXABx2gATQHn",
+        "name": "dance all night",
+        "artist": "ROSÉ"
+      },
+      {
+        "track_id": "6dGnYIeXmHdcikdzNNDMm2",
+        "name": "Here Comes The Sun - Remastered 2009",
+        "artist": "The Beatles"
+      },
+      {
+        "track_id": "2X485T9Z5Ly0xyaghN73ed",
+        "name": "Let It Happen",
+        "artist": "Tame Impala"
+      },
+      {
+        "track_id": "4BY4V1T0RJK1HmD2Q0ClyK",
+        "name": "Oblivion",
+        "artist": "Grimes"
+      },
+      {
+        "track_id": "2nvC4i2aMo4CzRjRflysah",
+        "name": "In My Place",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "4ytyLpIwUXbdFsNOvgNnmP",
+        "name": "Four Seasons",
+        "artist": "TAEYEON"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "en-30",
+    "language": "en",
+    "brief": {
+      "themes": [
+        "ironic",
+        "alone",
+        "invention"
+      ],
+      "stance": [
+        "outdoors",
+        "whimsical"
+      ],
+      "mood": [
+        "party"
+      ],
+      "energy": [],
+      "setting": [
+        "party"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "3gJAFFELdZyIM8tiwLAikg",
+        "name": "Handlebars (feat. Dua Lipa)",
+        "artist": "JENNIE, Dua Lipa"
+      },
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "1GP8VW5Wk2w2obkWjGCGXd",
+        "name": "So High School",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "2OzhQlSqBEmt7hmkYxfT6m",
+        "name": "Fortnight (feat. Post Malone)",
+        "artist": "Taylor Swift, Post Malone"
+      },
+      {
+        "track_id": "4rh7wySe2iEyEDEEzstKkt",
+        "name": "Come Alive (feat. Toro y Moi)",
+        "artist": "Chromeo, Toro y Moi"
+      },
+      {
+        "track_id": "57RA3JGafJm5zRtKJiKPIm",
+        "name": "Are You Bored Yet? (feat. Clairo)",
+        "artist": "Wallows, Clairo"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      },
+      {
+        "track_id": "161DnLWsx1i3u1JT05lzqU",
+        "name": "Talking to the Moon",
+        "artist": "Bruno Mars"
+      },
+      {
+        "track_id": "1ggsR5kCepKTW4F64bCFdV",
+        "name": "Cheerleader",
+        "artist": "Porter Robinson"
+      },
+      {
+        "track_id": "3SEZEyvEALlomED5xFeqOs",
+        "name": "summer depression",
+        "artist": "girl in red"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-01",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "pining",
+        "whimsical",
+        "mysterious"
+      ],
+      "stance": [
+        "haunting",
+        "autonomy"
+      ],
+      "mood": [
+        "dreamy",
+        "travel"
+      ],
+      "energy": [
+        "slow"
+      ],
+      "setting": [
+        "nature"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "0AxZUYeQ9bZwSdt1LmZuok",
+        "name": "Heaven or Las Vegas",
+        "artist": "Cocteau Twins"
+      },
+      {
+        "track_id": "41lw42I7uyqwPEQOPZwcOG",
+        "name": "Star",
+        "artist": "Heize"
+      },
+      {
+        "track_id": "0ofHAoxe9vBkTCp2UQIavz",
+        "name": "Dreams - 2004 Remaster",
+        "artist": "Fleetwood Mac"
+      },
+      {
+        "track_id": "0Jirkb7LGNWyVhKOsKFdZ2",
+        "name": "Run Away With Me",
+        "artist": "Carly Rae Jepsen"
+      },
+      {
+        "track_id": "2X485T9Z5Ly0xyaghN73ed",
+        "name": "Let It Happen",
+        "artist": "Tame Impala"
+      },
+      {
+        "track_id": "34WI9hCaE3AzbOYT9wFXLP",
+        "name": "High And Low",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "3pDGJRDN3p6kCNZcD97FYY",
+        "name": "Cosmic",
+        "artist": "Red Velvet"
+      },
+      {
+        "track_id": "4BY4V1T0RJK1HmD2Q0ClyK",
+        "name": "Oblivion",
+        "artist": "Grimes"
+      },
+      {
+        "track_id": "6rVCUwfnuYTAsX4P9fIdIu",
+        "name": "Dreams Come True",
+        "artist": "aespa"
+      },
+      {
+        "track_id": "1bjeWoagtHmUKputLVyDxQ",
+        "name": "Saturn",
+        "artist": "SZA"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-02",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "brooding",
+        "bittersweet",
+        "independence",
+        "childhood"
+      ],
+      "stance": [
+        "creative"
+      ],
+      "mood": [
+        "self-discovery"
+      ],
+      "energy": [
+        "ambient"
+      ],
+      "setting": [
+        "rain"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "1GP8VW5Wk2w2obkWjGCGXd",
+        "name": "So High School",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "2OzhQlSqBEmt7hmkYxfT6m",
+        "name": "Fortnight (feat. Post Malone)",
+        "artist": "Taylor Swift, Post Malone"
+      },
+      {
+        "track_id": "4rh7wySe2iEyEDEEzstKkt",
+        "name": "Come Alive (feat. Toro y Moi)",
+        "artist": "Chromeo, Toro y Moi"
+      },
+      {
+        "track_id": "57RA3JGafJm5zRtKJiKPIm",
+        "name": "Are You Bored Yet? (feat. Clairo)",
+        "artist": "Wallows, Clairo"
+      },
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "3y1EzRl5UEQxxd1f6Bv2aN",
+        "name": "When I'm Small",
+        "artist": "Phantogram"
+      },
+      {
+        "track_id": "48SGNp7AHeujwoPID3UCmn",
+        "name": "ฝันที่ไม่ปลอดภัย",
+        "artist": "Television off"
+      },
+      {
+        "track_id": "1oAwsWBovWRIp7qLMGPIet",
+        "name": "Apocalypse",
+        "artist": "Cigarettes After Sex"
+      },
+      {
+        "track_id": "7fax7NlxOq2X9kMZw8QLE2",
+        "name": "Tailwhip",
+        "artist": "Men I Trust"
+      },
+      {
+        "track_id": "7rVVBxV1Shckul3R8alUqw",
+        "name": "Sleepwalking",
+        "artist": "The Chain Gang Of 1974"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-03",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "doubt",
+        "wonder",
+        "past",
+        "affection"
+      ],
+      "stance": [],
+      "mood": [
+        "ambiguous"
+      ],
+      "energy": [],
+      "setting": [
+        "steady"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "5yvVYFDUpbnjcnRBgjwTzM",
+        "name": "Dracula (with JENNIE)",
+        "artist": "Tame Impala, JENNIE"
+      },
+      {
+        "track_id": "1CzBBeZ0OQr7Fvh9VzMAv1",
+        "name": "สักวันจะไม่แตกสลาย (Dear Trauma)",
+        "artist": "FREEHAND"
+      },
+      {
+        "track_id": "55WNlLuVqXJM4DQRxXWSTh",
+        "name": "give up, give in",
+        "artist": "Violette Wautier"
+      },
+      {
+        "track_id": "79RJg6MqIJlBuedcMqB9F0",
+        "name": "My Body Isn't Ready",
+        "artist": "sombr"
+      },
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      },
+      {
+        "track_id": "0ofHAoxe9vBkTCp2UQIavz",
+        "name": "Dreams - 2004 Remaster",
+        "artist": "Fleetwood Mac"
+      },
+      {
+        "track_id": "1ujxjsoNvh4XgS2fUNwkZ2",
+        "name": "Space Song",
+        "artist": "Beach House"
+      },
+      {
+        "track_id": "34WI9hCaE3AzbOYT9wFXLP",
+        "name": "High And Low",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "5r5cp9IpziiIsR6b93vcnQ",
+        "name": "Walking On A Dream",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "0V3wPSX9ygBnCm8psDIegu",
+        "name": "Anti-Hero",
+        "artist": "Taylor Swift"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-04",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "closeness",
+        "magic",
+        "intimacy",
+        "stillness"
+      ],
+      "stance": [
+        "mysterious",
+        "darkness"
+      ],
+      "mood": [
+        "car"
+      ],
+      "energy": [
+        "still"
+      ],
+      "setting": [
+        "road"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "0yuAWlxq59xT3agQ965OxE",
+        "name": "Sunsetz",
+        "artist": "Cigarettes After Sex"
+      },
+      {
+        "track_id": "1LzNfuep1bnAUR9skqdHCK",
+        "name": "Fade Into You",
+        "artist": "Mazzy Star"
+      },
+      {
+        "track_id": "1oAwsWBovWRIp7qLMGPIet",
+        "name": "Apocalypse",
+        "artist": "Cigarettes After Sex"
+      },
+      {
+        "track_id": "32XaqPVTVkkuOiOPQZ3SpA",
+        "name": "midnight love",
+        "artist": "girl in red"
+      },
+      {
+        "track_id": "0JmnkIqdlnUzPaf8sqBRs3",
+        "name": "Moonlight",
+        "artist": "Kali Uchis"
+      },
+      {
+        "track_id": "0Jirkb7LGNWyVhKOsKFdZ2",
+        "name": "Run Away With Me",
+        "artist": "Carly Rae Jepsen"
+      },
+      {
+        "track_id": "0QR1ZEGe5QBEYpmzh6PGov",
+        "name": "นานนาน",
+        "artist": "Whal & Dolph"
+      },
+      {
+        "track_id": "1v1oIWf2Xgh54kIWuKsDf6",
+        "name": "Runaway",
+        "artist": "AURORA"
+      },
+      {
+        "track_id": "2ctvdKmETyOzPb2GiJJT53",
+        "name": "Breathe (In the Air)",
+        "artist": "Pink Floyd"
+      },
+      {
+        "track_id": "2g0LdZQce9xlcHb1mBJyuz",
+        "name": "strawberry moon",
+        "artist": "IU"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-05",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "strength",
+        "euphoria",
+        "midnight",
+        "playful"
+      ],
+      "stance": [
+        "playful",
+        "rainy"
+      ],
+      "mood": [
+        "dream",
+        "affectionate"
+      ],
+      "energy": [
+        "fast"
+      ],
+      "setting": [
+        "sea"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "6SwnPNYCf3q4WsUQkMzAiI",
+        "name": "Hearsay",
+        "artist": "LANDOKMAI"
+      },
+      {
+        "track_id": "1GP8VW5Wk2w2obkWjGCGXd",
+        "name": "So High School",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "2OzhQlSqBEmt7hmkYxfT6m",
+        "name": "Fortnight (feat. Post Malone)",
+        "artist": "Taylor Swift, Post Malone"
+      },
+      {
+        "track_id": "4rh7wySe2iEyEDEEzstKkt",
+        "name": "Come Alive (feat. Toro y Moi)",
+        "artist": "Chromeo, Toro y Moi"
+      },
+      {
+        "track_id": "57RA3JGafJm5zRtKJiKPIm",
+        "name": "Are You Bored Yet? (feat. Clairo)",
+        "artist": "Wallows, Clairo"
+      },
+      {
+        "track_id": "51t4KpMubQMCQXV8T4lK3F",
+        "name": "Self Love",
+        "artist": "BLOND:ISH"
+      },
+      {
+        "track_id": "3gJAFFELdZyIM8tiwLAikg",
+        "name": "Handlebars (feat. Dua Lipa)",
+        "artist": "JENNIE, Dua Lipa"
+      },
+      {
+        "track_id": "0Jirkb7LGNWyVhKOsKFdZ2",
+        "name": "Run Away With Me",
+        "artist": "Carly Rae Jepsen"
+      },
+      {
+        "track_id": "2X485T9Z5Ly0xyaghN73ed",
+        "name": "Let It Happen",
+        "artist": "Tame Impala"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-06",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "dream",
+        "tenderness",
+        "night",
+        "dream"
+      ],
+      "stance": [],
+      "mood": [
+        "creativity"
+      ],
+      "energy": [
+        "upbeat"
+      ],
+      "setting": [
+        "familiar"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "5r5cp9IpziiIsR6b93vcnQ",
+        "name": "Walking On A Dream",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "0PG9fbaaHFHfre2gUVo7AN",
+        "name": "Please Me",
+        "artist": "Cardi B, Bruno Mars"
+      },
+      {
+        "track_id": "0ug5NqcwcFR2xrfTkc7k8e",
+        "name": "Style",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0y60itmpH0aPKsFiGxmtnh",
+        "name": "Wait a Minute!",
+        "artist": "WILLOW"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      },
+      {
+        "track_id": "3gJAFFELdZyIM8tiwLAikg",
+        "name": "Handlebars (feat. Dua Lipa)",
+        "artist": "JENNIE, Dua Lipa"
+      },
+      {
+        "track_id": "0cHtr7i0P0TpEODZr2WZDE",
+        "name": "ดาวหางฮัลเลย์",
+        "artist": "fellow fellow"
+      },
+      {
+        "track_id": "34WI9hCaE3AzbOYT9wFXLP",
+        "name": "High And Low",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "3pDGJRDN3p6kCNZcD97FYY",
+        "name": "Cosmic",
+        "artist": "Red Velvet"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-07",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "neon",
+        "ambiguous",
+        "freedom",
+        "dream"
+      ],
+      "stance": [
+        "defiance",
+        "mellow"
+      ],
+      "mood": [
+        "sea"
+      ],
+      "energy": [],
+      "setting": [
+        "urban"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "6GyFP1nfCDB8lbD2bG0Hq9",
+        "name": "Midnight City",
+        "artist": "M83"
+      },
+      {
+        "track_id": "1ixbwbeBi5ufN4noUKmW5a",
+        "name": "Paper Planes",
+        "artist": "M.I.A."
+      },
+      {
+        "track_id": "70pVCVMGjmIWPbWXDwf11e",
+        "name": "petal",
+        "artist": "Ariana Grande"
+      },
+      {
+        "track_id": "18mNRyfNGQvVfwTJo27sNR",
+        "name": "Go!",
+        "artist": "M83, MAI LAN"
+      },
+      {
+        "track_id": "1v1oIWf2Xgh54kIWuKsDf6",
+        "name": "Runaway",
+        "artist": "AURORA"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      },
+      {
+        "track_id": "2PRXyTkFmU0itou1ii4BPa",
+        "name": "Shine",
+        "artist": "Olly Alexander (Years & Years)"
+      },
+      {
+        "track_id": "30VHURM5NOfoZmqp2iKawS",
+        "name": "Butterflies",
+        "artist": "Kacey Musgraves"
+      },
+      {
+        "track_id": "50aQbgfdydBXABx2gATQHn",
+        "name": "dance all night",
+        "artist": "ROSÉ"
+      },
+      {
+        "track_id": "7yFMhCJOsH7khgpdnyrZAZ",
+        "name": "Ride",
+        "artist": "Lana Del Rey"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-08",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "street",
+        "stars"
+      ],
+      "stance": [],
+      "mood": [
+        "romance"
+      ],
+      "energy": [],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "1dGr1c8CrMLDpV6mPbImSI",
+        "name": "Lover",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "6GyFP1nfCDB8lbD2bG0Hq9",
+        "name": "Midnight City",
+        "artist": "M83"
+      },
+      {
+        "track_id": "2ctvdKmETyOzPb2GiJJT53",
+        "name": "Breathe (In the Air)",
+        "artist": "Pink Floyd"
+      },
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      },
+      {
+        "track_id": "6qOWwJlt1TOQ0V4Mji4Ytx",
+        "name": "ดำสนิท",
+        "artist": "Hugo"
+      },
+      {
+        "track_id": "00Hj710RrsLX5s9bothwlW",
+        "name": "ไวน์",
+        "artist": "Max Jenmana"
+      },
+      {
+        "track_id": "01aNqddaggrPJYUIdRApRD",
+        "name": "bad enough",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "086myS9r57YsLbJpU0TgK9",
+        "name": "Why'd You Only Call Me When You're High?",
+        "artist": "Arctic Monkeys"
+      },
+      {
+        "track_id": "0AxZUYeQ9bZwSdt1LmZuok",
+        "name": "Heaven or Las Vegas",
+        "artist": "Cocteau Twins"
+      },
+      {
+        "track_id": "0b16LTzby1YRVd2nq2Z0fw",
+        "name": "State Of Grace",
+        "artist": "Taylor Swift"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-09",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "insecurity",
+        "recharging"
+      ],
+      "stance": [
+        "hopeful"
+      ],
+      "mood": [
+        "imaginative"
+      ],
+      "energy": [
+        "minimal"
+      ],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "79RJg6MqIJlBuedcMqB9F0",
+        "name": "My Body Isn't Ready",
+        "artist": "sombr"
+      },
+      {
+        "track_id": "6rY5FAWxCdAGllYEOZMbjW",
+        "name": "SLOW DANCING IN THE DARK",
+        "artist": "Joji"
+      },
+      {
+        "track_id": "0V3wPSX9ygBnCm8psDIegu",
+        "name": "Anti-Hero",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "13P5rwmk2EsoFRIz9UCeh9",
+        "name": "Cool Kids",
+        "artist": "Echosmith"
+      },
+      {
+        "track_id": "0PG9fbaaHFHfre2gUVo7AN",
+        "name": "Please Me",
+        "artist": "Cardi B, Bruno Mars"
+      },
+      {
+        "track_id": "0ug5NqcwcFR2xrfTkc7k8e",
+        "name": "Style",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0y60itmpH0aPKsFiGxmtnh",
+        "name": "Wait a Minute!",
+        "artist": "WILLOW"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      },
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "3gJAFFELdZyIM8tiwLAikg",
+        "name": "Handlebars (feat. Dua Lipa)",
+        "artist": "JENNIE, Dua Lipa"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-10",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "imagination",
+        "wonder",
+        "recharging"
+      ],
+      "stance": [
+        "haunting"
+      ],
+      "mood": [
+        "nature",
+        "rain"
+      ],
+      "energy": [
+        "slow"
+      ],
+      "setting": [
+        "summer"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "0KVWVuutF9Dn8li4HdyAeU",
+        "name": "Archie, Marry Me",
+        "artist": "Alvvays"
+      },
+      {
+        "track_id": "3hUxzQpSfdDqwM3ZTFQY0K",
+        "name": "august",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      },
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "6rVCUwfnuYTAsX4P9fIdIu",
+        "name": "Dreams Come True",
+        "artist": "aespa"
+      },
+      {
+        "track_id": "2FHegFORo2cE19Rph47N0d",
+        "name": "ดินแดน ( Din Dan )",
+        "artist": "Safeplanet"
+      },
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "0I1cHghDEtreiO6tRrh2wm",
+        "name": "Llego",
+        "artist": "Empire Of The Sun, Danny Ocean, FIFA Sound"
+      },
+      {
+        "track_id": "0ug5NqcwcFR2xrfTkc7k8e",
+        "name": "Style",
+        "artist": "Taylor Swift"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-11",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "sky",
+        "closeness"
+      ],
+      "stance": [
+        "belonging"
+      ],
+      "mood": [
+        "heartbreak",
+        "crush"
+      ],
+      "energy": [],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "17UaCbdhkzTaCj4DbKTrPW",
+        "name": "Soft Sounds from Another Planet",
+        "artist": "Japanese Breakfast"
+      },
+      {
+        "track_id": "1GP8VW5Wk2w2obkWjGCGXd",
+        "name": "So High School",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "2OzhQlSqBEmt7hmkYxfT6m",
+        "name": "Fortnight (feat. Post Malone)",
+        "artist": "Taylor Swift, Post Malone"
+      },
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "4rh7wySe2iEyEDEEzstKkt",
+        "name": "Come Alive (feat. Toro y Moi)",
+        "artist": "Chromeo, Toro y Moi"
+      },
+      {
+        "track_id": "57RA3JGafJm5zRtKJiKPIm",
+        "name": "Are You Bored Yet? (feat. Clairo)",
+        "artist": "Wallows, Clairo"
+      },
+      {
+        "track_id": "2ctvdKmETyOzPb2GiJJT53",
+        "name": "Breathe (In the Air)",
+        "artist": "Pink Floyd"
+      },
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      },
+      {
+        "track_id": "6qOWwJlt1TOQ0V4Mji4Ytx",
+        "name": "ดำสนิท",
+        "artist": "Hugo"
+      },
+      {
+        "track_id": "1KCMF9fdF7sNE74R2V46af",
+        "name": "You",
+        "artist": "Lane 8, Kasablanca"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-12",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "whimsical",
+        "familiar",
+        "critique"
+      ],
+      "stance": [
+        "brooding"
+      ],
+      "mood": [
+        "joyful",
+        "skepticism"
+      ],
+      "energy": [
+        "upbeat"
+      ],
+      "setting": [
+        "dancing"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "3gJAFFELdZyIM8tiwLAikg",
+        "name": "Handlebars (feat. Dua Lipa)",
+        "artist": "JENNIE, Dua Lipa"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "11ozIUBoXAgRTVWelDn4pL",
+        "name": "Lights",
+        "artist": "Ellie Goulding"
+      },
+      {
+        "track_id": "2PRXyTkFmU0itou1ii4BPa",
+        "name": "Shine",
+        "artist": "Olly Alexander (Years & Years)"
+      },
+      {
+        "track_id": "30VHURM5NOfoZmqp2iKawS",
+        "name": "Butterflies",
+        "artist": "Kacey Musgraves"
+      },
+      {
+        "track_id": "36vmaZyO0iAE6FZ7287fg2",
+        "name": "Dive",
+        "artist": "Olivia Dean"
+      },
+      {
+        "track_id": "50aQbgfdydBXABx2gATQHn",
+        "name": "dance all night",
+        "artist": "ROSÉ"
+      },
+      {
+        "track_id": "51t4KpMubQMCQXV8T4lK3F",
+        "name": "Self Love",
+        "artist": "BLOND:ISH"
+      },
+      {
+        "track_id": "59wlTaYOL5tDUgXnbBQ3my",
+        "name": "A Moment Apart",
+        "artist": "ODESZA"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-13",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "dark",
+        "sky",
+        "gentle"
+      ],
+      "stance": [
+        "ambiguous"
+      ],
+      "mood": [
+        "sad",
+        "missing"
+      ],
+      "energy": [
+        "hushed"
+      ],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      },
+      {
+        "track_id": "2ctvdKmETyOzPb2GiJJT53",
+        "name": "Breathe (In the Air)",
+        "artist": "Pink Floyd"
+      },
+      {
+        "track_id": "6qOWwJlt1TOQ0V4Mji4Ytx",
+        "name": "ดำสนิท",
+        "artist": "Hugo"
+      },
+      {
+        "track_id": "00Hj710RrsLX5s9bothwlW",
+        "name": "ไวน์",
+        "artist": "Max Jenmana"
+      },
+      {
+        "track_id": "01aNqddaggrPJYUIdRApRD",
+        "name": "bad enough",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "0bkW98npv8EsWQ2fXFzK56",
+        "name": "From Eden",
+        "artist": "Hozier"
+      },
+      {
+        "track_id": "0D9lpJts3mXxe0fvovYUFv",
+        "name": "จากตรงนี้ที่(เคย)สวยงาม [La La Bye]",
+        "artist": "AYLA's"
+      },
+      {
+        "track_id": "0dpyzcT3RMNNSd2xKBf35I",
+        "name": "Be Sweet",
+        "artist": "Japanese Breakfast"
+      },
+      {
+        "track_id": "0fBSs3fRoh1yJcne77fdu9",
+        "name": "Video Games",
+        "artist": "Lana Del Rey"
+      },
+      {
+        "track_id": "0IVHlst3XMgzXUJbIyZ8oO",
+        "name": "Without You",
+        "artist": "Oh Wonder"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-14",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "dream",
+        "thoughtful",
+        "closeness",
+        "imaginative"
+      ],
+      "stance": [],
+      "mood": [
+        "insecurity"
+      ],
+      "energy": [],
+      "setting": [
+        "club"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "3gJAFFELdZyIM8tiwLAikg",
+        "name": "Handlebars (feat. Dua Lipa)",
+        "artist": "JENNIE, Dua Lipa"
+      },
+      {
+        "track_id": "2GMENhG1ga12aWFMfzq9vN",
+        "name": "ความลับของดวงจันทร์",
+        "artist": "FREEHAND"
+      },
+      {
+        "track_id": "1ggsR5kCepKTW4F64bCFdV",
+        "name": "Cheerleader",
+        "artist": "Porter Robinson"
+      },
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "1ujxjsoNvh4XgS2fUNwkZ2",
+        "name": "Space Song",
+        "artist": "Beach House"
+      },
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      },
+      {
+        "track_id": "1KCMF9fdF7sNE74R2V46af",
+        "name": "You",
+        "artist": "Lane 8, Kasablanca"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      },
+      {
+        "track_id": "2FHegFORo2cE19Rph47N0d",
+        "name": "ดินแดน ( Din Dan )",
+        "artist": "Safeplanet"
+      },
+      {
+        "track_id": "0cHtr7i0P0TpEODZr2WZDE",
+        "name": "ดาวหางฮัลเลย์",
+        "artist": "fellow fellow"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-15",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "moonlit",
+        "dancing",
+        "self-doubt"
+      ],
+      "stance": [
+        "transformation"
+      ],
+      "mood": [
+        "surreal",
+        "imagination"
+      ],
+      "energy": [
+        "restrained"
+      ],
+      "setting": [
+        "club"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "1CzBBeZ0OQr7Fvh9VzMAv1",
+        "name": "สักวันจะไม่แตกสลาย (Dear Trauma)",
+        "artist": "FREEHAND"
+      },
+      {
+        "track_id": "55WNlLuVqXJM4DQRxXWSTh",
+        "name": "give up, give in",
+        "artist": "Violette Wautier"
+      },
+      {
+        "track_id": "79RJg6MqIJlBuedcMqB9F0",
+        "name": "My Body Isn't Ready",
+        "artist": "sombr"
+      },
+      {
+        "track_id": "01aNqddaggrPJYUIdRApRD",
+        "name": "bad enough",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "19woxaSpjOefa2JnAOoqW5",
+        "name": "Garden (Say It Like Dat)",
+        "artist": "SZA"
+      },
+      {
+        "track_id": "1bjeWoagtHmUKputLVyDxQ",
+        "name": "Saturn",
+        "artist": "SZA"
+      },
+      {
+        "track_id": "1eZyd1mtOmlQu3YhSYmes7",
+        "name": "lovergirl",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "325toqbCzE1g1pYIED7U4C",
+        "name": "Take It Back",
+        "artist": "Pink Floyd"
+      },
+      {
+        "track_id": "3RamvFV2OtTv3kozKLZnvP",
+        "name": "Quarrel",
+        "artist": "Moses Sumney"
+      },
+      {
+        "track_id": "3UoULw70kMsiVXxW0L3A33",
+        "name": "pov",
+        "artist": "Ariana Grande"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-16",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "rainy",
+        "stars",
+        "eerie",
+        "quiet"
+      ],
+      "stance": [
+        "fun",
+        "stars"
+      ],
+      "mood": [
+        "escape"
+      ],
+      "energy": [
+        "intense"
+      ],
+      "setting": [
+        "stability"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "1uvyZBs4IZYRebHIB1747m",
+        "name": "Purple Rain",
+        "artist": "Prince"
+      },
+      {
+        "track_id": "086myS9r57YsLbJpU0TgK9",
+        "name": "Why'd You Only Call Me When You're High?",
+        "artist": "Arctic Monkeys"
+      },
+      {
+        "track_id": "0b16LTzby1YRVd2nq2Z0fw",
+        "name": "State Of Grace",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0cHtr7i0P0TpEODZr2WZDE",
+        "name": "ดาวหางฮัลเลย์",
+        "artist": "fellow fellow"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "0I1cHghDEtreiO6tRrh2wm",
+        "name": "Llego",
+        "artist": "Empire Of The Sun, Danny Ocean, FIFA Sound"
+      },
+      {
+        "track_id": "0Jirkb7LGNWyVhKOsKFdZ2",
+        "name": "Run Away With Me",
+        "artist": "Carly Rae Jepsen"
+      },
+      {
+        "track_id": "0kN8xEmgMW9mh7UmDYHlJP",
+        "name": "Versace on the Floor",
+        "artist": "Bruno Mars"
+      },
+      {
+        "track_id": "0KVWVuutF9Dn8li4HdyAeU",
+        "name": "Archie, Marry Me",
+        "artist": "Alvvays"
+      },
+      {
+        "track_id": "0l4DTppOxy7NUaEcwXuOb6",
+        "name": "Animal",
+        "artist": "Neon Trees"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-17",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "dreams",
+        "solitary",
+        "love"
+      ],
+      "stance": [
+        "doubt"
+      ],
+      "mood": [
+        "stars",
+        "goodbye"
+      ],
+      "energy": [],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "0V3wPSX9ygBnCm8psDIegu",
+        "name": "Anti-Hero",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "6rVCUwfnuYTAsX4P9fIdIu",
+        "name": "Dreams Come True",
+        "artist": "aespa"
+      },
+      {
+        "track_id": "0cHtr7i0P0TpEODZr2WZDE",
+        "name": "ดาวหางฮัลเลย์",
+        "artist": "fellow fellow"
+      },
+      {
+        "track_id": "3pDGJRDN3p6kCNZcD97FYY",
+        "name": "Cosmic",
+        "artist": "Red Velvet"
+      },
+      {
+        "track_id": "0ofHAoxe9vBkTCp2UQIavz",
+        "name": "Dreams - 2004 Remaster",
+        "artist": "Fleetwood Mac"
+      },
+      {
+        "track_id": "34WI9hCaE3AzbOYT9wFXLP",
+        "name": "High And Low",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "41lw42I7uyqwPEQOPZwcOG",
+        "name": "Star",
+        "artist": "Heize"
+      },
+      {
+        "track_id": "00Hj710RrsLX5s9bothwlW",
+        "name": "ไวน์",
+        "artist": "Max Jenmana"
+      },
+      {
+        "track_id": "0b16LTzby1YRVd2nq2Z0fw",
+        "name": "State Of Grace",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0fBSs3fRoh1yJcne77fdu9",
+        "name": "Video Games",
+        "artist": "Lana Del Rey"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-18",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "alone",
+        "soft",
+        "stars"
+      ],
+      "stance": [],
+      "mood": [
+        "creative"
+      ],
+      "energy": [
+        "groovy"
+      ],
+      "setting": [
+        "summer"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "0KVWVuutF9Dn8li4HdyAeU",
+        "name": "Archie, Marry Me",
+        "artist": "Alvvays"
+      },
+      {
+        "track_id": "3hUxzQpSfdDqwM3ZTFQY0K",
+        "name": "august",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0ug5NqcwcFR2xrfTkc7k8e",
+        "name": "Style",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0y60itmpH0aPKsFiGxmtnh",
+        "name": "Wait a Minute!",
+        "artist": "WILLOW"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      },
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "0I1cHghDEtreiO6tRrh2wm",
+        "name": "Llego",
+        "artist": "Empire Of The Sun, Danny Ocean, FIFA Sound"
+      },
+      {
+        "track_id": "11ozIUBoXAgRTVWelDn4pL",
+        "name": "Lights",
+        "artist": "Ellie Goulding"
+      },
+      {
+        "track_id": "1CSAUEapYQQOD50ardFG0K",
+        "name": "Glide",
+        "artist": "NEIKED, Portugal. The Man"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-19",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "dark",
+        "past"
+      ],
+      "stance": [
+        "stars",
+        "thoughtful"
+      ],
+      "mood": [
+        "mystery"
+      ],
+      "energy": [
+        "danceable"
+      ],
+      "setting": [
+        "summer"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "0KVWVuutF9Dn8li4HdyAeU",
+        "name": "Archie, Marry Me",
+        "artist": "Alvvays"
+      },
+      {
+        "track_id": "3hUxzQpSfdDqwM3ZTFQY0K",
+        "name": "august",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "5yvVYFDUpbnjcnRBgjwTzM",
+        "name": "Dracula (with JENNIE)",
+        "artist": "Tame Impala, JENNIE"
+      },
+      {
+        "track_id": "0ug5NqcwcFR2xrfTkc7k8e",
+        "name": "Style",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "1CSAUEapYQQOD50ardFG0K",
+        "name": "Glide",
+        "artist": "NEIKED, Portugal. The Man"
+      },
+      {
+        "track_id": "1GP8VW5Wk2w2obkWjGCGXd",
+        "name": "So High School",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "0I1cHghDEtreiO6tRrh2wm",
+        "name": "Llego",
+        "artist": "Empire Of The Sun, Danny Ocean, FIFA Sound"
+      },
+      {
+        "track_id": "0y60itmpH0aPKsFiGxmtnh",
+        "name": "Wait a Minute!",
+        "artist": "WILLOW"
+      },
+      {
+        "track_id": "11ozIUBoXAgRTVWelDn4pL",
+        "name": "Lights",
+        "artist": "Ellie Goulding"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-20",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "skeptical",
+        "recharging",
+        "dreamy",
+        "playful"
+      ],
+      "stance": [],
+      "mood": [
+        "eerie",
+        "anxiety"
+      ],
+      "energy": [
+        "driving"
+      ],
+      "setting": [
+        "grounded"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "5yvVYFDUpbnjcnRBgjwTzM",
+        "name": "Dracula (with JENNIE)",
+        "artist": "Tame Impala, JENNIE"
+      },
+      {
+        "track_id": "3gJAFFELdZyIM8tiwLAikg",
+        "name": "Handlebars (feat. Dua Lipa)",
+        "artist": "JENNIE, Dua Lipa"
+      },
+      {
+        "track_id": "1ggsR5kCepKTW4F64bCFdV",
+        "name": "Cheerleader",
+        "artist": "Porter Robinson"
+      },
+      {
+        "track_id": "34WI9hCaE3AzbOYT9wFXLP",
+        "name": "High And Low",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "5r5cp9IpziiIsR6b93vcnQ",
+        "name": "Walking On A Dream",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      },
+      {
+        "track_id": "0cHtr7i0P0TpEODZr2WZDE",
+        "name": "ดาวหางฮัลเลย์",
+        "artist": "fellow fellow"
+      },
+      {
+        "track_id": "3pDGJRDN3p6kCNZcD97FYY",
+        "name": "Cosmic",
+        "artist": "Red Velvet"
+      },
+      {
+        "track_id": "6rVCUwfnuYTAsX4P9fIdIu",
+        "name": "Dreams Come True",
+        "artist": "aespa"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-21",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "acceptance",
+        "comfort",
+        "care",
+        "wonder"
+      ],
+      "stance": [
+        "togetherness"
+      ],
+      "mood": [
+        "parting"
+      ],
+      "energy": [],
+      "setting": [
+        "nocturnal"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "17UaCbdhkzTaCj4DbKTrPW",
+        "name": "Soft Sounds from Another Planet",
+        "artist": "Japanese Breakfast"
+      },
+      {
+        "track_id": "4rh7wySe2iEyEDEEzstKkt",
+        "name": "Come Alive (feat. Toro y Moi)",
+        "artist": "Chromeo, Toro y Moi"
+      },
+      {
+        "track_id": "57RA3JGafJm5zRtKJiKPIm",
+        "name": "Are You Bored Yet? (feat. Clairo)",
+        "artist": "Wallows, Clairo"
+      },
+      {
+        "track_id": "3FtYbEfBqAlGO46NUDQSAt",
+        "name": "Electric Feel",
+        "artist": "MGMT"
+      },
+      {
+        "track_id": "1GP8VW5Wk2w2obkWjGCGXd",
+        "name": "So High School",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "2OzhQlSqBEmt7hmkYxfT6m",
+        "name": "Fortnight (feat. Post Malone)",
+        "artist": "Taylor Swift, Post Malone"
+      },
+      {
+        "track_id": "5JVbvCHX10U2pLa5DEqGav",
+        "name": "Safe and Sound",
+        "artist": "Capital Cities"
+      },
+      {
+        "track_id": "63oA4hG0SqvsUFfaEhgqVX",
+        "name": "อยากจะกอดเธอนาน ๆ (HAVE A GOOD TIME)",
+        "artist": "BLVCKHEART"
+      },
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      },
+      {
+        "track_id": "2X485T9Z5Ly0xyaghN73ed",
+        "name": "Let It Happen",
+        "artist": "Tame Impala"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-22",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "tender",
+        "road",
+        "hope",
+        "tense"
+      ],
+      "stance": [
+        "stability"
+      ],
+      "mood": [
+        "reflective",
+        "discovery"
+      ],
+      "energy": [
+        "minimal"
+      ],
+      "setting": [
+        "city"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "3jt1ZVIuluGkV0sWWLSUzw",
+        "name": "Appointments",
+        "artist": "Julien Baker"
+      },
+      {
+        "track_id": "12YJ22eobkNvns5hYqt2Ye",
+        "name": "A Moment - from \"Project Hail Mary\"",
+        "artist": "Daniel Pemberton"
+      },
+      {
+        "track_id": "1bjeWoagtHmUKputLVyDxQ",
+        "name": "Saturn",
+        "artist": "SZA"
+      },
+      {
+        "track_id": "3hEfpBHxgieRLz4t3kLNEg",
+        "name": "About You",
+        "artist": "The 1975"
+      },
+      {
+        "track_id": "3UoULw70kMsiVXxW0L3A33",
+        "name": "pov",
+        "artist": "Ariana Grande"
+      },
+      {
+        "track_id": "5pOm6H3kvDfjM1RoAlCOoL",
+        "name": "Memento",
+        "artist": "Benjamin Varney"
+      },
+      {
+        "track_id": "6qOWwJlt1TOQ0V4Mji4Ytx",
+        "name": "ดำสนิท",
+        "artist": "Hugo"
+      },
+      {
+        "track_id": "799KrpEbhZp0MHeiA8YK9P",
+        "name": "Guilty as Sin?",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "7fax7NlxOq2X9kMZw8QLE2",
+        "name": "Tailwhip",
+        "artist": "Men I Trust"
+      },
+      {
+        "track_id": "1ixbwbeBi5ufN4noUKmW5a",
+        "name": "Paper Planes",
+        "artist": "M.I.A."
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-23",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "critique",
+        "club",
+        "frustration",
+        "rebellion"
+      ],
+      "stance": [
+        "determination",
+        "travel"
+      ],
+      "mood": [
+        "perseverance",
+        "city"
+      ],
+      "energy": [
+        "steady beat"
+      ],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "7KNFJbMvPdplvrolBUkK2N",
+        "name": "Shy Girl",
+        "artist": "Haute & Freddy"
+      },
+      {
+        "track_id": "1tGmXu0s8ob0VFjNoQlyKc",
+        "name": "Never Say Die",
+        "artist": "CHVRCHES"
+      },
+      {
+        "track_id": "4rh7wySe2iEyEDEEzstKkt",
+        "name": "Come Alive (feat. Toro y Moi)",
+        "artist": "Chromeo, Toro y Moi"
+      },
+      {
+        "track_id": "5CZ40GBx1sQ9agT82CLQCT",
+        "name": "traitor",
+        "artist": "Olivia Rodrigo"
+      },
+      {
+        "track_id": "00Hj710RrsLX5s9bothwlW",
+        "name": "ไวน์",
+        "artist": "Max Jenmana"
+      },
+      {
+        "track_id": "01aNqddaggrPJYUIdRApRD",
+        "name": "bad enough",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "086myS9r57YsLbJpU0TgK9",
+        "name": "Why'd You Only Call Me When You're High?",
+        "artist": "Arctic Monkeys"
+      },
+      {
+        "track_id": "0AxZUYeQ9bZwSdt1LmZuok",
+        "name": "Heaven or Las Vegas",
+        "artist": "Cocteau Twins"
+      },
+      {
+        "track_id": "0b16LTzby1YRVd2nq2Z0fw",
+        "name": "State Of Grace",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "0bkW98npv8EsWQ2fXFzK56",
+        "name": "From Eden",
+        "artist": "Hozier"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-24",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "wistful",
+        "goodbye",
+        "joyful",
+        "summer"
+      ],
+      "stance": [],
+      "mood": [
+        "everyday",
+        "sky"
+      ],
+      "energy": [
+        "swaying"
+      ],
+      "setting": [
+        "storm"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "3hUxzQpSfdDqwM3ZTFQY0K",
+        "name": "august",
+        "artist": "Taylor Swift"
+      },
+      {
+        "track_id": "3cLXrotzCjYCkN73PewALM",
+        "name": "Good Goodbye",
+        "artist": "HWASA"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "50aQbgfdydBXABx2gATQHn",
+        "name": "dance all night",
+        "artist": "ROSÉ"
+      },
+      {
+        "track_id": "6dGnYIeXmHdcikdzNNDMm2",
+        "name": "Here Comes The Sun - Remastered 2009",
+        "artist": "The Beatles"
+      },
+      {
+        "track_id": "0IVHlst3XMgzXUJbIyZ8oO",
+        "name": "Without You",
+        "artist": "Oh Wonder"
+      },
+      {
+        "track_id": "2PL9IBLQvJjE7hqCQyJl2g",
+        "name": "Turn",
+        "artist": "The Wombats"
+      },
+      {
+        "track_id": "3A02hWQ2ebOFDWSbAMNnpw",
+        "name": "bittersweet",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "4MBTPJod6j1k2mPbPaPFfH",
+        "name": "The Heart of Me",
+        "artist": "Miike Snow"
+      },
+      {
+        "track_id": "4o0LyB69tylqDG6eTGhmig",
+        "name": "Fire for You",
+        "artist": "Cannons"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-25",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "surreal",
+        "self-doubt",
+        "stars",
+        "late-night"
+      ],
+      "stance": [],
+      "mood": [
+        "heartbreak",
+        "imagination"
+      ],
+      "energy": [
+        "restrained"
+      ],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "1CzBBeZ0OQr7Fvh9VzMAv1",
+        "name": "สักวันจะไม่แตกสลาย (Dear Trauma)",
+        "artist": "FREEHAND"
+      },
+      {
+        "track_id": "55WNlLuVqXJM4DQRxXWSTh",
+        "name": "give up, give in",
+        "artist": "Violette Wautier"
+      },
+      {
+        "track_id": "79RJg6MqIJlBuedcMqB9F0",
+        "name": "My Body Isn't Ready",
+        "artist": "sombr"
+      },
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      },
+      {
+        "track_id": "6qOWwJlt1TOQ0V4Mji4Ytx",
+        "name": "ดำสนิท",
+        "artist": "Hugo"
+      },
+      {
+        "track_id": "01aNqddaggrPJYUIdRApRD",
+        "name": "bad enough",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "19woxaSpjOefa2JnAOoqW5",
+        "name": "Garden (Say It Like Dat)",
+        "artist": "SZA"
+      },
+      {
+        "track_id": "1bjeWoagtHmUKputLVyDxQ",
+        "name": "Saturn",
+        "artist": "SZA"
+      },
+      {
+        "track_id": "1eZyd1mtOmlQu3YhSYmes7",
+        "name": "lovergirl",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "325toqbCzE1g1pYIED7U4C",
+        "name": "Take It Back",
+        "artist": "Pink Floyd"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-26",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "wonder",
+        "grounded"
+      ],
+      "stance": [],
+      "mood": [
+        "belonging",
+        "pining"
+      ],
+      "energy": [
+        "hushed"
+      ],
+      "setting": [
+        "sea"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      },
+      {
+        "track_id": "0ofHAoxe9vBkTCp2UQIavz",
+        "name": "Dreams - 2004 Remaster",
+        "artist": "Fleetwood Mac"
+      },
+      {
+        "track_id": "1ujxjsoNvh4XgS2fUNwkZ2",
+        "name": "Space Song",
+        "artist": "Beach House"
+      },
+      {
+        "track_id": "41lw42I7uyqwPEQOPZwcOG",
+        "name": "Star",
+        "artist": "Heize"
+      },
+      {
+        "track_id": "1KCMF9fdF7sNE74R2V46af",
+        "name": "You",
+        "artist": "Lane 8, Kasablanca"
+      },
+      {
+        "track_id": "4GMsgN54SdPxMamKu9qQam",
+        "name": "ขอให้เราทั้งคู่โชคดี (Good Luck to The Both of Us)",
+        "artist": "Tattoo Colour"
+      },
+      {
+        "track_id": "00Hj710RrsLX5s9bothwlW",
+        "name": "ไวน์",
+        "artist": "Max Jenmana"
+      },
+      {
+        "track_id": "01aNqddaggrPJYUIdRApRD",
+        "name": "bad enough",
+        "artist": "Madison Beer"
+      },
+      {
+        "track_id": "0AxZUYeQ9bZwSdt1LmZuok",
+        "name": "Heaven or Las Vegas",
+        "artist": "Cocteau Twins"
+      },
+      {
+        "track_id": "0bkW98npv8EsWQ2fXFzK56",
+        "name": "From Eden",
+        "artist": "Hozier"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-27",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "imagination",
+        "uncertainty"
+      ],
+      "stance": [
+        "loneliness"
+      ],
+      "mood": [
+        "strength"
+      ],
+      "energy": [
+        "energetic"
+      ],
+      "setting": []
+    },
+    "candidates": [
+      {
+        "track_id": "27OEf7iSIOJ14txp16xweP",
+        "name": "ลา ลา ลา",
+        "artist": "Dept"
+      },
+      {
+        "track_id": "3GZD6HmiNUhxXYf8Gch723",
+        "name": "Lost",
+        "artist": "Frank Ocean"
+      },
+      {
+        "track_id": "3SEZEyvEALlomED5xFeqOs",
+        "name": "summer depression",
+        "artist": "girl in red"
+      },
+      {
+        "track_id": "3siwsiaEoU4Kuuc9WKMUy5",
+        "name": "No One Noticed",
+        "artist": "The Marías"
+      },
+      {
+        "track_id": "4ntIPuXf6DpvrZExXrn5QA",
+        "name": "กลัวว่าฉันจะไม่เสียใจ (Fear)",
+        "artist": "PURPEECH"
+      },
+      {
+        "track_id": "6rY5FAWxCdAGllYEOZMbjW",
+        "name": "SLOW DANCING IN THE DARK",
+        "artist": "Joji"
+      },
+      {
+        "track_id": "72Z17vmmeQKAg8bptWvpVG",
+        "name": "Space Oddity - 2015 Remaster",
+        "artist": "David Bowie"
+      },
+      {
+        "track_id": "77zf87QsAz3H4XrENZOerR",
+        "name": "Death Stranding",
+        "artist": "CHVRCHES"
+      },
+      {
+        "track_id": "7fax7NlxOq2X9kMZw8QLE2",
+        "name": "Tailwhip",
+        "artist": "Men I Trust"
+      },
+      {
+        "track_id": "2BOUrjXoRIo2YHVAyZyXVX",
+        "name": "Colors",
+        "artist": "Beck"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-28",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "mysterious",
+        "yearning"
+      ],
+      "stance": [],
+      "mood": [
+        "tenderness",
+        "dreamy"
+      ],
+      "energy": [
+        "mid-tempo"
+      ],
+      "setting": [
+        "everyday"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "0AxZUYeQ9bZwSdt1LmZuok",
+        "name": "Heaven or Las Vegas",
+        "artist": "Cocteau Twins"
+      },
+      {
+        "track_id": "0Jirkb7LGNWyVhKOsKFdZ2",
+        "name": "Run Away With Me",
+        "artist": "Carly Rae Jepsen"
+      },
+      {
+        "track_id": "41lw42I7uyqwPEQOPZwcOG",
+        "name": "Star",
+        "artist": "Heize"
+      },
+      {
+        "track_id": "0ofHAoxe9vBkTCp2UQIavz",
+        "name": "Dreams - 2004 Remaster",
+        "artist": "Fleetwood Mac"
+      },
+      {
+        "track_id": "2X485T9Z5Ly0xyaghN73ed",
+        "name": "Let It Happen",
+        "artist": "Tame Impala"
+      },
+      {
+        "track_id": "34WI9hCaE3AzbOYT9wFXLP",
+        "name": "High And Low",
+        "artist": "Empire Of The Sun"
+      },
+      {
+        "track_id": "3pDGJRDN3p6kCNZcD97FYY",
+        "name": "Cosmic",
+        "artist": "Red Velvet"
+      },
+      {
+        "track_id": "4BY4V1T0RJK1HmD2Q0ClyK",
+        "name": "Oblivion",
+        "artist": "Grimes"
+      },
+      {
+        "track_id": "6rVCUwfnuYTAsX4P9fIdIu",
+        "name": "Dreams Come True",
+        "artist": "aespa"
+      },
+      {
+        "track_id": "0KVWVuutF9Dn8li4HdyAeU",
+        "name": "Archie, Marry Me",
+        "artist": "Alvvays"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-29",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "stars",
+        "kindness",
+        "curious",
+        "routine"
+      ],
+      "stance": [
+        "joyful",
+        "empowerment"
+      ],
+      "mood": [
+        "care",
+        "intimacy"
+      ],
+      "energy": [],
+      "setting": [
+        "street"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "1ixbwbeBi5ufN4noUKmW5a",
+        "name": "Paper Planes",
+        "artist": "M.I.A."
+      },
+      {
+        "track_id": "6GyFP1nfCDB8lbD2bG0Hq9",
+        "name": "Midnight City",
+        "artist": "M83"
+      },
+      {
+        "track_id": "2PRXyTkFmU0itou1ii4BPa",
+        "name": "Shine",
+        "artist": "Olly Alexander (Years & Years)"
+      },
+      {
+        "track_id": "37LhFxchiyAJVop5JgRZgY",
+        "name": "Like Water",
+        "artist": "WENDY"
+      },
+      {
+        "track_id": "6qOWwJlt1TOQ0V4Mji4Ytx",
+        "name": "ดำสนิท",
+        "artist": "Hugo"
+      },
+      {
+        "track_id": "142PiXzA84lmEw2RstFHFa",
+        "name": "supernatural",
+        "artist": "Ariana Grande"
+      },
+      {
+        "track_id": "3jjujdWJ72nww5eGnfs2E7",
+        "name": "Adore You",
+        "artist": "Harry Styles"
+      },
+      {
+        "track_id": "6SwnPNYCf3q4WsUQkMzAiI",
+        "name": "Hearsay",
+        "artist": "LANDOKMAI"
+      },
+      {
+        "track_id": "2ctvdKmETyOzPb2GiJJT53",
+        "name": "Breathe (In the Air)",
+        "artist": "Pink Floyd"
+      },
+      {
+        "track_id": "35KiiILklye1JRRctaLUb4",
+        "name": "Holocene",
+        "artist": "Bon Iver"
+      }
+    ],
+    "acceptable": []
+  },
+  {
+    "id": "th-30",
+    "language": "th",
+    "brief": {
+      "themes": [
+        "familiar",
+        "street",
+        "urban"
+      ],
+      "stance": [
+        "nostalgic",
+        "comforting"
+      ],
+      "mood": [
+        "joy",
+        "goodbye"
+      ],
+      "energy": [],
+      "setting": [
+        "nature"
+      ]
+    },
+    "candidates": [
+      {
+        "track_id": "6GyFP1nfCDB8lbD2bG0Hq9",
+        "name": "Midnight City",
+        "artist": "M83"
+      },
+      {
+        "track_id": "0FDzzruyVECATHXKHFs9eJ",
+        "name": "A Sky Full of Stars",
+        "artist": "Coldplay"
+      },
+      {
+        "track_id": "11ozIUBoXAgRTVWelDn4pL",
+        "name": "Lights",
+        "artist": "Ellie Goulding"
+      },
+      {
+        "track_id": "2PRXyTkFmU0itou1ii4BPa",
+        "name": "Shine",
+        "artist": "Olly Alexander (Years & Years)"
+      },
+      {
+        "track_id": "30VHURM5NOfoZmqp2iKawS",
+        "name": "Butterflies",
+        "artist": "Kacey Musgraves"
+      },
+      {
+        "track_id": "36vmaZyO0iAE6FZ7287fg2",
+        "name": "Dive",
+        "artist": "Olivia Dean"
+      },
+      {
+        "track_id": "50aQbgfdydBXABx2gATQHn",
+        "name": "dance all night",
+        "artist": "ROSÉ"
+      },
+      {
+        "track_id": "51t4KpMubQMCQXV8T4lK3F",
+        "name": "Self Love",
+        "artist": "BLOND:ISH"
+      },
+      {
+        "track_id": "59wlTaYOL5tDUgXnbBQ3my",
+        "name": "A Moment Apart",
+        "artist": "ODESZA"
+      },
+      {
+        "track_id": "00Hj710RrsLX5s9bothwlW",
+        "name": "ไวน์",
+        "artist": "Max Jenmana"
+      }
+    ],
+    "acceptable": []
+  }
+]

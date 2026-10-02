@@ -340,7 +340,14 @@ async function resolveTrack(
   }
 
   const artist = track.artists.map((a) => a.name).join(", ");
-  if (!preview_url) preview_url = await fetchItunesPreview(track.name, artist);
+  let preview_fallback_url: string | null = null;
+  if (!preview_url) {
+    const primaryArtist = track.artists[0]?.name ?? artist;
+    preview_url = await fetchItunesPreview(track.name, primaryArtist);
+    const deezer = await fetchDeezerPreview(track.name, primaryArtist);
+    if (preview_url) preview_fallback_url = deezer;
+    else preview_url = deezer;
+  }
 
   const images = track.album?.images ?? [];
   return {
@@ -349,13 +356,50 @@ async function resolveTrack(
     artist,
     embed_url: `https://open.spotify.com/embed/track/${track.id}`,
     preview_url,
+    preview_fallback_url,
     album_art_url: images[1]?.url ?? images[0]?.url ?? null,
   };
 }
 
+/** MP3 preview from Deezer's free search API; only an exact-title, same-artist hit is accepted. */
+async function fetchDeezerPreview(trackName: string, artist: string): Promise<string | null> {
+  try {
+    const res = await fetchWithRetry(
+      `https://api.deezer.com/search?${new URLSearchParams({ q: `${trackName} ${artist}`, limit: "5" })}`,
+      { cache: "no-store" },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as { data?: { title: string; preview?: string; artist?: { name?: string } }[] };
+    const norm = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+    const hit = data.data?.find((item) =>
+      item.preview && norm(item.title) === norm(trackName) && norm(item.artist?.name ?? "").includes(norm(artist)));
+    return hit?.preview ?? null;
+  } catch {
+    return null;
+  }
+}
+
+const normalizeTitle = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+/** Title without "(feat. X)", "[...]" and " - Remastered" style suffixes. */
+const coreTitle = (value: string) => normalizeTitle(value.replace(/[([].*?[)\]]/g, " ").replace(/\s+-\s+.*$/, ""));
+const derivativeTerms = (value: string) =>
+  DERIVATIVE_TERMS.filter((term) => new RegExp(`\\b${term}\\b`).test(value.toLowerCase()));
+
+/** True when an iTunes result is the same recording, not a remix, live or other alternate version. */
+function isSameVersion(result: { trackName?: string; artistName?: string }, trackName: string, artist: string): boolean {
+  if (!result.trackName || !result.artistName) return false;
+  const wanted = derivativeTerms(trackName).sort().join(",");
+  if (derivativeTerms(result.trackName).sort().join(",") !== wanted) return false;
+  const resultArtist = normalizeTitle(result.artistName);
+  const wantedArtist = normalizeTitle(artist);
+  return coreTitle(result.trackName) === coreTitle(trackName)
+    && (resultArtist.includes(wantedArtist) || wantedArtist.includes(resultArtist));
+}
+
 /** Fallback 30s preview lookup via Apple's free, unauthenticated iTunes
  *  Search API — used when Spotify's own preview_url is null (increasingly
- *  common as Spotify winds the field down). Returns null if no match. */
+ *  common as Spotify winds the field down). Returns null unless a result is
+ *  the same title and artist, so a remix is never played for the original. */
 async function fetchItunesPreview(
   trackName: string,
   artist: string,
@@ -365,14 +409,14 @@ async function fetchItunesPreview(
       term: `${trackName} ${artist}`,
       media: "music",
       entity: "song",
-      limit: "1",
+      limit: "10",
     })}`;
     const res = await fetchWithRetry(url, { cache: "no-store" });
     if (!res.ok) return null;
     const data = (await res.json()) as {
-      results?: { previewUrl?: string | null }[];
+      results?: { previewUrl?: string | null; trackName?: string; artistName?: string }[];
     };
-    return data.results?.[0]?.previewUrl ?? null;
+    return data.results?.find((item) => item.previewUrl && isSameVersion(item, trackName, artist))?.previewUrl ?? null;
   } catch {
     // Non-fatal — the UI already handles a null preview_url gracefully.
     return null;

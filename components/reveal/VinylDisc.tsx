@@ -34,6 +34,7 @@ interface Track {
   artist: string;
   embed_url: string;
   preview_url: string | null;
+  preview_fallback_url?: string | null;
   album_art_url: string | null;
 }
 
@@ -61,6 +62,7 @@ export function VinylDisc({
   const [errorMsg, setErrorMsg] = useState<string>("");
   const setMediaMode = useMediaStore((s) => s.setMode);
   const setSpotifyUrl = useMediaStore((s) => s.setSpotifyUrl);
+  const setSpotifyFallbackUrl = useMediaStore((s) => s.setSpotifyFallbackUrl);
   const setStoreTrack = useMediaStore((s) => s.setTrack);
   const isPlaying = useMediaStore((s) => s.isPlaying);
   const setPlaying = useMediaStore((s) => s.setPlaying);
@@ -74,6 +76,7 @@ export function VinylDisc({
     });
     setMediaMode("ambient");
     setSpotifyUrl(null);
+    setSpotifyFallbackUrl(null);
     setStoreTrack(null);
     setPlaying(false);
 
@@ -101,6 +104,7 @@ export function VinylDisc({
         });
         if (previewUrl) {
           setSpotifyUrl(previewUrl);
+          setSpotifyFallbackUrl(mediaProxyUrl(t.preview_fallback_url));
           setPlaying(true);
           setMediaMode("spotify");
         }
@@ -115,10 +119,11 @@ export function VinylDisc({
       cancelled = true;
       setMediaMode("ambient");
       setSpotifyUrl(null);
+      setSpotifyFallbackUrl(null);
       setStoreTrack(null);
       setPlaying(false);
     };
-  }, [query, trackId, setMediaMode, setSpotifyUrl, setStoreTrack, setPlaying]);
+  }, [query, trackId, setMediaMode, setSpotifyUrl, setSpotifyFallbackUrl, setStoreTrack, setPlaying]);
 
   // Keep the mobile hero; use a compact record in the desktop music dock.
   const discSizeClass =

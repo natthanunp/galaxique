@@ -10,6 +10,8 @@ interface BlackHoleProps {
   secondaryColor: string;
   rotationSpeed: number;
   config?: BlackHoleVisualConfig;
+  /** Multiplies particle sizes when scaled up and far away, where 1px points would shimmer. */
+  pointScale?: number;
   /** Optional overlay (e.g. a heart / star symbol) rendered near the core. */
   children?: ReactNode;
 }
@@ -42,6 +44,7 @@ export function BlackHole({
   secondaryColor,
   rotationSpeed,
   config,
+  pointScale = 1,
   children,
 }: BlackHoleProps) {
   const seed = config?.seed ?? 928_137_461;
@@ -95,6 +98,7 @@ export function BlackHole({
       uniforms: {
         uTime: { value: 0 },
         uPixelRatio: { value: 1 },
+        uPointScale: { value: 1 },
       },
       vertexShader: /* glsl */ `
         attribute vec3 aColor;
@@ -102,13 +106,14 @@ export function BlackHole({
         attribute float aPhase;
         uniform float uTime;
         uniform float uPixelRatio;
+        uniform float uPointScale;
         varying vec3 vColor;
         varying float vAlpha;
         void main() {
           vColor = aColor;
           vec4 mv = modelViewMatrix * vec4(position, 1.0);
           float pulse = 0.85 + 0.15 * sin(uTime * 2.0 + aPhase * 3.0);
-          gl_PointSize = max(1.0, aSize * uPixelRatio * 180.0 / -mv.z) * pulse;
+          gl_PointSize = max(1.0, aSize * uPixelRatio * uPointScale * 180.0 / -mv.z) * pulse;
           vAlpha = 0.35 + 0.4 * pulse;
           gl_Position = projectionMatrix * mv;
         }
@@ -149,6 +154,7 @@ export function BlackHole({
       photonRef.current.rotation.z -= delta * rotationSpeed * 0.08;
     }
     shellMaterial.uniforms.uTime.value = state.clock.elapsedTime;
+    shellMaterial.uniforms.uPointScale.value = pointScale;
   });
 
   return (

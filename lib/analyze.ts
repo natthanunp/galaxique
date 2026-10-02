@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
+import { TASKS } from "@/config/models";
 import { callLlm } from "@/lib/llm";
 import { LlmRequestError } from "@/lib/llmError";
 import { ASSESSMENT_PROMPT, ASSESSMENT_REPAIR_PROMPT, assessmentSchema, selectProfile, validateAssessment } from "@/lib/profileAssessment";
@@ -8,11 +9,11 @@ import {
   generatedCreatureSpecSchema,
   universeRevealSchema,
 } from "@/lib/schemas";
-import { rankSongs, selectSong } from "@/lib/songMatching";
-import { enrichPlaylistTracks } from "@/lib/songKnowledge";
-import { getRecentSelections, recordSelection } from "@/lib/songSelectionStore";
+import { eligibleForLanguage, pickSong, rankSongs } from "@/lib/songMatching";
+import { enrichPlaylistTracks, getSelectableCatalog } from "@/lib/songKnowledge";
+import { getExposure, recordSelection } from "@/lib/songExposureStore";
 import { getSpotifyPlaylistTracks, spotifyConfigured } from "@/lib/spotify";
-import { addStar } from "@/lib/constellationStore";
+import { saveReveal } from "@/lib/revealStore";
 import type { Language, QuizAnswer } from "@/types/universe";
 import type { ProgressCallback } from "@/lib/analyzeProgress";
 
@@ -121,14 +122,14 @@ export async function runAnalyze(body: { answers: QuizAnswer[]; language?: unkno
   const nonce = randomUUID();
   const started = Date.now();
   const deadline = started + 60_000;
-  const timeLeft = () => {
+  const timeLeft = (capMs: number) => {
     const left = deadline - Date.now();
     if (left < 1000) {
       const error = new Error("The reading took too long. Please try again.");
       error.name = "TimeoutError";
       throw error;
     }
-    return Math.min(20_000, left);
+    return Math.min(capMs, left);
   };
   progress({ stage: "starting", msElapsed: 0 });
   const assessmentWork = async () => {
@@ -140,7 +141,7 @@ export async function runAnalyze(body: { answers: QuizAnswer[]; language?: unkno
             : `${ASSESSMENT_PROMPT}\n${ASSESSMENT_REPAIR_PROMPT}`,
           userPrompt: JSON.stringify(body.answers),
           responseFormat: { type: "json_schema", jsonSchema: { name: "answer_evidence", strict: true, schema: z.toJSONSchema(assessmentSchema) } },
-          temperature: 0, maxTokens: 2300, reasoningEffort: "low", singleAttempt: true, timeoutMs: timeLeft(),
+          temperature: 0, maxTokens: 2300, reasoningEffort: TASKS.assessment.reasoningEffort, singleAttempt: true, timeoutMs: timeLeft(TASKS.assessment.timeoutMs),
           nonce: `${nonce}:assessment:${attempt}`, purpose: "assessment",
         });
         const assessment = validateAssessment(raw, body.answers);
@@ -155,21 +156,26 @@ export async function runAnalyze(body: { answers: QuizAnswer[]; language?: unkno
   };
   const catalogWork = async () => {
     try {
+      // The approved snapshot is the source of truth; the live playlist is only a pre-sync fallback.
+      const approved = await getSelectableCatalog();
+      if (approved) return eligibleForLanguage(approved, language);
       if (!spotifyConfigured()) throw new Error("Song matching needs a configured Spotify playlist.");
       const tracks = await enrichPlaylistTracks(await getSpotifyPlaylistTracks());
-      return tracks.filter(t => language === "th" || !(t.knowledge?.is_thai ?? /\p{Script=Thai}/u.test(t.name + t.artist)));
+      return eligibleForLanguage(tracks, language);
     } catch (error) {
       throw analyzeFailure("catalog", error, undefined, "external_service");
     }
   };
   // Independent I/O runs alongside assessment, never inside its prompt.
-  const [{ assessment, profile }, tracks, history] = await Promise.all([
-    assessmentWork(), catalogWork(), getRecentSelections(),
+  const [{ assessment, profile }, tracks, exposure] = await Promise.all([
+    assessmentWork(), catalogWork(), getExposure().catch(() => ({})),
   ]);
   progress({ stage: "llm", msElapsed: Date.now() - started });
   let picked;
   try {
-    picked = selectSong(rankSongs(tracks, assessment.song_brief), body.recentTrackIds, history.trackIds);
+    picked = pickSong(rankSongs(tracks, assessment.song_brief), {
+      seed: nonce, sessionRecent: body.recentTrackIds, exposure,
+    });
     if (!picked) {
       throw new AnalyzeOperationError({ stage: "selection", kind: "no_match" });
     }
@@ -202,7 +208,7 @@ Use the selected song identity exactly for spotify_track_id and spotify_search_q
           selected_song: { track_id: selected.track_id, name: selected.name, artist: selected.artist,
             themes: k.themes, stance: k.relationship_stance, mood: k.mood, energy: k.energy, setting: k.setting, summary: k.summary } }),
         responseFormat: { type: "json_schema", jsonSchema: { name: "assessed_reveal", strict: true, schema: z.toJSONSchema(fixedSchema) } },
-        temperature: 0.4, maxTokens: 1500, reasoningEffort: "low", timeoutMs: timeLeft(), singleAttempt: true,
+        temperature: 0.4, maxTokens: 1500, reasoningEffort: TASKS.reveal.reasoningEffort, timeoutMs: timeLeft(TASKS.reveal.timeoutMs), singleAttempt: true,
         nonce: `${nonce}:reveal:${attempt}`, purpose: "reveal",
       });
       const parsed = fixedSchema.parse(raw);
@@ -228,18 +234,21 @@ Use the selected song identity exactly for spotify_track_id and spotify_search_q
   }
   if (!result) throw analyzeFailure("reveal", new Error("Could not write the reading."));
   try {
-    await recordSelection(selected.track_id);
-    await addStar({
-      id: nonce, profile_version: 2, theme: profile.theme, vibe: result.vibe, celestialType: result.celestial_type,
-      creatureKind: result.creature?.kind ?? "spirit", creatureName: result.creature?.name ?? "",
-      primaryColor: result.primary_color, secondaryColor: result.secondary_color,
-      readingSnippet: result.personality_reading.slice(0, 200), songName: selected.name, songArtist: selected.artist, createdAt: Date.now(),
-    });
+    await recordSelection(selected.track_id, language, picked.shortlist.map((r) => r.track.track_id));
   } catch (error) {
     throw analyzeFailure("persistence", error, undefined, "storage");
+  }
+  // Nothing is published here: public worlds require explicit opt-in.
+  let revealToken: string | null = null;
+  try {
+    revealToken = await saveReveal(result, language, {
+      isrc: selected.isrc ?? null, song: { name: selected.name, artist: selected.artist },
+    });
+  } catch (error) {
+    console.warn("[analyze] private reveal not stored", { name: (error as Error)?.name });
   }
   // Aggregate diagnostics only; never log raw personal answers/evidence.
   console.info("[profile]", JSON.stringify({ language, theme: profile.theme, celestial: profile.celestial_type, mixed: profile.mixed, songScore: picked.score, elapsedMs: Date.now() - started }));
   progress({ stage: "done", msElapsed: Date.now() - started });
-  return result;
+  return { ...result, reveal_token: revealToken };
 }

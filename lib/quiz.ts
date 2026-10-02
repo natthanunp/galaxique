@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
-import { callLlm, resolveProviderOrder, type LlmCallMetrics } from "@/lib/llm";
+import { QUIZ_LIMITS, SHARED_MODEL, TASKS } from "@/config/models";
+import { callLlm, type LlmCallMetrics } from "@/lib/llm";
 import { sanitizeLlmError } from "@/lib/llmError";
 import { THEMES, type ProfileTheme } from "@/lib/profile";
 import { buildThaiQuizPrompt } from "@/prompts/thaiQuizPrompt";
-import { callTyphoonQuiz, TYPHOON_QUIZ_MODEL } from "@/lib/typhoonQuiz";
 import type { QuizProgressCallback } from "@/lib/quizProgress";
 import type { Language, QuizQuestion } from "@/types/universe";
 
@@ -41,9 +41,8 @@ const THEME_OPTION_GUIDANCE: Record<ProfileTheme, string> = {
   questioning: "independent judgment: asking why, testing an assumption, or deciding by your own standard (never rude)",
 };
 
-export const DEFAULT_QUIZ_MODEL = "openai/gpt-6-luna";
-// Both routes serve the same weights, so falling back never changes copy quality.
-export const DEFAULT_QUIZ_PROVIDERS = ["openai", "azure"] as const;
+export const DEFAULT_QUIZ_MODEL = SHARED_MODEL.model;
+export const DEFAULT_QUIZ_PROVIDERS = SHARED_MODEL.providers;
 
 const QUIZ_TOPIC_GUIDANCE = [
   "meeting or getting to know someone new",
@@ -140,22 +139,6 @@ export function createScenarioPlan(nonce: string, language: Language = "en"): Qu
   }));
 }
 
-function quizModel(language: Language): string {
-  const override = language === "th"
-    ? process.env.OPENROUTER_THAI_QUIZ_MODEL
-    : process.env.OPENROUTER_QUIZ_MODEL;
-  return override || DEFAULT_QUIZ_MODEL;
-}
-
-function quizProviderOrder(language: Language, model: string): string[] {
-  const raw = language === "th"
-    ? process.env.OPENROUTER_THAI_QUIZ_PROVIDER_ORDER
-    : process.env.OPENROUTER_QUIZ_PROVIDER_ORDER;
-  const parsed = raw?.split(",").map((slug) => slug.trim().toLowerCase()).filter(Boolean);
-  if (parsed?.length) return parsed;
-  return model === DEFAULT_QUIZ_MODEL ? [...DEFAULT_QUIZ_PROVIDERS] : resolveProviderOrder();
-}
-
 function rotate<T>(items: T[]): T[] {
   return items.length > 1 ? [...items.slice(1), items[0]] : items;
 }
@@ -166,17 +149,6 @@ function quizOutputTokenBudget(language: Language, itemCount: number, repair: bo
   const perItem = language === "th" ? 600 : 360;
   const base = Math.max(language === "th" ? 1000 : 900, itemCount * perItem);
   return repair ? Math.ceil(base * 1.15) : base;
-}
-
-function quizReasoningEffort(language: Language, model: string) {
-  const configured = language === "th"
-    ? process.env.OPENROUTER_THAI_QUIZ_REASONING_EFFORT
-    : process.env.OPENROUTER_QUIZ_REASONING_EFFORT;
-  const override = configured
-    ?? (model === DEFAULT_QUIZ_MODEL ? "none" : language === "en" ? "low" : undefined);
-  if (!override) return undefined;
-  return z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"])
-    .parse(override);
 }
 
 export function buildBalancedQuizPrompt(
@@ -452,19 +424,14 @@ export async function generateBalancedQuiz(
   limits: QuizGenerationLimits = {},
 ) {
   const startedAt = Date.now();
-  const overallMs = limits.overallMs ?? 30_000;
+  const overallMs = limits.overallMs ?? QUIZ_LIMITS.overallMs;
   const deadline = startedAt + overallMs;
   const nonce = input.nonce ?? randomUUID();
   const callScope = randomUUID();
   const scenarioPlan = createScenarioPlan(nonce, input.language);
-  const useTyphoon = input.language === "th" && process.env.THAI_QUIZ_ENGINE === "typhoon";
-  if (useTyphoon && !process.env.TYPHOON_API_KEY) {
-    throw new Error("TYPHOON_API_KEY is required when THAI_QUIZ_ENGINE=typhoon.");
-  }
-  const model = useTyphoon ? TYPHOON_QUIZ_MODEL : quizModel(input.language);
-  const reasoningEffort = quizReasoningEffort(input.language, model);
-  const generateBatch = useTyphoon ? callTyphoonQuiz : callLlm;
-  let providerOrder = quizProviderOrder(input.language, model);
+  const model = DEFAULT_QUIZ_MODEL;
+  const reasoningEffort = TASKS.quiz.reasoningEffort;
+  let providerOrder = [...DEFAULT_QUIZ_PROVIDERS];
   const allIds = QUIZ_TOPICS.map((_, index) => index + 1);
   const controller = new AbortController();
   const deadlineTimer = setTimeout(() => {
@@ -500,10 +467,10 @@ export async function generateBalancedQuiz(
       const roundStartedAt = Date.now();
       progress({ stage: "writing", completed: good.size, total: 8 });
       const results = await Promise.all(batches.map(async (ids, batchIndex): Promise<BatchResult> => {
-        const timeoutCap = round === 0 ? (limits.initialCallMs ?? 12_000) : (limits.repairCallMs ?? 8_000);
+        const timeoutCap = round === 0 ? (limits.initialCallMs ?? QUIZ_LIMITS.initialCallMs) : (limits.repairCallMs ?? QUIZ_LIMITS.repairCallMs);
         const timeoutMs = Math.max(1, Math.min(timeoutCap, deadline - Date.now()));
         try {
-          const raw = await withAbort(generateBatch({
+          const raw = await withAbort(callLlm({
             model,
             providerOrder,
             providerSort: "throughput",

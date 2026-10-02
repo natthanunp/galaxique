@@ -1,0 +1,12 @@
+{
+  "loopStart": 0.25,
+  "loopEnd": 96.25,
+  "layers": [
+    "pad",
+    "drone",
+    "pulse",
+    "shimmer"
+  ],
+  "key": "D Dorian",
+  "targetRmsDb": -18
+}

@@ -169,9 +169,9 @@ reaching the 3D layer.
 
 ## ⚙️ Configuration
 
-Edit `config/quizConfig.ts` to change the question count or generic LLM model
-(default `openai/gpt-oss-20b` via OpenRouter and Groq). Override with the
-`OPENROUTER_MODEL` and `OPENROUTER_PROVIDER_ORDER` environment variables.
+All LLM settings (one shared model for English and Thai, provider order,
+fallbacks, reasoning effort, timeouts, quiz limits) live in
+`config/models.ts`. Only `OPENROUTER_API_KEY` comes from the environment.
 
 ## 📝 Notes
 

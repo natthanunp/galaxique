@@ -202,10 +202,17 @@ export interface SongKnowledgeEntry {
    *  only non-Thai songs; Thai users get the full catalog. Replaces the
    *  fragile script-detection heuristic in app/api/analyze/route.ts. */
   is_thai?: boolean;
+  /** Primary vocal language (ISO 639-1, e.g. "th", "en", "ko"), or "none" for
+   *  instrumentals. Supersedes `is_thai` once reviewed. */
+  lyric_language?: string;
+  /** Catalog review state and provenance; absent on entries from the legacy knowledge file. */
+  review_status?: "legacy" | "draft" | "reviewed" | "native-reviewed";
+  sources?: { type: string }[];
 }
 
 /** A playlist candidate merged with its cached knowledge descriptor, if any. */
 export interface EnrichedPlaylistCandidate extends SpotifyPlaylistCandidate {
+  isrc?: string | null;
   knowledge?: SongKnowledgeEntry;
 }
 
@@ -220,6 +227,8 @@ export interface SpotifyTrack {
    *  only if no preview exists on either source. Used for reliable autoplay
    *  on the reveal page (the Spotify iframe `?autoplay=1` is unreliable). */
   preview_url: string | null;
+  /** MP3 preview from Deezer, set when `preview_url` is AAC. Some browsers (e.g. Electron webviews) cannot decode AAC. */
+  preview_fallback_url?: string | null;
   /** Album art image URL (~300px), used in the "Now playing" card and
    *  composited onto the exported share video. Null if Spotify returned no
    *  album images. */

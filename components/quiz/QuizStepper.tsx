@@ -244,7 +244,8 @@ export function QuizStepper() {
           if (anchor) {
             setAnalyzeMsElapsed(anchor.serverMs + (Date.now() - anchor.localArrival));
           }
-          setReveal(reveal);
+          const { reveal_token: revealToken, ...revealData } = reveal as typeof reveal & { reveal_token?: string | null };
+          setReveal(revealData, revealToken ?? null);
           setLoading(false);
           router.push("/reveal");
         },

@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { SparklesIcon } from "lucide-react";
-import type { ConstellationStar } from "@/lib/constellationStore";
 
 interface ConstellationPreviewProps {
   language?: "en" | "th";
@@ -97,8 +96,8 @@ export function ConstellationPreview({ language = "en" }: ConstellationPreviewPr
                 {count === 0
                   ? (language === "th" ? "เป็นคนแรกที่ค้นพบจักรวาลของตัวเอง" : "Be the first to discover your universe")
                   : (language === "th"
-                      ? `${count.toLocaleString()} จักรวาลถูกค้นพบ — ทุกคนกลายเป็นดาว`
-                      : `${count.toLocaleString()} universes discovered — everyone becomes a star`)}
+                      ? `${count.toLocaleString()} จักรวาลถูกค้นพบ`
+                      : `${count.toLocaleString()} universes discovered`)}
               </p>
             </div>
             <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors">

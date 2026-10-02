@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
     root: __dirname,
   },
   allowedDevOrigins: ['192.168.1.38', '192.168.1.33'],
+  outputFileTracingIncludes: {
+    "/api/**": ["./data/catalog/approved.json", "./data/catalog/knowledge.json", "./data/songKnowledge.json"],
+    "/api/score/[layer]": ["./public/audio/score/*.mp3"],
+  },
   // Prevent mobile Safari from serving a stale HTML shell from HTTP cache
   // after a new deployment. The service worker intentionally owns no cache,
   // but Safari can still keep the document and its _next/static chunks in

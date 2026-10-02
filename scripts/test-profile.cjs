@@ -31,22 +31,21 @@ stub('lib/llm.ts', { resolveProviderOrder: () => ['groq'], callLlm: async option
     throw error;
   }
 } });
-stub('lib/songSelectionStore.ts', { getRecentSelections: async () => ({ trackIds: [], source: 'memory' }), recordSelection: async id => selections.push(id) });
+stub('lib/songExposureStore.ts', { getExposure: async () => ({}), recordSelection: async id => selections.push(id) });
 let catalog = [];
 stub('lib/spotify.ts', { spotifyConfigured: () => true, getSpotifyPlaylistTracks: async () => catalog });
-stub('lib/songKnowledge.ts', { enrichPlaylistTracks: async tracks => tracks });
-stub('lib/constellationStore.ts', { addStar: async star => stars.push(star) });
+stub('lib/songKnowledge.ts', { enrichPlaylistTracks: async tracks => tracks, getSelectableCatalog: async () => null });
+stub('lib/constellationStore.ts', { addStar: async star => stars.push(star), getLegacyStars: async () => [] });
 for (const key of ['KV_REST_API_URL', 'KV_REST_API_TOKEN', 'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN']) delete process.env[key];
 const { THEMES, CELESTIAL_TYPES, THEME_VIBE, profileLabel } = require('../lib/profile.ts');
 const { ASSESSMENT_PROMPT, ASSESSMENT_REPAIR_PROMPT, validateAssessment, selectProfile, analyzeBodySchema } = require('../lib/profileAssessment.ts');
 const { validQuizQuestion, questionRejectionReasons, shuffleOptions, generateBalancedQuiz, buildBalancedQuizPrompt, createScenarioPlan, QUIZ_TOPICS, QUIZ_OPTION_THEMES, QUIZ_GENERATION_METRICS, DEFAULT_QUIZ_MODEL, DEFAULT_QUIZ_PROVIDERS } = require('../lib/quiz.ts');
-const { rankSongs, selectSong } = require('../lib/songMatching.ts');
+const { rankSongs, pickSong, shortlistSongs, eligibleForLanguage } = require('../lib/songMatching.ts');
 const { analyzeFailureDiagnostic, runAnalyze } = require('../lib/analyze.ts');
 const { incrementProfileStat, getProfileStats } = require('../lib/profileStatsStore.ts');
 const { sanitizeLlmError, LlmRequestError } = require('../lib/llmError.ts');
 const { buildCreatureChatPrompt } = require('../prompts/creatureChatPrompt.ts');
 const { withRequestDeadline } = require('../lib/requestDeadline.ts');
-const { callTyphoonQuiz, TYPHOON_QUIZ_MODEL } = require('../lib/typhoonQuiz.ts');
 const { creatureSpecSchema, generatedCreatureSpecSchema } = require('../lib/schemas.ts');
 test('request deadline releases a hung SDK call and aborts its signal', async () => {
   let signal;
@@ -62,73 +61,6 @@ test('request deadline preserves successful results and upstream failures', asyn
   await assert.rejects(withRequestDeadline(1000, async () => { throw error; }), e => e === error);
 });
 
-test('Typhoon transport makes one JSON request and sanitizes failures without retries', async t => {
-  const originalFetch = global.fetch;
-  const originalKey = process.env.TYPHOON_API_KEY;
-  t.after(() => {
-    global.fetch = originalFetch;
-    if (originalKey === undefined) delete process.env.TYPHOON_API_KEY;
-    else process.env.TYPHOON_API_KEY = originalKey;
-  });
-  process.env.TYPHOON_API_KEY = 'fixture-key';
-  const options = { systemPrompt: 'fixture-system', userPrompt: 'fixture-user', maxTokens: 3200, timeoutMs: 1000 };
-  let requests = 0;
-  global.fetch = async (url, init) => {
-    requests++;
-    assert.equal(url, 'https://api.opentyphoon.ai/v1/chat/completions');
-    const body = JSON.parse(init.body);
-    assert.equal(body.model, TYPHOON_QUIZ_MODEL);
-    assert.deepEqual(body.response_format, { type: 'json_object' });
-    assert.equal(body.stream, false);
-    assert.equal(body.max_tokens, 3200);
-    return Response.json({ choices: [{ message: { content: '{"questions":[]}' } }] });
-  };
-  assert.deepEqual(await callTyphoonQuiz(options), { questions: [] });
-  assert.equal(requests, 1);
-  global.fetch = async () => { requests++; return new Response('private upstream body', { status: 429 }); };
-  await assert.rejects(callTyphoonQuiz(options), error => error.statusCode === 429 && !error.message.includes('private'));
-  assert.equal(requests, 2, '429 must not trigger hidden retries');
-  global.fetch = async () => Response.json({ choices: [{ message: { content: 'not JSON' } }] });
-  await assert.rejects(callTyphoonQuiz(options), error => error.kind === 'non_json');
-  let abortedSignal;
-  global.fetch = async (_, init) => { abortedSignal = init.signal; return new Promise(() => {}); };
-  await assert.rejects(callTyphoonQuiz({ ...options, timeoutMs: 10 }), { name: 'TimeoutError' });
-  assert.equal(abortedSignal.aborted, true);
-});
-
-test('Thai Typhoon selection uses the same complete-quiz pipeline with no OpenRouter fallback', async t => {
-  const originalFetch = global.fetch;
-  const originalEngine = process.env.THAI_QUIZ_ENGINE;
-  const originalKey = process.env.TYPHOON_API_KEY;
-  t.after(() => {
-    global.fetch = originalFetch;
-    for (const [key, value] of [['THAI_QUIZ_ENGINE', originalEngine], ['TYPHOON_API_KEY', originalKey]]) {
-      if (value === undefined) delete process.env[key]; else process.env[key] = value;
-    }
-  });
-  process.env.THAI_QUIZ_ENGINE = 'typhoon';
-  delete process.env.TYPHOON_API_KEY;
-  calls = [];
-  await assert.rejects(generateBalancedQuiz({ language: 'th', avoidAngles: [] }, () => {}), /TYPHOON_API_KEY/);
-  assert.equal(calls.length, 0);
-  process.env.TYPHOON_API_KEY = 'fixture-key';
-  const pending = [];
-  global.fetch = (_, init) => new Promise(resolve => pending.push({ body: JSON.parse(init.body), resolve }));
-  const result = generateBalancedQuiz({ language: 'th', avoidAngles: [] }, () => {});
-  await new Promise(resolve => setImmediate(resolve));
-  assert.equal(pending.length, 2, 'initial batches must be concurrent');
-  for (const { body, resolve } of pending) {
-    const ids = JSON.parse(body.messages[1].content).requestedIds;
-    resolve(Response.json({ choices: [{ message: { content: JSON.stringify({ questions: ids.map(thaiQuestion) }) } }] }));
-  }
-  assert.equal((await result).questions.length, 8);
-  assert.equal(calls.length, 0);
-  let failedRequests = 0;
-  global.fetch = async () => { failedRequests++; return new Response('', { status: 429 }); };
-  await assert.rejects(generateBalancedQuiz({ language: 'th', avoidAngles: [] }, () => {}), /eight valid fresh questions/);
-  assert.equal(failedRequests, 12, 'initial calls plus deadline-bounded targeted repair rounds');
-  assert.equal(calls.length, 0, 'a Typhoon outage must never fall back to OpenRouter');
-});
 const emptyBrief = () => ({ themes: [], stance: [], mood: [], energy: [], setting: [] });
 test('new companions require a non-empty name while legacy companions remain readable', () => {
   const unnamed = { kind: 'cat', accent: 'none', motion: 'orbit' };
@@ -390,35 +322,15 @@ test('provider failures stay on the same model and start the next round on the o
   assert.deepEqual(calls[2].providerOrder, ['azure', 'openai']);
   assert.deepEqual(calls[3].providerOrder, ['azure', 'openai']);
 });
-test('quiz model settings default to GPT-6 Luna for both languages and honor overrides', async t => {
-  const names = ['OPENROUTER_THAI_QUIZ_MODEL', 'OPENROUTER_THAI_QUIZ_PROVIDER_ORDER', 'OPENROUTER_THAI_QUIZ_REASONING_EFFORT'];
-  const originals = Object.fromEntries(names.map(name => [name, process.env[name]]));
-  t.after(() => {
-    for (const name of names) {
-      if (originals[name] === undefined) delete process.env[name];
-      else process.env[name] = originals[name];
-    }
-  });
-  for (const name of names) delete process.env[name];
-  calls = [];
-  responder = options => languageQuestionsFor(options);
-  await generateBalancedQuiz({ language: 'th', avoidAngles: [], nonce: 'selected-default' }, () => {});
-  assert.ok(calls.every(call => call.model === DEFAULT_QUIZ_MODEL));
-  assert.ok(calls.every(call => JSON.stringify(call.providerOrder) === JSON.stringify(DEFAULT_QUIZ_PROVIDERS)));
-  assert.ok(calls.every(call => call.reasoningEffort === 'none'));
-
-  process.env.OPENROUTER_THAI_QUIZ_MODEL = 'qwen/qwen3-30b-a3b-instruct-2507';
-  process.env.OPENROUTER_THAI_QUIZ_PROVIDER_ORDER = 'alibaba';
-  delete process.env.OPENROUTER_THAI_QUIZ_REASONING_EFFORT;
-  calls = [];
-  await generateBalancedQuiz({ language: 'th', avoidAngles: [], nonce: 'reasoning-default' }, () => {});
-  assert.ok(calls.every(call => call.reasoningEffort === undefined));
-  assert.ok(calls.every(call => call.model === 'qwen/qwen3-30b-a3b-instruct-2507'));
-  assert.ok(calls.every(call => JSON.stringify(call.providerOrder) === JSON.stringify(['alibaba'])));
-  process.env.OPENROUTER_THAI_QUIZ_REASONING_EFFORT = 'none';
-  calls = [];
-  await generateBalancedQuiz({ language: 'th', avoidAngles: [], nonce: 'reasoning-none' }, () => {});
-  assert.ok(calls.every(call => call.reasoningEffort === 'none'));
+test('quiz uses the one shared model, providers, and reasoning setting for both languages', async () => {
+  for (const language of ['th', 'en']) {
+    calls = [];
+    responder = options => languageQuestionsFor(options);
+    await generateBalancedQuiz({ language, avoidAngles: [], nonce: `shared-${language}` }, () => {});
+    assert.ok(calls.every(call => call.model === DEFAULT_QUIZ_MODEL));
+    assert.ok(calls.every(call => JSON.stringify(call.providerOrder) === JSON.stringify(DEFAULT_QUIZ_PROVIDERS)));
+    assert.ok(calls.every(call => call.reasoningEffort === 'none'));
+  }
 });
 test('provider outage never substitutes static questions for a fresh AI quiz', async () => {
   calls = [];
@@ -484,18 +396,44 @@ test('SDK errors cannot carry authorization, cookies, prompts or raw bodies acro
 const track = (id, overrides = {}) => ({ track_id: id, name: `Song ${id}`, artist: 'Test Artist', knowledge: {
   known: true, themes: ['commitment', 'perseverance'], relationship_stance: 'independence', mood: 'determined', energy: 'driving', setting: 'forward motion', summary: 'A song about perseverance.', is_thai: false, ...overrides,
 } });
-test('full catalog relevance wins; session/global variety cannot rescue a weak match', () => {
+test('English users never get Thai songs; Thai users get every song; lyric_language overrides is_thai', () => {
+  const pool = [
+    track('en'), track('kpop', { lyric_language: 'ko' }), track('legacy-th', { is_thai: true }),
+    track('reviewed-th', { lyric_language: 'th', is_thai: false }),
+    track('thai-artist-english', { lyric_language: 'en', is_thai: true }),
+    { track_id: 'unreviewed', name: 'เพลง', artist: 'X' },
+  ];
+  assert.deepEqual(eligibleForLanguage(pool, 'en').map(t => t.track_id), ['en', 'kpop', 'thai-artist-english']);
+  assert.equal(eligibleForLanguage(pool, 'th').length, pool.length);
+});
+test('selection: weak matches never win, picks are seeded, cooldowns and exposure spread choices', () => {
   const best = track('best'), near = track('near'), weak = track('weak', { themes: ['heartbreak'], mood: 'melancholy' });
   const ranked = [{ track: best, score: 55 }, { track: near, score: 52 }, { track: weak, score: 10 }];
-  assert.equal(selectSong(ranked, [], Array(50).fill('best')).track.track_id, 'best');
-  assert.equal(selectSong(ranked, ['best'], []).track.track_id, 'near');
-  assert.notEqual(selectSong(ranked, ['best', 'near'], []).track.track_id, 'weak');
+  assert.deepEqual(shortlistSongs(ranked).map(r => r.track.track_id), ['best', 'near']);
+  const seeds = Array.from({ length: 400 }, (_, i) => `seed-${i}`);
+  const pick = (options) => seeds.map(seed => pickSong(ranked, { seed, ...options }).track.track_id);
+  assert.ok(pick({}).every(id => id !== 'weak'));
+  assert.ok(pick({ sessionRecent: ['best', 'near'] }).every(id => id !== 'weak'));
+  assert.equal(pickSong(ranked, { seed: 'same' }).track.track_id, pickSong(ranked, { seed: 'same' }).track.track_id);
+  const share = (ids, id) => ids.filter(x => x === id).length / ids.length;
+  assert.ok(share(pick({}), 'near') > 0.2, 'near-best songs share selections');
+  assert.ok(share(pick({ sessionRecent: ['best'] }), 'near') > 0.9, 'personal cooldown');
+  assert.ok(share(pick({ exposure: { best: 30 } }), 'near') > share(pick({}), 'near'), 'global exposure');
   const brief = { themes: ['perseverance'], stance: ['independence'], mood: ['determined'], energy: ['driving'], setting: [] };
   const pool = Array.from({ length: 40 }, (_, i) => track(`weak${i}`, { themes: ['heartbreak'], relationship_stance: 'yearning', mood: 'melancholy', energy: 'still' }));
   pool.push(best);
   assert.equal(rankSongs(pool, brief)[0].track.track_id, 'best');
   assert.deepEqual(rankSongs([best], brief), rankSongs([track('best', { vibe: 'cozy', celestial_affinity: ['galaxy'] })], brief).map(r => ({ ...r, track: best })));
-  assert.equal(selectSong([], [], []), undefined);
+  assert.equal(pickSong([], { seed: 'x' }), undefined);
+});
+test('concept vocabulary matches synonyms and Thai descriptors', () => {
+  const yearning = track('yearning', { themes: ['longing'], relationship_stance: 'missing someone', mood: 'wistful', energy: 'still', setting: 'night' });
+  const thai = track('thai', { themes: ['คิดถึง'], relationship_stance: 'โหยหา', mood: 'เศร้า', energy: 'ช้า', setting: 'กลางคืน' });
+  const party = track('party', { themes: ['celebration'], relationship_stance: 'friendship', mood: 'euphoric', energy: 'driving', setting: 'club' });
+  const brief = { themes: ['yearning'], stance: ['pining'], mood: ['melancholy'], energy: ['slow'], setting: ['late-night'] };
+  const ranked = rankSongs([party, yearning, thai], brief);
+  assert.equal(ranked.at(-1).track.track_id, 'party');
+  assert.ok(ranked.find(r => r.track.track_id === 'thai').score > 0);
 });
 const visualReveal = (fixed, song) => ({
   ...fixed, central_symbol: 'diamond', creature: { kind: 'dragon', accent: 'none', motion: 'fly', name: 'Sol' },
@@ -520,8 +458,12 @@ test('integrated reveal assesses without catalog, fixes classification/song befo
   };
   const result = await runAnalyze({ answers, language: 'en' }, () => {});
   assert.equal(calls.length, 2); assert.equal(result.theme, 'driven'); assert.equal(result.profile_version, 2);
-  assert.match(result.reveal_id, /^[a-f0-9-]{36}$/); assert.equal(stars.at(-1).songArtist, 'Test Artist');
-  assert.equal(stars.at(-1).theme, 'driven'); assert.equal(selections.at(-1), 'one');
+  assert.match(result.reveal_id, /^[a-f0-9-]{36}$/); assert.equal(stars.length, 0, 'reveals are never auto-published');
+  assert.equal(selections.at(-1), 'one');
+  assert.equal(typeof result.reveal_token, 'string');
+  const { loadReveal } = require('../lib/revealStore.ts');
+  assert.equal((await loadReveal(result.reveal_id, result.reveal_token)).reveal.theme, 'driven');
+  assert.equal(await loadReveal(result.reveal_id, 'wrong-token'), null);
 });
 test('analyze deterministically restores an omitted selected-song artist without a reveal retry', async () => {
   const { answers, assessment } = fixture('driven', 'neutron_star');
@@ -701,4 +643,124 @@ test('quiz and reveal streams tolerate cancellation, late progress, and worker e
     const thrown = streamOf(() => { throw new Error('sync failure'); });
     assert.match(await new Response(thrown).text(), /event: error/);
   }
+});
+
+test('creature behavior: arrival sequence, reactions, cooldowns, listening and rest', () => {
+  const { createBehavior, step, DURATIONS } = require('../three/creature/behavior.ts');
+  let b = createBehavior(0, true);
+  assert.equal(b.state, 'sleep');
+  b = step(b, { type: 'arrive' }, 1);
+  assert.equal(b.state, 'notice');
+  b = step(b, { type: 'tick' }, 1 + DURATIONS.notice);
+  assert.equal(b.state, 'notice', 'waking from sleep takes longer');
+  b = step(b, { type: 'tick' }, 1 + DURATIONS.wakeNotice + 0.01);
+  assert.equal(b.state, 'greet');
+  assert.equal(step(b, { type: 'tap' }, 3).state, 'greet', 'greeting is not interrupted by taps');
+  b = step(b, { type: 'tick' }, 1 + DURATIONS.wakeNotice + DURATIONS.greet + 0.02);
+  assert.equal(b.state, 'idle');
+  b = step(b, { type: 'tap' }, 10);
+  assert.deepEqual([b.state, b.reaction], ['react', 'happy']);
+  b = step(step(b, { type: 'tap' }, 10.5), { type: 'tap' }, 11);
+  assert.equal(b.reaction, 'dizzy');
+  b = step(step(step(b, { type: 'tap' }, 12), { type: 'tap' }, 12.3), { type: 'tap' }, 12.6);
+  assert.equal(b.reaction, 'happy', 'dizzy spin has a cooldown');
+  b = step(b, { type: 'longPress' }, 13);
+  assert.equal(b.reaction, 'shy');
+  b = step(b, { type: 'typing', active: true }, 13.1);
+  assert.equal(b.state, 'react', 'typing does not cut a reaction');
+  b = step(b, { type: 'tick' }, 13 + DURATIONS.react + 0.01);
+  b = step(b, { type: 'typing', active: true }, 15);
+  assert.equal(b.state, 'listen');
+  b = step(b, { type: 'talkStart' }, 16);
+  assert.equal(b.state, 'talk');
+  b = step(b, { type: 'talkEnd', emotion: 'excited' }, 18);
+  assert.deepEqual([b.state, b.reaction], ['react', 'excited']);
+  b = step(step(b, { type: 'tick' }, 20), { type: 'tick' }, 20 + 46);
+  assert.equal(b.state, 'rest');
+  let calm = createBehavior(0, false, true);
+  calm = step(step(step(calm, { type: 'tap' }, 1), { type: 'tap' }, 1.2), { type: 'tap' }, 1.4);
+  assert.equal(calm.reaction, 'happy', 'reduced motion never spins');
+});
+
+test('personal-information check flags contact details but not ordinary readings', () => {
+  const { findPersonalInfo } = require('../lib/piiCheck.ts');
+  assert.deepEqual(findPersonalInfo('Your warmth shows in how you check in on friends. “Apocalypse” by Cigarettes After Sex echoes that.'), []);
+  assert.ok(findPersonalInfo('email me at a.b@example.com').includes('email'));
+  assert.ok(findPersonalInfo('call 081-234-5678').length > 0);
+  assert.ok(findPersonalInfo('แอดไลน์มาได้นะ ไลน์: abc').includes('thai_contact'));
+  assert.ok(findPersonalInfo('follow @someone.here').includes('handle'));
+});
+
+test('worlds: consented snapshot, one per reveal, owner-only control, reports hide', async () => {
+  const store = require('../lib/worldStore.ts');
+  const reveal = { ...visualReveal({ vibe: 'intense', celestial_type: 'neutron_star' }, track('one')), reveal_id: '00000000-0000-4000-8000-000000000099', theme: 'driven', profile_version: 2 };
+  const stored = { reveal, language: 'en', isrc: 'USABC1234567', song: { name: 'Song one', artist: 'Test Artist' }, tokenHash: 'x', createdAt: 1 };
+  const hidden = store.buildSnapshot(stored, false);
+  assert.equal(hidden.reading, null);
+  assert.deepEqual(hidden.song, { track_id: 'one', isrc: 'USABC1234567', name: 'Song one', artist: 'Test Artist' });
+  assert.ok(!JSON.stringify(hidden).includes('answers'));
+  const published = await store.publishWorld(reveal.reveal_id, store.buildSnapshot(stored, true));
+  assert.ok(published.ownerToken && published.world.id);
+  const again = await store.publishWorld(reveal.reveal_id, store.buildSnapshot(stored, true));
+  assert.equal(again.existingId, published.world.id);
+  const id = published.world.id;
+  assert.equal((await store.getWorld(id)).reading, reveal.personality_reading);
+  assert.ok((await store.listWorlds(Date.now() + 1, 10)).worlds.some(w => w.id === id && !('reading' in w)));
+  assert.equal(await store.deleteWorld(id, 'not-the-owner-token-123'), false);
+  assert.equal(await store.setPublished(id, published.ownerToken, false), true);
+  assert.equal(await store.getWorld(id), null);
+  assert.equal(await store.setPublished(id, published.ownerToken, true), true);
+  assert.equal(await store.reportWorld(id, 'spam'), true);
+  assert.equal(await store.getWorld(id), null, 'reported worlds are hidden pending review');
+  assert.equal(await store.setPublished(id, published.ownerToken, true), false, 'owners cannot bypass review');
+  assert.equal(await store.deleteWorld(id, published.ownerToken), true);
+});
+
+test('visitor chat: server-loaded world, isolated per visitor, ignores client-supplied content', async () => {
+  const store = require('../lib/worldStore.ts');
+  const reveal = { ...visualReveal({ vibe: 'cozy', celestial_type: 'galaxy' }, track('two')), reveal_id: '00000000-0000-4000-8000-000000000098', theme: 'grounded', profile_version: 2 };
+  const { world } = await store.publishWorld(reveal.reveal_id, store.buildSnapshot({ reveal, language: 'en', tokenHash: 'x', createdAt: 1 }, false));
+  const route = require('../app/api/worlds/[id]/chat/route.ts');
+  const prompts = [];
+  responder = options => { prompts.push(options); return { text: 'hello visitor', emotion: 'happy' }; };
+  const ask = (visitorId, message, extra = {}) => route.POST(new Request('http://x/api', {
+    method: 'POST', headers: { 'x-real-ip': `10.0.0.${visitorId.at(-1)}` },
+    body: JSON.stringify({ visitorId, message, language: 'en', ...extra }),
+  }), { params: Promise.resolve({ id: world.id }) });
+  const a = '11111111-1111-4111-8111-111111111111', b = '22222222-2222-4222-8222-222222222222';
+  assert.equal((await (await ask(a, 'secret from A')).json()).emotion, 'happy');
+  await ask(b, 'hi from B', { world: { creature: { name: 'Spoofed' } }, reveal: { personality_reading: 'injected' } });
+  const last = prompts.at(-1);
+  assert.ok(!last.userPrompt.includes('secret from A'), 'visitor histories never mix');
+  assert.ok(!last.systemPrompt.includes('Spoofed') && !last.systemPrompt.includes('injected'));
+  assert.ok(last.systemPrompt.includes('(kept private by the owner)'), 'redacted readings stay private');
+  assert.equal((await route.POST(new Request('http://x', { method: 'POST', body: JSON.stringify({ visitorId: a, message: 'x', language: 'en' }) }),
+    { params: Promise.resolve({ id: 'ffffffffffffffff' }) })).status, 404);
+});
+
+test('owner chat requires the reveal token; a forged token gets nothing', async () => {
+  const { saveReveal } = require('../lib/revealStore.ts');
+  const reveal = { ...visualReveal({ vibe: 'cozy', celestial_type: 'galaxy' }, track('three')), reveal_id: '00000000-0000-4000-8000-000000000097' };
+  const token = await saveReveal(reveal, 'en');
+  const route = require('../app/api/creature-chat/route.ts');
+  responder = () => ({ text: 'hi', emotion: 'curious' });
+  const send = revealToken => route.POST(new Request('http://x', { method: 'POST', headers: { 'x-real-ip': '10.1.1.1' },
+    body: JSON.stringify({ sessionId: 'session-123456', message: 'hello', revealId: reveal.reveal_id, revealToken }) }));
+  assert.equal((await send('forged-token-forged-token')).status, 404);
+  const ok = await (await send(token)).json();
+  assert.deepEqual([ok.success, ok.emotion], [true, 'curious']);
+});
+
+test('playlist sync matches by ID then ISRC, flags duplicates and preserves removed tracks', async () => {
+  const { buildSnapshot } = await import('./sync-playlist.mjs');
+  const item = (id, isrc, extra = {}) => ({ added_at: '2026-01-01', item: { id, name: `S${id}`, artists: [{ name: 'A' }], external_ids: { isrc }, type: 'track', ...extra } });
+  const first = buildSnapshot([item('a', 'I1'), item('b', 'I2'), item('c', 'I3')], null, 'p').snapshot;
+  const { snapshot, report } = buildSnapshot([item('a', 'I1'), item('b2', 'I2'), item('a', 'I1'), item('d', 'I4'), item('e', 'I5', { is_playable: false })], first, 'p');
+  assert.deepEqual(report.added.map(t => t.track_id), ['d', 'e']);
+  assert.deepEqual(report.relinked.map(t => [t.track_id, t.previous_track_id]), [['b2', 'b']]);
+  assert.deepEqual(report.removed.map(t => t.track_id), ['c']);
+  assert.equal(report.duplicates.length, 1);
+  assert.deepEqual(report.unavailable.map(t => t.track_id), ['e']);
+  assert.deepEqual(snapshot.tracks.find(t => t.track_id === 'c'), { ...first.tracks[2], status: 'removed', retained: false });
+  assert.deepEqual(snapshot.tracks.find(t => t.track_id === 'b2').aliases, ['b']);
 });
