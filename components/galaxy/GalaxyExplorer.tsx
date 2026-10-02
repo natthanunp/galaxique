@@ -8,6 +8,7 @@ import * as THREE from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { HomeIcon, LocateFixedIcon, MinusIcon, PlusIcon, RotateCcwIcon, UsersIcon, XIcon } from "lucide-react";
 
+import { FLAGS } from "@/config/flags";
 import { Button } from "@/components/ui/button";
 import { getOwnedWorlds } from "@/lib/ownedWorlds";
 import { GALAXY_RADIUS, hash32, loadArmField, placeOnArms, thaiDayColor, type ArmField } from "@/lib/galaxyLayout";
@@ -378,7 +379,7 @@ export function GalaxyExplorer({ language }: { language: Language }) {
   }, []);
 
   const land = useCallback((planet: Planet) => {
-    soundtrack().unlock();
+    if (FLAGS.adaptiveSoundtrack) soundtrack().unlock();
     const c = controls.current;
     if (c) {
       sessionStorage.setItem(CAMERA_KEY, JSON.stringify({ position: c.object.position.toArray(), target: c.target.toArray() }));
@@ -390,7 +391,7 @@ export function GalaxyExplorer({ language }: { language: Language }) {
     const planet = planets.find((p) => owned.includes(p.id));
     if (planet) focusPlanet(planet);
     else if (owned[0]) {
-      soundtrack().unlock();
+      if (FLAGS.adaptiveSoundtrack) soundtrack().unlock();
       router.push(`/w/${owned[0]}`);
     }
   }, [planets, owned, focusPlanet, router]);
